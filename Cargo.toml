@@ -1,0 +1,13 @@
+[package]
+name = "tg-focus"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+
+[dependencies]
+chrono = "0.4.26"
+regex = "1.9.3"
+tdlib = "0.8.0"
+tokio = { version = "1.29.1", features = ["sync", "rt-multi-thread", "macros", "time"] }
