@@ -214,7 +214,7 @@ async fn handle_authorization_state(
                 // Set the flag to false to stop receiving updates from the
                 // spawned task
                 dbg!(112233);
-                run_flag.store(false, Ordering::SeqCst);
+                run_flag.store(false, Ordering::Release);
                 break;
             }
 
@@ -349,23 +349,9 @@ async fn main() {
                     tstamp: &date,
                 };
 
-                //                 let fmted_msg = format!(
-                //                     "chat : {}
-                // sender : {}
-                // ctn : {}
-                // date : {}
-                // ",
-                //                     chat_title, sender_name, msg_ctn, date,
-                //                 );
-
                 if coll_msg.is_ctn_interesting() {
                     collect_msg(coll_msg.to_string(), collector_chat_id, client_id).await;
                 }
-                // if !chat_title.contains("TG-FOCUS") && is_interesting(&fmted_msg) {
-                //     // if is_interesting(&fmted_msg) {
-                //     dbg!(&fmted_msg);
-                //     collect_msg(fmted_msg, collector_chat_id, client_id).await;
-                // }
             }
         }
     }
@@ -394,10 +380,10 @@ impl CollectedMsg<'_> {
     fn to_string(&self) -> String {
         format!(
             "
-chat   : {}
-sender : {}
-ctn    : {}
-date   : {}
+CHAT : {}
+SENDER : {}
+CTN : {}
+DATE : {}
                 ",
             self.title, self.sender, self.ctn, self.tstamp,
         )
