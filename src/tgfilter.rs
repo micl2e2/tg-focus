@@ -9,6 +9,21 @@ pub struct CollectedMsg<'a> {
     pub tstamp: &'a str,
 }
 
+impl CollectedMsg<'_> {
+    pub fn to_string(&self) -> String {
+        format!(
+            "
+CHAT : {}
+SENDER : {}
+CTN : {}
+DATE : {}
+                ",
+            self.title, self.sender, self.ctn, self.tstamp,
+        )
+        .to_string()
+    }
+}
+
 #[derive(Debug, Deserialize)]
 struct TgFilters {
     filter: Vec<TgFilter>,
@@ -354,6 +369,18 @@ keyword = ["kw1", "kw2"]
     }
 
     #[test]
+    fn _1b() {
+        // parse ok
+        let input = r#"
+[[filter]]
+"#;
+
+        let may_filters = toml::from_str::<TgFilters>(input);
+        dbg!(&may_filters);
+        assert!(may_filters.is_ok());
+    }
+
+    #[test]
     fn _2() {
         // invalid re
         let input = r#"
@@ -380,7 +407,7 @@ keyword = ["kw1", "kw2"]
     }
 
     #[test]
-    fn _3() {
+    fn _3a() {
         // invalid re
         let input = r#"
 
@@ -406,7 +433,7 @@ keyword = ["kw1", "k)w2"]
     }
 
     #[test]
-    fn _3_2() {
+    fn _3b() {
         // invalid re
         let input = r#"
 
@@ -534,7 +561,7 @@ keyword = ["kw1", "kw2"]
     }
 
     #[test]
-    fn _8() {
+    fn _8a() {
         // more filters
         let input = r#"
 
@@ -588,7 +615,7 @@ keyword = ["kw1", "kw2"]
     }
 
     #[test]
-    fn _8__() {
+    fn _8b() {
         // more filters
         let input = r#"
 
@@ -698,7 +725,7 @@ keyword = ["kw1", "kw2"]
     }
 
     #[test]
-    fn _10() {
+    fn _10a() {
         // more filters
         let input = r#"
 
@@ -762,7 +789,7 @@ keyword = ["kw1", "kw2"]
     }
 
     #[test]
-    fn _11() {
+    fn _10b() {
         // more filters
         let input = r#"
 
@@ -826,7 +853,7 @@ keyword = ["kw1", "kw2"]
     }
 
     #[test]
-    fn _12a() {
+    fn _11a() {
         // more filters
         let input = r#"
 
@@ -890,7 +917,7 @@ keyword = ["kw1", "kw2"]
     }
 
     #[test]
-    fn _12b() {
+    fn _11b() {
         // more filters
         let input = r#"
 

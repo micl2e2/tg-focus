@@ -1,5 +1,5 @@
-mod collmsg;
+// mod collmsg;
 
 mod tgfilter;
 
-pub use collmsg::CollectedMsg;
+pub use tgfilter::CollectedMsg;
