@@ -17,10 +17,12 @@ struct TgFilters {
 impl TgFilters {
     fn is_match(&self, msg: &CollectedMsg) -> (bool, usize) {
         let mut i_stay = 0;
-        let mut is_match = true;
+        let mut decide_match = false;
+
         for i in 0..self.filter.len() {
             i_stay = i;
-            // while i < self.filter.len() {
+            let mut is_match = true;
+
             let filter = &self.filter[i];
 
             // title: not matching means msg not matching
@@ -55,39 +57,12 @@ impl TgFilters {
             // last one done
 
             if is_match {
+                decide_match = true;
                 break;
             }
         }
 
-        return (is_match, i_stay);
-        // for filter in &self.filter {
-        //     // title: not matching means msg not matching
-        //     if let Some(title_f) = &filter.title {
-        //         if !title_f.is_match(msg.title) {
-        //             return false;
-        //         }
-        //     }
-
-        //     // keyword: matching any means msg matching
-        //     if let Some(kw_f_list) = &filter.keyword {
-        //         for kw_f in kw_f_list {
-        //             if kw_f.is_match(msg.ctn) {
-        //                 return true;
-        //             }
-        //         }
-        //     }
-
-        //     // no_keyword: matching any means msg not matching
-        //     if let Some(nkw_f_list) = &filter.no_keyword {
-        //         for nkw_f in nkw_f_list {
-        //             if nkw_f.is_match(msg.ctn) {
-        //                 return false;
-        //             }
-        //         }
-        //     }
-        // }
-
-        // return true;
+        return (decide_match, i_stay);
     }
 }
 
@@ -428,5 +403,32 @@ keyword = ["kw1", "kw2"]
         };
 
         assert_eq!(filters.is_match(&msg), (false, 0));
+    }
+
+    #[test]
+    fn _8() {
+        // more filters
+        let input = r#"
+
+    [[filter]]
+    no_keyword = ["kw1", "kw2"]
+
+    [[filter]]
+    keyword = ["kw5", "kw6"]
+
+    "#;
+
+        let filters = toml::from_str::<TgFilters>(input).unwrap();
+
+        assert_eq!(filters.filter.len(), 2);
+
+        let msg = CollectedMsg {
+            title: "xxx",
+            sender: "xxx",
+            ctn: "kw2, kw6",
+            tstamp: "xxx",
+        };
+
+        assert_eq!(filters.is_match(&msg), (true, 1));
     }
 }
