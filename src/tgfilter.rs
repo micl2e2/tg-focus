@@ -21,44 +21,87 @@ impl TgFilters {
 
         for i in 0..self.filter.len() {
             i_stay = i;
-            let mut is_match = false;
+            let mut is_curr_flt_match = false; // curr_flt is parent of sub flt
 
             let filter = &self.filter[i];
 
             // title: not matching means msg not matching
             if let Some(title_f) = &filter.title {
                 if title_f.is_match(msg.title) {
-                    is_match = true;
+                    is_curr_flt_match = true;
                 }
-                if !is_match {
+                if !is_curr_flt_match {
+                    continue; // big
+                }
+            }
+
+            // sender: matching any means msg matching
+            if let Some(flt_list) = &filter.sender {
+                let mut sub_match = false;
+                for flt in flt_list {
+                    if flt.is_match(msg.sender) {
+                        sub_match = true;
+                        break; // small
+                    }
+                }
+                is_curr_flt_match = sub_match;
+
+                if !is_curr_flt_match {
+                    continue; // big
+                }
+            }
+
+            // no_sender: matching any means msg not matching
+            if let Some(nflt_list) = &filter.no_sender {
+                let mut sub_match = true;
+                for nflt in nflt_list {
+                    if nflt.is_match(msg.sender) {
+                        sub_match = false;
+                        break; // small
+                    }
+                }
+                is_curr_flt_match = sub_match;
+
+                if !is_curr_flt_match {
                     continue; // big
                 }
             }
 
             // keyword: matching any means msg matching
-            if let Some(kw_f_list) = &filter.keyword {
+            if let Some(flt_list) = &filter.keyword {
                 let mut sub_match = false;
-                for kw_f in kw_f_list {
-                    if kw_f.is_match(msg.ctn) {
+                for flt in flt_list {
+                    if flt.is_match(msg.ctn) {
                         sub_match = true;
                         break; // small
                     }
                 }
-                is_match = sub_match;
+                is_curr_flt_match = sub_match;
+
+                if !is_curr_flt_match {
+                    continue; // big
+                }
             }
 
             // no_keyword: matching any means msg not matching
-            if let Some(nkw_f_list) = &filter.no_keyword {
-                for nkw_f in nkw_f_list {
-                    if nkw_f.is_match(msg.ctn) {
-                        is_match = false;
+            if let Some(nflt_list) = &filter.no_keyword {
+                let mut sub_match = true;
+                for nflt in nflt_list {
+                    if nflt.is_match(msg.ctn) {
+                        sub_match = false;
                         break; // small
                     }
                 }
+                is_curr_flt_match = sub_match;
+
+                if !is_curr_flt_match {
+                    continue; // big
+                }
             }
+
             // last one done
 
-            if is_match {
+            if is_curr_flt_match {
                 decide_match = true;
                 break;
             }
@@ -202,6 +245,38 @@ mod deser {
                 ret.title = Some(may_re.unwrap());
             }
 
+            // sender
+            if let Some(s_list) = f1.0 {
+                let mut kw_list = vec![];
+                for s in &s_list {
+                    let may_re = Regex::new(s);
+                    if let Err(e) = may_re {
+                        return Err(DeError::invalid_value(
+                            Unexpected::Other(s),
+                            &"valid regular expression",
+                        ));
+                    }
+                    kw_list.push(may_re.unwrap())
+                }
+                ret.sender = Some(kw_list);
+            }
+
+            // no_sender
+            if let Some(s_list) = f2.0 {
+                let mut kw_list = vec![];
+                for s in &s_list {
+                    let may_re = Regex::new(s);
+                    if let Err(e) = may_re {
+                        return Err(DeError::invalid_value(
+                            Unexpected::Other(s),
+                            &"valid regular expression",
+                        ));
+                    }
+                    kw_list.push(may_re.unwrap())
+                }
+                ret.no_sender = Some(kw_list);
+            }
+
             // keyword
             if let Some(s_list) = f3.0 {
                 let mut kw_list = vec![];
@@ -268,6 +343,7 @@ mod utst {
 
 [[filter]]
 title = "title1"
+sender = ["usr1", "usr2"]
 keyword = ["kw1", "kw2"]
 
 "#;
@@ -330,12 +406,39 @@ keyword = ["kw1", "k)w2"]
     }
 
     #[test]
+    fn _3_2() {
+        // invalid re
+        let input = r#"
+
+[[filter]]
+title = "title1"
+sender = ["usr1", "usr(2"]
+
+"#;
+
+        let may_filters = toml::from_str::<TgFilters>(input);
+
+        assert!(may_filters.is_err());
+
+        match may_filters {
+            Err(e) => {
+                assert_eq!(
+                    e.message(),
+                    "invalid value: usr(2, expected valid regular expression"
+                );
+            }
+            _ => assert!(false),
+        }
+    }
+
+    #[test]
     fn _4() {
         // one filter matching msg
         let input = r#"
 
 [[filter]]
 title = "title1"
+sender = ["usr1", "usr2"]
 keyword = ["kw1", "kw2"]
 
 "#;
@@ -346,7 +449,7 @@ keyword = ["kw1", "kw2"]
 
         let msg = CollectedMsg {
             title: "title123",
-            sender: "xxx",
+            sender: "usr234",
             ctn: "kw123",
             tstamp: "xxx",
         };
@@ -361,6 +464,7 @@ keyword = ["kw1", "kw2"]
 
     [[filter]]
     title = "title1"
+    sender = ["usr1", "usr2"]
     no_keyword = ["kw1", "kw2"]
 
     "#;
@@ -371,7 +475,7 @@ keyword = ["kw1", "kw2"]
 
         let msg = CollectedMsg {
             title: "title123",
-            sender: "xxx",
+            sender: "usr123",
             ctn: "kw123",
             tstamp: "xxx",
         };
@@ -449,6 +553,15 @@ keyword = ["kw1", "kw2"]
         let msg = CollectedMsg {
             title: "xxx",
             sender: "xxx",
+            ctn: "kw5",
+            tstamp: "xxx",
+        };
+
+        assert_eq!(filters.is_match(&msg), (true, 0));
+
+        let msg = CollectedMsg {
+            title: "xxx",
+            sender: "xxx",
             ctn: "kw2, kw6",
             tstamp: "xxx",
         };
@@ -471,7 +584,61 @@ keyword = ["kw1", "kw2"]
             tstamp: "xxx",
         };
 
+        assert_eq!(filters.is_match(&msg), (true, 0));
+    }
+
+    #[test]
+    fn _8__() {
+        // more filters
+        let input = r#"
+
+    [[filter]]
+    no_sender = ["usr1", "usr2"]
+
+    [[filter]]
+    sender = ["usr5", "usr6"]
+
+    "#;
+
+        let filters = toml::from_str::<TgFilters>(input).unwrap();
+
+        assert_eq!(filters.filter.len(), 2);
+
+        let msg = CollectedMsg {
+            title: "xxx",
+            sender: "usr6",
+            ctn: "xxx",
+            tstamp: "xxx",
+        };
+
+        assert_eq!(filters.is_match(&msg), (true, 0));
+
+        let msg = CollectedMsg {
+            title: "xxx",
+            sender: "usr2 usr6",
+            ctn: "xxx",
+            tstamp: "xxx",
+        };
+
+        assert_eq!(filters.is_match(&msg), (true, 1));
+
+        let msg = CollectedMsg {
+            title: "xxx",
+            sender: "usr2 usr",
+            ctn: "xxx",
+            tstamp: "xxx",
+        };
+
         assert_eq!(filters.is_match(&msg), (false, 1));
+
+        let msg = CollectedMsg {
+            title: "xxx",
+            sender: "xxx",
+            ctn: "xxx",
+            tstamp: "xxx",
+        };
+
+        assert_eq!(filters.is_match(&msg), (true, 0));
     }
 
     #[test]
@@ -653,6 +820,134 @@ keyword = ["kw1", "kw2"]
             title: "group-c",
             sender: "xxx",
             ctn: "kw6",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (false, 2));
+    }
+
+    #[test]
+    fn _12a() {
+        // more filters
+        let input = r#"
+
+    [[filter]]
+    title = "group-a"
+    sender = ["usr1", "usr2"]
+
+    [[filter]]
+    title = "group-b"
+    sender = ["usr3", "usr4"]
+
+    [[filter]]
+    title = "group-c"
+    sender = ["usr5", "usr6"]
+
+    "#;
+
+        let filters = toml::from_str::<TgFilters>(input).unwrap();
+
+        assert_eq!(filters.filter.len(), 3);
+
+        let msg = CollectedMsg {
+            title: "group-a",
+            sender: "usr1",
+            ctn: "xxx",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (true, 0));
+
+        let msg = CollectedMsg {
+            title: "group-b",
+            sender: "xxx",
+            ctn: "xxx",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (false, 2)); // will advance
+
+        let msg = CollectedMsg {
+            title: "group-b",
+            sender: "usr4",
+            ctn: "xxx",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (true, 1));
+
+        let msg = CollectedMsg {
+            title: "group-c",
+            sender: "xxx",
+            ctn: "xxx",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (false, 2));
+
+        let msg = CollectedMsg {
+            title: "group-c",
+            sender: "usr6",
+            ctn: "xxx",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (true, 2));
+    }
+
+    #[test]
+    fn _12b() {
+        // more filters
+        let input = r#"
+
+    [[filter]]
+    title = "group-a"
+    sender = ["usr1", "usr2"]
+
+    [[filter]]
+    title = "group-b"
+    sender = ["usr3", "usr4"]
+
+    [[filter]]
+    title = "group"
+    no_sender = ["usr5", "usr6"]
+
+    "#;
+
+        let filters = toml::from_str::<TgFilters>(input).unwrap();
+
+        assert_eq!(filters.filter.len(), 3);
+
+        let msg = CollectedMsg {
+            title: "group-a",
+            sender: "usr1",
+            ctn: "xxx",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (true, 0));
+
+        let msg = CollectedMsg {
+            title: "group-b",
+            sender: "xxx",
+            ctn: "xxx",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (true, 2)); // will advance
+
+        let msg = CollectedMsg {
+            title: "group-b",
+            sender: "usr4",
+            ctn: "xxx",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (true, 1));
+
+        let msg = CollectedMsg {
+            title: "group-c",
+            sender: "xxx",
+            ctn: "xxx",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (true, 2));
+
+        let msg = CollectedMsg {
+            title: "group-c",
+            sender: "usr6",
+            ctn: "xxx",
             tstamp: "xxx",
         };
         assert_eq!(filters.is_match(&msg), (false, 2));
