@@ -21,18 +21,18 @@ impl TgFilters {
 
         for i in 0..self.filter.len() {
             i_stay = i;
-            let mut is_match = true;
+            let mut is_match = false;
 
             let filter = &self.filter[i];
 
             // title: not matching means msg not matching
             if let Some(title_f) = &filter.title {
-                if !title_f.is_match(msg.title) {
-                    is_match = false;
+                if title_f.is_match(msg.title) {
+                    is_match = true;
                 }
-            }
-            if !is_match {
-                continue; // big
+                if !is_match {
+                    continue; // big
+                }
             }
 
             // keyword: matching any means msg matching
@@ -430,5 +430,23 @@ keyword = ["kw1", "kw2"]
         };
 
         assert_eq!(filters.is_match(&msg), (true, 1));
+
+        let msg = CollectedMsg {
+            title: "xxx",
+            sender: "xxx",
+            ctn: "kw2, kw",
+            tstamp: "xxx",
+        };
+
+        assert_eq!(filters.is_match(&msg), (false, 1));
+
+        let msg = CollectedMsg {
+            title: "xxx",
+            sender: "xxx",
+            ctn: "xxx",
+            tstamp: "xxx",
+        };
+
+        assert_eq!(filters.is_match(&msg), (false, 1));
     }
 }
