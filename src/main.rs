@@ -5,17 +5,10 @@ use std::sync::{
     Arc,
 };
 use tdlib::enums;
-use tdlib::enums::{AuthorizationState, Update, User};
+use tdlib::enums::{AuthorizationState, Update};
 use tdlib::functions;
 use tdlib::types;
 use tokio::sync::mpsc::{self, Receiver, Sender};
-
-fn ask_user(string: &str) -> String {
-    println!("{}", string);
-    let mut input = String::new();
-    std::io::stdin().read_line(&mut input).unwrap();
-    input.trim().to_string()
-}
 
 async fn chat2str(chat_id: i64, client_id: i32) -> String {
     if let Ok(enums::Chat::Chat(chatinfo)) = functions::get_chat(chat_id, client_id).await {
@@ -66,7 +59,6 @@ async fn sender2str(sender_id: enums::MessageSender, client_id: i32) -> String {
 async fn handle_update(
     update: Update,
     auth_tx: &Sender<AuthorizationState>,
-    client_id: i32,
     mq_tx: &Sender<(i64, enums::MessageSender, String, i32)>,
 ) {
     match update {
@@ -156,7 +148,7 @@ async fn handle_authorization_state(
             }
 
             AuthorizationState::WaitPhoneNumber => {
-                let mut may_phone: Option<String> = None;
+                let may_phone: Option<String>;
                 loop {
                     let readres = fs::read_to_string("/tmp/tg-focus/phone").unwrap();
                     if readres.trim().len() > 0 {
@@ -184,7 +176,7 @@ async fn handle_authorization_state(
             }
 
             AuthorizationState::WaitCode(_) => {
-                let mut may_vcode: Option<String> = None;
+                let may_vcode: Option<String>;
                 loop {
                     let readres = fs::read_to_string("/tmp/tg-focus/vcode").unwrap();
                     if readres.trim().len() > 0 {
@@ -229,9 +221,6 @@ async fn handle_authorization_state(
 
 #[tokio::main]
 async fn main() {
-    use std::fs;
-    use std::fs::File;
-
     fs::create_dir_all("/tmp/tg-focus").unwrap();
     fs::OpenOptions::new()
         .read(true)
@@ -258,7 +247,7 @@ async fn main() {
         .open("/tmp/tg-focus/vcode")
         .unwrap();
 
-    let mut may_api_id: Option<i32> = None;
+    let may_api_id: Option<i32>;
     loop {
         let readres = fs::read_to_string("/tmp/tg-focus/api_id").unwrap();
         if let Ok(got_api_id) = readres.trim().parse::<i32>() {
@@ -269,7 +258,7 @@ async fn main() {
         tokio::time::sleep(std::time::Duration::from_secs(1)).await;
     }
 
-    let mut may_api_hash: Option<String> = None;
+    let may_api_hash: Option<String>;
     loop {
         let readres = fs::read_to_string("/tmp/tg-focus/api_hash").unwrap();
         if readres.trim().len() > 0 {
@@ -298,7 +287,7 @@ async fn main() {
     let handle = tokio::spawn(async move {
         while run_flag_clone.load(Ordering::Acquire) {
             if let Some((update, _client_id)) = tdlib::receive() {
-                handle_update(update, &auth_tx, client_id, &mq_tx).await;
+                handle_update(update, &auth_tx, &mq_tx).await;
             }
         }
     });
@@ -332,28 +321,30 @@ async fn main() {
     .await;
 
     if let Ok(got_chat) = may_got_chat {
-        if let tdlib::enums::Chat::Chat(chat_meta) = got_chat {
-            let collector_chat_id = chat_meta.id;
+        let tdlib::enums::Chat::Chat(chat_meta) = got_chat;
 
-            while let Some((chat_id, sender_id, msg_ctn, date)) = mq_rx.recv().await {
-                let chat_title = chat2str(chat_id, client_id).await;
-                if chat_title.contains("TG-FOCUS") {
-                    continue;
-                }
-                let sender_name = sender2str(sender_id, client_id).await;
-                let date = date2str(date).await;
-                let coll_msg = CollectedMsg {
-                    title: &chat_title,
-                    sender: &sender_name,
-                    ctn: &msg_ctn,
-                    tstamp: &date,
-                };
+        // if let tdlib::enums::Chat::Chat(chat_meta) = got_chat {
+        let collector_chat_id = chat_meta.id;
 
-                if coll_msg.is_ctn_interesting() {
-                    collect_msg(coll_msg.to_string(), collector_chat_id, client_id).await;
-                }
+        while let Some((chat_id, sender_id, msg_ctn, date)) = mq_rx.recv().await {
+            let chat_title = chat2str(chat_id, client_id).await;
+            if chat_title.contains("TG-FOCUS") {
+                continue;
+            }
+            let sender_name = sender2str(sender_id, client_id).await;
+            let date = date2str(date).await;
+            let coll_msg = CollectedMsg {
+                title: &chat_title,
+                sender: &sender_name,
+                ctn: &msg_ctn,
+                tstamp: &date,
+            };
+
+            if coll_msg.is_ctn_interesting() {
+                collect_msg(coll_msg.to_string(), collector_chat_id, client_id).await;
             }
         }
+        // }
     }
 
     tokio::time::sleep(std::time::Duration::from_secs(3000)).await;
@@ -407,29 +398,6 @@ DATE : {}
         }
 
         return false;
-    }
-}
-
-async fn send_picked(msg_list: Vec<String>, chat_id: i64, client_id: i32) {
-    dbg!(msg_list.len(), &msg_list);
-    for full_msg_fmt in msg_list {
-        // let full_msg_with_chattitel = format!("{} - {}", chat_title, full_msg_fmt);
-        let mut msg_to_send = tdlib::types::InputMessageText::default();
-        msg_to_send.text.text = full_msg_fmt.clone();
-        let res_sent = functions::send_message(
-            chat_id,
-            0,
-            None,
-            None,
-            None,
-            tdlib::enums::InputMessageContent::InputMessageText(msg_to_send),
-            client_id,
-        )
-        .await;
-        std::thread::sleep(std::time::Duration::from_millis(100));
-        if let Ok(_) = res_sent {
-            dbg!(("yes", full_msg_fmt));
-        }
     }
 }
 
