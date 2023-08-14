@@ -15,16 +15,79 @@ struct TgFilters {
 }
 
 impl TgFilters {
-    fn is_match(&self, msg: &CollectedMsg) -> bool {
-        for filter in &self.filter {
-            if let Some(title) = &filter.title {
-                // if msg.title.contains(title) {
-                //     return true;
-                // }
+    fn is_match(&self, msg: &CollectedMsg) -> (bool, usize) {
+        let mut i_stay = 0;
+        let mut is_match = true;
+        for i in 0..self.filter.len() {
+            i_stay = i;
+            // while i < self.filter.len() {
+            let filter = &self.filter[i];
+
+            // title: not matching means msg not matching
+            if let Some(title_f) = &filter.title {
+                if !title_f.is_match(msg.title) {
+                    is_match = false;
+                }
+            }
+            if !is_match {
+                continue; // big
+            }
+
+            // keyword: matching any means msg matching
+            if let Some(kw_f_list) = &filter.keyword {
+                for kw_f in kw_f_list {
+                    if kw_f.is_match(msg.ctn) {
+                        is_match = true;
+                        break; // small
+                    }
+                }
+            }
+
+            // no_keyword: matching any means msg not matching
+            if let Some(nkw_f_list) = &filter.no_keyword {
+                for nkw_f in nkw_f_list {
+                    if nkw_f.is_match(msg.ctn) {
+                        is_match = false;
+                        break; // small
+                    }
+                }
+            }
+            // last one done
+
+            if is_match {
+                break;
             }
         }
 
-        return false;
+        return (is_match, i_stay);
+        // for filter in &self.filter {
+        //     // title: not matching means msg not matching
+        //     if let Some(title_f) = &filter.title {
+        //         if !title_f.is_match(msg.title) {
+        //             return false;
+        //         }
+        //     }
+
+        //     // keyword: matching any means msg matching
+        //     if let Some(kw_f_list) = &filter.keyword {
+        //         for kw_f in kw_f_list {
+        //             if kw_f.is_match(msg.ctn) {
+        //                 return true;
+        //             }
+        //         }
+        //     }
+
+        //     // no_keyword: matching any means msg not matching
+        //     if let Some(nkw_f_list) = &filter.no_keyword {
+        //         for nkw_f in nkw_f_list {
+        //             if nkw_f.is_match(msg.ctn) {
+        //                 return false;
+        //             }
+        //         }
+        //     }
+        // }
+
+        // return true;
     }
 }
 
@@ -201,6 +264,7 @@ mod utst {
 
     #[test]
     fn _1() {
+        // parse ok
         let input = r#"
 
 [[filter]]
@@ -216,6 +280,7 @@ keyword = ["kw1", "kw2"]
 
     #[test]
     fn _2() {
+        // invalid re
         let input = r#"
 
 [[filter]]
@@ -241,6 +306,7 @@ keyword = ["kw1", "kw2"]
 
     #[test]
     fn _3() {
+        // invalid re
         let input = r#"
 
 [[filter]]
@@ -264,30 +330,103 @@ keyword = ["kw1", "k)w2"]
         }
     }
 
-    // #[test]
-    fn _2222() {
+    #[test]
+    fn _4() {
+        // one filter matching msg
         let input = r#"
 
 [[filter]]
 title = "title1"
 keyword = ["kw1", "kw2"]
 
-[[filter]]
-title = "title2"
-no_keyword = ["kw3", "kw4"]
-
 "#;
 
         let filters = toml::from_str::<TgFilters>(input).unwrap();
-        dbg!(&filters);
+
+        assert_eq!(filters.filter.len(), 1);
 
         let msg = CollectedMsg {
             title: "title123",
-            sender: "xx",
-            ctn: "xx",
-            tstamp: "xx",
+            sender: "xxx",
+            ctn: "kw123",
+            tstamp: "xxx",
         };
 
-        assert!(filters.is_match(&msg));
+        assert_eq!(filters.is_match(&msg), (true, 0));
+    }
+
+    #[test]
+    fn _5() {
+        // one filter matching msg
+        let input = r#"
+
+    [[filter]]
+    title = "title1"
+    no_keyword = ["kw1", "kw2"]
+
+    "#;
+
+        let filters = toml::from_str::<TgFilters>(input).unwrap();
+
+        assert_eq!(filters.filter.len(), 1);
+
+        let msg = CollectedMsg {
+            title: "title123",
+            sender: "xxx",
+            ctn: "kw123",
+            tstamp: "xxx",
+        };
+
+        assert_eq!(filters.is_match(&msg), (false, 0));
+    }
+
+    #[test]
+    fn _6() {
+        // one filter matching msg
+        let input = r#"
+
+    [[filter]]
+    title = "title1"
+    no_keyword = ["kw1", "kw2"]
+
+    "#;
+
+        let filters = toml::from_str::<TgFilters>(input).unwrap();
+
+        assert_eq!(filters.filter.len(), 1);
+
+        let msg = CollectedMsg {
+            title: "title123",
+            sender: "xxx",
+            ctn: "xxx",
+            tstamp: "xxx",
+        };
+
+        assert_eq!(filters.is_match(&msg), (true, 0));
+    }
+
+    #[test]
+    fn _7() {
+        // one filter matching msg
+        let input = r#"
+
+    [[filter]]
+    keyword = ["kw1", "kw2"]
+    no_keyword = ["kw5", "kw6"]
+
+    "#;
+
+        let filters = toml::from_str::<TgFilters>(input).unwrap();
+
+        assert_eq!(filters.filter.len(), 1);
+
+        let msg = CollectedMsg {
+            title: "xxx",
+            sender: "xxx",
+            ctn: "kw2, kw6",
+            tstamp: "xxx",
+        };
+
+        assert_eq!(filters.is_match(&msg), (false, 0));
     }
 }
