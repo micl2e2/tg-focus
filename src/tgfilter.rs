@@ -1,3 +1,6 @@
+use std::fs;
+use std::path::Path;
+
 use regex::Regex;
 use serde::Deserialize;
 
@@ -25,12 +28,18 @@ DATE : {}
 }
 
 #[derive(Debug, Deserialize)]
-struct TgFilters {
+pub struct TgFilters {
     filter: Vec<TgFilter>,
 }
 
 impl TgFilters {
-    fn is_match(&self, msg: &CollectedMsg) -> (bool, usize) {
+    pub fn from_file<P: AsRef<Path>>(path: P) -> Self {
+        let str_data = fs::read_to_string(path).unwrap();
+
+        toml::from_str::<TgFilters>(&str_data).unwrap()
+    }
+
+    pub fn is_match(&self, msg: &CollectedMsg) -> (bool, usize) {
         let mut i_stay = 0;
         let mut decide_match = false;
 

@@ -3,3 +3,4 @@
 mod tgfilter;
 
 pub use tgfilter::CollectedMsg;
+pub use tgfilter::TgFilters;

@@ -1,5 +1,6 @@
 use chrono::{Local, TimeZone};
 use std::fs;
+use std::io::prelude::*;
 use std::sync::{
     atomic::{AtomicBool, Ordering},
     Arc,
@@ -12,6 +13,7 @@ use tokio::sync::mpsc::{self, Receiver, Sender};
 
 // mod tg_focus;
 use tg_focus::CollectedMsg;
+use tg_focus::TgFilters;
 
 async fn chat2str(chat_id: i64, client_id: i32) -> String {
     if let Ok(enums::Chat::Chat(chatinfo)) = functions::get_chat(chat_id, client_id).await {
@@ -223,31 +225,61 @@ async fn handle_authorization_state(
 
 #[tokio::main]
 async fn main() {
-    fs::create_dir_all("/tmp/tg-focus").unwrap();
-    fs::OpenOptions::new()
-        .read(true)
-        .write(true)
-        .create(true)
-        .open("/tmp/tg-focus/api_id")
-        .unwrap();
-    fs::OpenOptions::new()
-        .read(true)
-        .write(true)
-        .create(true)
-        .open("/tmp/tg-focus/api_hash")
-        .unwrap();
-    fs::OpenOptions::new()
-        .read(true)
-        .write(true)
-        .create(true)
-        .open("/tmp/tg-focus/phone")
-        .unwrap();
-    fs::OpenOptions::new()
-        .read(true)
-        .write(true)
-        .create(true)
-        .open("/tmp/tg-focus/vcode")
-        .unwrap();
+    async fn init_data() {
+        fs::create_dir_all("/tmp/tg-focus").unwrap();
+        fs::OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create(true)
+            .open("/tmp/tg-focus/api_id")
+            .unwrap();
+        fs::OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create(true)
+            .open("/tmp/tg-focus/api_hash")
+            .unwrap();
+        fs::OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create(true)
+            .open("/tmp/tg-focus/phone")
+            .unwrap();
+        fs::OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create(true)
+            .open("/tmp/tg-focus/vcode")
+            .unwrap();
+        let mut f_flt = fs::OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create(true)
+            .open("/tmp/tg-focus/filter")
+            .unwrap();
+
+        let mut buf = [0; 4096];
+        let mut ntotal = 0;
+        let mut nread = 1;
+        while nread > 0 {
+            nread = f_flt.read(&mut buf).unwrap();
+            ntotal += nread;
+        }
+        f_flt.rewind().unwrap();
+        let s = String::from_utf8_lossy(&buf[0..ntotal]);
+        if s.trim().len() < 10 {
+            f_flt
+                .write_all(
+                    r#"[[filter]]
+title = ".*"
+"#
+                    .as_bytes(),
+                )
+                .unwrap();
+        }
+    }
+
+    init_data().await;
 
     let may_api_id: Option<i32>;
     loop {
@@ -325,6 +357,10 @@ async fn main() {
     if let Ok(got_chat) = may_got_chat {
         let tdlib::enums::Chat::Chat(chat_meta) = got_chat;
 
+        let focus_filter = TgFilters::from_file("/tmp/tg-focus/filter");
+
+        dbg!(&focus_filter);
+
         // if let tdlib::enums::Chat::Chat(chat_meta) = got_chat {
         let collector_chat_id = chat_meta.id;
 
@@ -344,7 +380,11 @@ async fn main() {
 
             // if coll_msg.is_important() {}
 
-            if coll_msg.is_ctn_interesting() {
+            // if coll_msg.is_ctn_interesting() {
+            // collect_msg(coll_msg.to_string(), collector_chat_id, client_id).await;
+            // }
+
+            if focus_filter.is_match(&coll_msg).0 {
                 collect_msg(coll_msg.to_string(), collector_chat_id, client_id).await;
             }
         }
