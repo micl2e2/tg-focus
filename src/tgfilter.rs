@@ -128,6 +128,7 @@ mod deser {
 
             let mut ret = TgFilter::default();
 
+            // title
             if let Some(v) = f0.0 {
                 let may_re = Regex::new(&v);
                 if let Err(e) = may_re {
@@ -137,6 +138,38 @@ mod deser {
                     ));
                 }
                 ret.title = Some(may_re.unwrap());
+            }
+
+            // keyword
+            if let Some(s_list) = f1.0 {
+                let mut kw_list = vec![];
+                for s in &s_list {
+                    let may_re = Regex::new(s);
+                    if let Err(e) = may_re {
+                        return Err(DeError::invalid_value(
+                            Unexpected::Other(s),
+                            &"valid regular expression",
+                        ));
+                    }
+                    kw_list.push(may_re.unwrap())
+                }
+                ret.keyword = Some(kw_list);
+            }
+
+            // no_keyword
+            if let Some(s_list) = f2.0 {
+                let mut kw_list = vec![];
+                for s in &s_list {
+                    let may_re = Regex::new(s);
+                    if let Err(e) = may_re {
+                        return Err(DeError::invalid_value(
+                            Unexpected::Other(s),
+                            &"valid regular expression",
+                        ));
+                    }
+                    kw_list.push(may_re.unwrap())
+                }
+                ret.no_keyword = Some(kw_list);
             }
 
             Ok(ret)
@@ -171,7 +204,72 @@ mod utst {
         let input = r#"
 
 [[filter]]
+title = "title1"
+keyword = ["kw1", "kw2"]
+
+"#;
+
+        let may_filters = toml::from_str::<TgFilters>(input);
+
+        assert!(may_filters.is_ok());
+    }
+
+    #[test]
+    fn _2() {
+        let input = r#"
+
+[[filter]]
 title = "ti(tle1"
+keyword = ["kw1", "kw2"]
+
+"#;
+
+        let may_filters = toml::from_str::<TgFilters>(input);
+
+        assert!(may_filters.is_err());
+
+        match may_filters {
+            Err(e) => {
+                assert_eq!(
+                    e.message(),
+                    "invalid value: ti(tle1, expected valid regular expression"
+                );
+            }
+            _ => assert!(false),
+        }
+    }
+
+    #[test]
+    fn _3() {
+        let input = r#"
+
+[[filter]]
+title = "title1"
+keyword = ["kw1", "k)w2"]
+
+"#;
+
+        let may_filters = toml::from_str::<TgFilters>(input);
+
+        assert!(may_filters.is_err());
+
+        match may_filters {
+            Err(e) => {
+                assert_eq!(
+                    e.message(),
+                    "invalid value: k)w2, expected valid regular expression"
+                );
+            }
+            _ => assert!(false),
+        }
+    }
+
+    // #[test]
+    fn _2222() {
+        let input = r#"
+
+[[filter]]
+title = "title1"
 keyword = ["kw1", "kw2"]
 
 [[filter]]
