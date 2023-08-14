@@ -71,6 +71,8 @@ impl TgFilters {
 #[derive(Debug, Default)]
 struct TgFilter {
     title: Option<Regex>,
+    sender: Option<Vec<Regex>>,
+    no_sender: Option<Vec<Regex>>,
     keyword: Option<Vec<Regex>>,
     no_keyword: Option<Vec<Regex>>,
 }
@@ -83,11 +85,13 @@ mod deser {
 
     enum Fields {
         Title,
+        Sender,
+        NoSender,
         Keyword,
         NoKeyword,
     }
 
-    const FIELD_JSON_NAMES: &[&str] = &["title", "keyword", "no_keyword"];
+    const FIELD_JSON_NAMES: &[&str] = &["title", "sender", "no_sender", "keyword", "no_keyword"];
 
     impl Fields {
         fn from_str(s: &str) -> Self {
@@ -95,9 +99,15 @@ mod deser {
                 return Fields::Title;
             }
             if s == FIELD_JSON_NAMES[1] {
-                return Fields::Keyword;
+                return Fields::Sender;
             }
             if s == FIELD_JSON_NAMES[2] {
+                return Fields::NoSender;
+            }
+            if s == FIELD_JSON_NAMES[3] {
+                return Fields::Keyword;
+            }
+            if s == FIELD_JSON_NAMES[4] {
                 return Fields::NoKeyword;
             }
 
@@ -106,8 +116,10 @@ mod deser {
         fn to_sstr(&self) -> &'static str {
             match self {
                 Fields::Title => FIELD_JSON_NAMES[0],
-                Fields::Keyword => FIELD_JSON_NAMES[1],
-                Fields::NoKeyword => FIELD_JSON_NAMES[2],
+                Fields::Sender => FIELD_JSON_NAMES[1],
+                Fields::NoSender => FIELD_JSON_NAMES[2],
+                Fields::Keyword => FIELD_JSON_NAMES[3],
+                Fields::NoKeyword => FIELD_JSON_NAMES[4],
             }
         }
     }
@@ -140,8 +152,10 @@ mod deser {
             A: MapAccess<'de>,
         {
             let mut f0: (Option<String>, &str) = (None, Fields::Title.to_sstr());
-            let mut f1: (Option<Vec<String>>, &str) = (None, Fields::Keyword.to_sstr());
-            let mut f2: (Option<Vec<String>>, &str) = (None, Fields::NoKeyword.to_sstr());
+            let mut f1: (Option<Vec<String>>, &str) = (None, Fields::Sender.to_sstr());
+            let mut f2: (Option<Vec<String>>, &str) = (None, Fields::NoSender.to_sstr());
+            let mut f3: (Option<Vec<String>>, &str) = (None, Fields::Keyword.to_sstr());
+            let mut f4: (Option<Vec<String>>, &str) = (None, Fields::NoKeyword.to_sstr());
 
             // none or wrap a duplication error
             let mut is_dup: Option<A::Error> = None;
@@ -151,13 +165,21 @@ mod deser {
                         None => f0.0 = Some(map.next_value()?),
                         _ => is_dup = Some(DeError::duplicate_field(f0.1)),
                     },
-                    Fields::Keyword => match f1.0 {
+                    Fields::Sender => match f1.0 {
                         None => f1.0 = Some(map.next_value()?),
                         _ => is_dup = Some(DeError::duplicate_field(f1.1)),
                     },
-                    Fields::NoKeyword => match f2.0 {
+                    Fields::NoSender => match f2.0 {
                         None => f2.0 = Some(map.next_value()?),
                         _ => is_dup = Some(DeError::duplicate_field(f2.1)),
+                    },
+                    Fields::Keyword => match f3.0 {
+                        None => f3.0 = Some(map.next_value()?),
+                        _ => is_dup = Some(DeError::duplicate_field(f3.1)),
+                    },
+                    Fields::NoKeyword => match f4.0 {
+                        None => f4.0 = Some(map.next_value()?),
+                        _ => is_dup = Some(DeError::duplicate_field(f4.1)),
                     },
                 }
             }
@@ -181,7 +203,7 @@ mod deser {
             }
 
             // keyword
-            if let Some(s_list) = f1.0 {
+            if let Some(s_list) = f3.0 {
                 let mut kw_list = vec![];
                 for s in &s_list {
                     let may_re = Regex::new(s);
@@ -197,7 +219,7 @@ mod deser {
             }
 
             // no_keyword
-            if let Some(s_list) = f2.0 {
+            if let Some(s_list) = f4.0 {
                 let mut kw_list = vec![];
                 for s in &s_list {
                     let may_re = Regex::new(s);
