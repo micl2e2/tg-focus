@@ -37,12 +37,14 @@ impl TgFilters {
 
             // keyword: matching any means msg matching
             if let Some(kw_f_list) = &filter.keyword {
+                let mut sub_match = false;
                 for kw_f in kw_f_list {
                     if kw_f.is_match(msg.ctn) {
-                        is_match = true;
+                        sub_match = true;
                         break; // small
                     }
                 }
+                is_match = sub_match;
             }
 
             // no_keyword: matching any means msg not matching
@@ -448,5 +450,189 @@ keyword = ["kw1", "kw2"]
         };
 
         assert_eq!(filters.is_match(&msg), (false, 1));
+    }
+
+    #[test]
+    fn _9() {
+        // more filters
+        let input = r#"
+
+    [[filter]]
+    title = "group-a"
+    keyword = ["kw1", "kw2"]
+
+    [[filter]]
+    title = "group-b"
+    no_keyword = ["kw3", "kw4"]
+
+    [[filter]]
+    title = "group-c"
+    keyword = ["kw5", "kw6"]
+
+    "#;
+
+        let filters = toml::from_str::<TgFilters>(input).unwrap();
+
+        assert_eq!(filters.filter.len(), 3);
+
+        let msg = CollectedMsg {
+            title: "group-a",
+            sender: "xxx",
+            ctn: "kw1",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (true, 0));
+
+        let msg = CollectedMsg {
+            title: "group-b",
+            sender: "xxx",
+            ctn: "xxx",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (true, 1));
+
+        let msg = CollectedMsg {
+            title: "group-c",
+            sender: "xxx",
+            ctn: "xxx",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (false, 2));
+
+        let msg = CollectedMsg {
+            title: "group-c",
+            sender: "xxx",
+            ctn: "kw6",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (true, 2));
+    }
+
+    #[test]
+    fn _10() {
+        // more filters
+        let input = r#"
+
+    [[filter]]
+    title = "group-a"
+    keyword = ["kw1", "kw2"]
+
+    [[filter]]
+    title = "group-b"
+    keyword = ["kw3", "kw4"]
+
+    [[filter]]
+    title = "group-c"
+    keyword = ["kw5", "kw6"]
+
+    "#;
+
+        let filters = toml::from_str::<TgFilters>(input).unwrap();
+
+        assert_eq!(filters.filter.len(), 3);
+
+        let msg = CollectedMsg {
+            title: "group-a",
+            sender: "xxx",
+            ctn: "kw1",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (true, 0));
+
+        let msg = CollectedMsg {
+            title: "group-b",
+            sender: "xxx",
+            ctn: "xxx",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (false, 2)); // will advance
+
+        let msg = CollectedMsg {
+            title: "group-b",
+            sender: "xxx",
+            ctn: "kw4",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (true, 1));
+
+        let msg = CollectedMsg {
+            title: "group-c",
+            sender: "xxx",
+            ctn: "xxx",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (false, 2));
+
+        let msg = CollectedMsg {
+            title: "group-c",
+            sender: "xxx",
+            ctn: "kw6",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (true, 2));
+    }
+
+    #[test]
+    fn _11() {
+        // more filters
+        let input = r#"
+
+    [[filter]]
+    title = "group-a"
+    keyword = ["kw1", "kw2"]
+
+    [[filter]]
+    title = "group-b"
+    keyword = ["kw3", "kw4"]
+
+    [[filter]]
+    title = "group"
+    no_keyword = ["kw5", "kw6"]
+
+    "#;
+
+        let filters = toml::from_str::<TgFilters>(input).unwrap();
+
+        assert_eq!(filters.filter.len(), 3);
+
+        let msg = CollectedMsg {
+            title: "group-a",
+            sender: "xxx",
+            ctn: "kw1",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (true, 0));
+
+        let msg = CollectedMsg {
+            title: "group-b",
+            sender: "xxx",
+            ctn: "xxx",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (true, 2)); // will advance
+
+        let msg = CollectedMsg {
+            title: "group-b",
+            sender: "xxx",
+            ctn: "kw4",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (true, 1));
+
+        let msg = CollectedMsg {
+            title: "group-c",
+            sender: "xxx",
+            ctn: "xxx",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (true, 2));
+
+        let msg = CollectedMsg {
+            title: "group-c",
+            sender: "xxx",
+            ctn: "kw6",
+            tstamp: "xxx",
+        };
+        assert_eq!(filters.is_match(&msg), (false, 2));
     }
 }
