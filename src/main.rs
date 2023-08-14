@@ -10,6 +10,9 @@ use tdlib::functions;
 use tdlib::types;
 use tokio::sync::mpsc::{self, Receiver, Sender};
 
+// mod tg_focus;
+use tg_focus::CollectedMsg;
+
 async fn chat2str(chat_id: i64, client_id: i32) -> String {
     if let Ok(enums::Chat::Chat(chatinfo)) = functions::get_chat(chat_id, client_id).await {
         chatinfo.title
@@ -114,7 +117,6 @@ async fn handle_authorization_state(
     mut auth_rx: Receiver<AuthorizationState>,
     run_flag: Arc<AtomicBool>,
 ) -> Receiver<AuthorizationState> {
-    dbg!(223344);
     while let Some(state) = auth_rx.recv().await {
         match state {
             AuthorizationState::WaitTdlibParameters => {
@@ -340,6 +342,8 @@ async fn main() {
                 tstamp: &date,
             };
 
+            // if coll_msg.is_important() {}
+
             if coll_msg.is_ctn_interesting() {
                 collect_msg(coll_msg.to_string(), collector_chat_id, client_id).await;
             }
@@ -357,48 +361,6 @@ async fn main() {
 
     // Wait for the previously spawned task to end the execution
     handle.await.unwrap();
-}
-
-#[derive(Debug)]
-struct CollectedMsg<'a> {
-    title: &'a str,
-    sender: &'a str,
-    ctn: &'a str,
-    tstamp: &'a str,
-}
-
-impl CollectedMsg<'_> {
-    fn to_string(&self) -> String {
-        format!(
-            "
-CHAT : {}
-SENDER : {}
-CTN : {}
-DATE : {}
-                ",
-            self.title, self.sender, self.ctn, self.tstamp,
-        )
-        .to_string()
-    }
-
-    fn is_ctn_interesting(&self) -> bool {
-        let relist = [
-            regex::Regex::new("Ubuntu").unwrap(),
-            regex::Regex::new("linux").unwrap(),
-        ];
-
-        for re in relist {
-            // FIXME: remove me
-            if re.is_match(self.title) {
-                return true;
-            }
-            if re.is_match(self.ctn) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }
 
 async fn collect_msg(msg: String, chat_id: i64, client_id: i32) {
