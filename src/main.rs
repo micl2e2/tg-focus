@@ -12,6 +12,7 @@ use tdlib::types;
 use tokio::sync::mpsc::{self, Receiver, Sender};
 
 // mod tg_focus;
+use tg_focus::init_data;
 use tg_focus::CollectedMsg;
 use tg_focus::TgFilters;
 
@@ -225,65 +226,11 @@ async fn handle_authorization_state(
 
 #[tokio::main]
 async fn main() {
-    async fn init_data() {
-        fs::create_dir_all("/tmp/tg-focus").unwrap();
-        fs::OpenOptions::new()
-            .read(true)
-            .write(true)
-            .create(true)
-            .open("/tmp/tg-focus/api_id")
-            .unwrap();
-        fs::OpenOptions::new()
-            .read(true)
-            .write(true)
-            .create(true)
-            .open("/tmp/tg-focus/api_hash")
-            .unwrap();
-        fs::OpenOptions::new()
-            .read(true)
-            .write(true)
-            .create(true)
-            .open("/tmp/tg-focus/phone")
-            .unwrap();
-        fs::OpenOptions::new()
-            .read(true)
-            .write(true)
-            .create(true)
-            .open("/tmp/tg-focus/vcode")
-            .unwrap();
-        let mut f_flt = fs::OpenOptions::new()
-            .read(true)
-            .write(true)
-            .create(true)
-            .open("/tmp/tg-focus/filter")
-            .unwrap();
-
-        let mut buf = [0; 4096];
-        let mut ntotal = 0;
-        let mut nread = 1;
-        while nread > 0 {
-            nread = f_flt.read(&mut buf).unwrap();
-            ntotal += nread;
-        }
-        f_flt.rewind().unwrap();
-        let s = String::from_utf8_lossy(&buf[0..ntotal]);
-        if s.trim().len() < 10 {
-            f_flt
-                .write_all(
-                    r#"[[filter]]
-title = ".*"
-"#
-                    .as_bytes(),
-                )
-                .unwrap();
-        }
-    }
-
-    init_data().await;
+    let wdir = init_data(None, false);
 
     let may_api_id: Option<i32>;
     loop {
-        let readres = fs::read_to_string("/tmp/tg-focus/api_id").unwrap();
+        let readres = fs::read_to_string(wdir.api_id()).unwrap();
         if let Ok(got_api_id) = readres.trim().parse::<i32>() {
             may_api_id = Some(got_api_id);
             break;
@@ -294,7 +241,7 @@ title = ".*"
 
     let may_api_hash: Option<String>;
     loop {
-        let readres = fs::read_to_string("/tmp/tg-focus/api_hash").unwrap();
+        let readres = fs::read_to_string(wdir.api_hash()).unwrap();
         if readres.trim().len() > 0 {
             may_api_hash = Some(readres.trim().to_string());
             break;
