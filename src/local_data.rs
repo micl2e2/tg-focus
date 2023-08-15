@@ -2,7 +2,7 @@ use std::fs;
 use std::io::prelude::*;
 use std::path::PathBuf;
 
-const DEFAULT_DATA_ROOT: &str = ".tg-focus";
+const DEFAULT_DATA_ROOT: &str = "/tmp/tg-focus";
 const FILE_API_ID: &str = "api_id";
 const FILE_API_HASH: &str = "api_hash";
 const FILE_PHONE: &str = "phone";
@@ -15,8 +15,8 @@ pub struct WorkDir {
 }
 
 impl WorkDir {
-    pub fn file_in_root(&self, file_name: &str) -> PathBuf {
-        self.root.join(file_name)
+    pub fn file_in_cwd(&self, file_name: &str) -> PathBuf {
+        PathBuf::from(file_name)
     }
 
     pub fn api_id(&self) -> PathBuf {

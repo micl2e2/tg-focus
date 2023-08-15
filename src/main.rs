@@ -372,7 +372,7 @@ async fn collect_msg(msg: String, chat_id: i64, client_id: i32) {
 }
 
 async fn setup_chat_profile(wdir: &WorkDir, chat_id: i64, client_id: i32) -> Option<()> {
-    let pbuf = wdir.file_in_root("tgfocus-white.jpg");
+    let pbuf = wdir.file_in_cwd("tgfocus-white.jpg");
     if let Ok(flag) = pbuf.try_exists() {
         if !flag {
             dbg!("chat photo NOT set: no photo");
