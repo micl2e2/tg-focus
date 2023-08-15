@@ -33,10 +33,17 @@ pub struct TgFilters {
 }
 
 impl TgFilters {
-    pub fn from_file<P: AsRef<Path>>(path: P) -> Self {
-        let str_data = fs::read_to_string(path).unwrap();
+    pub fn from_file<P: AsRef<Path>>(path: P) -> Option<Self> {
+        if let Ok(str_data) = fs::read_to_string(path) {
+            if let Ok(obj) = toml::from_str::<TgFilters>(&str_data) {
+                return Some(obj);
+            }
+        }
 
-        toml::from_str::<TgFilters>(&str_data).unwrap()
+        return None;
+
+        // let str_data = fs::read_to_string(path).unwrap();
+        // toml::from_str::<TgFilters>(&str_data).unwrap()
     }
 
     pub fn is_match(&self, msg: &CollectedMsg) -> (bool, usize) {

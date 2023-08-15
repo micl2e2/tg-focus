@@ -128,21 +128,18 @@ async fn handle_authorization_state(
                 let response = functions::set_tdlib_parameters(
                     false,
                     wdir.tddb().into_os_string().into_string().unwrap(),
-                    String::new(),
-                    String::new(),
+                    String::new(), /* files_directory */
+                    String::new(), /* database_encryption_key */
                     false,
                     false,
                     false,
                     false,
-                    // 12345,
                     api_id,
-                    // env!("API_ID").parse().unwrap(),
-                    // env!("API_HASH").into(),
                     api_hash.clone(),
-                    String::from("en"),
-                    String::from("Desktop"),
-                    String::new(),
-                    env!("CARGO_PKG_VERSION").into(),
+                    String::from("en"),               /* system_language_code */
+                    String::from("TG Focus"),         /* device_model */
+                    String::default(),                /* system_version */
+                    env!("CARGO_PKG_VERSION").into(), /* application_version */
                     false,
                     true,
                     client_id,
@@ -154,56 +151,54 @@ async fn handle_authorization_state(
                 }
             }
 
-            AuthorizationState::WaitPhoneNumber => {
-                let may_phone: Option<String>;
-                loop {
-                    let readres = fs::read_to_string(wdir.phone()).unwrap();
-                    if readres.trim().len() > 0 {
-                        may_phone = Some(readres.trim().to_string());
-                        break;
-                    }
-                    dbg!("waiting phone...");
-                    tokio::time::sleep(std::time::Duration::from_secs(1)).await;
-                }
-                let response =
-                    functions::set_authentication_phone_number(may_phone.unwrap(), None, client_id)
-                        .await;
-                match response {
-                    Ok(_) => {
-                        dbg!("phone ok");
-                    }
-                    Err(_e) => {
-                        if _e.message.contains("API_ID_INVALID") {
-                            dbg!("try other api id");
-                        } else {
-                            dbg!(_e);
+            AuthorizationState::WaitPhoneNumber => loop {
+                let readres = fs::read_to_string(wdir.phone()).unwrap();
+                if readres.trim().len() > 0 {
+                    let phone = readres.trim().to_string();
+                    let response =
+                        functions::set_authentication_phone_number(phone, None, client_id).await;
+
+                    match response {
+                        Ok(_) => {
+                            dbg!("phone ok");
+                            break;
+                        }
+                        Err(_e) => {
+                            if _e.message.contains("API_ID_INVALID") {
+                                dbg!("api_id invalid! please try another");
+                            } else {
+                                dbg!(_e);
+                            }
                         }
                     }
                 }
-            }
+                dbg!("waiting phone...");
+                tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+            },
 
-            AuthorizationState::WaitCode(_) => {
-                let may_vcode: Option<String>;
-                loop {
-                    let readres = fs::read_to_string(wdir.vcode()).unwrap();
-                    if readres.trim().len() > 0 {
-                        may_vcode = Some(readres.trim().to_string());
-                        break;
+            AuthorizationState::WaitCode(_) => loop {
+                let readres = fs::read_to_string(wdir.vcode()).unwrap();
+                if readres.trim().len() > 0 {
+                    let vcode = readres.trim().to_string();
+
+                    let response = functions::check_authentication_code(vcode, client_id).await;
+                    match response {
+                        Ok(_) => {
+                            dbg!("verification code ok");
+                            break;
+                        }
+                        Err(_e) => {
+                            if _e.message.contains("PHONE_CODE_INVALID") {
+                                dbg!("verification code invalid! please try another");
+                            } else {
+                                dbg!(_e);
+                            }
+                        }
                     }
-                    dbg!("waiting vcode...");
-                    tokio::time::sleep(std::time::Duration::from_secs(1)).await;
                 }
-                let response =
-                    functions::check_authentication_code(may_vcode.unwrap(), client_id).await;
-                match response {
-                    Ok(_) => {
-                        dbg!("vcode ok");
-                    }
-                    Err(_e) => {
-                        dbg!(_e);
-                    }
-                }
-            }
+                dbg!("waiting vcode...");
+                tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+            },
 
             AuthorizationState::Ready => {
                 break;
@@ -307,17 +302,40 @@ async fn main() {
     if let Ok(got_chat) = may_got_chat {
         let tdlib::enums::Chat::Chat(chat_meta) = got_chat;
 
-        let focus_filter = TgFilters::from_file(wdir.filter());
-
-        dbg!(&focus_filter);
+        let mut focus_filter = TgFilters::from_file(wdir.filter()).unwrap();
+        dbg!(("filter init", &focus_filter));
 
         let collector_chat_id = chat_meta.id;
 
+        async fn setup_chat_profile(chat_id: i64, client_id: i32) -> Option<()> {
+            let photo = Some(enums::InputChatPhoto::Static(types::InputChatPhotoStatic {
+                photo: enums::InputFile::Local(types::InputFileLocal {
+                    path: String::from("tgfocus-white.jpg"),
+                }),
+            }));
+            if let Ok(_) = functions::set_chat_photo(chat_id, photo, client_id).await {
+                dbg!("chat photo set!");
+                Some(())
+            } else {
+                dbg!("chat photo NOT set!");
+                None
+            }
+        }
+
+        setup_chat_profile(collector_chat_id, client_id).await;
+
+        // long-live loop
         while let Some((chat_id, sender_id, msg_ctn, date)) = mq_rx.recv().await {
             let chat_title = chat2str(chat_id, client_id).await;
             if chat_title.contains("TG-FOCUS") {
                 continue;
             }
+
+            if let Some(v) = TgFilters::from_file(wdir.filter()) {
+                focus_filter = v;
+                dbg!(("filter updated", &focus_filter));
+            }
+
             let sender_name = sender2str(sender_id, client_id).await;
             let date = date2str(date).await;
             let coll_msg = CollectedMsg {
@@ -327,14 +345,10 @@ async fn main() {
                 tstamp: &date,
             };
 
-            // if coll_msg.is_important() {}
-
-            // if coll_msg.is_ctn_interesting() {
-            // collect_msg(coll_msg.to_string(), collector_chat_id, client_id).await;
-            // }
-
             if focus_filter.is_match(&coll_msg).0 {
                 collect_msg(coll_msg.to_string(), collector_chat_id, client_id).await;
+            } else {
+                dbg!(format!("message ignored: {}", &msg_ctn));
             }
         }
         // }
