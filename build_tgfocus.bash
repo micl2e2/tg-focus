@@ -34,6 +34,6 @@ buildah run tgfocus-builder-container -- \
 buildah run tgfocus-builder-container -- \
         mkdir /tmp/tg-focus
 
-buildah config --cmd "/bin/bash -c '/tg-focus/target/release/tg-focus >/tmp/tg-focus/stdout 2>/tmp/tg-focus/stderr'" tgfocus-builder-container
+# buildah config --cmd "/bin/bash -c '/tg-focus/target/release/tg-focus >/tmp/tg-focus/stdout 2>/tmp/tg-focus/stderr'" tgfocus-builder-container
 
 

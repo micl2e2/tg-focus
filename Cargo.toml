@@ -13,3 +13,7 @@ serde = "1.0.183"
 tdlib = "0.8.0"
 tokio = { version = "1.29.1", features = ["sync", "rt-multi-thread", "macros", "time"] }
 toml = "0.7.6"
+
+[profile.release]
+strip = "symbols"
+lto = true
