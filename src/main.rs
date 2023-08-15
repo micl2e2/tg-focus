@@ -15,6 +15,7 @@ use tokio::sync::mpsc::{self, Receiver, Sender};
 use tg_focus::init_data;
 use tg_focus::CollectedMsg;
 use tg_focus::TgFilters;
+use tg_focus::WorkDir;
 
 async fn chat2str(chat_id: i64, client_id: i32) -> String {
     if let Ok(enums::Chat::Chat(chatinfo)) = functions::get_chat(chat_id, client_id).await {
@@ -115,6 +116,7 @@ async fn handle_update(
 
 async fn handle_authorization_state(
     client_id: i32,
+    wdir: &WorkDir,
     api_id: i32,
     api_hash: String,
     mut auth_rx: Receiver<AuthorizationState>,
@@ -125,7 +127,7 @@ async fn handle_authorization_state(
             AuthorizationState::WaitTdlibParameters => {
                 let response = functions::set_tdlib_parameters(
                     false,
-                    "/tmp/tsttdlibs_db".into(),
+                    wdir.tddb().into_os_string().into_string().unwrap(),
                     String::new(),
                     String::new(),
                     false,
@@ -155,7 +157,7 @@ async fn handle_authorization_state(
             AuthorizationState::WaitPhoneNumber => {
                 let may_phone: Option<String>;
                 loop {
-                    let readres = fs::read_to_string("/tmp/tg-focus/phone").unwrap();
+                    let readres = fs::read_to_string(wdir.phone()).unwrap();
                     if readres.trim().len() > 0 {
                         may_phone = Some(readres.trim().to_string());
                         break;
@@ -183,7 +185,7 @@ async fn handle_authorization_state(
             AuthorizationState::WaitCode(_) => {
                 let may_vcode: Option<String>;
                 loop {
-                    let readres = fs::read_to_string("/tmp/tg-focus/vcode").unwrap();
+                    let readres = fs::read_to_string(wdir.vcode()).unwrap();
                     if readres.trim().len() > 0 {
                         may_vcode = Some(readres.trim().to_string());
                         break;
@@ -283,6 +285,7 @@ async fn main() {
     // Handle the authorization state to authenticate the client
     let auth_rx = handle_authorization_state(
         client_id,
+        &wdir,
         may_api_id.unwrap(),
         may_api_hash.unwrap(),
         auth_rx,
@@ -304,11 +307,10 @@ async fn main() {
     if let Ok(got_chat) = may_got_chat {
         let tdlib::enums::Chat::Chat(chat_meta) = got_chat;
 
-        let focus_filter = TgFilters::from_file("/tmp/tg-focus/filter");
+        let focus_filter = TgFilters::from_file(wdir.filter());
 
         dbg!(&focus_filter);
 
-        // if let tdlib::enums::Chat::Chat(chat_meta) = got_chat {
         let collector_chat_id = chat_meta.id;
 
         while let Some((chat_id, sender_id, msg_ctn, date)) = mq_rx.recv().await {
@@ -344,7 +346,7 @@ async fn main() {
     functions::close(client_id).await.unwrap();
 
     // Handle the authorization state to wait for the "Closed" state
-    handle_authorization_state(client_id, 0, "".into(), auth_rx, run_flag.clone()).await;
+    handle_authorization_state(client_id, &wdir, 0, "".into(), auth_rx, run_flag.clone()).await;
 
     // Wait for the previously spawned task to end the execution
     handle.await.unwrap();

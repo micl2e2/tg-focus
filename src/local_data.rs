@@ -8,6 +8,7 @@ const FILE_API_HASH: &str = "api_hash";
 const FILE_PHONE: &str = "phone";
 const FILE_VCODE: &str = "vcode";
 const FILE_FILTER: &str = "filter";
+const FILE_TDDB: &str = "tdlib_db";
 
 pub struct WorkDir {
     root: PathBuf,
@@ -33,6 +34,10 @@ impl WorkDir {
     pub fn filter(&self) -> PathBuf {
         self.root.join(FILE_FILTER)
     }
+
+    pub fn tddb(&self) -> PathBuf {
+        self.root.join(FILE_TDDB)
+    }
 }
 
 // cannot-fail operation
@@ -53,6 +58,7 @@ pub fn init_data(pred_root: Option<&str>, reset: bool) -> WorkDir {
 
     let wdir = WorkDir { root: actual_root };
 
+    fs::create_dir_all(wdir.tddb()).unwrap();
     fs::OpenOptions::new()
         .read(true)
         .write(true)
@@ -114,6 +120,9 @@ mod utst {
     #[test]
     fn _1() {
         let wdir = init_data(Some("/tmp/tsttgfocus"), true);
+
+        let dir_entry_list = fs::read_dir(wdir.tddb()).unwrap();
+        assert_eq!(dir_entry_list.count(), 0);
 
         let file_ctn = fs::read_to_string(wdir.api_id()).unwrap();
         assert_eq!(file_ctn, r#""#);
