@@ -31,8 +31,8 @@ buildah run tgfocus-builder-container -- \
 buildah run tgfocus-builder-container -- \
 	bash -c "source /root/.cargo/env && cd tg-focus && LD_LIBRARY_PATH=/usr/local/lib API_ID=$API_ID API_HASH=$API_HASH cargo build --release"
 
-buildah run tgfocus-builder-container -- \
-        mkdir /tmp/tg-focus
+# buildah run tgfocus-builder-container -- \
+        # mkdir /tmp/tg-focus
 
 
 

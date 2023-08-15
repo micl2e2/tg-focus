@@ -307,22 +307,7 @@ async fn main() {
 
         let collector_chat_id = chat_meta.id;
 
-        async fn setup_chat_profile(chat_id: i64, client_id: i32) -> Option<()> {
-            let photo = Some(enums::InputChatPhoto::Static(types::InputChatPhotoStatic {
-                photo: enums::InputFile::Local(types::InputFileLocal {
-                    path: String::from("tgfocus-white.jpg"),
-                }),
-            }));
-            if let Ok(_) = functions::set_chat_photo(chat_id, photo, client_id).await {
-                dbg!("chat photo set!");
-                Some(())
-            } else {
-                dbg!("chat photo NOT set!");
-                None
-            }
-        }
-
-        setup_chat_profile(collector_chat_id, client_id).await;
+        setup_chat_profile(&wdir, collector_chat_id, client_id).await;
 
         // long-live loop
         while let Some((chat_id, sender_id, msg_ctn, date)) = mq_rx.recv().await {
@@ -384,4 +369,31 @@ async fn collect_msg(msg: String, chat_id: i64, client_id: i32) {
     dbg!(res_sent.is_ok());
 
     tokio::time::sleep(std::time::Duration::from_millis(300)).await;
+}
+
+async fn setup_chat_profile(wdir: &WorkDir, chat_id: i64, client_id: i32) -> Option<()> {
+    let pbuf = wdir.file_in_root("tgfocus-white.jpg");
+    if let Ok(flag) = pbuf.try_exists() {
+        if !flag {
+            dbg!("chat photo NOT set: no photo");
+            return None;
+        }
+    } else {
+        dbg!("chat photo NOT set: io error");
+        return None;
+    }
+
+    let photo = Some(enums::InputChatPhoto::Static(types::InputChatPhotoStatic {
+        photo: enums::InputFile::Local(types::InputFileLocal {
+            path: pbuf.into_os_string().into_string().unwrap(),
+        }),
+    }));
+
+    if let Ok(_) = functions::set_chat_photo(chat_id, photo, client_id).await {
+        dbg!("chat photo set!");
+        Some(())
+    } else {
+        dbg!("chat photo NOT set: tdlib api failed");
+        None
+    }
 }
