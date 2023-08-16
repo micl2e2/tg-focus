@@ -14,4 +14,4 @@ buildah copy app-tgfocus-container2 'tgfocus-white.jpg' '/'
 
 buildah config --cmd "/bin/sh -c 'LD_LIBRARY_PATH=/usr/local/lib /tg-focus >/tmp/tg-focus/stdout 2>/tmp/tg-focus/stderr'" app-tgfocus-container2
 
-buildah commit app-tgfocus-container2 tg-focus
+buildah commit app-tgfocus-container2 tg-focus-small
