@@ -277,7 +277,7 @@ async fn main() {
     // Set a fairly low verbosity level. We mainly do this because tdlib
     // requires to perform a random request with the client to start receiving
     // updates for it.
-    functions::set_log_verbosity_level(3, client_id)
+    functions::set_log_verbosity_level(1, client_id)
         .await
         .unwrap();
     dbg!(2226);
