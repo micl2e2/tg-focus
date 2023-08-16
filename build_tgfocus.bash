@@ -1,6 +1,5 @@
 
-buildah from --name tgfocus-builder-container debian:bookworm-slim
-
+buildah from --name tgfocus-builder-container debian:bullseye-slim
 
 # install dependencies
 buildah copy --from tdlib-builder-container tgfocus-builder-container '/usr/local/lib' '/usr/local/lib'

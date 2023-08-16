@@ -1,6 +1,6 @@
 
 buildah rm tdlib-builder-container
-buildah from --name tdlib-builder-container debian:bookworm-slim
+buildah from --name tdlib-builder-container debian:bullseye-slim
 
 # install dependencies
 buildah run tdlib-builder-container -- \
