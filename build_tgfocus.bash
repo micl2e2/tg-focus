@@ -1,5 +1,5 @@
 
-buildah from --name tgfocus-builder-container debian:bullseye-slim
+buildah from --name tgfocus-builder-container debian:bookworm-slim
 
 
 # install dependencies
