@@ -197,6 +197,7 @@ async fn handle_authorization_state(
                     }
                 }
                 dbg!("waiting vcode...");
+                // this sleep is buggy
                 tokio::time::sleep(std::time::Duration::from_secs(1)).await;
             },
 
