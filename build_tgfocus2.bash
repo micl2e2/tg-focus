@@ -1,8 +1,10 @@
-buildah from --name tgfocus-builder-container2 alpine
+buildah from --name tgfocus-builder-container2 alpine:latest
 
+# install deps
+buildah copy --from tdlib-builder-container2 tgfocus-builder-container2 \
+	'/usr/local/lib/' '/usr/local/lib' # needs all
 buildah run tgfocus-builder-container2 -- \
 	apk update
-
 buildah run tgfocus-builder-container2 -- \
 	apk add --no-cache wget pkgconfig gcc git g++
 
