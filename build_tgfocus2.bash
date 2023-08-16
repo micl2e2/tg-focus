@@ -1,3 +1,4 @@
+buildah rm tgfocus-builder-container2
 buildah from --name tgfocus-builder-container2 alpine:latest
 
 # install deps
