@@ -249,18 +249,21 @@ async fn main() {
 
     dbg!(&may_api_id, &may_api_hash);
 
+    dbg!(2221);
     // Create the client object
     let client_id = tdlib::create_client();
+    dbg!(2222);
 
     // Create a mpsc channel for handling AuthorizationState updates separately
     // from the task
     let (auth_tx, auth_rx) = mpsc::channel(5);
     let (mq_tx, mut mq_rx) = mpsc::channel(5);
+    dbg!(2223);
 
     // Create a flag to make it possible to stop receiving updates
     let run_flag = Arc::new(AtomicBool::new(true));
     let run_flag_clone = run_flag.clone();
-
+    dbg!(2224);
     // Spawn a task to receive updates/responses
     let handle = tokio::spawn(async move {
         while run_flag_clone.load(Ordering::Acquire) {
@@ -269,13 +272,15 @@ async fn main() {
             }
         }
     });
+    dbg!(2225);
 
     // Set a fairly low verbosity level. We mainly do this because tdlib
     // requires to perform a random request with the client to start receiving
     // updates for it.
-    functions::set_log_verbosity_level(1, client_id)
+    functions::set_log_verbosity_level(3, client_id)
         .await
         .unwrap();
+    dbg!(2226);
 
     // Handle the authorization state to authenticate the client
     let auth_rx = handle_authorization_state(
@@ -288,6 +293,8 @@ async fn main() {
     )
     .await;
 
+    dbg!(2227);
+
     // create a new collector, with title and timestamp
     let may_got_chat = functions::create_new_basic_group_chat(
         vec![],
@@ -298,6 +305,8 @@ async fn main() {
         client_id,
     )
     .await;
+
+    dbg!(2228);
 
     if let Ok(got_chat) = may_got_chat {
         let tdlib::enums::Chat::Chat(chat_meta) = got_chat;
@@ -339,7 +348,11 @@ async fn main() {
         // }
     }
 
+    dbg!(2229);
+
     tokio::time::sleep(std::time::Duration::from_secs(3000)).await;
+
+    dbg!(2230);
 
     // Tell the client to close
     functions::close(client_id).await.unwrap();
