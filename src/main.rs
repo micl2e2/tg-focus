@@ -151,55 +151,61 @@ async fn handle_authorization_state(
                 }
             }
 
-            AuthorizationState::WaitPhoneNumber => loop {
-                let readres = fs::read_to_string(wdir.phone()).unwrap();
-                if readres.trim().len() > 0 {
-                    let phone = readres.trim().to_string();
-                    let response =
-                        functions::set_authentication_phone_number(phone, None, client_id).await;
-
-                    match response {
-                        Ok(_) => {
-                            dbg!("phone ok");
-                            break;
-                        }
-                        Err(_e) => {
-                            if _e.message.contains("API_ID_INVALID") {
-                                dbg!("api_id invalid! please try another");
-                            } else {
-                                dbg!(_e);
-                            }
-                        }
-                    }
-                }
+            AuthorizationState::WaitPhoneNumber => {
                 dbg!("waiting phone...");
-                tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
-            },
 
-            AuthorizationState::WaitCode(_) => loop {
-                let readres = fs::read_to_string(wdir.vcode()).unwrap();
-                if readres.trim().len() > 0 {
-                    let vcode = readres.trim().to_string();
+                loop {
+                    let readres = fs::read_to_string(wdir.phone()).unwrap();
+                    if readres.trim().len() > 0 {
+                        let phone = readres.trim().to_string();
+                        let response =
+                            functions::set_authentication_phone_number(phone, None, client_id)
+                                .await;
 
-                    let response = functions::check_authentication_code(vcode, client_id).await;
-                    match response {
-                        Ok(_) => {
-                            dbg!("verification code ok");
-                            break;
-                        }
-                        Err(_e) => {
-                            if _e.message.contains("PHONE_CODE_INVALID") {
-                                dbg!("verification code invalid! please try another");
-                            } else {
-                                dbg!(_e);
+                        match response {
+                            Ok(_) => {
+                                dbg!("phone ok");
+                                break;
+                            }
+                            Err(_e) => {
+                                if _e.message.contains("API_ID_INVALID") {
+                                    dbg!("api_id invalid! please try another");
+                                } else {
+                                    dbg!(_e);
+                                }
                             }
                         }
                     }
+                    // tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
                 }
+            }
+
+            AuthorizationState::WaitCode(_) => {
                 dbg!("waiting vcode...");
-                // this sleep is buggy
-                tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
-            },
+                loop {
+                    let readres = fs::read_to_string(wdir.vcode()).unwrap();
+                    if readres.trim().len() > 0 {
+                        let vcode = readres.trim().to_string();
+
+                        let response = functions::check_authentication_code(vcode, client_id).await;
+                        match response {
+                            Ok(_) => {
+                                dbg!("verification code ok");
+                                break;
+                            }
+                            Err(_e) => {
+                                if _e.message.contains("PHONE_CODE_INVALID") {
+                                    dbg!("verification code invalid! please try another");
+                                } else {
+                                    dbg!(_e);
+                                }
+                            }
+                        }
+                    }
+                    // this sleep is buggy
+                    // tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+                }
+            }
 
             AuthorizationState::Ready => {
                 break;
@@ -226,17 +232,18 @@ async fn handle_authorization_state(
 async fn main() {
     let wdir = init_data(None, false);
 
+    dbg!("waiting api id...");
     let may_api_id: Option<i32>;
     loop {
-        let readres = fs::read_to_string(wdir.api_id()).unwrap();
+        let readres = fs::read_to_string(wdir.api_id()).unwrap(); // FIXME: too many io
         if let Ok(got_api_id) = readres.trim().parse::<i32>() {
             may_api_id = Some(got_api_id);
             break;
         }
-        dbg!("waiting api id...");
-        tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+        // tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
     }
 
+    dbg!("waiting api hash...");
     let may_api_hash: Option<String>;
     loop {
         let readres = fs::read_to_string(wdir.api_hash()).unwrap();
@@ -244,8 +251,7 @@ async fn main() {
             may_api_hash = Some(readres.trim().to_string());
             break;
         }
-        dbg!("waiting api hash...");
-        tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+        // tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
     }
 
     dbg!(&may_api_id, &may_api_hash);
@@ -351,7 +357,7 @@ async fn main() {
 
     dbg!(2229);
 
-    tokio::time::sleep(tokio::time::Duration::from_secs(3000)).await;
+    // tokio::time::sleep(tokio::time::Duration::from_secs(3000)).await;
 
     dbg!(2230);
 
@@ -382,7 +388,7 @@ async fn collect_msg(msg: String, chat_id: i64, client_id: i32) {
 
     dbg!(res_sent.is_ok());
 
-    tokio::time::sleep(tokio::time::Duration::from_millis(300)).await;
+    // tokio::time::sleep(tokio::time::Duration::from_millis(300)).await;
 }
 
 async fn setup_chat_profile(wdir: &WorkDir, chat_id: i64, client_id: i32) -> Option<()> {

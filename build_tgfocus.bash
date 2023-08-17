@@ -1,4 +1,5 @@
 
+buildah rm tgfocus-builder-container
 buildah from --name tgfocus-builder-container debian:bullseye-slim
 
 # install dependencies
