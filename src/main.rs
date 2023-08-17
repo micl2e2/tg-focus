@@ -173,7 +173,7 @@ async fn handle_authorization_state(
                     }
                 }
                 dbg!("waiting phone...");
-                tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+                tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
             },
 
             AuthorizationState::WaitCode(_) => loop {
@@ -198,7 +198,7 @@ async fn handle_authorization_state(
                 }
                 dbg!("waiting vcode...");
                 // this sleep is buggy
-                tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+                tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
             },
 
             AuthorizationState::Ready => {
@@ -234,7 +234,7 @@ async fn main() {
             break;
         }
         dbg!("waiting api id...");
-        tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+        tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
     }
 
     let may_api_hash: Option<String>;
@@ -245,7 +245,7 @@ async fn main() {
             break;
         }
         dbg!("waiting api hash...");
-        tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+        tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
     }
 
     dbg!(&may_api_id, &may_api_hash);
@@ -351,7 +351,7 @@ async fn main() {
 
     dbg!(2229);
 
-    tokio::time::sleep(std::time::Duration::from_secs(3000)).await;
+    tokio::time::sleep(tokio::time::Duration::from_secs(3000)).await;
 
     dbg!(2230);
 
@@ -382,7 +382,7 @@ async fn collect_msg(msg: String, chat_id: i64, client_id: i32) {
 
     dbg!(res_sent.is_ok());
 
-    tokio::time::sleep(std::time::Duration::from_millis(300)).await;
+    tokio::time::sleep(tokio::time::Duration::from_millis(300)).await;
 }
 
 async fn setup_chat_profile(wdir: &WorkDir, chat_id: i64, client_id: i32) -> Option<()> {
