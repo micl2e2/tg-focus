@@ -16,4 +16,4 @@ buildah run tdlib-builder-container2 -- \
 # 138 commits from 2e5319ff360cd2d6dab638a7e0370fe959e4201b^1, 1.8.15
 
 buildah run tdlib-builder-container2 -- \
-	sh -c 'cd td && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make -j8 && make install'
+	sh -c 'cd td && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make -j2 && make install'
