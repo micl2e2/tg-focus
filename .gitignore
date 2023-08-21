@@ -2,6 +2,8 @@
 *#
 *.#
 
+*.session
+
 Cargo.lock
 *target*
 *tmp*

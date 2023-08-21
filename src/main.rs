@@ -1,424 +1,155 @@
-use chrono::{Local, TimeZone};
-use std::fs;
-use std::io::prelude::*;
-use std::sync::{
-    atomic::{AtomicBool, Ordering},
-    Arc,
-};
-use tdlib::enums;
-use tdlib::enums::{AuthorizationState, Update};
-use tdlib::functions;
-use tdlib::types;
-use tokio::sync::mpsc::{self, Receiver, Sender};
+//! Example to echo user text messages. Updates are handled concurrently.
+//!
+//! The `TG_ID` and `TG_HASH` environment variables must be set (learn how to do it for
+//! [Windows](https://ss64.com/nt/set.html) or [Linux](https://ss64.com/bash/export.html))
+//! to Telegram's API ID and API hash respectively.
+//!
+//! Then, run it as:
+//!
+//! ```sh
+//! cargo run --example echo -- BOT_TOKEN
+//! ```
 
-// mod tg_focus;
-use tg_focus::init_data;
-use tg_focus::CollectedMsg;
-use tg_focus::TgFilters;
-use tg_focus::WorkDir;
+use futures_util::future::{select, Either};
+use grammers_client::{Client, Config, InitParams, Update};
+use grammers_session::Session;
+use log;
+use simple_logger::SimpleLogger;
+use std::env;
+use std::pin::pin;
+use tokio::{runtime, task};
 
-async fn chat2str(chat_id: i64, client_id: i32) -> String {
-    if let Ok(enums::Chat::Chat(chatinfo)) = functions::get_chat(chat_id, client_id).await {
-        chatinfo.title
-    } else {
-        String::default()
-    }
-}
+type Result = std::result::Result<(), Box<dyn std::error::Error>>;
 
-async fn date2str(tstamp: i32) -> String {
-    Local
-        .timestamp_opt(tstamp.into(), 0)
-        .unwrap()
-        .format("%Y-%m-%d %H:%M:%S")
-        .to_string()
-}
+const SESSION_FILE: &str = "echo.session";
 
-async fn sender2str(sender_id: enums::MessageSender, client_id: i32) -> String {
-    let mut ret = String::from("???");
-    match sender_id {
-        enums::MessageSender::User(types::MessageSenderUser { user_id }) => {
-            if let Ok(enums::User::User(types::User {
-                first_name,
-                last_name,
-                usernames,
-                ..
-            })) = functions::get_user(user_id, client_id).await
-            {
-                let username = if let Some(types::Usernames {
-                    editable_username, ..
-                }) = usernames
-                {
-                    editable_username
-                } else {
-                    String::from("-")
-                };
-                ret = format!("<{} {} {}>", first_name, last_name, username);
-            }
-        }
-        enums::MessageSender::Chat(types::MessageSenderChat { chat_id }) => {
-            ret = format!("<chat {}>", chat_id);
-        }
-    }
-
-    ret
-}
-
-async fn handle_update(
-    update: Update,
-    auth_tx: &Sender<AuthorizationState>,
-    mq_tx: &Sender<(i64, enums::MessageSender, String, i32)>,
-) {
+async fn handle_update(client: Client, update: Update) -> Result {
     match update {
-        Update::AuthorizationState(update) => {
-            auth_tx.send(update.authorization_state).await.unwrap();
-        }
-
-        Update::NewMessage(types::UpdateNewMessage { message }) => match message.content {
-            enums::MessageContent::MessageText(types::MessageText {
-                text: types::FormattedText { text, .. },
-                ..
-            }) => {
-                if let Ok(_) = mq_tx
-                    .send((
-                        message.chat_id,
-                        message.sender_id,
-                        text.clone(),
-                        message.date,
-                    ))
-                    .await
-                {}
-            }
-            enums::MessageContent::MessagePhoto(types::MessagePhoto {
-                caption: types::FormattedText { text, .. },
-                ..
-            }) => {
-                if let Ok(_) = mq_tx
-                    .send((
-                        message.chat_id,
-                        message.sender_id,
-                        text.clone(),
-                        message.date,
-                    ))
-                    .await
-                {}
-            }
-            _o => {
-                dbg!(("message IGNORED", _o));
-            }
-        },
-
-        _other => {
-            // dbg!("message OTHER...");
-            // dbg!(_other);
-        }
-    }
-}
-
-async fn handle_authorization_state(
-    client_id: i32,
-    wdir: &WorkDir,
-    api_id: i32,
-    api_hash: String,
-    mut auth_rx: Receiver<AuthorizationState>,
-    run_flag: Arc<AtomicBool>,
-) -> Receiver<AuthorizationState> {
-    while let Some(state) = auth_rx.recv().await {
-        match state {
-            AuthorizationState::WaitTdlibParameters => {
-                let response = functions::set_tdlib_parameters(
-                    false,
-                    wdir.tddb().into_os_string().into_string().unwrap(),
-                    String::new(), /* files_directory */
-                    String::new(), /* database_encryption_key */
-                    false,
-                    false,
-                    false,
-                    false,
-                    api_id,
-                    api_hash.clone(),
-                    String::from("en"),               /* system_language_code */
-                    String::from("TG Focus"),         /* device_model */
-                    String::default(),                /* system_version */
-                    env!("CARGO_PKG_VERSION").into(), /* application_version */
-                    false,
-                    true,
-                    client_id,
+        Update::NewMessage(message) if !message.outgoing() => {
+            let chat = message.chat();
+            let mut sender = String::from("???");
+            use grammers_client::types::chat::Chat;
+            if let Some(Chat::User(usr)) = message.sender() {
+                sender = format!(
+                    "{} @{}",
+                    usr.full_name(),
+                    usr.username().unwrap_or_else(|| "???")
                 )
-                .await;
-
-                if let Err(error) = response {
-                    println!("{}", error.message);
-                }
             }
-
-            AuthorizationState::WaitPhoneNumber => {
-                dbg!("waiting phone...");
-
-                loop {
-                    let readres = fs::read_to_string(wdir.phone()).unwrap();
-                    if readres.trim().len() > 0 {
-                        let phone = readres.trim().to_string();
-                        let response =
-                            functions::set_authentication_phone_number(phone, None, client_id)
-                                .await;
-
-                        match response {
-                            Ok(_) => {
-                                dbg!("phone ok");
-                                break;
-                            }
-                            Err(_e) => {
-                                if _e.message.contains("API_ID_INVALID") {
-                                    dbg!("api_id invalid! please try another");
-                                } else {
-                                    dbg!(_e);
-                                }
-                            }
-                        }
-                    }
-                    // tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
-                }
-            }
-
-            AuthorizationState::WaitCode(_) => {
-                dbg!("waiting vcode...");
-                loop {
-                    let readres = fs::read_to_string(wdir.vcode()).unwrap();
-                    if readres.trim().len() > 0 {
-                        let vcode = readres.trim().to_string();
-
-                        let response = functions::check_authentication_code(vcode, client_id).await;
-                        match response {
-                            Ok(_) => {
-                                dbg!("verification code ok");
-                                break;
-                            }
-                            Err(_e) => {
-                                if _e.message.contains("PHONE_CODE_INVALID") {
-                                    dbg!("verification code invalid! please try another");
-                                } else {
-                                    dbg!(_e);
-                                }
-                            }
-                        }
-                    }
-                    // this sleep is buggy
-                    // tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
-                }
-            }
-
-            AuthorizationState::Ready => {
-                break;
-            }
-
-            AuthorizationState::Closed => {
-                // Set the flag to false to stop receiving updates from the
-                // spawned task
-                dbg!(112233);
-                run_flag.store(false, Ordering::Release);
-                break;
-            }
-
-            _xxx => {
-                dbg!(_xxx);
-            }
+            println!(
+                "<{}> <{}> <{}>: {}",
+                chat.name(),
+                sender,
+                message.date().format("%Y-%m-%d %H:%M:%S%z").to_string(),
+                message.text(),
+            );
+            // client.send_message(&chat, message.text()).await?;
         }
+        _ => {}
     }
 
-    auth_rx
+    Ok(())
 }
 
-#[tokio::main]
-async fn main() {
-    let wdir = init_data(None, false);
-
-    dbg!("waiting api id...");
-    let may_api_id: Option<i32>;
-    loop {
-        let readres = fs::read_to_string(wdir.api_id()).unwrap(); // FIXME: too many io
-        if let Ok(got_api_id) = readres.trim().parse::<i32>() {
-            may_api_id = Some(got_api_id);
-            break;
-        }
-        // tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
-    }
-
-    dbg!("waiting api hash...");
-    let may_api_hash: Option<String>;
-    loop {
-        let readres = fs::read_to_string(wdir.api_hash()).unwrap();
-        if readres.trim().len() > 0 {
-            may_api_hash = Some(readres.trim().to_string());
-            break;
-        }
-        // tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
-    }
-
-    dbg!(&may_api_id, &may_api_hash);
-
-    dbg!(2221);
-    // Create the client object
-    let client_id = tdlib::create_client();
-    dbg!(2222);
-
-    // Create a mpsc channel for handling AuthorizationState updates separately
-    // from the task
-    let (auth_tx, auth_rx) = mpsc::channel(5);
-    let (mq_tx, mut mq_rx) = mpsc::channel(5);
-    dbg!(2223);
-
-    // Create a flag to make it possible to stop receiving updates
-    let run_flag = Arc::new(AtomicBool::new(true));
-    let run_flag_clone = run_flag.clone();
-    dbg!(2224);
-    // Spawn a task to receive updates/responses
-    let handle = tokio::spawn(async move {
-        while run_flag_clone.load(Ordering::Acquire) {
-            if let Some((update, _client_id)) = tdlib::receive() {
-                handle_update(update, &auth_tx, &mq_tx).await;
-            }
-        }
-    });
-    dbg!(2225);
-
-    // Set a fairly low verbosity level. We mainly do this because tdlib
-    // requires to perform a random request with the client to start receiving
-    // updates for it.
-    functions::set_log_verbosity_level(1, client_id)
-        .await
+async fn async_main() -> Result {
+    SimpleLogger::new()
+        .with_level(log::LevelFilter::Debug)
+        .init()
         .unwrap();
-    dbg!(2226);
 
-    // Handle the authorization state to authenticate the client
-    let auth_rx = handle_authorization_state(
-        client_id,
-        &wdir,
-        may_api_id.unwrap(),
-        may_api_hash.unwrap(),
-        auth_rx,
-        run_flag.clone(),
-    )
-    .await;
+    let api_id = env!("TG_ID").parse().expect("TG_ID invalid");
+    let api_hash = env!("TG_HASH").to_string();
+    let token = env::args().skip(1).next().expect("token missing");
 
-    dbg!(2227);
+    println!("Connecting to Telegram...");
+    let client = Client::connect(Config {
+        session: Session::load_file_or_create(SESSION_FILE)?,
+        api_id,
+        api_hash: api_hash.clone(),
+        params: InitParams {
+            // Fetch the updates we missed while we were offline
+            catch_up: true,
+            ..Default::default()
+        },
+    })
+    .await?;
+    println!("Connected!");
 
-    // create a new collector, with title and timestamp
-    let may_got_chat = functions::create_new_basic_group_chat(
-        vec![],
-        chrono::Local::now()
-            .format("TG-FOCUS %Y-%m-%d %H:%M:%S%z")
-            .to_string(),
-        0,
-        client_id,
-    )
-    .await;
-
-    dbg!(2228);
-
-    if let Ok(got_chat) = may_got_chat {
-        let tdlib::enums::Chat::Chat(chat_meta) = got_chat;
-
-        let mut focus_filter = TgFilters::from_file(wdir.filter()).unwrap();
-        dbg!(("filter init", &focus_filter));
-
-        let collector_chat_id = chat_meta.id;
-
-        setup_chat_profile(&wdir, collector_chat_id, client_id).await;
-
-        dbg!(22288881);
-        // long-live loop
-        while let Some((chat_id, sender_id, msg_ctn, date)) = mq_rx.recv().await {
-            dbg!(22288882);
-            let chat_title = chat2str(chat_id, client_id).await;
-            dbg!(22288883);
-            if chat_title.contains("TG-FOCUS") {
-                continue;
-            }
-
-            if let Some(v) = TgFilters::from_file(wdir.filter()) {
-                focus_filter = v;
-                dbg!(("filter updated", &focus_filter));
-            }
-
-            dbg!(22288884);
-            let sender_name = sender2str(sender_id, client_id).await;
-            dbg!(22288885);
-            let date = date2str(date).await;
-            let coll_msg = CollectedMsg {
-                title: &chat_title,
-                sender: &sender_name,
-                ctn: &msg_ctn,
-                tstamp: &date,
-            };
-
-            if focus_filter.is_match(&coll_msg).0 {
-                collect_msg(coll_msg.to_string(), collector_chat_id, client_id).await;
-            } else {
-                dbg!(format!("message ignored: {}", &msg_ctn));
-            }
-        }
-        // }
+    fn ask_user(string: &str) -> String {
+        println!("{}", string);
+        let mut input = String::new();
+        std::io::stdin().read_line(&mut input).unwrap();
+        input.trim().to_string()
     }
 
-    dbg!(2229);
+    if !client.is_authorized().await? {
+        println!("Signing in...");
+        let token = client.request_login_code("xxx", api_id, &api_hash).await?;
+        // client.bot_sign_in(&token, api_id, &api_hash).await?;
 
-    // tokio::time::sleep(tokio::time::Duration::from_secs(3000)).await;
+        let vcode = ask_user("vcode???:");
+        use grammers_client::SignInError;
+        let user = match client.sign_in(&token, &vcode).await {
+            Ok(user) => user,
+            Err(SignInError::PasswordRequired(_token)) => panic!("Please provide a password"),
+            Err(SignInError::SignUpRequired {
+                terms_of_service: tos,
+            }) => panic!("Sign up required"),
+            Err(err) => {
+                println!("Failed to sign in as a user :(\n{}", err);
+                return Err(err.into());
+            }
+        };
 
-    dbg!(2230);
+        println!("Signed in as {}!", user.first_name());
 
-    // Tell the client to close
-    functions::close(client_id).await.unwrap();
+        client.session().save_to_file(SESSION_FILE)?;
+        println!("Signed in!");
+    }
 
-    // Handle the authorization state to wait for the "Closed" state
-    handle_authorization_state(client_id, &wdir, 0, "".into(), auth_rx, run_flag.clone()).await;
+    println!("Waiting for messages...");
 
-    // Wait for the previously spawned task to end the execution
-    handle.await.unwrap();
+    // This code uses `select` on Ctrl+C to gracefully stop the client and have a chance to
+    // save the session. You could have fancier logic to save the session if you wanted to
+    // (or even save it on every update). Or you could also ignore Ctrl+C and just use
+    // `while let Some(updates) =  client.next_updates().await?`.
+    //
+    // Using `tokio::select!` would be a lot cleaner but add a heavy dependency,
+    // so a manual `select` is used instead by pinning async blocks by hand.
+    loop {
+        let update = {
+            let exit = pin!(async { tokio::signal::ctrl_c().await });
+            let upd = pin!(async { client.next_update().await });
+
+            match select(exit, upd).await {
+                Either::Left(_) => None,
+                Either::Right((u, _)) => Some(u),
+            }
+        };
+
+        let update = match update {
+            None | Some(Ok(None)) => break,
+            Some(u) => u?.unwrap(),
+        };
+
+        let handle = client.clone();
+        task::spawn(async move {
+            match handle_update(handle, update).await {
+                Ok(_) => {}
+                Err(e) => eprintln!("Error handling updates!: {}", e),
+            }
+        });
+    }
+
+    println!("Saving session file and exiting...");
+    client.session().save_to_file(SESSION_FILE)?;
+    Ok(())
 }
 
-async fn collect_msg(msg: String, chat_id: i64, client_id: i32) {
-    let mut msg_to_send = types::InputMessageText::default();
-    msg_to_send.text.text = msg;
-
-    let res_sent = functions::send_message(
-        chat_id,
-        0,
-        None,
-        None,
-        None,
-        enums::InputMessageContent::InputMessageText(msg_to_send),
-        client_id,
-    )
-    .await;
-
-    dbg!(res_sent.is_ok());
-
-    // tokio::time::sleep(tokio::time::Duration::from_millis(300)).await;
-}
-
-async fn setup_chat_profile(wdir: &WorkDir, chat_id: i64, client_id: i32) -> Option<()> {
-    let pbuf = wdir.file_in_cwd("tgfocus-white.jpg");
-    if let Ok(flag) = pbuf.try_exists() {
-        if !flag {
-            dbg!("chat photo NOT set: no photo");
-            return None;
-        }
-    } else {
-        dbg!("chat photo NOT set: io error");
-        return None;
-    }
-
-    let photo = Some(enums::InputChatPhoto::Static(types::InputChatPhotoStatic {
-        photo: enums::InputFile::Local(types::InputFileLocal {
-            path: pbuf.into_os_string().into_string().unwrap(),
-        }),
-    }));
-
-    if let Ok(_) = functions::set_chat_photo(chat_id, photo, client_id).await {
-        dbg!("chat photo set!");
-        Some(())
-    } else {
-        dbg!("chat photo NOT set: tdlib api failed");
-        None
-    }
+fn main() -> Result {
+    runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap()
+        .block_on(async_main())
 }
