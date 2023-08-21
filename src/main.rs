@@ -325,9 +325,12 @@ async fn main() {
 
         setup_chat_profile(&wdir, collector_chat_id, client_id).await;
 
+        dbg!(22288881);
         // long-live loop
         while let Some((chat_id, sender_id, msg_ctn, date)) = mq_rx.recv().await {
+            dbg!(22288882);
             let chat_title = chat2str(chat_id, client_id).await;
+            dbg!(22288883);
             if chat_title.contains("TG-FOCUS") {
                 continue;
             }
@@ -337,7 +340,9 @@ async fn main() {
                 dbg!(("filter updated", &focus_filter));
             }
 
+            dbg!(22288884);
             let sender_name = sender2str(sender_id, client_id).await;
+            dbg!(22288885);
             let date = date2str(date).await;
             let coll_msg = CollectedMsg {
                 title: &chat_title,
