@@ -10,7 +10,8 @@ edition = "2021"
 chrono = "0.4.26"
 regex = "1.9.3"
 serde = "1.0.183"
-tdlib = "0.8.0"
+# tdlib = "0.8.0"
+tdlib = { path = "/root/tdlib" }
 tokio = { version = "1.29.1", features = ["sync", "rt-multi-thread", "macros"] }
 toml = "0.7.6"
 
