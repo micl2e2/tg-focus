@@ -25,4 +25,4 @@ fi
 buildah run tgfocus-builder-container2 -- \
 	sh -c "https_proxy=$HTTPS_PROXY git clone --depth=1 https://github.com/micl2e2/tg-focus"
 buildah run tgfocus-builder-container2 -- \
-	sh -c "source /root/.cargo/env && cd tg-focus && LD_LIBRARY_PATH=/usr/local/lib API_ID=$API_ID API_HASH=$API_HASH cargo build --release"
+	sh -c "source /root/.cargo/env && cd tg-focus && LD_LIBRARY_PATH=/usr/local/lib API_ID=$API_ID API_HASH=$API_HASH RUSTFLAGS='-C target-feature=-crt-static' cargo build --release"

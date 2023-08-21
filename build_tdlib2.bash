@@ -1,3 +1,4 @@
+buildah rm tdlib-builder-container2
 buildah from --name tdlib-builder-container2 alpine:latest
 
 # install deps

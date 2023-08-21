@@ -2,10 +2,16 @@
 buildah rm app-tgfocus-container2
 buildah from --name app-tgfocus-container2 alpine:latest
 
-# buildah copy --from tdlib-builder-container2 app-tgfocus-container2 \
-	# '/usr/local/lib/libtdjson.so.1.8.15' '/usr/local/lib'
+# buildah run app-builder-container2 -- \
+    # apk update
+buildah run app-tgfocus-container2 -- \
+	apk add libstdc++
+
+
 buildah copy --from tdlib-builder-container2 app-tgfocus-container2 \
-	'/usr/local/lib' '/usr/local/lib'
+	'/usr/local/lib/libtdjson.so.1.8.15' '/usr/local/lib'
+# buildah copy --from tdlib-builder-container2 app-tgfocus-container2 \
+	# '/usr/local/lib' '/usr/local/lib'
 
 # cwd is /
 buildah copy --from tgfocus-builder-container2 app-tgfocus-container2 '/tg-focus/target/release/tg-focus' '/'
