@@ -19,10 +19,9 @@ use tg_focus::WorkDir;
 
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
-async fn handle_update(client: Client, update: Update) -> Result<()> {
+async fn handle_update(client: Client, update: Update, wdir: WorkDir) -> Result<()> {
     match update {
         Update::NewMessage(message) if !message.outgoing() => {
-            let chat = message.chat();
             let mut sender = String::from("???");
             if let Some(types::chat::Chat::User(usr)) = message.sender() {
                 sender = format!(
@@ -31,13 +30,34 @@ async fn handle_update(client: Client, update: Update) -> Result<()> {
                     usr.username().unwrap_or_else(|| "???")
                 )
             }
-            println!(
-                "<{}> <{}> <{}>: {}",
-                chat.name(),
-                sender,
-                message.date().format("%Y-%m-%d %H:%M:%S%z").to_string(),
-                message.text(),
-            );
+
+            let chat = message.chat();
+            let tstamp = message.date().format("%Y-%m-%d %H:%M:%S%z").to_string();
+            let ctn = message.text();
+
+            let coll_msg = CollectedMsg {
+                title: &chat.name(),
+                sender: &sender,
+                ctn: &ctn,
+                tstamp: &tstamp,
+            };
+
+            let mut focus_filter = TgFilters::from_file(wdir.filter()).unwrap();
+            dbg!(("filter init", &focus_filter));
+
+            if focus_filter.is_match(&coll_msg).0 {
+                collect_msg(coll_msg.to_string(), 123, 123).await;
+            } else {
+                dbg!(format!("message ignored: {}", &ctn));
+            }
+
+            // println!(
+            //     "<{}> <{}> <{}>: {}",
+            //     chat.name(),
+            //     sender,
+            //     message.date().format("%Y-%m-%d %H:%M:%S%z").to_string(),
+            //     message.text(),
+            // );
             // client.send_message(&chat, message.text()).await?;
         }
         _ => {}
@@ -167,8 +187,9 @@ async fn async_main() -> Result<()> {
         };
 
         let handle = client.clone();
+        let wdir = wdir.clone();
         task::spawn(async move {
-            if let Err(e) = handle_update(handle, update).await {
+            if let Err(e) = handle_update(handle, update, wdir).await {
                 eprintln!("Error handling updates!: {}", e)
             }
             // match handle_update(handle, update).await {
@@ -181,6 +202,26 @@ async fn async_main() -> Result<()> {
     println!("Saving session file and exiting...");
     client.session().save_to_file(wdir.session())?;
     Ok(())
+}
+
+async fn collect_msg(msg: String, chat_id: i64, client_id: i32) {
+    // let mut msg_to_send = types::InputMessageText::default();
+    // msg_to_send.text.text = msg;
+
+    // let res_sent = functions::send_message(
+    //     chat_id,
+    //     0,
+    //     None,
+    //     None,
+    //     None,
+    //     enums::InputMessageContent::InputMessageText(msg_to_send),
+    //     client_id,
+    // )
+    // .await;
+
+    // dbg!(res_sent.is_ok());
+
+    dbg!(msg);
 }
 
 fn main() -> Result<()> {

@@ -10,6 +10,7 @@ const FILE_VCODE: &str = "vcode";
 const FILE_FILTER: &str = "filter";
 const FILE_SESSION: &str = "session";
 
+#[derive(Debug, Clone)]
 pub struct WorkDir {
     root: PathBuf,
 }
