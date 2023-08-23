@@ -8,7 +8,7 @@ const FILE_API_HASH: &str = "api_hash";
 const FILE_PHONE: &str = "phone";
 const FILE_VCODE: &str = "vcode";
 const FILE_FILTER: &str = "filter";
-const FILE_TDDB: &str = "tdlib_db";
+const FILE_SESSION: &str = "session";
 
 pub struct WorkDir {
     root: PathBuf,
@@ -39,8 +39,8 @@ impl WorkDir {
         self.root.join(FILE_FILTER)
     }
 
-    pub fn tddb(&self) -> PathBuf {
-        self.root.join(FILE_TDDB)
+    pub fn session(&self) -> PathBuf {
+        self.root.join(FILE_SESSION)
     }
 }
 
@@ -62,7 +62,7 @@ pub fn init_data(pred_root: Option<&str>, reset: bool) -> WorkDir {
 
     let wdir = WorkDir { root: actual_root };
 
-    fs::create_dir_all(wdir.tddb()).unwrap();
+    // fs::create_dir_all(wdir.tddb()).unwrap();
     fs::OpenOptions::new()
         .read(true)
         .write(true)
@@ -87,6 +87,13 @@ pub fn init_data(pred_root: Option<&str>, reset: bool) -> WorkDir {
         .create(true)
         .open(wdir.vcode())
         .unwrap();
+    // do not create session
+    // fs::OpenOptions::new()
+    //     .read(true)
+    //     .write(true)
+    //     .create(true)
+    //     .open(wdir.session())
+    //     .unwrap();
     let mut f_flt = fs::OpenOptions::new()
         .read(true)
         .write(true)
@@ -125,8 +132,8 @@ mod utst {
     fn _1() {
         let wdir = init_data(Some("/tmp/tsttgfocus"), true);
 
-        let dir_entry_list = fs::read_dir(wdir.tddb()).unwrap();
-        assert_eq!(dir_entry_list.count(), 0);
+        // let dir_entry_list = fs::read_dir(wdir.tddb()).unwrap();
+        // assert_eq!(dir_entry_list.count(), 0);
 
         let file_ctn = fs::read_to_string(wdir.api_id()).unwrap();
         assert_eq!(file_ctn, r#""#);
@@ -139,6 +146,10 @@ mod utst {
 
         let file_ctn = fs::read_to_string(wdir.vcode()).unwrap();
         assert_eq!(file_ctn, r#""#);
+
+        if let Ok(true) = wdir.session().try_exists() {
+            assert!(false, "session should not exist at first init");
+        }
 
         let file_ctn = fs::read_to_string(wdir.filter()).unwrap();
         assert_eq!(
