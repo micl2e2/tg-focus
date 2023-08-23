@@ -8,24 +8,12 @@ edition = "2021"
 
 [dependencies]
 chrono = "0.4.26"
-grammers-client = "0.4.0"
 regex = "1.9.3"
-serde = { version = "1.0.183", features = ["derive"] }
+serde = "1.0.183"
 # tdlib = "0.8.0"
-# tdlib = { path = "/root/tdlib" }
-# tokio = { version = "1.29.1", features = ["sync", "rt-multi-thread", "macros"] }
-tokio = { version = "1.5.0", default-features = false, features = [
-    "fs",
-    "rt",
-    "signal"
-] }
-futures-util = { version = "0.3.15", default_features = false, features = [
-    "alloc"
-] }
+tdlib = { git = "https://github.com/micl2e2/tdlib-rs" }
+tokio = { version = "1.29.1", features = ["sync", "rt-multi-thread", "macros"] }
 toml = "0.7.6"
-log = "0.4.20"
-simple_logger = "4.2.0"
-grammers-session = "0.4.0"
 
 [profile.release]
 strip = "symbols"
