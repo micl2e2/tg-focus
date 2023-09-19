@@ -43,7 +43,7 @@ target_include_directories(
   tf-conf
   PRIVATE ${PROJECT_SOURCE_DIR}/include
   PRIVATE ${PROJECT_SOURCE_DIR}/deps/toml11)
-target_link_libraries(tf-conf -static-libgcc -static-libstdc++)
+target_link_libraries(tf-conf PRIVATE -static-libgcc -static-libstdc++)
 target_link_libraries(tf-conf PRIVATE focus_filter)
 target_link_libraries(tf-conf PRIVATE Td::TdStatic)
 
@@ -60,7 +60,7 @@ target_include_directories(
   tf-focusd
   PRIVATE ${PROJECT_SOURCE_DIR}/include
   PRIVATE ${PROJECT_SOURCE_DIR}/deps/toml11)
-target_link_libraries(tf-focusd -static-libgcc -static-libstdc++)
+target_link_libraries(tf-focusd PRIVATE -static-libgcc -static-libstdc++)
 target_link_libraries(tf-focusd PRIVATE focus_filter)
 target_link_libraries(tf-focusd PRIVATE Td::TdStatic)
 
