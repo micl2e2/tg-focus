@@ -11,6 +11,15 @@ buildah run build-tgfocus-container -- \
 	apt-get -o Acquire::ForceIPv4=true install git g++ libssl-dev zlib1g-dev cmake -y
 	# apt-get --quiet install git g++ cmake -y
 
+# buildah run build-tgfocus-container -- \
+# 	mv /lib/x86_64-linux-gnu/libssl.so.3 /lib/x86_64-linux-gnu/xlibssl.so.3
+
+# buildah run build-tgfocus-container -- \
+# 	mv /lib/x86_64-linux-gnu/libcrypto.so.3 /lib/x86_64-linux-gnu/xlibcrypto.so.3
+
+# buildah run build-tgfocus-container -- \
+# 	mv /lib/x86_64-linux-gnu/libz.so.1 /lib/x86_64-linux-gnu/xlibz.so.1
+
 # build tg-focus
 if [[ ! -z $HTTPS_PROXY ]]
 then
