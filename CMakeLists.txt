@@ -1,5 +1,5 @@
 # cmake_minimum_required(VERSION 3.20)
-cmake_minimum_required(VERSION 3.0.2 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 project(tg-focus)
 
 # set(CMAKE_CXX_COMPILER clang++)
@@ -19,6 +19,9 @@ if (DEFINED ENV{WITH_SANITIZERS})
 add_compile_options(-fsanitize=address -fsanitize=undefined -fno-sanitize=vptr -fsanitize=leak)
 link_libraries(asan ubsan)
 endif()
+
+add_subdirectory(${PROJECT_SOURCE_DIR}/deps/fmt)
+link_libraries(fmt)
 
 # posix_regex
 add_library(posix_regex ${PROJECT_SOURCE_DIR}/src/posix_regex.cc)

@@ -1,6 +1,7 @@
 #ifndef _CONSUMER_H
 #define _CONSUMER_H
 
+#include <fmt/core.h>
 #include <vector>
 #include <mutex>
 #include <atomic>
@@ -33,7 +34,7 @@ need_collect (const TgMsg &msg)
   {
     auto tomlstr = tf_data.get_filters ();
     // std::cerr << "filters reloaded: " << *tomlstr << std::endl;
-    std::cerr << std::format ("[CONSUMER {}] filters reloaded...",
+    std::cerr << fmt::format ("[CONSUMER {}] filters reloaded...",
 			      it_cnt_consumer.load (std::memory_order_relaxed))
 	      << std::endl;
     auto fcf_list = FocusFilterList (tomlstr);
@@ -66,7 +67,7 @@ tgmsg_consumer ()
 
 	if (mq.size () > 0 && td_client.done_create_collector)
 	  {
-	    std::cerr << std::format (
+	    std::cerr << fmt::format (
 	      "[CONSUMER {}] mq consumable, mq.size():{} ",
 	      it_cnt_consumer.load (std::memory_order_relaxed), mq.size ())
 		      << std::endl;
@@ -84,7 +85,7 @@ tgmsg_consumer ()
 		      }
 		    else
 		      std::cerr
-			<< std::format ("[CONSUMER,{}] message not collected: ",
+			<< fmt::format ("[CONSUMER,{}] message not collected: ",
 					it_cnt_consumer.load (
 					  std::memory_order_relaxed))
 			<< curr_msg << std::endl;
@@ -98,7 +99,7 @@ tgmsg_consumer ()
 	  }
 	else
 	  {
-	    std::cerr << std::format (
+	    std::cerr << fmt::format (
 	      "[CONSUMER {}] mq not consumable, mq.size():{} ",
 	      it_cnt_consumer.load (std::memory_order_relaxed), mq.size ())
 		      << std::endl;

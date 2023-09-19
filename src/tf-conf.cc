@@ -9,7 +9,7 @@
 #include <optional>
 #include <sstream>
 #include <string>
-#include <format>
+#include <fmt/core.h>
 #include <string_view>
 #include <thread>
 #include <unistd.h>
@@ -34,18 +34,18 @@ TgFocusData tf_data{std::nullopt, false};
 
 template <class... Args>
 void
-log (std::format_string<Args...> fmt, Args &&...args)
+log (fmt::format_string<Args...> fmt, Args &&...args)
 {
   constexpr std::string_view header{"[tf-conf] "};
-  std::cout << header << std::format (fmt, args...) << std::endl;
+  std::cout << header << fmt::format (fmt, args...) << std::endl;
 }
 
 template <class... Args>
 void
-log_flush (std::format_string<Args...> fmt, Args &&...args)
+log_flush (fmt::format_string<Args...> fmt, Args &&...args)
 {
   constexpr std::string_view header{"[tf-conf] "};
-  std::cout << header << std::format (fmt, args...) << std::flush;
+  std::cout << header << fmt::format (fmt, args...) << std::flush;
 }
 
 class TdAuth
@@ -212,7 +212,7 @@ private:
 	  this->is_authorized = true;
 
 	  // persistant
-	  tf_data.set_api_id (std::format ("{}", this->api_id_));
+	  tf_data.set_api_id (fmt::format ("{}", this->api_id_));
 	  tf_data.set_api_hash (std::move (this->api_hash_));
 	  tf_data.set_auth_hint (true);
 
@@ -400,7 +400,7 @@ handle_filters ()
 
   auto fpath = tf_data.path_filters_tmp ();
   auto fpath_cstr = fpath.c_str ();
-  std::system (std::format ("$EDITOR {}", fpath_cstr).c_str ());
+  std::system (fmt::format ("$EDITOR {}", fpath_cstr).c_str ());
 
   log ("Verifying filters...");
 

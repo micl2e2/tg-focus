@@ -9,7 +9,7 @@
 #include <cstdlib>
 #include <optional>
 #include <string>
-#include <format>
+#include <fmt/core.h>
 #include <filesystem>
 #include <iostream>
 #include <sys/file.h>
@@ -336,7 +336,7 @@ title = ".*"
     if (as_num < INT_MIN || as_num > INT_MAX)
       return;
 
-    if (std::format ("{}", as_num) != in)
+    if (fmt::format ("{}", as_num) != in)
       return;
 
     auto path = this->path_api_id ();

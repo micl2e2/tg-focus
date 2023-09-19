@@ -9,7 +9,8 @@
 #include <optional>
 #include <string>
 #include <algorithm>
-#include <format>
+
+#include <fmt/core.h>
 
 class FileReader
 {
@@ -120,7 +121,7 @@ is_valid_int32 (const std::string &in)
 
   if (as_num < INT_MIN || as_num > INT_MAX)
     return false;
-  if (std::format ("{}", as_num) != in)
+  if (fmt::format ("{}", as_num) != in)
     return false;
 
   return true;

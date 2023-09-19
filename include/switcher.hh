@@ -6,6 +6,7 @@
 #include <mutex>
 #include <atomic>
 #include <thread>
+#include <fmt/core.h>
 
 #include "tgfocus_state.hh"
 
@@ -25,7 +26,7 @@ tgmsg_switcher ()
 
       {
 	std::cout
-	  << std::format ("[SWITCHER {}] P,{} C,{} S,{} check for switching...",
+	  << fmt::format ("[SWITCHER {}] P,{} C,{} S,{} check for switching...",
 			  it_cnt_switcher.load (std::memory_order_relaxed),
 			  it_cnt_producer.load (std::memory_order_relaxed),
 			  it_cnt_consumer.load (std::memory_order_relaxed),
@@ -37,7 +38,7 @@ tgmsg_switcher ()
       if (is_csm_mq.load (std::memory_order_acquire))
 	{
 	  std::cout
-	    << std::format ("[SWITCHER {}] has msg, consumer maybe handling...",
+	    << fmt::format ("[SWITCHER {}] has msg, consumer maybe handling...",
 			    it_cnt_switcher.load (std::memory_order_relaxed))
 	    << std::endl;
 	  continue;

@@ -7,7 +7,7 @@
 #include <vector>
 #include <mutex>
 #include <atomic>
-#include <format>
+#include <fmt/core.h>
 #include <iostream>
 
 // #include "td_auth.hh"
@@ -27,7 +27,7 @@ tgmsg_producer ()
     {
       is_csm_mq.wait (true, std::memory_order_acquire);
 
-      std::cerr << std::format ("[PRODUCER {}] mq size: {}",
+      std::cerr << fmt::format ("[PRODUCER {}] mq size: {}",
 				it_cnt_producer.load (
 				  std::memory_order_relaxed),
 				mq.size ())

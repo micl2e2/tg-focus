@@ -1,4 +1,5 @@
 #include <thread>
+#include <fmt/core.h>
 
 #include "producer.hh"
 #include "consumer.hh"
@@ -12,18 +13,18 @@ extern TgFocusData tf_data;
 
 template <class... Args>
 void
-log (std::format_string<Args...> fmt, Args &&...args)
+log (fmt::format_string<Args...> fmt, Args &&...args)
 {
   constexpr std::string_view header{"[tf-focusd] "};
-  std::cout << header << std::format (fmt, args...) << std::endl;
+  std::cout << header << fmt::format (fmt, args...) << std::endl;
 }
 
 template <class... Args>
 void
-log_flush (std::format_string<Args...> fmt, Args &&...args)
+log_flush (fmt::format_string<Args...> fmt, Args &&...args)
 {
   constexpr std::string_view header{"[tf-focusd] "};
-  std::cout << header << std::format (fmt, args...) << std::flush;
+  std::cout << header << fmt::format (fmt, args...) << std::flush;
 }
 
 int

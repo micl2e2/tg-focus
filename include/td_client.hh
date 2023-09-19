@@ -9,7 +9,7 @@
 #include <map>
 #include <functional>
 #include <atomic>
-#include <format>
+#include <fmt/core.h>
 #include <chrono>
 #include <iostream>
 
@@ -113,7 +113,7 @@ no message!
     //   }
 
     auto text_ctn
-      = std::format (R"(
+      = fmt::format (R"(
 ID : {}
 CHAT : {}
 SENDER : {}
@@ -134,7 +134,7 @@ DATE: {}
       if (object->get_id () == td_api::message::ID)
 	{
 	  // FIXME: do not use operator <<
-	  std::cout << std::format ("[CONSUMER {}] msg collected:",
+	  std::cout << fmt::format ("[CONSUMER {}] msg collected:",
 				    it_cnt_consumer.load (
 				      std::memory_order_relaxed))
 		    << msg << std::endl;
@@ -149,7 +149,7 @@ DATE: {}
     auto response = client_manager_->receive (60);
     if (response.object)
       {
-	std::cerr << std::format ("[PRODUCER {}] td-client, resp recv id:{}",
+	std::cerr << fmt::format ("[PRODUCER {}] td-client, resp recv id:{}",
 				  it_cnt_producer.load (
 				    std::memory_order_relaxed),
 				  response.object->get_id ())
@@ -207,7 +207,7 @@ private:
     auto it = handlers_.find (response.request_id);
     if (it != handlers_.end ())
       {
-	std::cerr << std::format (
+	std::cerr << fmt::format (
 	  "[PRODUCER {}]td-client, handlers_.size():{} it->first:{}",
 	  it_cnt_producer.load (std::memory_order_relaxed), handlers_.size (),
 	  it->first)
@@ -324,7 +324,7 @@ private:
 		auto orig_txt_ctn = static_cast<td_api::messagePhoto &> (
 				      *casted->message_->content_)
 				      .caption_->text_;
-		text = std::format ("<photo>({})", std::move (orig_txt_ctn));
+		text = fmt::format ("<photo>({})", std::move (orig_txt_ctn));
 		break;
 	      }
 
@@ -333,7 +333,7 @@ private:
 		  = static_cast<td_api::messageAnimatedEmoji &> (
 		      *casted->message_->content_)
 		      .emoji_;
-		text = std::format ("<emoji>({})", std::move (orig_txt_ctn));
+		text = fmt::format ("<emoji>({})", std::move (orig_txt_ctn));
 		break;
 	      }
 
@@ -341,12 +341,12 @@ private:
 		auto orig_txt_ctn = static_cast<td_api::messageSticker &> (
 				      *casted->message_->content_)
 				      .sticker_->emoji_;
-		text = std::format ("<sticker>({})", std::move (orig_txt_ctn));
+		text = fmt::format ("<sticker>({})", std::move (orig_txt_ctn));
 		break;
 	      }
 
 	      default: {
-		text = std::format ("ignored message with ID {}",
+		text = fmt::format ("ignored message with ID {}",
 				    casted->message_->content_->get_id ());
 		break;
 	      }
@@ -362,7 +362,7 @@ private:
 	}
 
 	default: {
-	  std::cerr << std::format (
+	  std::cerr << fmt::format (
 	    "[PRODUCER {}] td-client, ignored update with id:{}",
 	    it_cnt_producer.load (std::memory_order_relaxed), update->get_id ())
 		    << std::endl;
