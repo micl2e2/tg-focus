@@ -20,6 +20,7 @@ add_compile_options(-fsanitize=address -fsanitize=undefined -fno-sanitize=vptr -
 link_libraries(asan ubsan)
 endif()
 
+# third-party
 add_subdirectory(${PROJECT_SOURCE_DIR}/deps/fmt)
 link_libraries(fmt)
 
