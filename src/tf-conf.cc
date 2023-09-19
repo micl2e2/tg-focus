@@ -400,7 +400,9 @@ handle_filters ()
 
   auto fpath = tf_data.path_filters_tmp ();
   auto fpath_cstr = fpath.c_str ();
-  std::system (fmt::format ("$EDITOR {}", fpath_cstr).c_str ());
+
+  // std::system (fmt::format ("$EDITOR {}", fpath_cstr).c_str ());
+  std::system (fmt::format ("nano {}", fpath_cstr).c_str ());
 
   log ("Verifying filters...");
 

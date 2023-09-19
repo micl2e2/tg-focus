@@ -10,7 +10,7 @@ buildah copy --from build-tgfocus-container package-tgfocus-container \
 buildah run package-tgfocus-container -- \
 	apt-get -o Acquire::ForceIPv4=true update
 buildah run package-tgfocus-container -- \
-	apt-get -o Acquire::ForceIPv4=true install libstdc++6 libssl3 zlib1g -y
+	apt-get -o Acquire::ForceIPv4=true install libstdc++6 libssl3 zlib1g nano -y
 
 buildah config --cmd "/bin/bash -c tf-focusd" package-tgfocus-container
 

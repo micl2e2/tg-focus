@@ -21,7 +21,7 @@ buildah run build-tgfocus-container -- \
 buildah run build-tgfocus-container -- \
 	bash -c "https_proxy=$HTTPS_PROXY cd tg-focus && bash dl-deps.bash"
 buildah run build-tgfocus-container -- \
-	bash -c "cd tg-focus && cmake -B build && cmake --build build"
+	bash -c "cd tg-focus && cmake -DCMAKE_BUILD_TYPE=Release -B build && cmake --build build"
 
 
 
