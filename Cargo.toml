@@ -1,0 +1,24 @@
+[package]
+name = "tg-focus"
+version = "0.7.10815" # source + build_script
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+
+[dependencies]
+chrono = "0.4.0"
+grammers-client = "0.4.0"
+regex = "1.0.0"
+serde = { version = "1.0.0", features = ["derive"] }
+tokio = { version = "1.5.0", default-features = false, features = ["rt", "signal"] }
+futures-util = { version = "0.3.15", default_features = false, features = ["alloc"] }
+toml = "0.7.6"
+log = "0.4.20"
+simple_logger = "4.2.0"
+grammers-session = "0.4.0"
+grammers-tl-types = "0.4.0"
+
+[profile.release]
+strip = "symbols"
+lto = true
