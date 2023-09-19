@@ -8,3 +8,5 @@ Cargo.lock
 *target*
 *tmp*
 build
+
+deps
