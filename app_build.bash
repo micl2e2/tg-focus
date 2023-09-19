@@ -1,5 +1,5 @@
 buildah rm build-tgfocus-container
-buildah from --name build-tgfocus-container debian:bullseye-slim
+buildah from --name build-tgfocus-container debian:bookworm-slim
 
 # install dependencies
 buildah copy --from tdlib-builder-container build-tgfocus-container '/usr/local/include' '/usr/local/include'
@@ -8,7 +8,7 @@ buildah run build-tgfocus-container -- \
 	apt-get -o Acquire::ForceIPv4=true update
 	# apt-get --quiet update
 buildah run build-tgfocus-container -- \
-	apt-get -o Acquire::ForceIPv4=true install git g++ cmake -y
+	apt-get -o Acquire::ForceIPv4=true install git g++ libssl-dev zlib1g-dev cmake -y
 	# apt-get --quiet install git g++ cmake -y
 
 # build tg-focus

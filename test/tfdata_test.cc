@@ -3,6 +3,8 @@
 #include <filesystem>
 #include <string>
 
+#include <fmt/core.h>
+
 namespace fs = std::filesystem;
 
 #include "tg_focus_data.hh"
@@ -45,7 +47,7 @@ tst_files_existence ()
   assert (fs::exists (tfdata.path_filters_tmp ()));
   assert (fs::is_regular_file (tfdata.path_filters_tmp ()));
 
-  auto expected = format ("{}/{}/abc", PRED_HOME, tfdata.name_droot ());
+  auto expected = fmt::format ("{}/{}/abc", PRED_HOME, tfdata.name_droot ());
   cerr << "expected: " << expected << endl;
   assert (tfdata.abspath_of ("abc") == expected);
 }
