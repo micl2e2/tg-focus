@@ -5,7 +5,7 @@ buildah from --name build-tgfocus-container debian:bullseye-slim
 buildah copy --from tdlib-builder-container build-tgfocus-container '/usr/local/include' '/usr/local/include'
 buildah copy --from tdlib-builder-container build-tgfocus-container '/usr/local/lib' '/usr/local/lib'
 buildah run build-tgfocus-container -- \
-	apt-get -o Acquire::ForceIPv4=true --quiet update
+	apt-get -o Acquire::ForceIPv4=true update
 	# apt-get --quiet update
 buildah run build-tgfocus-container -- \
 	apt-get -o Acquire::ForceIPv4=true install git g++ cmake -y
