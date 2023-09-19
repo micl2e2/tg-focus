@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.20)
+# cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.0.2 FATAL_ERROR)
 project(tg-focus)
 
 # set(CMAKE_CXX_COMPILER clang++)
