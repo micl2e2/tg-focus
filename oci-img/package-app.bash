@@ -10,7 +10,8 @@ buildah copy --from build-tgfocus-container package-tgfocus-container \
 buildah run package-tgfocus-container -- \
 	apt-get -o Acquire::ForceIPv4=true --quiet update
 buildah run package-tgfocus-container -- \
-	apt-get -o Acquire::ForceIPv4=true install libstdc++6 libssl3 zlib1g nano --quiet -y
+	apt-get -o Acquire::ForceIPv4=true install nano --quiet -y
+	# apt-get -o Acquire::ForceIPv4=true install libstdc++6 libssl3 zlib1g nano --quiet -y
 buildah run package-tgfocus-container -- \
 	apt-get -o Acquire::ForceIPv4=true install locales -y
 
