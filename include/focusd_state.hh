@@ -1,5 +1,5 @@
-#ifndef _TGFOCUS_STATE_H
-#define _TGFOCUS_STATE_H
+#ifndef _FOCUSD_STATE_H
+#define _FOCUSD_STATE_H
 
 #include <optional>
 #include <vector>

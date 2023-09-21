@@ -46,6 +46,13 @@ add_library(td_client ${PROJECT_SOURCE_DIR}/src/td_client.cc)
 target_include_directories(td_client PRIVATE ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(td_client PRIVATE focus_filter PRIVATE tf_data)
 
+# conf_state
+add_library(conf_state ${PROJECT_SOURCE_DIR}/src/conf_state.cc)
+target_include_directories(conf_state PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_link_libraries(conf_state
+  PRIVATE tf_data
+)
+
 # tf-conf
 add_executable(tf-conf ${PROJECT_SOURCE_DIR}/src/tf-conf.cc)
 target_include_directories(
@@ -54,7 +61,7 @@ target_include_directories(
   PRIVATE ${PROJECT_SOURCE_DIR}/deps/toml11)
 target_link_libraries(tf-conf PRIVATE -static-libgcc -static-libstdc++)
 target_link_libraries(tf-conf PRIVATE Td::TdStatic)
-target_link_libraries(tf-conf PRIVATE focus_filter PRIVATE tf_data)
+target_link_libraries(tf-conf PRIVATE focus_filter PRIVATE conf_state)
 
 # ...
 # add_executable(tf-tstleak ${PROJECT_SOURCE_DIR}/src/tf-tstleak.cc)

@@ -22,15 +22,17 @@
 #include <td/telegram/td_api.h>
 #include <td/telegram/td_api.hpp>
 
+#include "conf_state.hh"
+
 #include "focus_filter.hh"
-#include "tf_data.hh"
+// #include "tf_data.hh"
 
 namespace td_api = td::td_api;
 
-std::atomic<bool> is_login{false};
-std::atomic<bool> is_tdlib_closed{false};
+// std::atomic<bool> is_login{false};
+// std::atomic<bool> is_tdlib_closed{false};
 
-TgFocusData tf_data{std::nullopt, false};
+// TgFocusData tf_data{std::nullopt, false};
 
 template <class... Args>
 void
