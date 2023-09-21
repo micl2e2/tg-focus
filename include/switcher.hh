@@ -8,7 +8,9 @@
 #include <thread>
 #include <fmt/core.h>
 
-#include "tgfocus_state.hh"
+// #include "tgfocus_state.hh"
+
+#include "td_client.hh"
 
 extern std::vector<TgMsg> mq;
 extern std::mutex mq_lock;

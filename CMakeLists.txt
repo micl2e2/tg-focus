@@ -23,6 +23,10 @@ endif()
 add_subdirectory(${PROJECT_SOURCE_DIR}/deps/fmt)
 link_libraries(fmt)
 
+# a0d026239439c76847c4f75f2fa32f3e56b9b789
+find_package(Td 1.8.17 REQUIRED)
+
+
 # posix_regex
 add_library(posix_regex ${PROJECT_SOURCE_DIR}/src/posix_regex.cc)
 target_include_directories(posix_regex PRIVATE ${PROJECT_SOURCE_DIR}/include)
@@ -31,11 +35,17 @@ target_include_directories(posix_regex PRIVATE ${PROJECT_SOURCE_DIR}/include)
 add_library(focus_filter ${PROJECT_SOURCE_DIR}/src/focus_filter.cc)
 target_include_directories(focus_filter
   PRIVATE ${PROJECT_SOURCE_DIR}/include
-  PRIVATE ${PROJECT_SOURCE_DIR}/deps/toml11)
+  PUBLIC ${PROJECT_SOURCE_DIR}/deps/toml11)
 target_link_libraries(focus_filter PRIVATE posix_regex)
 
-# a0d026239439c76847c4f75f2fa32f3e56b9b789
-find_package(Td 1.8.17 REQUIRED)
+# tf_data
+add_library(tf_data ${PROJECT_SOURCE_DIR}/src/tf_data.cc)
+target_include_directories(tf_data PRIVATE ${PROJECT_SOURCE_DIR}/include)
+
+# td_client
+add_library(td_client ${PROJECT_SOURCE_DIR}/src/td_client.cc)
+target_include_directories(td_client PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_link_libraries(td_client PRIVATE focus_filter PRIVATE tf_data)
 
 # tf-conf
 add_executable(tf-conf ${PROJECT_SOURCE_DIR}/src/tf-conf.cc)
@@ -44,15 +54,14 @@ target_include_directories(
   PRIVATE ${PROJECT_SOURCE_DIR}/include
   PRIVATE ${PROJECT_SOURCE_DIR}/deps/toml11)
 target_link_libraries(tf-conf PRIVATE -static-libgcc -static-libstdc++)
-target_link_libraries(tf-conf PRIVATE focus_filter)
 target_link_libraries(tf-conf PRIVATE Td::TdStatic)
-
+target_link_libraries(tf-conf PRIVATE focus_filter PRIVATE tf_data)
 
 # ...
-add_executable(tf-tstleak ${PROJECT_SOURCE_DIR}/src/tf-tstleak.cc)
-target_include_directories(
-  tf-tstleak
-  PRIVATE ${PROJECT_SOURCE_DIR}/include)
+# add_executable(tf-tstleak ${PROJECT_SOURCE_DIR}/src/tf-tstleak.cc)
+# target_include_directories(
+#   tf-tstleak
+#   PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 # tf-focusd
 add_executable(tf-focusd ${PROJECT_SOURCE_DIR}/src/tf-focusd.cc)
@@ -61,7 +70,7 @@ target_include_directories(
   PRIVATE ${PROJECT_SOURCE_DIR}/include
   PRIVATE ${PROJECT_SOURCE_DIR}/deps/toml11)
 target_link_libraries(tf-focusd PRIVATE -static-libgcc -static-libstdc++)
-target_link_libraries(tf-focusd PRIVATE focus_filter)
+target_link_libraries(tf-focusd PRIVATE focus_filter PRIVATE tf_data PRIVATE td_client)
 target_link_libraries(tf-focusd PRIVATE Td::TdStatic)
 
 # TEST

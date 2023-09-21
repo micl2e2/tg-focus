@@ -18,6 +18,6 @@ set(CurrTestName tfdata_test)
 add_executable(${CurrTestName} ${CurrTestName}.cc)
 target_include_directories(${CurrTestName} PRIVATE
   ${PROJECT_SOURCE_DIR}/include)
-# target_link_libraries(${CurrTestName} tfdata)
+target_link_libraries(${CurrTestName} tf_data)
 add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 

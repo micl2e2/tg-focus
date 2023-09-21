@@ -114,7 +114,7 @@ trim (std::string &s)
   ltrim (s);
 }
 
-bool
+inline bool
 is_valid_int32 (const std::string &in)
 {
   long as_num = std::strtol (in.c_str (), nullptr, 10);

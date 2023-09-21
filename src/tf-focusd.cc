@@ -1,11 +1,11 @@
 #include <thread>
 #include <fmt/core.h>
 
+#include "focusd_state.hh"
+
 #include "producer.hh"
 #include "consumer.hh"
 #include "switcher.hh"
-
-#include "tgfocus_state.hh"
 
 extern TdClient td_client;
 

@@ -23,7 +23,7 @@
 #include <td/telegram/td_api.hpp>
 
 #include "focus_filter.hh"
-#include "tg_focus_data.hh"
+#include "tf_data.hh"
 
 namespace td_api = td::td_api;
 

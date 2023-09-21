@@ -7,9 +7,8 @@
 #include <atomic>
 
 #include "focus_filter.hh"
-#include "producer.hh"
 #include "td_client.hh"
-#include "tg_focus_data.hh"
+#include "tf_data.hh"
 
 std::atomic<std::uint32_t> it_cnt_switcher;
 std::atomic<std::uint32_t> it_cnt_producer;

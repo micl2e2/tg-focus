@@ -10,9 +10,8 @@
 #include <fmt/core.h>
 #include <iostream>
 
-// #include "td_auth.hh"
+#include "td_client.hh"
 
-#include "tgfocus_state.hh"
 extern std::vector<TgMsg> mq;
 extern std::mutex mq_lock;
 extern std::atomic<bool> is_csm_mq;
