@@ -4,7 +4,6 @@
 #include <fmt/core.h>
 #include <iostream>
 
-#include "td_client.hh"
 #include "focusd_state.hh"
 #include "focus_filter.hh"
 

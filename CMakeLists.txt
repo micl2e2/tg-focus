@@ -15,8 +15,8 @@ add_compile_options(-Wall -Wextra)
 
 # santinize, linked by all targets
 if (DEFINED ENV{WITH_SANITIZERS})
-add_compile_options(-fsanitize=address -fsanitize=undefined -fno-sanitize=vptr -fsanitize=leak)
-link_libraries(asan ubsan)
+  add_compile_options(-fsanitize=address -fsanitize=undefined -fno-sanitize=vptr -fsanitize=leak)
+  link_libraries(asan ubsan)
 endif()
 
 # third-party
@@ -44,14 +44,24 @@ target_include_directories(tf_data PRIVATE ${PROJECT_SOURCE_DIR}/include)
 # td_client
 add_library(td_client ${PROJECT_SOURCE_DIR}/src/td_client.cc)
 target_include_directories(td_client PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_link_libraries(td_client PRIVATE focus_filter PRIVATE tf_data)
+target_link_libraries(td_client
+  PRIVATE Td::TdStatic
+  PRIVATE focus_filter
+  PRIVATE tf_data)
 
-# conf_state
-add_library(conf_state ${PROJECT_SOURCE_DIR}/src/conf_state.cc)
-target_include_directories(conf_state PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_link_libraries(conf_state
-  PRIVATE tf_data
-)
+
+# tfconf_state
+add_library(tfconf_state ${PROJECT_SOURCE_DIR}/src/tfconf_state.cc)
+target_include_directories(tfconf_state PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_link_libraries(tfconf_state
+  PRIVATE tf_data)
+
+# tfconf_auth
+add_library(tfconf_auth ${PROJECT_SOURCE_DIR}/src/tfconf_auth.cc)
+target_include_directories(tfconf_auth PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_link_libraries(tfconf_auth
+  PRIVATE tfconf_state
+  PRIVATE Td::TdStatic)
 
 # tf-conf
 add_executable(tf-conf ${PROJECT_SOURCE_DIR}/src/tf-conf.cc)
@@ -60,8 +70,10 @@ target_include_directories(
   PRIVATE ${PROJECT_SOURCE_DIR}/include
   PRIVATE ${PROJECT_SOURCE_DIR}/deps/toml11)
 target_link_libraries(tf-conf PRIVATE -static-libgcc -static-libstdc++)
-target_link_libraries(tf-conf PRIVATE Td::TdStatic)
-target_link_libraries(tf-conf PRIVATE focus_filter PRIVATE conf_state)
+target_link_libraries(tf-conf
+  PRIVATE focus_filter
+  PRIVATE tfconf_state
+  PRIVATE tfconf_auth)
 
 # ...
 # add_executable(tf-tstleak ${PROJECT_SOURCE_DIR}/src/tf-tstleak.cc)
@@ -74,17 +86,14 @@ add_library(focusd_state ${PROJECT_SOURCE_DIR}/src/focusd_state.cc)
 target_include_directories(focusd_state PRIVATE ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(focusd_state
   PRIVATE tf_data
-  PRIVATE td_client
-)
+  PRIVATE td_client)
 
 # focusd_worker
 add_library(focusd_worker ${PROJECT_SOURCE_DIR}/src/focusd_worker.cc)
 target_include_directories(focusd_worker PRIVATE ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(focusd_worker
   PRIVATE focusd_state
-  PRIVATE td_client
-  PRIVATE focus_filter
-)
+  PRIVATE focus_filter)
 
 # tf-focusd
 add_executable(tf-focusd ${PROJECT_SOURCE_DIR}/src/tf-focusd.cc)
@@ -92,14 +101,10 @@ target_include_directories(
   tf-focusd
   PRIVATE ${PROJECT_SOURCE_DIR}/include
   PRIVATE ${PROJECT_SOURCE_DIR}/deps/toml11)
-target_link_libraries(tf-focusd PRIVATE -static-libgcc -static-libstdc++)
 target_link_libraries(tf-focusd
-  PRIVATE focus_filter
-  PRIVATE tf_data
-  PRIVATE td_client
+  PRIVATE -static-libgcc -static-libstdc++
   PRIVATE focusd_state
   PRIVATE focusd_worker)
-target_link_libraries(tf-focusd PRIVATE Td::TdStatic)
 
 # TEST
 # if (DEFINED ENV{RUN_TEST})
