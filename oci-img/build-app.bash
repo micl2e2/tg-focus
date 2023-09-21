@@ -1,40 +1,35 @@
-buildah rm build-tgfocus-container
-buildah from --name build-tgfocus-container debian:bookworm-slim
+CTN_TDLIB="build-tdlib-container"
+CTN_TGFOCUS="build-tgfocus-container"
 
-# install dependencies
-buildah copy --from build-tdlib-container build-tgfocus-container '/usr/local/include' '/usr/local/include'
-buildah copy --from build-tdlib-container build-tgfocus-container '/usr/local/lib' '/usr/local/lib'
+flag=$(buildah ps | grep $CTN_TGFOCUS | wc -l)
+test $flag -eq 0 || buildah rm $CTN_TGFOCUS
 
-buildah run build-tgfocus-container -- \
-	sed -i 's/deb\.debian\.org/ftp\.cn\.debian\.org/' /etc/apt/sources.list.d/debian.sources
+buildah from --name $CTN_TGFOCUS debian:bookworm-slim
 
-buildah run build-tgfocus-container -- \
+buildah copy --from $CTN_TDLIB $CTN_TGFOCUS '/usr/local/include' '/usr/local/include'
+buildah copy --from $CTN_TDLIB $CTN_TGFOCUS '/usr/local/lib' '/usr/local/lib'
+
+buildah run $CTN_TGFOCUS -- \
 	apt-get -o Acquire::ForceIPv4=true update
-	# apt-get --quiet update
-buildah run build-tgfocus-container -- \
+buildah run $CTN_TGFOCUS -- \
 	apt-get -o Acquire::ForceIPv4=true install git g++ libssl-dev zlib1g-dev cmake -y
-	# apt-get --quiet install git g++ cmake -y
 
 test $? -eq 0 || exit 1
 
-# build tg-focus
-if [[ ! -z $HTTPS_PROXY ]]
-then
-    echo Use proxy $HTTPS_PROXY!
-fi
+test -z $HTTPS_PROXY || echo use https proxy $HTTPS_PROXY
 
-buildah run build-tgfocus-container -- \
+buildah run $CTN_TGFOCUS -- \
 	bash -c "https_proxy=$HTTPS_PROXY git clone --depth=1 https://github.com/micl2e2/tg-focus"
-buildah run build-tgfocus-container -- \
-	bash -c "https_proxy=$HTTPS_PROXY cd tg-focus && bash dl-deps.bash"
 
 test $? -eq 0 || exit 2
 
-buildah run build-tgfocus-container -- \
-	bash -c "cd tg-focus && cmake -DCMAKE_BUILD_TYPE=Release -B build && cmake --build build"
+buildah run $CTN_TGFOCUS -- \
+	bash -c "https_proxy=$HTTPS_PROXY cd tg-focus && bash dl-deps.bash"
 
-# buildah run build-tgfocus-container -- \
-	# bash -c "cd tg-focus && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_FIND_LIBRARY_SUFFIXES='.a' -B build && cmake --build build"
+test $? -eq 0 || exit 3
+
+buildah run $CTN_TGFOCUS -- \
+	bash -c "cd tg-focus && cmake -DCMAKE_BUILD_TYPE=Release -B build && cmake --build build"
 
 
 
