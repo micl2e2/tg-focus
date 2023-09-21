@@ -1,4 +1,4 @@
-#include "tfconf_state.hh"
+#include "state.hh"
 
 std::atomic<bool> is_login{false};
 std::atomic<bool> is_tdlib_closed{false};

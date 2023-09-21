@@ -4,7 +4,7 @@
 #include <fmt/core.h>
 #include <iostream>
 
-#include "focusd_state.hh"
+#include "state.hh"
 #include "focus_filter.hh"
 
 void

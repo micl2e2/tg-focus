@@ -1,4 +1,4 @@
-#include "focusd_state.hh"
+#include "state.hh"
 
 std::atomic<std::uint32_t> it_cnt_switcher;
 std::atomic<std::uint32_t> it_cnt_producer;

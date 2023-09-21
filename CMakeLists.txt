@@ -20,96 +20,60 @@ if (DEFINED ENV{WITH_SANITIZERS})
 endif()
 
 # third-party
-add_subdirectory(${PROJECT_SOURCE_DIR}/deps/fmt)
+add_subdirectory(${PROJECT_SOURCE_DIR}/3rd/fmt)
 link_libraries(fmt)
 
 # a0d026239439c76847c4f75f2fa32f3e56b9b789
 find_package(Td 1.8.17 REQUIRED)
 
-# posix_regex
-add_library(posix_regex ${PROJECT_SOURCE_DIR}/src/posix_regex.cc)
-target_include_directories(posix_regex PRIVATE ${PROJECT_SOURCE_DIR}/include)
-
-# focus_filter
-add_library(focus_filter ${PROJECT_SOURCE_DIR}/src/focus_filter.cc)
-target_include_directories(focus_filter
-  PRIVATE ${PROJECT_SOURCE_DIR}/include
-  PUBLIC ${PROJECT_SOURCE_DIR}/deps/toml11)
-target_link_libraries(focus_filter PRIVATE posix_regex)
-
-# tf_data
-add_library(tf_data ${PROJECT_SOURCE_DIR}/src/tf_data.cc)
-target_include_directories(tf_data PRIVATE ${PROJECT_SOURCE_DIR}/include)
-
-# td_client
-add_library(td_client ${PROJECT_SOURCE_DIR}/src/td_client.cc)
-target_include_directories(td_client PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_link_libraries(td_client
-  PRIVATE Td::TdStatic
-  PRIVATE focus_filter
-  PRIVATE tf_data)
-
-
-# tfconf_state
-add_library(tfconf_state ${PROJECT_SOURCE_DIR}/src/tfconf_state.cc)
-target_include_directories(tfconf_state PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_link_libraries(tfconf_state
-  PRIVATE tf_data)
-
-# tfconf_auth
-add_library(tfconf_auth ${PROJECT_SOURCE_DIR}/src/tfconf_auth.cc)
-target_include_directories(tfconf_auth PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_link_libraries(tfconf_auth
-  PRIVATE tfconf_state
-  PRIVATE Td::TdStatic)
-
 # tf-conf
-add_executable(tf-conf ${PROJECT_SOURCE_DIR}/src/tf-conf.cc)
+add_executable(
+  tf-conf
+  ${PROJECT_SOURCE_DIR}/tf-conf/tf_conf.cc
+  ${PROJECT_SOURCE_DIR}/tf-conf/state.cc
+  ${PROJECT_SOURCE_DIR}/tf-conf/auth.cc
+  ${PROJECT_SOURCE_DIR}/shared/tf_data.cc
+  ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
+  ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc
+)
+
 target_include_directories(
   tf-conf
-  PRIVATE ${PROJECT_SOURCE_DIR}/include
-  PRIVATE ${PROJECT_SOURCE_DIR}/deps/toml11)
-target_link_libraries(tf-conf PRIVATE -static-libgcc -static-libstdc++)
-target_link_libraries(tf-conf
-  PRIVATE focus_filter
-  PRIVATE tfconf_state
-  PRIVATE tfconf_auth)
+  PRIVATE ${PROJECT_SOURCE_DIR}/shared
+  PRIVATE ${PROJECT_SOURCE_DIR}/3rd/toml11
+)
 
-# ...
-# add_executable(tf-tstleak ${PROJECT_SOURCE_DIR}/src/tf-tstleak.cc)
-# target_include_directories(
-#   tf-tstleak
-#   PRIVATE ${PROJECT_SOURCE_DIR}/include)
-
-# focusd_state
-add_library(focusd_state ${PROJECT_SOURCE_DIR}/src/focusd_state.cc)
-target_include_directories(focusd_state PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_link_libraries(focusd_state
-  PRIVATE tf_data
-  PRIVATE td_client)
-
-# focusd_worker
-add_library(focusd_worker ${PROJECT_SOURCE_DIR}/src/focusd_worker.cc)
-target_include_directories(focusd_worker PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_link_libraries(focusd_worker
-  PRIVATE focusd_state
-  PRIVATE focus_filter)
+target_link_libraries(
+  tf-conf
+  PRIVATE -static-libgcc -static-libstdc++
+  PRIVATE Td::TdStatic
+)
 
 # tf-focusd
-add_executable(tf-focusd ${PROJECT_SOURCE_DIR}/src/tf-focusd.cc)
+add_executable(
+  tf-focusd
+  ${PROJECT_SOURCE_DIR}/tf-focusd/tf_focusd.cc
+  ${PROJECT_SOURCE_DIR}/tf-focusd/state.cc
+  ${PROJECT_SOURCE_DIR}/tf-focusd/worker.cc
+  ${PROJECT_SOURCE_DIR}/tf-focusd/td_client.cc
+  ${PROJECT_SOURCE_DIR}/shared/tf_data.cc
+  ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
+  ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc
+)
+
 target_include_directories(
   tf-focusd
-  PRIVATE ${PROJECT_SOURCE_DIR}/include
-  PRIVATE ${PROJECT_SOURCE_DIR}/deps/toml11)
-target_link_libraries(tf-focusd
+  PRIVATE ${PROJECT_SOURCE_DIR}/shared
+  PRIVATE ${PROJECT_SOURCE_DIR}/3rd/toml11
+)
+
+target_link_libraries(
+  tf-focusd
   PRIVATE -static-libgcc -static-libstdc++
-  PRIVATE focusd_state
-  PRIVATE focusd_worker)
+  PRIVATE Td::TdStatic
+)
 
-# TEST
-# if (DEFINED ENV{RUN_TEST})
-  enable_testing()
-  add_subdirectory(test)
-# endif()
+# tests
 
-
+enable_testing()
+add_subdirectory(test)

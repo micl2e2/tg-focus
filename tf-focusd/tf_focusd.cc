@@ -1,8 +1,8 @@
 #include <thread>
 #include <fmt/core.h>
 
-#include "focusd_state.hh"
-#include "focusd_worker.hh"
+#include "state.hh"
+#include "worker.hh"
 
 template <class... Args>
 void
