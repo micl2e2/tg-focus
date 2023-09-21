@@ -7,10 +7,6 @@
 #include "consumer.hh"
 #include "switcher.hh"
 
-extern TdClient td_client;
-
-extern TgFocusData tf_data;
-
 template <class... Args>
 void
 log (fmt::format_string<Args...> fmt, Args &&...args)

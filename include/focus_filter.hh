@@ -1,41 +1,13 @@
 #ifndef _FOCUS_FILTER_H
 #define _FOCUS_FILTER_H 1
 
-// #include "toml/value.hpp"
-// #include <cstddef>
-// #include <cstdint>
-
 #include <string>
 #include <vector>
 #include <iostream>
 
 #include "toml.hpp"
 #include "posix_regex.hh"
-
-class TgMsg
-{
-public:
-  TgMsg () = default;
-
-  TgMsg (std::string &chat_title, std::string &sender,
-	 std::string &text_content, std::int32_t tstamp = 0);
-
-  TgMsg (std::string &&chat_title, std::string &&sender,
-	 std::string &&text_content, std::int32_t tstamp = 0);
-
-  const std::string &get_chat_title () const { return this->title_; }
-  const std::string &get_sender () const { return this->sender_; }
-  const std::string &get_text_content () const { return this->txt_; }
-  const std::string &get_timestamp () const { return this->tstamp_; }
-
-  friend std::ostream &operator<< (std::ostream &os, const TgMsg &msg);
-
-private:
-  std::string title_;
-  std::string sender_;
-  std::string txt_;
-  std::string tstamp_;
-};
+#include "tf_msg.hh"
 
 class FocusFilter
 {

@@ -63,6 +63,14 @@ target_link_libraries(tf-conf PRIVATE focus_filter PRIVATE tf_data)
 #   tf-tstleak
 #   PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
+# focusd_state
+add_library(focusd_state ${PROJECT_SOURCE_DIR}/src/focusd_state.cc)
+target_include_directories(focusd_state PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_link_libraries(focusd_state
+  PRIVATE tf_data
+  PRIVATE td_client
+)
+
 # tf-focusd
 add_executable(tf-focusd ${PROJECT_SOURCE_DIR}/src/tf-focusd.cc)
 target_include_directories(
@@ -70,7 +78,11 @@ target_include_directories(
   PRIVATE ${PROJECT_SOURCE_DIR}/include
   PRIVATE ${PROJECT_SOURCE_DIR}/deps/toml11)
 target_link_libraries(tf-focusd PRIVATE -static-libgcc -static-libstdc++)
-target_link_libraries(tf-focusd PRIVATE focus_filter PRIVATE tf_data PRIVATE td_client)
+target_link_libraries(tf-focusd
+  PRIVATE focus_filter
+  PRIVATE tf_data
+  PRIVATE td_client
+  PRIVATE focusd_state)
 target_link_libraries(tf-focusd PRIVATE Td::TdStatic)
 
 # TEST

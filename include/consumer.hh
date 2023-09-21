@@ -8,13 +8,14 @@
 
 #include "common.hh"
 #include "td_client.hh"
+#include "focusd_state.hh"
+#include "focus_filter.hh"
 
-// #include "tgfocus_state.hh"
-extern std::vector<TgMsg> mq;
-extern std::mutex mq_lock;
-extern std::atomic<bool> is_csm_mq;
-extern TdClient td_client;
-extern std::atomic<std::uint32_t> it_cnt_consumer;
+// extern std::vector<TgMsg> mq;
+// extern std::mutex mq_lock;
+// extern std::atomic<bool> is_csm_mq;
+// extern TdClient td_client;
+// extern std::atomic<std::uint32_t> it_cnt_consumer;
 
 bool
 is_tgfocus_msg (const TgMsg &msg)

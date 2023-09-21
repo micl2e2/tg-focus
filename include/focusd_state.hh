@@ -6,21 +6,21 @@
 #include <mutex>
 #include <atomic>
 
-#include "focus_filter.hh"
 #include "td_client.hh"
 #include "tf_data.hh"
+#include "tf_msg.hh"
 
-std::atomic<std::uint32_t> it_cnt_switcher;
-std::atomic<std::uint32_t> it_cnt_producer;
-std::atomic<std::uint32_t> it_cnt_consumer;
+extern std::atomic<std::uint32_t> it_cnt_switcher;
+extern std::atomic<std::uint32_t> it_cnt_producer;
+extern std::atomic<std::uint32_t> it_cnt_consumer;
 
-std::vector<TgMsg> mq;
-std::mutex mq_lock;
-std::atomic<bool> is_csm_mq;
-std::atomic<bool> is_tdlib_auth;
-std::atomic<bool> need_phone;
-TdClient td_client;
-TgFocusData tf_data{std::nullopt, false};
-std::atomic<int> producer_hang_period{0};
+extern std::vector<TgMsg> mq;
+extern std::mutex mq_lock;
+extern std::atomic<bool> is_csm_mq;
+extern std::atomic<bool> is_tdlib_auth;
+extern std::atomic<bool> need_phone;
+extern TdClient td_client;
+extern TgFocusData tf_data;
+extern std::atomic<int> producer_hang_period;
 
 #endif // _TGFOCUS_STATE_H

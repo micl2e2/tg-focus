@@ -11,13 +11,14 @@
 #include <iostream>
 
 #include "td_client.hh"
+#include "focusd_state.hh"
 
-extern std::vector<TgMsg> mq;
-extern std::mutex mq_lock;
-extern std::atomic<bool> is_csm_mq;
-extern std::atomic<bool> is_tdlib_auth;
-extern TdClient td_client;
-extern std::atomic<std::uint32_t> it_cnt_producer;
+// extern std::vector<TgMsg> mq;
+// extern std::mutex mq_lock;
+// extern std::atomic<bool> is_csm_mq;
+// extern std::atomic<bool> is_tdlib_auth;
+// extern TdClient td_client;
+// extern std::atomic<std::uint32_t> it_cnt_producer;
 
 void
 tgmsg_producer ()
