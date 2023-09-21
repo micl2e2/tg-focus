@@ -34,5 +34,10 @@ test $? -eq 0 || exit 3
 buildah run $CTN_TGFOCUS -- \
 	bash -c "cd tg-focus && cmake -DCMAKE_BUILD_TYPE=Release -B build && cmake --build build"
 
+test $? -eq 0 || exit 4
+
+buildah run $CTN_TGFOCUS -- \
+	bash -c "cd tg-focus && strip /tg-focus/build/tf-conf && strip /tg-focus/build/tf-focusd"
+
 
 
