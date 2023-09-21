@@ -1,6 +1,6 @@
-mkdir -p deps
+mkdir -p 3rd
 
-cd deps
+cd 3rd
 
 git clone https://github.com/fmtlib/fmt fmt
 cd fmt && \

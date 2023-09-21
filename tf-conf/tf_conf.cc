@@ -15,12 +15,10 @@
 #include <unistd.h>
 #include <vector>
 
-#include "common.hh"
 #include "toml.hpp"
-
-#include "tfconf_state.hh"
-
-#include "tfconf_auth.hh"
+#include "common.hh"
+#include "state.hh"
+#include "auth.hh"
 #include "focus_filter.hh"
 
 int

@@ -1,5 +1,4 @@
-#include "tfconf_auth.hh"
-
+#include "auth.hh"
 #include "common.hh"
 
 TdAuth::TdAuth ()
