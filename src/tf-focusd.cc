@@ -4,10 +4,6 @@
 #include "focusd_state.hh"
 #include "focusd_worker.hh"
 
-// #include "producer.hh"
-// #include "consumer.hh"
-// #include "switcher.hh"
-
 template <class... Args>
 void
 log (fmt::format_string<Args...> fmt, Args &&...args)
