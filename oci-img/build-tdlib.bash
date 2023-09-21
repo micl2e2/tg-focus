@@ -5,6 +5,9 @@ test $flag -eq 0 || exit 0
 
 buildah from --name $CTN_TDLIB debian:bookworm-slim
 
+buildah run build-tgfocus-container -- \
+	sed -i 's/deb\.debian\.org/ftp\.us\.debian\.org/' /etc/apt/sources.list.d/debian.sources
+
 buildah run $CTN_TDLIB -- \
 	apt-get -o Acquire::ForceIPv4=true update
 buildah run $CTN_TDLIB -- \

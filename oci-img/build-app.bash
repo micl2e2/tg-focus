@@ -9,6 +9,9 @@ buildah from --name $CTN_TGFOCUS debian:bookworm-slim
 buildah copy --from $CTN_TDLIB $CTN_TGFOCUS '/usr/local/include' '/usr/local/include'
 buildah copy --from $CTN_TDLIB $CTN_TGFOCUS '/usr/local/lib' '/usr/local/lib'
 
+buildah run build-tgfocus-container -- \
+	sed -i 's/deb\.debian\.org/ftp\.us\.debian\.org/' /etc/apt/sources.list.d/debian.sources
+
 buildah run $CTN_TGFOCUS -- \
 	apt-get -o Acquire::ForceIPv4=true update
 buildah run $CTN_TGFOCUS -- \
@@ -24,7 +27,7 @@ buildah run $CTN_TGFOCUS -- \
 test $? -eq 0 || exit 2
 
 buildah run $CTN_TGFOCUS -- \
-	bash -c "https_proxy=$HTTPS_PROXY cd tg-focus && bash dl-deps.bash"
+	bash -c "https_proxy=$HTTPS_PROXY cd tg-focus && bash dl-3rd.bash"
 
 test $? -eq 0 || exit 3
 
