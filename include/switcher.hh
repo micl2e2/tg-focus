@@ -8,19 +8,11 @@
 #include <thread>
 #include <fmt/core.h>
 
-// #include "tgfocus_state.hh"
-
 #include "td_client.hh"
 #include "focusd_state.hh"
 
-// extern std::vector<TgMsg> mq;
-// extern std::mutex mq_lock;
-// extern std::atomic<bool> is_csm_mq;
-// extern TdClient td_client;
-// extern std::atomic<std::uint32_t> it_cnt_switcher;
-
 void
-tgmsg_switcher ()
+focusd_switcher ()
 {
   // size_t it_count = 0;
   while (true)

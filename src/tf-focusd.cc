@@ -2,10 +2,11 @@
 #include <fmt/core.h>
 
 #include "focusd_state.hh"
+#include "focusd_worker.hh"
 
-#include "producer.hh"
-#include "consumer.hh"
-#include "switcher.hh"
+// #include "producer.hh"
+// #include "consumer.hh"
+// #include "switcher.hh"
 
 template <class... Args>
 void
@@ -44,9 +45,9 @@ main ()
 
   td_client.init ();
 
-  std::thread producer (tgmsg_producer);
-  std::thread switcher (tgmsg_switcher);
-  std::thread consumer (tgmsg_consumer);
+  std::thread producer (focusd_producer);
+  std::thread switcher (focusd_switcher);
+  std::thread consumer (focusd_consumer);
   producer.join ();
   switcher.join ();
   consumer.join ();

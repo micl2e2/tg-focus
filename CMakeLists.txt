@@ -26,7 +26,6 @@ link_libraries(fmt)
 # a0d026239439c76847c4f75f2fa32f3e56b9b789
 find_package(Td 1.8.17 REQUIRED)
 
-
 # posix_regex
 add_library(posix_regex ${PROJECT_SOURCE_DIR}/src/posix_regex.cc)
 target_include_directories(posix_regex PRIVATE ${PROJECT_SOURCE_DIR}/include)
@@ -71,6 +70,15 @@ target_link_libraries(focusd_state
   PRIVATE td_client
 )
 
+# focusd_worker
+add_library(focusd_worker ${PROJECT_SOURCE_DIR}/src/focusd_worker.cc)
+target_include_directories(focusd_worker PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_link_libraries(focusd_worker
+  PRIVATE focusd_state
+  PRIVATE td_client
+  PRIVATE focus_filter
+)
+
 # tf-focusd
 add_executable(tf-focusd ${PROJECT_SOURCE_DIR}/src/tf-focusd.cc)
 target_include_directories(
@@ -82,7 +90,8 @@ target_link_libraries(tf-focusd
   PRIVATE focus_filter
   PRIVATE tf_data
   PRIVATE td_client
-  PRIVATE focusd_state)
+  PRIVATE focusd_state
+  PRIVATE focusd_worker)
 target_link_libraries(tf-focusd PRIVATE Td::TdStatic)
 
 # TEST

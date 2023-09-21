@@ -1,15 +1,31 @@
-#ifndef _CONSUMER_H
-#define _CONSUMER_H
-
-#include <fmt/core.h>
-#include <vector>
 #include <mutex>
 #include <atomic>
+#include <thread>
+#include <fmt/core.h>
+#include <iostream>
 
-#include "common.hh"
 #include "td_client.hh"
 #include "focusd_state.hh"
 #include "focus_filter.hh"
+
+void
+focusd_producer ()
+{
+  while (true)
+    {
+      is_csm_mq.wait (true, std::memory_order_acquire);
+
+      std::cerr << fmt::format ("[PRODUCER {}] mq size: {}",
+				it_cnt_producer.load (
+				  std::memory_order_relaxed),
+				mq.size ())
+		<< std::endl;
+
+      td_client.fetch_updates ();
+
+      it_cnt_producer.fetch_add (1, std::memory_order_relaxed);
+    }
+}
 
 bool
 is_tgfocus_msg (const TgMsg &msg)
@@ -107,4 +123,44 @@ focusd_consumer ()
     }
 }
 
-#endif
+void
+focusd_switcher ()
+{
+  // size_t it_count = 0;
+  while (true)
+    {
+      std::this_thread::sleep_for (std::chrono::seconds (5));
+
+      {
+	std::cout
+	  << fmt::format ("[SWITCHER {}] P,{} C,{} S,{} check for switching...",
+			  it_cnt_switcher.load (std::memory_order_relaxed),
+			  it_cnt_producer.load (std::memory_order_relaxed),
+			  it_cnt_consumer.load (std::memory_order_relaxed),
+			  it_cnt_switcher.load (std::memory_order_relaxed))
+
+	  << std::endl;
+      }
+
+      if (is_csm_mq.load (std::memory_order_acquire))
+	{
+	  std::cout
+	    << fmt::format ("[SWITCHER {}] has msg, consumer maybe handling...",
+			    it_cnt_switcher.load (std::memory_order_relaxed))
+	    << std::endl;
+	  continue;
+	}
+
+      {
+	std::lock_guard<std::mutex> mq_guard (mq_lock);
+	if (mq.size () > 0)
+	  {
+	    is_csm_mq.store (true, std::memory_order_release); // unlock
+	    is_csm_mq.notify_all ();
+	  }
+      }
+
+      it_cnt_switcher.fetch_add (1, std::memory_order_relaxed);
+      // it_count++;
+    }
+}
