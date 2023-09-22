@@ -73,7 +73,8 @@ focusd_consumer ()
 	  continue;
 	}
 
-      consume_existing_messages : {
+      // try consume mq
+      {
 	std::lock_guard<std::mutex> mq_guard (mq_lock);
 
 	if (mq.size () > 0 && td_client.done_create_collector)
@@ -106,7 +107,7 @@ focusd_consumer ()
 		    // we dont deal or log tgfocus message.
 		  }
 	      }
-	    mq = std::vector<TgMsg> ();
+	    mq = std::move (std::vector<TgMsg> ());
 	  }
 	else
 	  {
