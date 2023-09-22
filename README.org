@@ -1,0 +1,7 @@
+#+TITLE: TG-FOCUS
+#+OPTIONS: num:nil
+
+* About
+
+tg-focus is a ...
+
