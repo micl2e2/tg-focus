@@ -1,0 +1,32 @@
+name: build-tgfocus
+run-name: Build TgFocus
+on: [push]
+jobs:
+  job1:
+    name: Build OCI App
+    if: contains(github.event.head_commit.message, 'YnVpbGQtdGdmb2N1cwo=') == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get current date
+        run: echo "CURR_DATE=$(date +'%Y%m%d')" >> "$GITHUB_ENV"
+      - uses: actions/checkout@v3
+      - name: Install Deps
+        run: sudo apt-get update && sudo apt-get install buildah -y
+      - name: Build TDLib
+        run: bash oci/build-tdlib.bash
+      - name: Build TgFocus
+        run: bash oci/build-app.bash
+      - name: Package TgFocus
+        run: bash oci/package-app.bash
+      - name: OCI Image
+        uses: actions/upload-artifact@v3
+        with:
+          name: tg-focus-ociapp-${{ env.CURR_DATE }}
+          path: |
+            tg-focus-ociapp-*
+
+
+
+
+
+      
