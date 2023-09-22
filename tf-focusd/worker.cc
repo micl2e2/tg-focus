@@ -110,7 +110,6 @@ focusd_consumer ()
 
 	    {
 	      auto tmp = std::move (mq);
-	      mq = std::vector<TgMsg> ();
 	    }
 	  }
 	else
