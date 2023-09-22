@@ -32,6 +32,9 @@ podman images | grep tg-focus
 
 curr_date=$(date +%Y%m%d)
 
-podman save --output tg-focus-ociapp-$curr_date.tar --format oci-archive localhost/tg-focus:latest
+TAR_NAME="tg-focus-ociapp-$curr_date"
 
+podman save --output $TAR_NAME.tar --format oci-archive localhost/tg-focus:latest
+
+podman inspect localhost/tg-focus:latest >$TAR_NAME.json
 
