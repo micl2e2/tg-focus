@@ -107,7 +107,11 @@ focusd_consumer ()
 		    // we dont deal or log tgfocus message.
 		  }
 	      }
-	    mq = std::move (std::vector<TgMsg> ());
+
+	    {
+	      auto tmp = std::move (mq);
+	      mq = std::vector<TgMsg> ();
+	    }
 	  }
 	else
 	  {
