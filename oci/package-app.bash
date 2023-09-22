@@ -26,3 +26,12 @@ buildah config --cmd "/bin/bash -c tf-focusd" $CTN_APP
 
 buildah commit $CTN_APP tg-focus
 
+test $? -eq 0 || exit 1
+
+podman images | grep tg-focus
+
+curr_date=$(date +%Y%m%d)
+
+podman save --output tg-focus-ociapp-$curr_date.tar --format oci-archive localhost/tg-focus:latest
+
+
