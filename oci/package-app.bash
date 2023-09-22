@@ -14,9 +14,7 @@ buildah copy --from $CTN_TGFOCUS $CTN_APP \
 buildah run $CTN_APP -- \
 	apt-get -o Acquire::ForceIPv4=true update
 buildah run $CTN_APP -- \
-	apt-get -o Acquire::ForceIPv4=true install nano -y
-buildah run $CTN_APP -- \
-	apt-get -o Acquire::ForceIPv4=true install locales -y
+	apt-get -o Acquire::ForceIPv4=true install locales nano -y
 
 buildah run $CTN_APP -- \
 	sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
