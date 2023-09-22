@@ -6,6 +6,7 @@
 
 #include "state.hh"
 #include "focus_filter.hh"
+#include "tf_msg.hh"
 
 void
 focusd_producer ()
@@ -105,7 +106,7 @@ focusd_consumer ()
 		    // we dont deal or log tgfocus message.
 		  }
 	      }
-	    mq.clear ();
+	    mq = std::vector<TgMsg> ();
 	  }
 	else
 	  {
