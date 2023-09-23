@@ -268,7 +268,8 @@ TdCollector::process_update (td_api::object_ptr<td_api::Object> update)
 	    }
 	    case messageSenderChat::ID: {
 	      auto casted = static_cast<messageSenderChat *> (sender_id.get ());
-	      sender_name = get_chat_title (casted->chat_id_);
+	      sender_name
+		= fmt::format ("{}(chat)", get_chat_title (casted->chat_id_));
 	      break;
 	    }
 	  }
