@@ -28,15 +28,6 @@ focusd_producer ()
 }
 
 bool
-is_tgfocus_msg (const TgMsg &msg)
-{
-  if (msg.get_chat_title ().find ("TG-FOCUS") != std::string::npos)
-    return true;
-
-  return false;
-}
-
-bool
 need_collect (const TgMsg &msg)
 {
   // FileReader freader{"filters.toml"};
@@ -87,7 +78,7 @@ focusd_consumer ()
 	    for (auto it = mq.begin (); it != mq.end (); it += 1)
 	      {
 		auto curr_msg = *it;
-		if (!is_tgfocus_msg (curr_msg))
+		if (!curr_msg.is_from_tgfocus ())
 		  {
 		    if (need_collect (curr_msg))
 		      {
@@ -130,20 +121,22 @@ focusd_consumer ()
 void
 focusd_switcher ()
 {
-  // size_t it_count = 0;
   while (true)
     {
       std::this_thread::sleep_for (std::chrono::seconds (5));
 
       {
-	std::cout
-	  << fmt::format ("[SWITCHER {}] P,{} C,{} S,{} check for switching...",
-			  it_cnt_switcher.load (std::memory_order_relaxed),
-			  it_cnt_producer.load (std::memory_order_relaxed),
-			  it_cnt_consumer.load (std::memory_order_relaxed),
-			  it_cnt_switcher.load (std::memory_order_relaxed))
+	std::cout << fmt::format (
+	  "[SWITCHER {}] P,{} C,{} S,{} nhandle:{},nuser:{},nchattitle:{}  "
+	  "check for switch...",
+	  td_client.n_handlers (), td_client.n_users (),
+	  td_client.n_chat_titles (),
+	  it_cnt_switcher.load (std::memory_order_relaxed),
+	  it_cnt_producer.load (std::memory_order_relaxed),
+	  it_cnt_consumer.load (std::memory_order_relaxed),
+	  it_cnt_switcher.load (std::memory_order_relaxed))
 
-	  << std::endl;
+		  << std::endl;
       }
 
       if (is_csm_mq.load (std::memory_order_acquire))

@@ -15,12 +15,20 @@ public:
   TgMsg (std::string &&chat_title, std::string &&sender,
 	 std::string &&text_content, std::int32_t tstamp = 0);
 
-  const std::string &get_chat_title () const { return this->title_; }
-  const std::string &get_sender () const { return this->sender_; }
-  const std::string &get_text_content () const { return this->txt_; }
-  const std::string &get_timestamp () const { return this->tstamp_; }
+  inline const std::string &get_chat_title () const { return this->title_; }
 
-  friend std::ostream &operator<< (std::ostream &os, const TgMsg &msg);
+  inline bool is_from_tgfocus () const
+  {
+    return this->title_.find ("TG-FOCUS") != std::string::npos;
+  }
+
+  inline const std::string &get_sender () const { return this->sender_; }
+
+  inline const std::string &get_text_content () const { return this->txt_; }
+
+  inline const std::string &get_timestamp () const { return this->tstamp_; }
+
+  inline friend std::ostream &operator<< (std::ostream &os, const TgMsg &msg);
 
 private:
   std::string title_;

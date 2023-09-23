@@ -26,8 +26,6 @@ extern std::atomic<std::uint32_t> it_cnt_consumer;
 
 namespace td_api = td::td_api;
 
-//
-// initialize td client
 void
 TdClient::init ()
 {
@@ -38,8 +36,6 @@ TdClient::init ()
   send_query (td_api::make_object<td_api::getOption> ("version"), {});
 }
 
-//
-// create collector chat
 void
 TdClient::create_tgfocus_group ()
 {
@@ -92,8 +88,6 @@ no message!
     }
 }
 
-//
-// send message to collector chat
 void
 TdClient::collect_msg (const TgMsg &msg, size_t c_count)
 {
@@ -133,8 +127,6 @@ DATE: {}
   });
 }
 
-//
-// signal td client to fetch updates
 void
 TdClient::fetch_updates ()
 {
@@ -150,8 +142,6 @@ TdClient::fetch_updates ()
     }
 }
 
-//
-// signal td client to send a request
 void
 TdClient::send_query (td_api::object_ptr<td_api::Function> f,
 		      std::function<void (Object)> handler)
@@ -164,9 +154,6 @@ TdClient::send_query (td_api::object_ptr<td_api::Function> f,
   client_manager_->send (client_id_, query_id, std::move (f));
 }
 
-//
-// process response from td client, maybe for an automatic update, maybe for a
-// user's request.
 void
 TdClient::process_response (td::ClientManager::Response response)
 {
@@ -193,8 +180,6 @@ TdClient::process_response (td::ClientManager::Response response)
     }
 }
 
-//
-// get user name from internal map
 std::string
 TdClient::get_user_name (std::int64_t user_id) const
 {
@@ -330,9 +315,13 @@ TdClient::process_update (td_api::object_ptr<td_api::Object> update)
 
 	std::int32_t tstamp = casted->message_->date_;
 
+	// ---
 	std::lock_guard<std::mutex> mq_guard (mq_lock);
-	mq.insert (mq.begin (),
-		   TgMsg (chat_title_[chat_id], sender_name, text, tstamp));
+
+	TgMsg msg (chat_title_[chat_id], sender_name, text, tstamp);
+
+	if (!msg.is_from_tgfocus ())
+	  mq.insert (mq.begin (), std::move (msg));
 
 	break;
       }

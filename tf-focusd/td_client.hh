@@ -47,6 +47,12 @@ public:
 
   bool is_authorized{false};
 
+  size_t n_handlers () { return this->handlers_.size (); }
+
+  size_t n_users () { return this->users_.size (); }
+
+  size_t n_chat_titles () { return this->chat_title_.size (); }
+
 private:
   using Object = td_api::object_ptr<td_api::Object>;
   std::unique_ptr<td::ClientManager> client_manager_; // client manager obj
