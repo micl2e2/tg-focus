@@ -10,10 +10,10 @@ public:
   TgMsg () = default;
 
   TgMsg (std::string &chat_title, std::string &sender,
-	 std::string &text_content, std::int32_t tstamp = 0);
+	 std::string &text_content, int32_t tstamp = 0);
 
   TgMsg (std::string &&chat_title, std::string &&sender,
-	 std::string &&text_content, std::int32_t tstamp = 0);
+	 std::string &&text_content, int32_t tstamp = 0);
 
   inline const std::string &get_chat_title () const { return this->title_; }
 
@@ -28,7 +28,7 @@ public:
 
   inline const std::string &get_timestamp () const { return this->tstamp_; }
 
-  inline friend std::ostream &operator<< (std::ostream &os, const TgMsg &msg);
+  friend std::ostream &operator<< (std::ostream &os, const TgMsg &msg);
 
 private:
   std::string title_;

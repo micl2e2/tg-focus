@@ -11,6 +11,7 @@ set(CurrTestName focus_filter_test)
 add_executable(${CurrTestName} ${CurrTestName}.cc
    ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc
    ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
+   ${PROJECT_SOURCE_DIR}/shared/tf_msg.cc
 )
 target_include_directories(${CurrTestName} PRIVATE
   ${PROJECT_SOURCE_DIR}/shared

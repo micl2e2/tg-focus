@@ -59,6 +59,7 @@ add_executable(
   ${PROJECT_SOURCE_DIR}/shared/tf_data.cc
   ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
   ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc
+  ${PROJECT_SOURCE_DIR}/shared/tf_msg.cc
 )
 
 target_include_directories(
