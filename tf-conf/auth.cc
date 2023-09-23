@@ -181,6 +181,16 @@ TdAuth::on_authorization_state_update ()
 	break;
       }
 
+      case td_api::authorizationStateWaitPhoneNumber::ID: {
+	log_flush ("Enter phone number: ");
+	std::string phone_number;
+	std::cin >> phone_number;
+	send_query (td_api::make_object<td_api::setAuthenticationPhoneNumber> (
+		      phone_number, nullptr),
+		    auth_query_callback ());
+	break;
+      }
+
       case td_api::authorizationStateWaitCode::ID: {
 	log_flush ("Enter authentication code: ");
 	std::string code;
