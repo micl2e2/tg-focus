@@ -125,12 +125,12 @@ focusd_switcher ()
 	std::cout << fmt::format (
 	  "[SWITCHER {}] P,{} C,{} S,{} nhandle:{},nuser:{},nchattitle:{}  "
 	  "check for switch...",
-	  collector.n_handlers (), collector.n_users (),
-	  collector.n_chat_titles (),
 	  it_cnt_switcher.load (std::memory_order_relaxed),
 	  it_cnt_producer.load (std::memory_order_relaxed),
 	  it_cnt_consumer.load (std::memory_order_relaxed),
-	  it_cnt_switcher.load (std::memory_order_relaxed))
+	  it_cnt_switcher.load (std::memory_order_relaxed),
+	  collector.n_handlers (), collector.n_users (),
+	  collector.n_chat_titles ())
 		  << std::endl;
       }
 

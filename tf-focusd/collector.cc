@@ -148,6 +148,7 @@ TdCollector::send_query (td_api::object_ptr<td_api::Function> f,
 			 std::function<void (Object)> handler)
 {
   auto query_id = next_query_id ();
+  std::cout << "send_query!!!" << std::endl;
   if (handler)
     {
       handlers_.emplace (query_id, std::move (handler));
