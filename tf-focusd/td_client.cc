@@ -14,6 +14,7 @@
 #include <td/telegram/td_api.h>
 #include <td/telegram/td_api.hpp>
 
+#include "common.hh"
 #include "tf_data.hh"
 #include "td_client.hh"
 
@@ -378,8 +379,8 @@ TdClient::on_authorization_state_update ()
 	request->api_id_ = tf_data.get_api_id_as_int32 ();
 	request->api_hash_ = tf_data.get_api_hash (); //
 	request->system_language_code_ = "en";
-	request->device_model_ = "Desktop";
-	request->application_version_ = "1.0";
+	request->device_model_ = TF_DEV;
+	request->application_version_ = TF_VER;
 	request->enable_storage_optimizer_ = true;
 	send_query (std::move (request), auth_query_callback ());
 	break;

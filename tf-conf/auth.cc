@@ -259,7 +259,6 @@ TdAuth::on_authorization_state_update ()
 	else
 	  {
 	    log_flush ("Enter api id: ");
-	    // std::cout << "Enter api id: " << std::flush;
 	    std::cin >> may_api_id;
 
 	    if (is_valid_int32 (may_api_id))
@@ -268,7 +267,6 @@ TdAuth::on_authorization_state_update ()
 	      api_id = 0;
 
 	    log_flush ("Enter api hash: ");
-	    // std::cout << "Enter api hash: " << std::flush;
 	    std::cin >> api_hash;
 	  }
 
@@ -279,8 +277,8 @@ TdAuth::on_authorization_state_update ()
 	request->api_id_ = api_id;
 	request->api_hash_ = api_hash;
 	request->system_language_code_ = "en";
-	request->device_model_ = "TG-FOCUS";
-	request->application_version_ = "1.1.817-beta1";
+	request->device_model_ = TF_DEV;
+	request->application_version_ = TF_VER;
 	request->enable_storage_optimizer_ = true;
 
 	this->api_id_ = api_id;
