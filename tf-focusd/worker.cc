@@ -21,7 +21,7 @@ focusd_producer ()
 				mq.size ())
 		<< std::endl;
 
-      td_client.fetch_updates ();
+      collector.fetch_updates ();
 
       it_cnt_producer.fetch_add (1, std::memory_order_relaxed);
     }
@@ -58,9 +58,9 @@ focusd_consumer ()
 
       is_csm_mq.wait (false, std::memory_order_acquire);
 
-      if (!td_client.tried_create_collector)
+      if (!collector.tried_create_collector)
 	{
-	  td_client.create_tgfocus_group ();
+	  collector.create_tgfocus_group ();
 	  continue;
 	}
 
@@ -68,7 +68,7 @@ focusd_consumer ()
       {
 	std::lock_guard<std::mutex> mq_guard (mq_lock);
 
-	if (mq.size () > 0 && td_client.done_create_collector)
+	if (mq.size () > 0 && collector.done_create_collector)
 	  {
 	    std::cerr << fmt::format (
 	      "[CONSUMER {}] mq consumable, mq.size():{} ",
@@ -82,7 +82,7 @@ focusd_consumer ()
 		  {
 		    if (need_collect (curr_msg))
 		      {
-			td_client.collect_msg (std::move (curr_msg),
+			collector.collect_msg (std::move (curr_msg),
 					       consume_cnt);
 			consume_cnt++;
 		      }
@@ -92,10 +92,6 @@ focusd_consumer ()
 					it_cnt_consumer.load (
 					  std::memory_order_relaxed))
 			<< curr_msg << std::endl;
-		  }
-		else
-		  {
-		    // we dont deal or log tgfocus message.
 		  }
 	      }
 
@@ -129,13 +125,12 @@ focusd_switcher ()
 	std::cout << fmt::format (
 	  "[SWITCHER {}] P,{} C,{} S,{} nhandle:{},nuser:{},nchattitle:{}  "
 	  "check for switch...",
-	  td_client.n_handlers (), td_client.n_users (),
-	  td_client.n_chat_titles (),
+	  collector.n_handlers (), collector.n_users (),
+	  collector.n_chat_titles (),
 	  it_cnt_switcher.load (std::memory_order_relaxed),
 	  it_cnt_producer.load (std::memory_order_relaxed),
 	  it_cnt_consumer.load (std::memory_order_relaxed),
 	  it_cnt_switcher.load (std::memory_order_relaxed))
-
 		  << std::endl;
       }
 
@@ -158,6 +153,5 @@ focusd_switcher ()
       }
 
       it_cnt_switcher.fetch_add (1, std::memory_order_relaxed);
-      // it_count++;
     }
 }

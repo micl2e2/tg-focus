@@ -16,7 +16,7 @@
 
 #include "common.hh"
 #include "tf_data.hh"
-#include "td_client.hh"
+#include "collector.hh"
 
 extern std::vector<TgMsg> mq;
 extern std::mutex mq_lock;
@@ -28,7 +28,7 @@ extern std::atomic<std::uint32_t> it_cnt_consumer;
 namespace td_api = td::td_api;
 
 void
-TdClient::init ()
+TdCollector::init ()
 {
   td::ClientManager::execute (
     td_api::make_object<td_api::setLogVerbosityLevel> (1));
@@ -38,7 +38,7 @@ TdClient::init ()
 }
 
 void
-TdClient::create_tgfocus_group ()
+TdCollector::create_tgfocus_group ()
 {
   // the handle call time maybe a little late, one proved order:
   /*
@@ -90,7 +90,7 @@ no message!
 }
 
 void
-TdClient::collect_msg (const TgMsg &msg, size_t c_count)
+TdCollector::collect_msg (const TgMsg &msg, size_t c_count)
 {
   // https://core.telegram.org/tdlib/docs/td__api_8h.html#a7b249263de52128c32781ba0e713b556
   // if (msg.get_chat_title ().find ("TG-FOCUS") != std::string::npos)
@@ -129,7 +129,7 @@ DATE: {}
 }
 
 void
-TdClient::fetch_updates ()
+TdCollector::fetch_updates ()
 {
   auto response = client_manager_->receive (60);
   if (response.object)
@@ -144,8 +144,8 @@ TdClient::fetch_updates ()
 }
 
 void
-TdClient::send_query (td_api::object_ptr<td_api::Function> f,
-		      std::function<void (Object)> handler)
+TdCollector::send_query (td_api::object_ptr<td_api::Function> f,
+			 std::function<void (Object)> handler)
 {
   auto query_id = next_query_id ();
   if (handler)
@@ -156,7 +156,7 @@ TdClient::send_query (td_api::object_ptr<td_api::Function> f,
 }
 
 void
-TdClient::process_response (td::ClientManager::Response response)
+TdCollector::process_response (td::ClientManager::Response response)
 {
   if (!response.object)
     {
@@ -182,7 +182,7 @@ TdClient::process_response (td::ClientManager::Response response)
 }
 
 std::string
-TdClient::get_user_name (std::int64_t user_id) const
+TdCollector::get_user_name (std::int64_t user_id) const
 {
   auto it = this->users_.find (user_id);
   if (it == users_.end ())
@@ -204,7 +204,7 @@ TdClient::get_user_name (std::int64_t user_id) const
 //
 // get chat title from internal map
 std::string
-TdClient::get_chat_title (std::int64_t chat_id) const
+TdCollector::get_chat_title (std::int64_t chat_id) const
 {
   auto it = chat_title_.find (chat_id);
   if (it == chat_title_.end ())
@@ -215,7 +215,7 @@ TdClient::get_chat_title (std::int64_t chat_id) const
 }
 
 void
-TdClient::process_update (td_api::object_ptr<td_api::Object> update)
+TdCollector::process_update (td_api::object_ptr<td_api::Object> update)
 {
   using td::td_api::updateAuthorizationState;
   using td::td_api::updateChatTitle;
@@ -338,7 +338,7 @@ TdClient::process_update (td_api::object_ptr<td_api::Object> update)
 }
 
 auto
-TdClient::auth_query_callback ()
+TdCollector::auth_query_callback ()
 {
   return [this, id = authentication_query_id_] (Object object) {
     if (id == authentication_query_id_)
@@ -355,7 +355,7 @@ TdClient::auth_query_callback ()
 }
 
 void
-TdClient::on_authorization_state_update ()
+TdCollector::on_authorization_state_update ()
 {
   this->authentication_query_id_++;
 
@@ -395,7 +395,7 @@ TdClient::on_authorization_state_update ()
 }
 
 void
-TdClient::check_authentication_error (Object object)
+TdCollector::check_authentication_error (Object object)
 {
   if (object->get_id () == td_api::error::ID)
     {
@@ -411,7 +411,7 @@ TdClient::check_authentication_error (Object object)
 //
 // td request id
 std::uint64_t
-TdClient::next_query_id ()
+TdCollector::next_query_id ()
 {
   return ++current_query_id_;
 }

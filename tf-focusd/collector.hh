@@ -1,5 +1,5 @@
-#ifndef _TD_CLIENT_H
-#define _TD_CLIENT_H
+#ifndef _TD_COLLECTOR_H
+#define _TD_COLLECTOR_H
 
 #include <cstdlib>
 #include <vector>
@@ -22,13 +22,13 @@
 
 namespace td_api = td::td_api;
 
-class TdClient
+class TdCollector
 {
 public:
   bool tried_create_collector{false};
   bool done_create_collector{false};
 
-  TdClient () = default;
+  TdCollector () = default;
 
   //
   // initialize td client

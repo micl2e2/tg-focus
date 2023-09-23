@@ -6,7 +6,7 @@
 #include <mutex>
 #include <atomic>
 
-#include "td_client.hh"
+#include "collector.hh"
 #include "tf_data.hh"
 #include "tf_msg.hh"
 
@@ -19,7 +19,7 @@ extern std::mutex mq_lock;
 extern std::atomic<bool> is_csm_mq;
 extern std::atomic<bool> is_tdlib_auth;
 extern std::atomic<bool> need_phone;
-extern TdClient td_client;
+extern TdCollector collector;
 extern TgFocusData tf_data;
 extern std::atomic<int> producer_hang_period;
 

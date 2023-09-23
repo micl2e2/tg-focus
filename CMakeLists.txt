@@ -55,7 +55,7 @@ add_executable(
   ${PROJECT_SOURCE_DIR}/tf-focusd/tf_focusd.cc
   ${PROJECT_SOURCE_DIR}/tf-focusd/state.cc
   ${PROJECT_SOURCE_DIR}/tf-focusd/worker.cc
-  ${PROJECT_SOURCE_DIR}/tf-focusd/td_client.cc
+  ${PROJECT_SOURCE_DIR}/tf-focusd/collector.cc
   ${PROJECT_SOURCE_DIR}/shared/tf_data.cc
   ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
   ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc

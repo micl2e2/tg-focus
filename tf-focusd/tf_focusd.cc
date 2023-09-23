@@ -39,7 +39,7 @@ main ()
 
   // tf_data.init ();
 
-  td_client.init ();
+  collector.init ();
 
   std::thread producer (focusd_producer);
   std::thread switcher (focusd_switcher);
