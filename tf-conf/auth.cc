@@ -161,7 +161,7 @@ TdAuth::on_authorization_state_update ()
 	break;
       }
 
-      // FIXME: auth-reset should make use of this event
+      // FIXME:  auth-reset should make use of this event
       // case td_api::authorizationStateLoggingOut::ID: {
       //   this->is_authorized = false;
       //   std::cout << "Logging out" << std::endl;
