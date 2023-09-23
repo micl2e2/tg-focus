@@ -181,67 +181,12 @@ TdAuth::on_authorization_state_update ()
 	break;
       }
 
-      case td_api::authorizationStateWaitPhoneNumber::ID: {
-	log_flush ("Enter phone number: ");
-	// std::cout << "Enter phone number: " << std::flush;
-	std::string phone_number;
-	std::cin >> phone_number;
-	send_query (td_api::make_object<td_api::setAuthenticationPhoneNumber> (
-		      phone_number, nullptr),
-		    auth_query_callback ());
-	break;
-      }
-
-      case td_api::authorizationStateWaitEmailAddress::ID: {
-	log_flush ("Enter email address: ");
-	// std::cout << "Enter email address: " << std::flush;
-	std::string email_address;
-	std::cin >> email_address;
-	send_query (td_api::make_object<td_api::setAuthenticationEmailAddress> (
-		      email_address),
-		    auth_query_callback ());
-	break;
-      }
-
-      case td_api::authorizationStateWaitEmailCode::ID: {
-	log_flush ("Enter email authentication code: ");
-	// std::cout << "Enter email authentication code: " << std::flush;
-	std::string code;
-	std::cin >> code;
-	send_query (
-	  td_api::make_object<td_api::checkAuthenticationEmailCode> (
-	    td_api::make_object<td_api::emailAddressAuthenticationCode> (code)),
-	  auth_query_callback ());
-	break;
-      }
-
       case td_api::authorizationStateWaitCode::ID: {
 	log_flush ("Enter authentication code: ");
-	// std::cout << "Enter authentication code: " << std::flush;
 	std::string code;
 	std::cin >> code;
 	send_query (td_api::make_object<td_api::checkAuthenticationCode> (code),
 		    auth_query_callback ());
-	break;
-      }
-
-      case td_api::authorizationStateWaitPassword::ID: {
-	log_flush ("Enter authentication password: ");
-	// std::cout << "Enter authentication password: " << std::flush;
-	std::string password;
-	std::getline (std::cin, password);
-	send_query (td_api::make_object<td_api::checkAuthenticationPassword> (
-		      password),
-		    auth_query_callback ());
-	break;
-      }
-
-      case td_api::authorizationStateWaitOtherDeviceConfirmation::ID: {
-	auto casted = static_cast<
-	  td_api::authorizationStateWaitOtherDeviceConfirmation *> (
-	  this->auth_state_.get ());
-	std::cout << "Confirm this login link on another device: "
-		  << casted->link_ << std::endl;
 	break;
       }
 
