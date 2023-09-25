@@ -21,21 +21,21 @@
 # TG-Focus
 
 tg-focus is a **T**ele**g**ram message filter that helps you
-**focus**. It can filter text messages, media captions or emoji
-messages. By customizing *Focus Filter*, tg-focus can forward any
-message from any chat, to a dedicated chat *TG-FOCUS*, that way users
-have fully control on the messages they'd see.
+**focus**. It can filter text messages, media captions, or emoji
+messages. By customizing *Focus Filters*, tg-focus can forward any
+message from any chat to a dedicated chat *TG-FOCUS*, that way users
+have full control of the messages they see.
 
 Telegram is famous for its openness. While users are free to make a
 speech in any public chat, they should be equally free to choose what
-they'd see. Telegram's official client apps already have excellent
-support for the former feature, tg-focus and other couterparts are trying to
-fill the blank in the latter one. 
+they see. Telegram's official client apps already have excellent
+support for the former feature, tg-focus and other counterparts are
+trying to fill the blank in the latter one. 
 
 Notable features:
 
 -   **Reliable & Consistent**: Built on top of native
-    C++ API([TDLib](https://core.telegram.org/tdlib/)). All
+    C++ interfaces([TDLib](https://core.telegram.org/tdlib/)). All
     communications towards Telegram servers are completely handled by
     TDLib.
 
@@ -45,7 +45,7 @@ Notable features:
     [TOML](https://toml.io/en/) format.
 
 -   **Ready to deploy**: Releases are made in three forms: source,
-    binary and OCI image. Users can run it directly on a laptop,
+    binary, and OCI image. Users can run it directly on a laptop,
     or use [docker](https://www.docker.com)/[podman](https://podman.io/) to
     deploy it on their servers, without interfering with each other.
 
@@ -289,20 +289,21 @@ software. Every single line of source code is open, and every single
 person is free to check the code.
 
 tg-focus inherits the openness from TDLib, its source as well as its 
-dependencies' source are fully open. Additionally all its binaries and
+dependencies' source are fully open. Additionally, all its binaries and
 OCI images will **not** be built by any individual, but by 
 Github-hosted containers. Build details such as checksums are shipped
-along with binaries and images. Users are free to verify them on
-[Github Action page](https://github.com/micl2e2/tg-focus/actions).
+along with binaries and images. Users are free to verify them on the
+GitHub Action [page](https://github.com/micl2e2/tg-focus/actions).
 
 Telegram bot is useful for some specific tasks, but not sufficient
-to be a **comprehensive** message filter. Therefore, during
-authorization process, tg-focus needs to login in user's account,
-which in turn needs user's phone number and login code,
-just as any functional Telegram client would require. It only save
-API ID and API HASH on user's local machine because these two are
-required each time when TDLib initializes. But under **no**
-circumstances would tg-focus save user's phone number or login code. 
+to be a **comprehensive** message filter. Therefore, during the
+authorization process, tg-focus needs to log in user's account,
+which in turn needs a phone number and login code,
+just as any functional Telegram client would require. It only saves
+API ID/HASH on the user's machine because these two are
+required each time TDLib initializes. But under **no** 
+circumstances would tg-focus save the user's phone number or login
+code.
 
 # Development
 
@@ -331,10 +332,19 @@ cd build && ctest
 # Contributing
 
 tg-focus is still far from perfect, any form of contribution is
-welcomed! 
+welcomed! This is not an exhaustive list:
+
+- Bug Report (open an issue with <span style="background:orange;">Bug</span>)
+- Documentation Improvement ()
+- Feature Request ()
+- Code Contribution ()
+- 
+
+
+
 
 # License
 
-tg-focus is proudly licensed under [GNU General Public License Version
+tg-focus is licensed under [GNU General Public License Version
 3.0](https://github.com/micl2e2/tg-focus/blob/master/LICENSE-GPL). 
 
