@@ -1,11 +1,13 @@
 2023-09-25  Michael Lee  <micl2e2@proton.me>
 
-	* RELEASE: 1.2.1817, <commit...>
+	* RELEASE: 1.2.1817, fa7aed9d6d72b93683385f7723126c9b74859b7a
+
+	TDLib version: 1.8.17
 
 	Backward Compatible Changes:
 
 	- Introduce bold style message.
-	- Add documentation, license, ChangeLog.
+	- Add documentation, license.
 
 
 2023-09-23  Michael Lee  <micl2e2@proton.me>
@@ -15,6 +17,8 @@
 	Artifacts: https://github.com/micl2e2/tg-focus/actions/runs/6283171167
 
 	Initial release.
+
+	TDLib version: 1.8.17
 
 	From semver.org:
 	Backward Compatible Changes

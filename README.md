@@ -23,7 +23,7 @@
 tg-focus is a comprehensive **text** message forwarder for Telegram. It can
 filter raw text messages, media captions or even emoji messages.
 By customizing *Focus Filters*, tg-focus can forward any specific
-message from any specific chat, to one dedicated chat, so that users
+message from any specific chat, to a dedicated chat `TG-FOCUS`, so that users
 have fully control on the messages they'd see.
 
 Telegram is famous for its openness. While users are free to make a
@@ -53,39 +53,39 @@ Notable features:
 
 Below is a 9-step demonstration of common use cases for tg-focus. 
 
-<img src="demo/1.jpg" width="600px"/>
+<img src="demo/1.jpg" width="500px"/>
 
 [Back to top](#table-of-contents)
 
-<img src="demo/2.jpg" width="600px"/>
+<img src="demo/2.jpg" width="500px"/>
 
 [Back to top](#table-of-contents)
 
-<img src="demo/3.jpg" width="600px"/>
+<img src="demo/3.jpg" width="500px"/>
 
 [Back to top](#table-of-contents)
 
-<img src="demo/4.jpg" width="600px"/>
+<img src="demo/4.jpg" width="500px"/>
 
 [Back to top](#table-of-contents)
 
-<img src="demo/5.jpg" width="600px"/>
+<img src="demo/5.jpg" width="500px"/>
 
 [Back to top](#table-of-contents)
 
-<img src="demo/6.jpg" width="600px"/>
+<img src="demo/6.jpg" width="500px"/>
 
 [Back to top](#table-of-contents)
 
-<img src="demo/7.jpg" width="600px"/>
+<img src="demo/7.jpg" width="500px"/>
 
 [Back to top](#table-of-contents)
 
-<img src="demo/8.jpg" width="600px"/>
+<img src="demo/8.jpg" width="500px"/>
 
 [Back to top](#table-of-contents)
 
-<img src="demo/9.jpg" width="600px"/>
+<img src="demo/9.jpg" width="500px"/>
 
 [Back to top](#table-of-contents)
 
