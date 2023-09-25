@@ -55,39 +55,31 @@ Below is a 9-step demonstration of common use cases for tg-focus.
 
 <img src="demo/1.jpg" width="600px"/>
 
-[Back to top](#table-of-contents)
-
 <img src="demo/2.jpg" width="600px"/>
-
-[Back to top](#table-of-contents)
 
 <img src="demo/3.jpg" width="600px"/>
 
-[Back to top](#table-of-contents)
-
 <img src="demo/4.jpg" width="600px"/>
-
-[Back to top](#table-of-contents)
 
 <img src="demo/5.jpg" width="600px"/>
 
-[Back to top](#table-of-contents)
+[Back to start](#a-simple-demo)
 
 <img src="demo/6.jpg" width="600px"/>
 
-[Back to top](#table-of-contents)
+[Back to start](#a-simple-demo)
 
 <img src="demo/7.jpg" width="600px"/>
 
-[Back to top](#table-of-contents)
+[Back to start](#a-simple-demo)
 
 <img src="demo/8.jpg" width="600px"/>
 
-[Back to top](#table-of-contents)
+[Back to start](#a-simple-demo)
 
 <img src="demo/9.jpg" width="600px"/>
 
-[Back to top](#table-of-contents)
+[Back to start](#a-simple-demo)
 
 
 # How To Use
@@ -284,8 +276,8 @@ these will NOT be forwarded:
 
 ## Can I trust tg-focus?
 
-First of all, consider that tg-focus is a GPL-licensed free
-software.
+First of all, consider that tg-focus is a GPL-licensed [free
+software](https://www.gnu.org/philosophy/free-sw.en.html). 
 
 tg-focus inherits the openness from TDLib, its source as well as its 
 dependencies' source are completely open. Additionally, all its
