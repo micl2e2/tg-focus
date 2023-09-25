@@ -334,12 +334,11 @@ cd build && ctest
 tg-focus is still far from perfect, any form of contribution is
 welcomed! This is not an exhaustive list:
 
-- Bug Report (open an issue with label $${\color{red}Bug}$$)
-- Documentation Improvement (open an issue with label $${\bg{red}Bug}$$)
-- Feature Request ()
-- Code Contribution ()
-- 
-
+- Ask question. (open an issue with label ![](https://img.shields.io/static/v1?label=&message=question&color=purple))
+- Bug Report. (open an issue with label ![](https://img.shields.io/static/v1?label=&message=bug&color=red))
+- Documentation Improvement or Feature Request. (open an issue with label  ![](https://img.shields.io/static/v1?label=&message=enhancement&color=lightblue))
+- Code Contribution
+  - Note that tg-focus follows [GNU](https://www.gnu.org/prep/standards/standards.html) code style.
 
 
 
