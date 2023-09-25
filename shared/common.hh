@@ -13,7 +13,7 @@
 #include <fmt/core.h>
 
 constexpr auto TF_DEV = "TG-FOCUS";
-constexpr auto TF_VER = "1.1.817-beta";
+constexpr auto TF_VER = "1.2.817";
 
 class FileReader
 {
