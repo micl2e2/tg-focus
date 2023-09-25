@@ -285,15 +285,15 @@ these will NOT be forwarded:
 ## Can I trust tg-focus?
 
 First of all, consider that tg-focus is a GPL-licensed free
-software. Every single line of source code is open, and every single
-person is free to check the code.
+software.
 
 tg-focus inherits the openness from TDLib, its source as well as its 
-dependencies' source are fully open. Additionally, all its binaries and
-OCI images will **not** be built by any individual, but by 
-Github-hosted containers. Build details such as checksums are shipped
-along with binaries and images. Users are free to verify them on the
-GitHub Action [page](https://github.com/micl2e2/tg-focus/actions).
+dependencies' source are completely open. Additionally, all its
+binaries and OCI images will **not** be built by any individual, but
+by Github-hosted containers. Build details such as checksums are
+shipped along with binaries and images. Users are free to verify them
+on the GitHub Action
+[page](https://github.com/micl2e2/tg-focus/actions). 
 
 Telegram bot is useful for some specific tasks, but not sufficient
 to be a **comprehensive** message filter. Therefore, during the
@@ -332,12 +332,16 @@ cd build && ctest
 # Contributing
 
 tg-focus is still far from perfect, any form of contribution is
-welcomed! This is not an exhaustive list:
+welcomed! 
 
-- Ask question. (open an issue with label [![](https://img.shields.io/static/v1?label=&message=question&color=purple)](https://github.com/micl2e2/tg-focus/issues/new))
-- Bug Report. (open an issue with label [![](https://img.shields.io/static/v1?label=&message=bug&color=red)](https://github.com/micl2e2/tg-focus/issues/new))
-- Documentation Improvement or Feature Request. (open an issue with label [![](https://img.shields.io/static/v1?label=&message=enhancement&color=lightblue)](https://github.com/micl2e2/tg-focus/issues/new))
-- Code Contribution. (tg-focus follows [GNU](https://www.gnu.org/prep/standards/standards.html) code style)
+This is not an exhaustive list:
+
+- Ask question (open an issue with label [![](https://img.shields.io/static/v1?label=&message=question&color=purple)](https://github.com/micl2e2/tg-focus/issues/new))
+- Bug Report (open an issue with label [![](https://img.shields.io/static/v1?label=&message=bug&color=red)](https://github.com/micl2e2/tg-focus/issues/new))
+- Feature Request (open an issue with label
+  [![](https://img.shields.io/static/v1?label=&message=enhancement&color=lightblue)](https://github.com/micl2e2/tg-focus/issues/new))
+- Documentation Improvement
+- Code Contribution (tg-focus follows [GNU](https://www.gnu.org/prep/standards/standards.html) code style)
 
 
 
