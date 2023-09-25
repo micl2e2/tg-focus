@@ -53,39 +53,39 @@ Notable features:
 
 Below is a 9-step demonstration of common use cases for tg-focus. 
 
-<img src="demo/1.jpg" width="500px"/>
+<img src="demo/1.jpg" width="600px"/>
 
 [Back to top](#table-of-contents)
 
-<img src="demo/2.jpg" width="500px"/>
+<img src="demo/2.jpg" width="600px"/>
 
 [Back to top](#table-of-contents)
 
-<img src="demo/3.jpg" width="500px"/>
+<img src="demo/3.jpg" width="600px"/>
 
 [Back to top](#table-of-contents)
 
-<img src="demo/4.jpg" width="500px"/>
+<img src="demo/4.jpg" width="600px"/>
 
 [Back to top](#table-of-contents)
 
-<img src="demo/5.jpg" width="500px"/>
+<img src="demo/5.jpg" width="600px"/>
 
 [Back to top](#table-of-contents)
 
-<img src="demo/6.jpg" width="500px"/>
+<img src="demo/6.jpg" width="600px"/>
 
 [Back to top](#table-of-contents)
 
-<img src="demo/7.jpg" width="500px"/>
+<img src="demo/7.jpg" width="600px"/>
 
 [Back to top](#table-of-contents)
 
-<img src="demo/8.jpg" width="500px"/>
+<img src="demo/8.jpg" width="600px"/>
 
 [Back to top](#table-of-contents)
 
-<img src="demo/9.jpg" width="500px"/>
+<img src="demo/9.jpg" width="600px"/>
 
 [Back to top](#table-of-contents)
 
@@ -108,8 +108,8 @@ Assume you have docker/podman installed on your system already:
 1. Pull the image and run:
 
 ```sh
-docker pull xxx
-docker run -d xxx
+docker pull docker.io/micl2e2/tg-focus:latest
+docker run -d docker.io/micl2e2/tg-focus
 ```
 
 2. Login your telegram account first, here it needs API ID, API HASH,

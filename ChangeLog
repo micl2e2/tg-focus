@@ -2,23 +2,23 @@
 
 	* RELEASE: 1.2.1817, fa7aed9d6d72b93683385f7723126c9b74859b7a
 
-	TDLib version: 1.8.17
-
 	Backward Compatible Changes:
 
 	- Introduce bold style message.
 	- Add documentation, license.
+
+	TDLib version: 1.8.17
+	Artifacts: https://github.com/micl2e2/tg-focus/actions/runs/6295899479
 
 
 2023-09-23  Michael Lee  <micl2e2@proton.me>
 
 	* RELEASE: 1.1.1817, 3ce09078b47722ac152709201ffff94b84d39e44
 
-	Artifacts: https://github.com/micl2e2/tg-focus/actions/runs/6283171167
-
 	Initial release.
 
 	TDLib version: 1.8.17
+	Artifacts: https://github.com/micl2e2/tg-focus/actions/runs/6283171167
 
 	From semver.org:
 	Backward Compatible Changes
