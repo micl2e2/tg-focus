@@ -1,4 +1,7 @@
+#include <cuchar>
+#include <cstddef>
 #include <cstdlib>
+#include <tuple>
 #include <vector>
 #include <atomic>
 #include <mutex>
@@ -26,6 +29,24 @@ extern std::atomic<std::uint32_t> it_cnt_producer;
 extern std::atomic<std::uint32_t> it_cnt_consumer;
 
 namespace td_api = td::td_api;
+
+std::ostream &
+operator<< (std::ostream &os, std::tuple<int, int> t)
+{
+  os << "<" << get<0> (t) << "," << get<1> (t) << ">";
+
+  return os;
+}
+
+template <typename T>
+std::ostream &
+operator<< (std::ostream &os, std::vector<T> t)
+{
+  for (auto ele : t)
+    os << ele << ",";
+
+  return os;
+}
 
 void
 TdCollector::init ()
@@ -89,6 +110,29 @@ no message!
     }
 }
 
+td_api::array<td_api::object_ptr<td_api::textEntity>>
+decorate_msg (const std::string &msg)
+{
+  auto pos_info = get_decor_pos (msg);
+
+  // FIXME: only when very verbose
+  std::cout << fmt::format ("[CONSUMER {}] decorating u8str:{} pos_info:",
+			    it_cnt_consumer.load (std::memory_order_relaxed),
+			    msg)
+	    << pos_info << std::endl;
+
+  auto deco_list = td_api::array<td_api::object_ptr<td_api::textEntity>> ();
+
+  for (auto pos : pos_info)
+    {
+      deco_list.emplace_back (td_api::make_object<td_api::textEntity> (
+	std::get<0> (pos), std::get<1> (pos),
+	td_api::make_object<td_api::textEntityTypeBold> ()));
+    }
+
+  return deco_list;
+}
+
 void
 TdCollector::collect_msg (const TgMsg &msg, size_t c_count)
 {
@@ -99,17 +143,20 @@ TdCollector::collect_msg (const TgMsg &msg, size_t c_count)
   //   }
 
   auto text_ctn
-    = fmt::format (R"(
-ID : {}
-CHAT : {}
-SENDER : {}
-CONTENT: {}
-DATE: {}
+    = fmt::format (R"([ CHAT ] {}
+[ SENDER ] {}
+[ CONTENT ] {}
+[ DATE ] {}
+[ ID ] {}
 )",
-		   c_count, msg.get_chat_title (), msg.get_sender (),
-		   msg.get_text_content (), msg.get_timestamp ());
-  auto message_text = td_api::make_object<td_api::formattedText> (
-    text_ctn, td_api::array<td_api::object_ptr<td_api::textEntity>> ());
+		   msg.get_chat_title (), msg.get_sender (),
+		   msg.get_text_content (), msg.get_timestamp (), c_count);
+
+  auto text_deco_list = decorate_msg (text_ctn);
+
+  auto message_text
+    = td_api::make_object<td_api::formattedText> (text_ctn,
+						  std::move (text_deco_list));
   td_api::object_ptr<td_api::Function> send_message_request
     = td_api::make_object<td_api::sendMessage> (
       this->collector_id, 0, nullptr, nullptr, nullptr,

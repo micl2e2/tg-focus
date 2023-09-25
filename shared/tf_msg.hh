@@ -2,6 +2,11 @@
 #define _TF_MSG_H
 
 #include <stdint.h>
+#include <uchar.h>
+#include <vector>
+#include <tuple>
+#include <time.h>
+#include <iostream>
 #include <string>
 
 class TgMsg
@@ -36,5 +41,8 @@ private:
   std::string txt_;
   std::string tstamp_;
 };
+
+std::vector<std::tuple<int, int>>
+get_decor_pos (const std::string &str);
 
 #endif

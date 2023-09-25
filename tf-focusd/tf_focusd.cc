@@ -23,6 +23,8 @@ log_flush (fmt::format_string<Args...> fmt, Args &&...args)
 int
 main ()
 {
+  std::setlocale (LC_ALL, "en_US.UTF-8");
+
   using namespace std;
 
   while (!tf_data.get_auth_hint ())
