@@ -334,8 +334,8 @@ cd build && ctest
 tg-focus is still far from perfect, any form of contribution is
 welcomed! This is not an exhaustive list:
 
-- Bug Report (open an issue with <span style="background:orange;">Bug</span>)
-- Documentation Improvement ()
+- Bug Report (open an issue with label $${\color{red}Bug}$$)
+- Documentation Improvement (open an issue with label $${\bg{red}Bug}$$)
 - Feature Request ()
 - Code Contribution ()
 - 
