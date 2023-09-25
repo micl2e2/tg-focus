@@ -59,7 +59,11 @@ Below is a 9-step demonstration of common use cases for tg-focus.
 
 <img src="demo/3.jpg" width="600px"/>
 
+[Back to start](#a-simple-demo)
+
 <img src="demo/4.jpg" width="600px"/>
+
+[Back to start](#a-simple-demo)
 
 <img src="demo/5.jpg" width="600px"/>
 
