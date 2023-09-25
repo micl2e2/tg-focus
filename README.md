@@ -20,26 +20,26 @@
 
 # TG-Focus
 
-tg-focus is a comprehensive **text** message forwarder for Telegram. It can
-filter raw text messages, media captions or even emoji messages.
-By customizing *Focus Filters*, tg-focus can forward any specific
-message from any specific chat, to a dedicated chat `TG-FOCUS`, so that users
+tg-focus is a **T**ele**g**ram message filter that helps you
+**focus**. It can filter text messages, media captions or emoji
+messages. By customizing *Focus Filter*, tg-focus can forward any
+message from any chat, to a dedicated chat *TG-FOCUS*, that way users
 have fully control on the messages they'd see.
 
 Telegram is famous for its openness. While users are free to make a
 speech in any public chat, they should be equally free to choose what
-they'd see. Telegram's official client apps have excellent support
-for the former feature, tg-focus and other couterparts are trying to
+they'd see. Telegram's official client apps already have excellent
+support for the former feature, tg-focus and other couterparts are trying to
 fill the blank in the latter one. 
 
 Notable features:
 
--   **Reliable & Consistent**: Built on top of official
-    C++ library([TDLib](https://core.telegram.org/tdlib/)). All
+-   **Reliable & Consistent**: Built on top of native
+    C++ API([TDLib](https://core.telegram.org/tdlib/)). All
     communications towards Telegram servers are completely handled by
     TDLib.
 
--   **Easy to use**: Users can customize *Focus Filters* any
+-   **Easy to use**: Users can customize *Focus Filter* any
     time they like. The filter accepts both simple text and regular 
     expressions. The configuration file is in human-readable
     [TOML](https://toml.io/en/) format.
@@ -94,16 +94,15 @@ Below is a 9-step demonstration of common use cases for tg-focus.
 
 Before anything make sure you have:
 
-1. A Telegram phone-loginable account
-2. A telegram API ID and corresponding API HASH, they can be obtained 
+1. A Telegram account
+2. Telegram API ID and corresponding API HASH, they can be obtained 
    at https://my.telegram.org. 
 
 Suppose you're:
 
-
 ## Using OCI Image
 
-Assume you have docker/podman installed on your system already:
+Make sure have docker or podman installed on your system already: 
 
 1. Pull the image and run:
 
@@ -112,19 +111,19 @@ docker pull docker.io/micl2e2/tg-focus:latest
 docker run -d docker.io/micl2e2/tg-focus
 ```
 
-2. Login your telegram account first, here it needs API ID, API HASH,
-and your phone number:
+2. Login your telegram account first, here you should provide API ID,
+API HASH, and your phone number:
 
 ```sh
 docker exec -it <container-name> tf-conf auth
 ```
 
-3. If logined successfullly, a new chat named `TG-FOCUS` will be
+3. If logined successfullly, a new chat named *TG-FOCUS* will be
    created, the subsequent messages will be filtered and forwarded to
    this chat.
 
 4. Change the *Focus Filter*s any time you like, to make adjustment on
-   the messages you would like to see on that chat.
+   the messages you'd like to receive on that chat.
 
 ```sh
 docker exec -it <container-name> tf-conf filters
@@ -169,29 +168,29 @@ phone number, the first two can be obtained in https://my.telegram.org:
 # Filtering Rules
 
 A *Focus Filter* is a filter used by tg-focus to match against the
-message's text content(raw text, emoji, or media caption). There can
-be many filters, when a message comes, they are tried one by one, if
-there is any filter than can *match* the message, it will be
-forwarded.
+message's text content(text, emoji, or media caption). Users can add
+as many filters as they like, when a message comes, they are tried one
+by one, if there is any filter than can *match* the message and not
+*reject* the message , it will be forwarded.
 
 Currently *Focus Filter* can *match*:
 
 1. Chat title
-2. Text keywords
-3. Message senders
+2. Keywords
+3. Senders
 
 can *reject*:
 
-1. Text keywords
-2. Message senders
+1. Keywords
+2. Senders
 
 A message is forwarded if and only if:
 
 - the message is matched by a *Focus Filter*, **and**
 - the message is not rejected by that *Focus Filter*.
 
-(Hence, the first 1/2/3 can be regarded as **whitelist** filters, the
-second 1/2 can be regarded as **blacklist** filters)
+(Note that the first three rules can be regarded as **whitelist** ,
+the second two rules can be regarded as **blacklist**) 
 
 
 ## Filter Examples
@@ -285,27 +284,25 @@ these will NOT be forwarded:
 
 ## Can I trust tg-focus?
 
-tg-focus inherits the openness from TDLib, its source, and its
+First of all, consider that tg-focus is a GPL-licensed free
+software. Every single line of source code is open, and every single
+person is free to check the code.
+
+tg-focus inherits the openness from TDLib, its source as well as its 
 dependencies' source are fully open. Additionally all its binaries and
 OCI images will **not** be built by any individual, but by 
-Github-hosted containers. Users are free to verify if binaries'
-checksums or docker images metainfo are identical to the original
-build artifacts on [Github Action
-page](https://github.com/micl2e2/tg-focus/actions). 
+Github-hosted containers. Build details such as checksums are shipped
+along with binaries and images. Users are free to verify them on
+[Github Action page](https://github.com/micl2e2/tg-focus/actions).
 
-Telegram bot is helpful for some specific tasks, but not sufficient
-to be a **comprehensive** message forwarder. Therefore, during
+Telegram bot is useful for some specific tasks, but not sufficient
+to be a **comprehensive** message filter. Therefore, during
 authorization process, tg-focus needs to login in user's account,
 which in turn needs user's phone number and login code,
 just as any functional Telegram client would require. It only save
 API ID and API HASH on user's local machine because these two are
 required each time when TDLib initializes. But under **no**
-circumstances would tg-focus save user's phone number. 
-
-If users are still worrying about tg-focus, consider that tg-focus is
-a GPL-licensed free software. And as mentioned above, every single
-line of source code is open, and every single person is free to check
-the code, and of course, to contribute.
+circumstances would tg-focus save user's phone number or login code. 
 
 # Development
 
