@@ -1,5 +1,8 @@
 name: build-tdlib
 run-name: Build TDLib
+on:
+  branches:
+    - xxxxxxxxxxxxxxxxxxxxxxx
 
 jobs:
   job1:
