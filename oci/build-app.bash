@@ -46,7 +46,14 @@ buildah run $CTN_TGFOCUS -- \
 test $? -eq 0 || exit 4
 
 buildah run $CTN_TGFOCUS -- \
+	sh -c "cd tg-focus/build && ctest"
+
+test $? -eq 0 || exit 5
+
+buildah run $CTN_TGFOCUS -- \
 	sh -c "cd tg-focus && strip /tg-focus/build/tf-conf && strip /tg-focus/build/tf-focusd"
+
+test $? -eq 0 || exit 6
 
 
 
