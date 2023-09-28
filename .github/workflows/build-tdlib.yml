@@ -1,0 +1,18 @@
+name: build-tdlib
+run-name: Build TDLib
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Deps
+        run: sudo apt-get update && sudo apt-get install buildah -y
+      - name: Build TDLib
+        run: bash oci/build-tdlib.bash
+      - run: buildah ps
+
+
+
+
+      
