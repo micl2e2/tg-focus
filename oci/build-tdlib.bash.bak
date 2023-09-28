@@ -30,9 +30,3 @@ test $? -eq 0 || exit 4
 buildah run $CTN_TDLIB -- \
 	bash -c "cd td && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release  -DOPENSSL_CRYPTO_LIBRARY='/lib/x86_64-linux-gnu/libcrypto.a' -DOPENSSL_SSL_LIBRARY='/lib/x86_64-linux-gnu/libssl.a' -DZLIB_LIBRARY_RELEASE='/lib/x86_64-linux-gnu/libz.a' .. && make -j8 && make install"
 
-build commit $CTN_TDLIB tg-focus-tdlib-1817
-
-TAR_NAME="tg-focus-tdlib-1817"
-
-podman save --output $TAR_NAME.tar --format oci-archive localhost/tg-focus-tdlib-1817:latest
-

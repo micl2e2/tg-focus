@@ -15,6 +15,12 @@ jobs:
       - name: Build TDLib
         run: bash oci/build-tdlib.bash
       - run: buildah ps
+      - name: OCI Image
+        uses: actions/upload-artifact@v3
+        with:
+          name: tg-focus-tdlib-1817
+          path: |
+            tg-focus-tdlib-1817*
 
 
 
