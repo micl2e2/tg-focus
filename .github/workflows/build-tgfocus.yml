@@ -16,6 +16,8 @@ jobs:
         run: sudo apt-get update && sudo apt-get install buildah -y
       - name: Prepare TDLib
         run: bash oci/fetch-tdlib.bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build TgFocus
         run: bash oci/build-app.bash
       - name: Package TgFocus
