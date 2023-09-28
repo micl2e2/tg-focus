@@ -1,40 +1,46 @@
 CTN_TDLIB="build-tdlib-container"
+CTN_PACK="package-tdlib-container"
 
 flag=$(buildah ps | grep $CTN_TDLIB | wc -l)
-test $flag -eq 0 || exit 0
+test $flag -eq 0 || buildah rm $CTN_TDLIB
 
-buildah from --name $CTN_TDLIB debian:bookworm-slim
-
-buildah run build-tgfocus-container -- \
-	sed -i 's/deb\.debian\.org/ftp\.us\.debian\.org/' /etc/apt/sources.list.d/debian.sources
+buildah from --name $CTN_TDLIB alpine:3.18
 
 buildah run $CTN_TDLIB -- \
-	apt-get -o Acquire::ForceIPv4=true update
+	sed -i 's/https/http/' /etc/apk/repositories
 buildah run $CTN_TDLIB -- \
-	apt-get -o Acquire::ForceIPv4=true install gperf cmake g++ git zlib1g-dev libssl-dev wget -y --quiet
+	sh -c "https_proxy=$HTTPS_PROXY apk update"
+buildah run $CTN_TDLIB -- \
+        sh -c "https_proxy=$HTTPS_PROXY apk add cmake gperf g++ openssl-dev git make linux-headers zlib-dev zlib-static openssl-libs-static"
 
 test $? -eq 0 || exit 2
 
 test -z $HTTPS_PROXY || echo use https proxy $HTTPS_PROXY
 
 buildah run $CTN_TDLIB -- \
-	bash -c "https_proxy=$HTTPS_PROXY git clone https://github.com/tdlib/td"
+	sh -c "https_proxy=$HTTPS_PROXY git clone https://github.com/tdlib/td"
 
 test $? -eq 0 || exit 3
 
+PICK_SRC="a0d026239439c76847c4f75f2fa32f3e56b9b789"
+
 buildah run $CTN_TDLIB -- \
-	bash -c "cd td && git reset --hard a0d026239439c76847c4f75f2fa32f3e56b9b789"
+	sh -c "cd td && git reset --hard $PICK_SRC"
 
 test $? -eq 0 || exit 4
 
 buildah run $CTN_TDLIB -- \
-	bash -c "cd td && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release  -DOPENSSL_CRYPTO_LIBRARY='/lib/x86_64-linux-gnu/libcrypto.a' -DOPENSSL_SSL_LIBRARY='/lib/x86_64-linux-gnu/libssl.a' -DZLIB_LIBRARY_RELEASE='/lib/x86_64-linux-gnu/libz.a' .. && make -j8 && make install"
+	sh -c "cd td && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release  .. && make -j$(nproc) && make install"
 
-build commit $CTN_TDLIB tg-focus-tdlib-1817
+buildah from --name $CTN_PACK alpine:3.18
+buildah copy --from $CTN_TDLIB $CTN_PACK '/usr/local/include' '/usr/local/include'
+buildah copy --from $CTN_TDLIB $CTN_PACK '/usr/local/lib' '/usr/local/lib'
 
-TAR_NAME="tg-focus-tdlib-1817"
+TAR_NAME="tdlib-$PICK_SRC"
 
-podman save --output $TAR_NAME.tar --format oci-archive localhost/tg-focus-tdlib-1817:latest
+buildah commit $CTN_PACK $TAR_NAME
 
-podman inspect localhost/tg-focus-tdlib-1817:latest >$TAR_NAME.json
+podman save --output $TAR_NAME.tar --format oci-archive localhost/$TAR_NAME:latest
+
+podman inspect localhost/$TAR_NAME:latest >$TAR_NAME.json
 

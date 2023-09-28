@@ -1,30 +1,19 @@
 CTN_TGFOCUS="build-tgfocus-container"
-CTN_APP="package-app-container"
+CTN_PACK="package-tgfocus-container"
 
-flag=$(buildah ps | grep $CTN_APP | wc -l)
-test $flag -eq 0 || buildah rm $CTN_APP
+flag=$(buildah ps | grep $CTN_PACK | wc -l)
+test $flag -eq 0 || buildah rm $CTN_PACK
 
-buildah from --name $CTN_APP debian:bookworm-slim
+buildah from --name $CTN_PACK alpine:3.18
 
-buildah copy --from $CTN_TGFOCUS $CTN_APP \
+buildah copy --from $CTN_TGFOCUS $CTN_PACK \
 	'/tg-focus/build/tf-conf' '/usr/local/bin'
-buildah copy --from $CTN_TGFOCUS $CTN_APP \
+buildah copy --from $CTN_TGFOCUS $CTN_PACK \
 	'/tg-focus/build/tf-focusd' '/usr/local/bin'
 
-buildah run $CTN_APP -- \
-	apt-get -o Acquire::ForceIPv4=true update
-buildah run $CTN_APP -- \
-	apt-get -o Acquire::ForceIPv4=true install locales nano -y
+buildah config --cmd "/bin/sh -c tf-focusd" $CTN_PACK
 
-buildah run $CTN_APP -- \
-	sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
-buildah run $CTN_APP -- \
-        locale-gen
-buildah config --env LANG="en_US.UTF-8" $CTN_APP
-
-buildah config --cmd "/bin/bash -c tf-focusd" $CTN_APP
-
-buildah commit $CTN_APP tg-focus
+buildah commit $CTN_PACK tg-focus
 
 test $? -eq 0 || exit 1
 

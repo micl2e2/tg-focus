@@ -1,43 +1,52 @@
-CTN_TDLIB="build-tdlib-container"
+CTN_TDLIB="package-tdlib-container"
 CTN_TGFOCUS="build-tgfocus-container"
 
 flag=$(buildah ps | grep $CTN_TGFOCUS | wc -l)
 test $flag -eq 0 || buildah rm $CTN_TGFOCUS
 
-buildah from --name $CTN_TGFOCUS debian:bookworm-slim
+buildah from --name $CTN_TGFOCUS alpine:3.18
 
 buildah copy --from $CTN_TDLIB $CTN_TGFOCUS '/usr/local/include' '/usr/local/include'
 buildah copy --from $CTN_TDLIB $CTN_TGFOCUS '/usr/local/lib' '/usr/local/lib'
 
-buildah run build-tgfocus-container -- \
-	sed -i 's/deb\.debian\.org/ftp\.us\.debian\.org/' /etc/apt/sources.list.d/debian.sources
+test $? -eq 0 || exit 1
 
 buildah run $CTN_TGFOCUS -- \
-	apt-get -o Acquire::ForceIPv4=true update
+	sed -i 's/https/http/' /etc/apk/repositories
 buildah run $CTN_TGFOCUS -- \
-	apt-get -o Acquire::ForceIPv4=true install git g++ libssl-dev zlib1g-dev cmake -y
+        sh -c "https_proxy=$HTTPS_PROXY apk update"
+buildah run $CTN_TGFOCUS -- \
+        sh -c "https_proxy=$HTTPS_PROXY apk add pkgconfig gcc g++ git cmake make"
 
 test $? -eq 0 || exit 1
+
+# better use *-dev
+buildah run $CTN_TGFOCUS -- \
+        sh -c "ln -s /usr/lib/libssl.so.3 /usr/lib/libssl.so"
+buildah run $CTN_TGFOCUS -- \
+        sh -c "ln -s /usr/lib/libcrypto.so.3 /usr/lib/libcrypto.so"
+buildah run $CTN_TGFOCUS -- \
+        sh -c "ln -s /lib/libz.so.1 /lib/libz.so"
 
 test -z $HTTPS_PROXY || echo use https proxy $HTTPS_PROXY
 
 buildah run $CTN_TGFOCUS -- \
-	bash -c "https_proxy=$HTTPS_PROXY git clone --depth=1 https://github.com/micl2e2/tg-focus"
+	sh -c "https_proxy=$HTTPS_PROXY git clone --depth=1 https://github.com/micl2e2/tg-focus"
 
 test $? -eq 0 || exit 2
 
 buildah run $CTN_TGFOCUS -- \
-	bash -c "https_proxy=$HTTPS_PROXY cd tg-focus && bash dl-3rd.bash"
+	sh -c "https_proxy=$HTTPS_PROXY cd tg-focus && sh dl-3rd.bash"
 
 test $? -eq 0 || exit 3
 
 buildah run $CTN_TGFOCUS -- \
-	bash -c "cd tg-focus && cmake -DCMAKE_BUILD_TYPE=Release -B build && cmake --build build"
+	sh -c "cd tg-focus && cmake -DCMAKE_BUILD_TYPE=Release -B build && cmake --build build"
 
 test $? -eq 0 || exit 4
 
 buildah run $CTN_TGFOCUS -- \
-	bash -c "cd tg-focus && strip /tg-focus/build/tf-conf && strip /tg-focus/build/tf-focusd"
+	sh -c "cd tg-focus && strip /tg-focus/build/tf-conf && strip /tg-focus/build/tf-focusd"
 
 
 
