@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+	  ref: master
       - name: Install Deps
         run: sudo apt-get update && sudo apt-get install buildah -y
       - name: Build TDLib
