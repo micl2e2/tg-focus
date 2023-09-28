@@ -36,3 +36,5 @@ TAR_NAME="tg-focus-tdlib-1817"
 
 podman save --output $TAR_NAME.tar --format oci-archive localhost/tg-focus-tdlib-1817:latest
 
+podman inspect localhost/tg-focus-tdlib-1817:latest >$TAR_NAME.json
+
