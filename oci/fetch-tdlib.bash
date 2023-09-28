@@ -14,4 +14,4 @@ podman load -i tdlib-$PICK_SRC.tar
 
 CTN_TDLIB="package-tdlib-container"
 
-buildah from --name $CTN_TGFOCUS localhost/tdlib-$PICK_SRC:latest
+buildah from --name $CTN_TDLIB localhost/tdlib-$PICK_SRC:latest
