@@ -1,3 +1,6 @@
+
+# ATTENTION: time consuming
+
 CTN_TDLIB="build-tdlib-container"
 CTN_PACK="package-tdlib-container"
 

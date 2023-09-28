@@ -1,12 +1,11 @@
-name: release-tgfocus
-run-name: Release TgFocus
+name: build-tgfocus
+run-name: Build TG-Focus
 on:
-  push:
-    tags: 'v[0-9]+.[0-9]+.[0-9]+'
-
+  push
+  
 jobs:
   job1:
-    name: Build OCI App
+    name: Build
     if: endsWith(github.ref, 'master') == true
     runs-on: ubuntu-latest
     steps:
@@ -15,13 +14,15 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install Deps
         run: sudo apt-get update && sudo apt-get install buildah -y
-      - name: Build TDLib
-        run: bash oci/build-tdlib.bash
+      - name: Prepare TDLib
+        run: bash oci/fetch-tdlib.bash
       - name: Build TgFocus
         run: bash oci/build-app.bash
       - name: Package TgFocus
+        if: contains(github.event.head_commit.message, 'bWFrZS1hcnRpZmFjdAo=') == true
         run: bash oci/package-app.bash
       - name: OCI Image
+        if: contains(github.event.head_commit.message, 'bWFrZS1hcnRpZmFjdAo=') == true
         uses: actions/upload-artifact@v3
         with:
           name: tg-focus-ociapp-${{ env.CURR_DATE }}
