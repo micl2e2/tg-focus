@@ -3,7 +3,7 @@ run-name: Build TDLib
 on:
   push:
     branches:
-      - xxxxxxxxxxxxxxxxxxxxxxx
+      - build-tdlib
 
 jobs:
   job1:
