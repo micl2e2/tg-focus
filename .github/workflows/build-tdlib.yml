@@ -9,6 +9,8 @@ jobs:
   job1:
     runs-on: ubuntu-latest
     steps:
+      - name: Get current date
+        run: echo "CURR_DATE=$(date +'%Y%m%d')" >> "$GITHUB_ENV"
       - uses: actions/checkout@v3
         with:
           ref: master
@@ -20,9 +22,9 @@ jobs:
       - name: OCI Image
         uses: actions/upload-artifact@v3
         with:
-          name: tg-focus-tdlib-1817
+          name: tdlib-${{ env.CURR_DATE }}
           path: |
-            tg-focus-tdlib-1817*
+            tdlib-*
 
 
 
