@@ -136,12 +136,6 @@ decorate_msg (const std::string &msg)
 void
 TdCollector::collect_msg (const TgMsg &msg, size_t c_count)
 {
-  // https://core.telegram.org/tdlib/docs/td__api_8h.html#a7b249263de52128c32781ba0e713b556
-  // if (msg.get_chat_title ().find ("TG-FOCUS") != std::string::npos)
-  //   {
-  // 	return;
-  //   }
-
   auto text_ctn
     = fmt::format (R"([ CHAT ] {}
 [ SENDER ] {}
