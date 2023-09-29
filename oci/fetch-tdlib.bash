@@ -1,5 +1,5 @@
-ARTIFACT_ID="952104308"
-PICK_SRC="a0d026239439c76847c4f75f2fa32f3e56b9b789"
+ARTIFACT_ID="???"
+PICK_SRC="030e440757478ef5f5fdb01f60c3c6d885330c72"
 
 curl -L \
      -H "Accept: application/vnd.github+json" \

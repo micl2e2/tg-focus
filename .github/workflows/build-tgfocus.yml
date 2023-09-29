@@ -2,11 +2,12 @@ name: build-tgfocus
 run-name: Build TG-Focus
 on:
   push
+    branches:
+      - master
   
 jobs:
   job1:
     name: Build
-    if: endsWith(github.ref, 'master') == true
     runs-on: ubuntu-latest
     steps:
       - name: Get current date

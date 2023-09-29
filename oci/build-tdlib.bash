@@ -14,7 +14,7 @@ buildah run $CTN_TDLIB -- \
 buildah run $CTN_TDLIB -- \
 	sh -c "https_proxy=$HTTPS_PROXY apk update"
 buildah run $CTN_TDLIB -- \
-        sh -c "https_proxy=$HTTPS_PROXY apk add cmake gperf g++ openssl-dev git make linux-headers zlib-dev zlib-static openssl-libs-static"
+        sh -c "https_proxy=$HTTPS_PROXY apk add cmake gperf g++ openssl-dev git make linux-headers zlib-dev"
 
 test $? -eq 0 || exit 2
 
@@ -25,7 +25,7 @@ buildah run $CTN_TDLIB -- \
 
 test $? -eq 0 || exit 3
 
-PICK_SRC="a0d026239439c76847c4f75f2fa32f3e56b9b789"
+PICK_SRC="030e440757478ef5f5fdb01f60c3c6d885330c72"
 
 buildah run $CTN_TDLIB -- \
 	sh -c "cd td && git reset --hard $PICK_SRC"
