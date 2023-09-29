@@ -1,4 +1,3 @@
-# cmake_minimum_required(VERSION 3.20)
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 project(tg-focus)
 
@@ -19,12 +18,13 @@ if (DEFINED ENV{WITH_SANITIZERS})
   link_libraries(asan ubsan)
 endif()
 
-# third-party
+# 3rd-party
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rd/fmt)
 link_libraries(fmt)
 
-# a0d026239439c76847c4f75f2fa32f3e56b9b789
-find_package(Td 1.8.17 REQUIRED)
+# 030e440757478ef5f5fdb01f60c3c6d885330c72
+#   note: sync with build/fetch-tdlib
+find_package(Td 1.8.14 REQUIRED)
 
 # tf-conf
 add_executable(
@@ -36,13 +36,11 @@ add_executable(
   ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
   ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc
 )
-
 target_include_directories(
   tf-conf
   PRIVATE ${PROJECT_SOURCE_DIR}/shared
   PRIVATE ${PROJECT_SOURCE_DIR}/3rd/toml11
 )
-
 target_link_libraries(
   tf-conf
   PRIVATE -static-libgcc -static-libstdc++
@@ -61,13 +59,11 @@ add_executable(
   ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc
   ${PROJECT_SOURCE_DIR}/shared/tf_msg.cc
 )
-
 target_include_directories(
   tf-focusd
   PRIVATE ${PROJECT_SOURCE_DIR}/shared
   PRIVATE ${PROJECT_SOURCE_DIR}/3rd/toml11
 )
-
 target_link_libraries(
   tf-focusd
   PRIVATE -static-libgcc -static-libstdc++
@@ -75,6 +71,5 @@ target_link_libraries(
 )
 
 # tests
-
 enable_testing()
 add_subdirectory(test)

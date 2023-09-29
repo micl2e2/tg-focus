@@ -1,4 +1,6 @@
-ARTIFACT_ID="???"
+# retrieve id: https://api.github.com/repos/micl2e2/tg-focus/actions/artifacts
+
+ARTIFACT_ID="953603201"
 PICK_SRC="030e440757478ef5f5fdb01f60c3c6d885330c72"
 
 curl -L \

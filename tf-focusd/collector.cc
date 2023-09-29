@@ -61,7 +61,7 @@ TdCollector::init ()
 void
 TdCollector::create_tgfocus_group ()
 {
-  // the handle call time maybe a little late, one proved order:
+  // the handle call time maybe a little late, one possible order:
   /*
 no message!
 no message!
@@ -93,16 +93,16 @@ no message!
     {
       this->tried_create_collector = true;
       send_query (td_api::make_object<td_api::createNewBasicGroupChat> (
-		    std::vector<td::td_api::int53> (0), "TG-FOCUS", 0),
+		    std::vector<td::td_api::int53> (0), TF_COLL_CHAT_TITLE, 0),
 		  [this] (Object object) {
 		    if (object->get_id () == td_api::chat::ID)
 		      {
 			auto chat
 			  = td::move_tl_object_as<td_api::chat> (object);
-			// std::cout << "group created! "
-			// 	    << " chat id:" << chat->id_
-			// 	    << " chat title:" << chat->title_
-			// 	    << std::endl;
+			std::cout << "group created! "
+				  << " chat id:" << chat->id_
+				  << " chat title:" << chat->title_
+				  << std::endl;
 			this->collector_id = chat->id_;
 			this->done_create_collector = true;
 		      }
@@ -153,7 +153,7 @@ TdCollector::collect_msg (const TgMsg &msg, size_t c_count)
 						  std::move (text_deco_list));
   td_api::object_ptr<td_api::Function> send_message_request
     = td_api::make_object<td_api::sendMessage> (
-      this->collector_id, 0, nullptr, nullptr, nullptr,
+      this->collector_id, 0, 0, nullptr, nullptr,
       td_api::make_object<td_api::inputMessageText> (std::move (message_text),
 						     false, true));
 

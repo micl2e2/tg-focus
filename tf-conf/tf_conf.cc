@@ -24,7 +24,36 @@
 int
 print_usage (char *argv[])
 {
-  printf ("Usage: %s auth/filters\n", argv[0]);
+  printf (R"(Configure TG-Focus
+
+Usage: %s [command]
+
+Available Commands:
+  auth           Log in Telegram
+  auth-reset     Log out Telegram
+  filters        Customize focus filter(s)
+  version        Print TG-Focus version
+  help           Print this message
+)",
+	  argv[0]);
+  return 0;
+}
+
+int
+handle_version ()
+{
+  printf (R"(TG-Focus:     %s
+Default Chat: %s
+Device ID:    %s
+TDLib:        %s(%s)
+
+Copyright (C) 2023 Michael Lee <micl2e2@proton.me>
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+)",
+	  TF_VER, TF_COLL_CHAT_TITLE, TF_DEV, TDLIB_VER, TDLIB_SRC);
+
   return 0;
 }
 
@@ -113,6 +142,9 @@ main (int argc, char *argv[])
 
   if (subcmd == "filters")
     return handle_filters ();
+
+  if (subcmd == "version" || subcmd == "--version" || subcmd == "-v")
+    return handle_version ();
 
   return print_usage (argv);
 }
