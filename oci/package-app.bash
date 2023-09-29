@@ -11,6 +11,8 @@ buildah copy --from $CTN_TGFOCUS $CTN_PACK \
 buildah copy --from $CTN_TGFOCUS $CTN_PACK \
 	'/tg-focus/build/tf-focusd' '/usr/local/bin'
 
+buildah run $CTN_PACK -- sh -c "apk add --no-cache nano"
+
 buildah config --cmd "/bin/sh -c tf-focusd" $CTN_PACK
 
 buildah commit $CTN_PACK tg-focus
