@@ -1,14 +1,15 @@
 2023-09-25  Michael Lee  <micl2e2@proton.me>
 
-	* RELEASE: 1.3.1817, ???
+	* RELEASE: 1.3.1814, 01f4d22fc45ac29701377de2ebc31088243fbdd0
 
 	Backward Compatible Changes:
 
+	- Downgrade TDLib from 1.8.17 to 1.8.14.
 	- Change OCI base from debian:bookworm-slim to alpine:3.18.
 
-	TDLib version: 1.8.17
+	TDLib version: 1.8.14
 	OCI image base: alpine:3.18
-	Artifacts: https://github.com/micl2e2/tg-focus/actions/runs/???
+	Artifacts: https://github.com/micl2e2/tg-focus/actions/runs/6347256195
 
 
 2023-09-25  Michael Lee  <micl2e2@proton.me>
