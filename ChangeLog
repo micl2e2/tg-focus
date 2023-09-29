@@ -6,6 +6,7 @@
 
 	- Downgrade TDLib from 1.8.17 to 1.8.14.
 	- Change OCI base from debian:bookworm-slim to alpine:3.18.
+	- Refine tf-conf cli interface.
 
 	TDLib version: 1.8.14
 	OCI image base: alpine:3.18

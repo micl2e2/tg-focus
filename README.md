@@ -1,3 +1,10 @@
+# TG-Focus
+
+
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/micl2e2/tg-focus/build-tgfocus.yml)
+![Static Badge](https://img.shields.io/badge/TDLib-1.8.14-lightblue)
+![Docker Image Size (tag)](https://img.shields.io/docker/image-size/micl2e2/tg-focus/latest?color=lightgreen)
+
 
 # Table of Contents
 
@@ -18,7 +25,7 @@
   
 
 
-# TG-Focus
+# About
 
 tg-focus is a **T**ele**g**ram message filter that helps you
 **focus**. It can filter text messages, media captions, or emoji
