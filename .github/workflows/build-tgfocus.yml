@@ -1,7 +1,7 @@
 name: build-tgfocus
 run-name: Build TG-Focus
 on:
-  push
+  push:
     branches:
       - master
   
