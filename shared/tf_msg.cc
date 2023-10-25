@@ -56,6 +56,7 @@ get_decor_pos (const std::string &str)
       if (rc == (size_t) -3)
 	{
 	  std::cout << "mbrtoc16 -3" << std::endl;
+	  cuseq.push_back (c16);
 	}
       else if (rc == (size_t) -2)
 	{

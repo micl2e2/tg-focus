@@ -48,6 +48,8 @@ operator<< (std::ostream &os, std::vector<T> t)
   return os;
 }
 
+// public
+
 void
 TdCollector::init ()
 {
@@ -113,6 +115,8 @@ no message!
 td_api::array<td_api::object_ptr<td_api::textEntity>>
 decorate_msg (const std::string &msg)
 {
+  // return td_api::array<td_api::object_ptr<td_api::textEntity>>{};
+
   auto pos_info = get_decor_pos (msg);
 
   // FIXME: only when very verbose
@@ -184,6 +188,8 @@ TdCollector::fetch_updates ()
     }
 }
 
+// private
+
 void
 TdCollector::send_query (td_api::object_ptr<td_api::Function> f,
 			 std::function<void (Object)> handler)
@@ -243,8 +249,6 @@ TdCollector::get_user_name (std::int64_t user_id) const
   return readable_usrname;
 }
 
-//
-// get chat title from internal map
 std::string
 TdCollector::get_chat_title (std::int64_t chat_id) const
 {
@@ -451,8 +455,6 @@ TdCollector::check_authentication_error (Object object)
     }
 }
 
-//
-// td request id
 std::uint64_t
 TdCollector::next_query_id ()
 {
