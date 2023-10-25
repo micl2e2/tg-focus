@@ -7,6 +7,8 @@ main ()
 {
   using namespace std;
 
+  assert (false);
+
   std::setlocale (LC_ALL, "en_US.UTF-8");
 
   // ascii + nonascii
