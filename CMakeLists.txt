@@ -18,7 +18,7 @@ if (DEFINED ENV{WITH_SANITIZERS})
   link_libraries(asan ubsan)
 endif()
 
-# 3rd-party
+# deps
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rd/fmt)
 link_libraries(fmt)
 

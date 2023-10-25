@@ -36,7 +36,7 @@ buildah run $CTN_TGFOCUS -- \
 test $? -eq 0 || exit 2
 
 buildah run $CTN_TGFOCUS -- \
-	sh -c "https_proxy=$HTTPS_PROXY cd tg-focus && sh dl-3rd.bash"
+	sh -c "https_proxy=$HTTPS_PROXY cd tg-focus && sh dev/install-deps-oci-only.bash"
 
 test $? -eq 0 || exit 3
 
