@@ -7,8 +7,6 @@ main ()
 {
   using namespace std;
 
-  assert (false);
-
   std::setlocale (LC_ALL, "en_US.UTF-8");
 
   // ascii + nonascii
@@ -24,7 +22,7 @@ main ()
     cout << pos_info.size () << endl;
     assert (pos_info.size () == 5);
 
-    assert ((pos_info[0] == make_tuple<int, int> (1, 8)));
+    assert ((pos_info[0] == make_tuple<int, int> (0, 8)));
     assert ((pos_info[1] == make_tuple<int, int> (28, 10)));
     assert ((pos_info[2] == make_tuple<int, int> (47, 11)));
     assert ((pos_info[3] == make_tuple<int, int> (76, 8)));

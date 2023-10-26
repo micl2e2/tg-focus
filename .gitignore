@@ -12,3 +12,6 @@ build
 3rd
 
 .cache
+
+tdlib-*.json
+tdlib-*.tar
