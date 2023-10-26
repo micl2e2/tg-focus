@@ -1,5 +1,21 @@
 2023-09-25  Michael Lee  <micl2e2@proton.me>
 
+	* RELEASE: 1.4.1814, ???
+
+	Backward compatible changes:
+
+	- Improve build script's portability
+	- Fix unicode convertion issues occurred during message styling
+	- Introduce "rej_senders" filter
+	- Fine-grained control of focusd logging
+
+	TDLib version: 1.8.14
+	OCI image base: alpine:3.18
+	Artifacts: https://github.com/micl2e2/tg-focus/actions/runs/???
+
+
+2023-09-25  Michael Lee  <micl2e2@proton.me>
+
 	* RELEASE: 1.3.1814, 01f4d22fc45ac29701377de2ebc31088243fbdd0
 
 	Backward Compatible Changes:
