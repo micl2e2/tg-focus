@@ -98,12 +98,18 @@ FocusFilterList::is_tgmsg_match (const TgMsg &in)
   this->i_prev_matched_ = 0;
   for (auto &f : this->filters)
     {
-      if (f.is_tgmsg_match (in))
+      if (f.is_tgmsg_match (in) == FocusDecision::Accept)
 	{
 	  return true;
 	}
+      if (f.is_tgmsg_match (in) == FocusDecision::Reject)
+	{
+	  return false;
+	}
+
       this->i_prev_matched_++;
     }
+
   return false;
 }
 
@@ -114,6 +120,7 @@ FocusFilter::FocusFilter (FocusFilter &&move_ctor_from)
   this->chat_title = std::move (move_ctor_from.chat_title);
   this->senders = std::move (move_ctor_from.senders);
   this->no_senders = std::move (move_ctor_from.no_senders);
+  this->rej_senders = std::move (move_ctor_from.rej_senders);
   this->keywords = std::move (move_ctor_from.keywords);
   this->no_keywords = std::move (move_ctor_from.no_keywords);
 }
@@ -142,11 +149,18 @@ FocusFilter::FocusFilter (const toml::value &v)
     = toml::find_or<vector<string>> (v, "senders", vector<string> (0));
   for (string &strval : sender_list)
     this->senders.emplace_back (PosixExtRegex (strval));
+
   // no sender
   vector<string> no_sender_list
     = toml::find_or<vector<string>> (v, "no-senders", vector<string> (0));
   for (string &strval : no_sender_list)
     this->no_senders.emplace_back (PosixExtRegex (strval));
+
+  // rej sender
+  vector<string> rej_sender_list
+    = toml::find_or<vector<string>> (v, "rej-senders", vector<string> (0));
+  for (string &strval : rej_sender_list)
+    this->rej_senders.emplace_back (PosixExtRegex (strval));
 
   // keyword
   vector<string> keyword_list
@@ -249,22 +263,43 @@ FocusFilter::is_no_sender_match (const std::string &input)
 }
 
 bool
+FocusFilter::is_rej_sender_match (const std::string &input)
+{
+  // if (this->no_senders.size () == 0)
+  //   return true;
+
+  for (PosixExtRegex &re : this->rej_senders)
+    {
+      if (auto flag = re.is_match (input))
+	{
+	  if (*flag)
+	    return true;
+	}
+    }
+
+  return false;
+}
+
+FocusDecision
 FocusFilter::is_tgmsg_match (const TgMsg &in)
 {
   if (!this->is_title_match (in.get_chat_title ()))
-    return false;
+    return FocusDecision::Skip;
 
   if (!this->is_sender_match (in.get_sender ()))
-    return false;
+    return FocusDecision::Skip;
 
   if (this->is_no_sender_match (in.get_sender ()))
-    return false;
+    return FocusDecision::Skip;
+
+  if (this->is_rej_sender_match (in.get_sender ()))
+    return FocusDecision::Reject;
 
   if (!this->is_keyword_match (in.get_text_content ()))
-    return false;
+    return FocusDecision::Skip;
 
   if (this->is_no_keyword_match (in.get_text_content ()))
-    return false;
+    return FocusDecision::Skip;
 
-  return true;
+  return FocusDecision::Accept;
 }

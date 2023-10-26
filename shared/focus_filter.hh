@@ -9,6 +9,13 @@
 #include "posix_regex.hh"
 #include "tf_msg.hh"
 
+enum FocusDecision
+{
+  Accept,
+  Skip,
+  Reject
+};
+
 class FocusFilter
 {
 public:
@@ -20,28 +27,48 @@ public:
 
   explicit FocusFilter (const toml::value &v);
 
+  // FIXME: is_xyz_match family should be private
+
+  //
+  // Check whether the input string can match "title" filter.
   bool is_title_match (const std::string &input);
 
+  //
+  // Check whether the input string can match any of "senders" filter list.
   bool is_sender_match (const std::string &input);
 
+  //
+  // Check whether the input string can match any of "no-senders" filter list.
   bool is_no_sender_match (const std::string &input);
 
-  // the input string can match any of keywords
+  //
+  // Check whether the input string can match any of "rej-senders" filter list.
+  bool is_rej_sender_match (const std::string &input);
+
+  //
+  // Check whether the input string can match any of "keywords" filter list.
   bool is_keyword_match (const std::string &input);
 
-  // check whether the input string can match any of no-keyword list.
+  //
+  // Check whether the input string can match any of "no-keywords" filter list.
   bool is_no_keyword_match (const std::string &input);
 
-  // If any xyz filter not matched, or any no-xyz filter matched, then is false,
-  // otherwise true.
-  bool is_tgmsg_match (const TgMsg &input);
-
-  // private:
+private:
   PosixExtRegex chat_title;
   std::vector<PosixExtRegex> senders;
   std::vector<PosixExtRegex> no_senders;
+  std::vector<PosixExtRegex> rej_senders;
   std::vector<PosixExtRegex> keywords;
   std::vector<PosixExtRegex> no_keywords;
+
+  //
+  // Check whether this "Focus Filter" can match the input. If any xyz filter
+  // not matched, or any no-xyz filter matched, then is false, otherwise
+  // true(i.e. all xyz filters match and all no-xyz filters cannot match the
+  // input).
+  FocusDecision is_tgmsg_match (const TgMsg &input);
+
+  friend class FocusFilterList;
 };
 
 class FocusFilterList
@@ -62,8 +89,11 @@ public:
   inline size_t n_filter () { return this->filters.size (); }
   inline size_t i_prev_matched () { return this->i_prev_matched_; }
 
-  // If any enclosing filter's "is_tgmsg_match" is true, then is true, otherwise
-  // false. This differs largly from sub-field matching mechanism.
+  //
+  // Check whether this "Focus Filter List" can match the input. If any
+  // enclosing filter matches input(i.e. "is_tgmsg_match" returns true), the
+  // result is true, otherwise false. Note that this differs largly from
+  // sub-field matching mechanism.
   bool is_tgmsg_match (const TgMsg &in);
 
 private:

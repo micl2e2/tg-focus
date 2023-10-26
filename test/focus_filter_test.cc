@@ -13,6 +13,8 @@ test_sub_match1 ()
   using namespace std;
 
   auto dataxxx = R"(
+# this line will be ignored by parser
+
 [[focus-filter]]
 title = "bcd"
 
@@ -580,6 +582,160 @@ no-keywords = ["macos"]
   }
 }
 
+//
+// a filter list containing one filter, reject a message because of a
+// FocusDecision::Skip
+void
+test_match_and_submatch1 ()
+{
+  using namespace toml::literals::toml_literals;
+  using namespace std;
+
+  auto dataxxx = R"(
+
+[[focus-filter]]
+no-senders = ["sd1","sd2"]
+keywords = ["kw1","kw2"]
+
+)"_toml;
+
+  vector<FocusFilter> filters
+    = toml::find<vector<FocusFilter>> (dataxxx, "focus-filter");
+
+  assert (filters.size () == 1);
+
+  // [0]
+  assert (filters[0].is_no_sender_match ("sd1"));
+  assert (filters[0].is_no_sender_match ("sd2"));
+  assert (filters[0].is_keyword_match ("kw1"));
+  assert (filters[0].is_keyword_match ("kw2"));
+
+  auto fcf_list = FocusFilterList (dataxxx);
+  assert (fcf_list.n_filter () == 1);
+
+  {
+    TgMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
+    assert (!fcf_list.is_tgmsg_match (msg));
+  }
+}
+
+//
+// a filter list containing two filter2, accept a message because of a
+// FocusDecision::Skip and the following FocusDecision::Focus
+void
+test_match_and_submatch2 ()
+{
+  using namespace toml::literals::toml_literals;
+  using namespace std;
+
+  auto dataxxx = R"(
+
+[[focus-filter]]
+no-senders = ["sd1","sd2"]
+keywords = ["kw1","kw2"]
+
+[[focus-filter]]
+keywords = ["kw1","kw2"]
+
+)"_toml;
+
+  vector<FocusFilter> filters
+    = toml::find<vector<FocusFilter>> (dataxxx, "focus-filter");
+
+  assert (filters.size () == 2);
+
+  // [0]
+  assert (filters[0].is_no_sender_match ("sd1"));
+  assert (filters[0].is_no_sender_match ("sd2"));
+  assert (filters[0].is_keyword_match ("kw1"));
+  assert (filters[0].is_keyword_match ("kw2"));
+
+  auto fcf_list = FocusFilterList (dataxxx);
+  assert (fcf_list.n_filter () == 2);
+
+  {
+    TgMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
+    assert (fcf_list.is_tgmsg_match (msg));
+  }
+}
+
+//
+// a filter list containing one filter, reject a message because of a
+// FocusDecision::Reject
+void
+test_match_and_submatch1_ ()
+{
+  using namespace toml::literals::toml_literals;
+  using namespace std;
+
+  auto dataxxx = R"(
+
+[[focus-filter]]
+rej-senders = ["sd1","sd2"]
+keywords = ["kw1","kw2"]
+
+)"_toml;
+
+  vector<FocusFilter> filters
+    = toml::find<vector<FocusFilter>> (dataxxx, "focus-filter");
+
+  assert (filters.size () == 1);
+
+  // [0]
+  assert (filters[0].is_rej_sender_match ("sd1"));
+  assert (filters[0].is_rej_sender_match ("sd2"));
+  assert (filters[0].is_keyword_match ("kw1"));
+  assert (filters[0].is_keyword_match ("kw2"));
+
+  auto fcf_list = FocusFilterList (dataxxx);
+  assert (fcf_list.n_filter () == 1);
+
+  {
+    TgMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
+    assert (!fcf_list.is_tgmsg_match (msg));
+  }
+}
+
+//
+// a filter list containing two filter2, reject a message because of a
+// FocusDecision::Reject
+void
+test_match_and_submatch2_ ()
+{
+  using namespace toml::literals::toml_literals;
+  using namespace std;
+
+  auto dataxxx = R"(
+
+[[focus-filter]]
+rej-senders = ["sd1","sd2"]
+keywords = ["kw1","kw2"]
+
+[[focus-filter]]
+keywords = ["kw1","kw2"]
+
+)"_toml;
+
+  vector<FocusFilter> filters
+    = toml::find<vector<FocusFilter>> (dataxxx, "focus-filter");
+
+  assert (filters.size () == 2);
+
+  // [0]
+  assert (filters[0].is_rej_sender_match ("sd1"));
+  assert (filters[0].is_rej_sender_match ("sd2"));
+  assert (filters[0].is_keyword_match ("kw1"));
+  assert (filters[0].is_keyword_match ("kw2"));
+
+  auto fcf_list = FocusFilterList (dataxxx);
+  assert (fcf_list.n_filter () == 2);
+
+  {
+    TgMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
+    assert (!fcf_list.is_tgmsg_match (msg));
+  }
+}
+
 int
 main ()
 {
@@ -590,4 +746,9 @@ main ()
   test_focus_filter_list2 ();
   test_focus_filter_list3 ();
   test_focus_filter_list4 ();
+
+  test_match_and_submatch1 ();
+  test_match_and_submatch2 ();
+  test_match_and_submatch1_ ();
+  test_match_and_submatch2_ ();
 }
