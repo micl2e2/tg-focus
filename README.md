@@ -8,7 +8,7 @@
 
 # Table of Contents
 
-- [TG-Focus](#tg-focus)
+- [About](#about)
 - [A Simple Demo](#a-simple-demo)
 - [How To Use](#how-to-use)
   - [Using OCI Image](#using-oci-image)
@@ -28,8 +28,14 @@
 # About
 
 tg-focus is a **T**ele**g**ram message filter that helps you
-**focus**. It can filter text messages, media captions, or emoji
-messages. By customizing *Focus Filters*, tg-focus can forward any
+**focus**. It supports several forms of messages, including
+
+1. Text messages
+2. Media captions
+3. Emoji messages
+4. Channel updates
+
+By customizing *Focus Filters*, tg-focus can forward any specific
 message from any chat to a dedicated chat *TG-FOCUS*, that way users
 have full control of the messages they see.
 
@@ -287,6 +293,8 @@ these will NOT be forwarded:
 
 ## Can I trust tg-focus?
 
+Absolutely yes!
+
 First of all, consider that tg-focus is a GPL-licensed [free
 software](https://www.gnu.org/philosophy/free-sw.en.html). 
 
@@ -304,9 +312,9 @@ authorization process, tg-focus needs to log in user's account,
 which in turn needs a phone number and login code,
 just as any functional Telegram client would require. It only saves
 API ID/HASH on the user's machine because these two are
-required each time TDLib initializes. But under **no** 
-circumstances would tg-focus save the user's phone number or login
-code.
+required each time TDLib initializes. But **under no
+circumstances** would tg-focus save the user's phone number or login
+code, even on your local machine.
 
 # Development
 
