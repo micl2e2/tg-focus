@@ -1,6 +1,6 @@
 2023-09-25  Michael Lee  <micl2e2@proton.me>
 
-	* RELEASE: 1.4.1814, ???
+	* RELEASE: 1.4.1814, ec2d3f5cf4854875dfd9c6dcd90f31e03aa8bd7a
 
 	Backward compatible changes:
 
@@ -11,7 +11,7 @@
 
 	TDLib version: 1.8.14
 	OCI image base: alpine:3.18
-	Artifacts: https://github.com/micl2e2/tg-focus/actions/runs/???????
+	Artifacts: https://github.com/micl2e2/tg-focus/actions/runs/6654343823
 
 
 2023-09-25  Michael Lee  <micl2e2@proton.me>
