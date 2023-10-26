@@ -1,41 +1,42 @@
+#include <iostream>
 #include <thread>
-#include <fmt/core.h>
 
+#include "lv_log.hh"
 #include "state.hh"
 #include "worker.hh"
 
-template <class... Args>
 void
-log (fmt::format_string<Args...> fmt, Args &&...args)
+handle_opts (int argc, char *argv[])
 {
-  constexpr std::string_view header{"[tf-focusd] "};
-  std::cout << header << fmt::format (fmt, args...) << std::endl;
-}
-
-template <class... Args>
-void
-log_flush (fmt::format_string<Args...> fmt, Args &&...args)
-{
-  constexpr std::string_view header{"[tf-focusd] "};
-  std::cout << header << fmt::format (fmt, args...) << std::flush;
+  if (argc > 1)
+    {
+      if (strcmp (argv[1], "--verbose") == 0)
+	{
+	  std::cout << "argc:" << argc << std::endl;
+	  std::cout << "argv1:" << argv[1] << std::endl;
+	  g_log_lv = LogLv::DEBUG;
+	}
+    }
 }
 
 int
-main ()
+main (int argc, char *argv[])
 {
-  std::setlocale (LC_ALL, "en_US.UTF-8");
-
   using namespace std;
+
+  setlocale (LC_ALL, "en_US.UTF-8");
+
+  handle_opts (argc, argv);
 
   while (!tf_data.get_auth_hint ())
     {
-      log ("Waiting for authorization");
+      lv_log (LogLv::INFO, "Waiting for authorization");
       std::this_thread::sleep_for (std::chrono::seconds (3));
     }
 
   if (!tf_data.get_auth_hint ())
     {
-      log ("Not authorized");
+      lv_log (LogLv::INFO, "Not authorized");
       return 1;
     }
 

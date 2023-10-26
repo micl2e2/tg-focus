@@ -42,6 +42,17 @@ operator<< (std::ostream &os, const TgMsg &msg)
   return os;
 }
 
+std::string
+decor_pos_to_str (const std::vector<std::tuple<int, int>> &pos)
+{
+  std::string ret;
+  for (auto ele : pos)
+    {
+      ret += fmt::format ("<{},{}>,", std::get<0> (ele), std::get<1> (ele));
+    }
+  return ret;
+}
+
 std::vector<std::tuple<int, int>>
 get_decor_pos (const std::string &str)
 {

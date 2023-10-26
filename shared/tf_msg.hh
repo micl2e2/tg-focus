@@ -9,6 +9,8 @@
 #include <iostream>
 #include <string>
 
+#include "fmt/core.h"
+
 class TgMsg
 {
 public:
@@ -33,6 +35,15 @@ public:
 
   inline const std::string &get_timestamp () const { return this->tstamp_; }
 
+  std::string to_string () const
+  {
+    std::string ret = fmt::format (
+      "Telegram Message-<title,{}>-<sender,{}>-<txt,{}>-<tstamp,{}>",
+      this->title_, this->sender_, this->txt_, this->tstamp_);
+
+    return ret;
+  }
+
   friend std::ostream &operator<< (std::ostream &os, const TgMsg &msg);
 
 private:
@@ -44,5 +55,8 @@ private:
 
 std::vector<std::tuple<int, int>>
 get_decor_pos (const std::string &str);
+
+std::string
+decor_pos_to_str (const std::vector<std::tuple<int, int>> &pos);
 
 #endif

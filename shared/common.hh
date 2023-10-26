@@ -8,6 +8,7 @@
 
 #include <optional>
 #include <string>
+#include <vector>
 #include <algorithm>
 
 #include <fmt/core.h>

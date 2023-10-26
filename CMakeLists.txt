@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 project(tg-focus)
 
 set(CMAKE_CXX_FLAGS_RELEASE "-O3" CACHE STRING "" FORCE)
+
 # set(CMAKE_CXX_COMPILER clang++)
 
 # cpp std
@@ -59,6 +60,7 @@ add_executable(
   ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
   ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc
   ${PROJECT_SOURCE_DIR}/shared/tf_msg.cc
+  ${PROJECT_SOURCE_DIR}/shared/lv_log.cc
 )
 target_include_directories(
   tf-focusd

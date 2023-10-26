@@ -18,6 +18,7 @@
 #include <td/telegram/td_api.hpp>
 
 #include "common.hh"
+#include "lv_log.hh"
 #include "tf_data.hh"
 #include "collector.hh"
 
@@ -101,10 +102,9 @@ no message!
 		      {
 			auto chat
 			  = td::move_tl_object_as<td_api::chat> (object);
-			std::cout << "group created! "
-				  << " chat id:" << chat->id_
-				  << " chat title:" << chat->title_
-				  << std::endl;
+			lv_log (LogLv::INFO,
+				"group created, chat id:{}, chat title:{}",
+				chat->id_, chat->title_);
 			this->collector_id = chat->id_;
 			this->done_create_collector = true;
 		      }
@@ -120,10 +120,9 @@ decorate_msg (const std::string &msg)
   auto pos_info = get_decor_pos (msg);
 
   // FIXME: only when very verbose
-  std::cout << fmt::format ("[CONSUMER {}] decorating u8str:{} pos_info:",
-			    it_cnt_consumer.load (std::memory_order_relaxed),
-			    msg)
-	    << pos_info << std::endl;
+  lv_log (LogLv::DEBUG, "consumer_cnt:{}, decorating u8str:{} pos_info:{}",
+	  it_cnt_consumer.load (std::memory_order_relaxed), msg,
+	  decor_pos_to_str (pos_info));
 
   auto deco_list = td_api::array<td_api::object_ptr<td_api::textEntity>> ();
 
@@ -165,10 +164,9 @@ TdCollector::collect_msg (const TgMsg &msg, size_t c_count)
     if (object->get_id () == td_api::message::ID)
       {
 	// FIXME: do not use operator <<
-	std::cout << fmt::format ("[CONSUMER {}] msg collected:",
-				  it_cnt_consumer.load (
-				    std::memory_order_relaxed))
-		  << msg << std::endl;
+	lv_log (LogLv::INFO, "consumer_cnt:{} msg collected:{}",
+		it_cnt_consumer.load (std::memory_order_relaxed),
+		msg.to_string ());
       }
   });
 }
@@ -179,11 +177,9 @@ TdCollector::fetch_updates ()
   auto response = client_manager_->receive (60);
   if (response.object)
     {
-      std::cerr << fmt::format ("[PRODUCER {}] td-client, resp recv id:{}",
-				it_cnt_producer.load (
-				  std::memory_order_relaxed),
-				response.object->get_id ())
-		<< std::endl;
+      lv_log (LogLv::DEBUG, "producer_iter:{}, td-client, resp recv id:{}",
+	      it_cnt_producer.load (std::memory_order_relaxed),
+	      response.object->get_id ());
       process_response (std::move (response));
     }
 }
@@ -195,7 +191,7 @@ TdCollector::send_query (td_api::object_ptr<td_api::Function> f,
 			 std::function<void (Object)> handler)
 {
   auto query_id = next_query_id ();
-  std::cout << "send_query!!!" << std::endl;
+  lv_log (LogLv::DEBUG, "TdCollector::send_query !!!");
   if (handler)
     {
       handlers_.emplace (query_id, std::move (handler));
@@ -219,11 +215,11 @@ TdCollector::process_response (td::ClientManager::Response response)
   auto it = handlers_.find (response.request_id);
   if (it != handlers_.end ())
     {
-      std::cerr << fmt::format (
-	"[PRODUCER {}]td-client, handlers_.size():{} it->first:{}",
-	it_cnt_producer.load (std::memory_order_relaxed), handlers_.size (),
-	it->first)
-		<< std::endl;
+      lv_log (LogLv::DEBUG,
+	      "producer_iter:{}, td-client, handlers_.size():{} it->first:{}",
+	      it_cnt_producer.load (std::memory_order_relaxed),
+	      handlers_.size (), it->first);
+
       it->second (std::move (response.object));
       handlers_.erase (it);
     }
@@ -375,10 +371,10 @@ TdCollector::process_update (td_api::object_ptr<td_api::Object> update)
       }
 
       default: {
-	std::cerr << fmt::format (
-	  "[PRODUCER {}] td-client, ignored update with id:{}",
-	  it_cnt_producer.load (std::memory_order_relaxed), update->get_id ())
-		  << std::endl;
+	lv_log (LogLv::DEBUG,
+		"producer_iter:{}, td-client, ignored update with id:{}",
+		it_cnt_producer.load (std::memory_order_relaxed),
+		update->get_id ());
 	break;
       }
     }
