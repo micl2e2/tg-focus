@@ -11,8 +11,8 @@
 - [About](#about)
 - [A Simple Demo](#a-simple-demo)
 - [How To Use](#how-to-use)
-  - [Using OCI Image](#using-oci-image)
-  - [Using Prebuilt Binaries](#using-prebuilt-binaries)
+  - [Use Docker Image](#use-docker-image)
+  - [Use Prebuilt Binaries](#use-prebuilt-binarieswork-in-progress)
 - [Filtering Rules](#filtering-rules)
   - [Filter Examples](#filter-examples)
 - [Q & A](#qa)
@@ -30,19 +30,19 @@
 tg-focus is a **T**ele**g**ram message filter that helps you
 **focus**. It supports several forms of messages, including
 
-1. Text messages
+1. Text messages(raw/reply/forward messages)
 2. Media captions
 3. Emoji messages
 4. Channel updates
 
 By customizing *Focus Filters*, tg-focus can forward any specific
-message from any chat to a dedicated chat *TG-FOCUS*, that way users
-have full control of the messages they see.
+message from any chat to a dedicated chat named *TG-FOCUS*, that way
+users have full control of the messages they see.
 
 Telegram is famous for its openness. While users are free to make a
 speech in any public chat, they should be equally free to choose what
 they see. Telegram's official client apps already have excellent
-support for the former feature, tg-focus and other counterparts are
+support for the former need, tg-focus and other counterparts are
 trying to fill the blank in the latter one. 
 
 Notable features:
@@ -58,43 +58,43 @@ Notable features:
     [TOML](https://toml.io/en/) format.
 
 -   **Ready to deploy**: Releases are made in three forms: source,
-    binary, and OCI image. Users can run it directly on a laptop,
-    or use [docker](https://www.docker.com)/[podman](https://podman.io/) to
-    deploy it on their servers, without interfering with each other.
+    prebuilt docker image and prebuilt binary(work-in-progress). With
+    docker image, users can run it effortlessly on a laptop(Linux, PC
+    or Mac) or their servers.
 
 # A Simple Demo
 
 Below is a 9-step demonstration of common use cases for tg-focus. 
 
-<img src="demo/1.jpg" width="600px"/>
+<img src="demo/1.jpg" width="500px"/>
 
-<img src="demo/2.jpg" width="600px"/>
+<img src="demo/2.jpg" width="500px"/>
 
-<img src="demo/3.jpg" width="600px"/>
-
-[Back to start](#a-simple-demo)
-
-<img src="demo/4.jpg" width="600px"/>
+<img src="demo/3.jpg" width="500px"/>
 
 [Back to start](#a-simple-demo)
 
-<img src="demo/5.jpg" width="600px"/>
+<img src="demo/4.jpg" width="500px"/>
 
 [Back to start](#a-simple-demo)
 
-<img src="demo/6.jpg" width="600px"/>
+<img src="demo/5.jpg" width="500px"/>
 
 [Back to start](#a-simple-demo)
 
-<img src="demo/7.jpg" width="600px"/>
+<img src="demo/6.jpg" width="500px"/>
 
 [Back to start](#a-simple-demo)
 
-<img src="demo/8.jpg" width="600px"/>
+<img src="demo/7.jpg" width="500px"/>
 
 [Back to start](#a-simple-demo)
 
-<img src="demo/9.jpg" width="600px"/>
+<img src="demo/8.jpg" width="500px"/>
+
+[Back to start](#a-simple-demo)
+
+<img src="demo/9.jpg" width="500px"/>
 
 [Back to start](#a-simple-demo)
 
@@ -107,13 +107,19 @@ Before anything make sure you have:
 2. Telegram API ID and corresponding API HASH, they can be obtained 
    at https://my.telegram.org. 
 
-Suppose you're:
+There are two different way to deploy and launch a tg-focus instance:
 
-## Using OCI Image
+1. Use docker image
+2. Use prebuilt binaries(work-in-progress)
 
-Make sure have docker or podman installed on your system already: 
+Suppose you are going to:
 
-1. Pull the image and run:
+## Use Docker Image
+
+Make sure have Docker or Podman installed on your machine: 
+
+1. Pull the image and run it in the background, assuming the newly
+created container's name is CONTAINER-NAME: 
 
 ```sh
 docker pull docker.io/micl2e2/tg-focus:latest
@@ -124,30 +130,33 @@ docker run -d docker.io/micl2e2/tg-focus
 API HASH, and your phone number:
 
 ```sh
-docker exec -it <container-name> tf-conf auth
+docker exec -it CONTAINER-NAME tf-conf auth
 ```
 
 3. If logined successfullly, a new chat named *TG-FOCUS* will be
    created, the subsequent messages will be filtered and forwarded to
    this chat.
 
-4. Change the *Focus Filter*s any time you like, to make adjustment on
-   the messages you'd like to receive on that chat.
+4. Note that by default, tg-focus will forward **all** messages
+   you receive. You can change the *Focus Filter*s(the filter
+   configuration) any time you like, to custom the messages you'd like
+   to receive on that chat. 
 
 ```sh
-docker exec -it <container-name> tf-conf filters
+docker exec -it CONTAINER-NAME tf-conf filters
 ```
 
 5. Done
 
 
 
-## Using Prebuilt Binaries
+## Use Prebuilt Binaries(work-in-progress)
 
 1. Download the binaries.
 
-2. Login your Telegram account first, it needs API ID, API HASH, and your
-phone number, the first two can be obtained in https://my.telegram.org:
+2. Login your Telegram account first, it needs API ID, API HASH, and
+your phone number, the first two can be obtained in
+https://my.telegram.org: 
 
 ```sh
 /path/to/tf-conf auth
@@ -318,17 +327,28 @@ code, even on your local machine.
 
 # Development
 
+Note that currently the development is documented only for Linux 
+platforms.
+
 ## Dependencies
 
-- CMake
+- Bash
+- Git
 - C++20 compatible compiler
-- TDLib (meaning the dependencies of TDLib)
+- CMake
 
 ## Building
+
 
 ```sh
 # Get the source
 git clone --depth=1 https://github.com/micl2e2/tg-focus
+
+# Make sure in the source root directory
+cd tg-focus
+
+# Download the dependencies of tg-focus
+bash dev/install-deps.bash
 
 # Setup a release build
 cmake -DCMAKE_BUILD_TYPE=Release -B build
