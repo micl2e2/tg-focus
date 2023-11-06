@@ -32,7 +32,7 @@ buildah from --name $CTN_TDLIB $PICK_BASEIMG
 buildah run $CTN_TDLIB -- \
 	sed -i \
 	"s/deb\.debian\.org/ftp\.$APT_COUNTRY_CODE\.debian\.org/" \
-	/etc/apt/sources.list.d/debian.sources
+	/etc/apt/sources.list
 
 buildah run $CTN_TDLIB -- \
 	apt-get -o Acquire::ForceIPv4=true update
