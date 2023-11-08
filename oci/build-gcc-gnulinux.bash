@@ -56,15 +56,27 @@ buildah run $CTN_BUILD -- \
 test $? -eq 0 || exit 4
 
 buildah run $CTN_BUILD -- \
-	bash -c "mkdir objdir && cd objdir && ../gcc-12.3.0/configure --prefix=/mygcc12 --disable-multilib --disable-libsanitizer --enable-languages=c,c++"
+	bash -c "mkdir objdir && cd objdir && ../gcc-12.3.0/configure --prefix=/mygcc12 --program-prefix=my --disable-multilib --disable-libsanitizer --enable-languages=c,c++"
 
 test $? -eq 0 || exit 4
 
-# build: 100min+ on 4C  
+# build 100min+ on 4C
 buildah run $CTN_BUILD -- \
-	bash -c 'cd objdir && make -j$(nproc) && make -j$(nproc) -k check && make install'
+	bash -c 'cd objdir && make -j$(nproc)'
 
 test $? -eq 0 || exit 4
+
+# test 200min+ on 4C
+# buildah run $CTN_BUILD -- \
+#	bash -c 'cd objdir && make -j$(nproc) -k check'
+
+test $? -eq 0 || exit 4
+
+buildah run $CTN_BUILD -- \
+	bash -c 'cd objdir && make install'
+
+test $? -eq 0 || exit 4
+
 
 # package
 

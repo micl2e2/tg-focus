@@ -4,7 +4,7 @@ CTN_TDLIB="build-tdlib-gnulinux-container"
 CTN_PACK="package-tdlib-gnulinux-container"
 PICK_SRC="030e440757478ef5f5fdb01f60c3c6d885330c72"
 PICK_PLATFORM="gnulinux"
-PICK_BASEIMG="debian:bookworm-slim"
+PICK_BASEIMG="quay.io/centos/centos:stream9"
 PXY_FRONTEND=""
 APT_COUNTRY_CODE="us"
 
@@ -51,8 +51,9 @@ buildah run $CTN_TDLIB -- \
 
 test $? -eq 0 || exit 4
 
+# FIXEM: handle rpath
 buildah run $CTN_TDLIB -- \
-	bash -c "cd td && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release  -DZLIB_USE_STATIC_LIBS=ON -DOPENSSL_USE_STATIC_LIBS=TRUE .. && make -j$(nproc) && make install"
+	bash -c "cd td && mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DZLIB_USE_STATIC_LIBS=ON -DOPENSSL_USE_STATIC_LIBS=TRUE .. && make -j$(nproc) && make install"
 
 # package
 
