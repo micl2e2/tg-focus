@@ -5,9 +5,9 @@ then
 fi
 
 
-distro_id=$(cat /etc/os-release)
+distro_id=$(uname -a)
 
-os_id=0 # 1:debian 2:fedora
+os_id=0 # 1:debian 2:fedora 3:alpine 4:mingw/cygwin
 
 # Check distros
 if [[ $distro_id =~ "debian" ]]
@@ -19,6 +19,9 @@ then
 elif [[ $distro_id =~ "alpine" ]]
 then
     os_id=3
+elif [[ $distro_id =~ "MINGW" ||  $distro_id =~ "CYGWIN" ]]
+then
+    os_id=4
 else
     echo '[ERROR] this platform is not supported'
     exit 1
@@ -65,6 +68,9 @@ then
     test $? -eq 0 || exit 1
 
     # fetch tdlib
+elif [[ $os_id -eq 4 ]]
+then
+    echo '[INFO] Installing dependencies for TDLib...WIP'
 fi
 
 test $? -eq 0 || exit 2
@@ -108,6 +114,11 @@ function dl-3rd-deps
     echo "[INFO] 'toml11' source picked"
     cd .. #  back to 3rd
 
+    if [[  $os_id -eq 4 ]]
+    then
+	return 0
+    fi
+    
     # tdlib
     echo "[INFO] Fetching 'tdlib'..."
     https_proxy=$HTTPS_PROXY git clone --quiet https://github.com/tdlib/td tdlib
@@ -163,12 +174,26 @@ function build-tdlib
     return 0
 }
 
+function build-tdlib-win
+{
+    echo 'WIP'
+}
+
+
 pick_src_fmt=$(cat dev/pick-src-fmt)
 pick_src_toml11=$(cat dev/pick-src-toml11)
 pick_src_tdlib=$(cat dev/pick-src-tdlib)
 dl-3rd-deps
 
-build-tdlib
+if [[ $os_id -eq 4 ]]
+then
+    build-tdlib-win
+else
+    build-tdlib
+fi
+
+
+
 if [[ ! $(pwd) =~ tg-focus$ ]]
 then
     echo '[ERROR] current directory is NOT tg-focus source root'
