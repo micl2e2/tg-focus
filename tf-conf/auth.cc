@@ -127,7 +127,39 @@ TdAuth::auth_query_callback ()
     else if (object->get_id () == td_api::error::ID)
       {
 	auto error = td::move_tl_object_as<td_api::error> (object);
-	lv_log (LogLv::ERROR, "ERROR: {}", error->message_);
+
+	if (error->message_.find ("PHONE_NUMBER_INVALID") != std::string::npos)
+	  lv_log (LogLv::ERROR, "The phone number is invalid");
+	else if (error->message_.find ("PHONE_CODE_HASH_EMPTY")
+		 != std::string::npos)
+	  lv_log (LogLv::ERROR, "phone_code_hash is missing");
+	else if (error->message_.find ("PHONE_CODE_EMPTY") != std::string::npos)
+	  lv_log (LogLv::ERROR, "phone_code is missing");
+	else if (error->message_.find ("PHONE_CODE_EXPIRED")
+		 != std::string::npos)
+	  lv_log (LogLv::ERROR, "The confirmation code has expired");
+	else if (error->message_.find ("PHONE_CODE_INVALID")
+		 != std::string::npos)
+	  lv_log (LogLv::ERROR, "The login code is invalid");
+	else if (error->message_.find ("API_ID_INVALID") != std::string::npos)
+	  lv_log (LogLv::ERROR, "The api_id/api_hash combination is invalid"
+				"(restart might be needed)");
+	else if (error->message_.find ("PASSWORD_HASH_INVALID")
+		 != std::string::npos)
+	  lv_log (LogLv::ERROR, "Incorrect password");
+	else if (error->message_.find ("PHONE_NUMBER_UNOCCUPIED")
+		 != std::string::npos)
+	  lv_log (LogLv::ERROR, "The phone number is not yet being used");
+	else if (error->message_.find (
+		   "Valid api_id must be provided. Can be obtained at")
+		 != std::string::npos)
+	  lv_log (LogLv::ERROR, "Invalid API ID");
+	else
+	  {
+	    lv_log (LogLv::ERROR, "ERROR: {}", error->message_);
+	    lv_log (LogLv::ERROR, "Fatal errors. Please submit a bug report.");
+	    std::exit (11);
+	  }
 	on_authorization_state_update ();
       }
     else
