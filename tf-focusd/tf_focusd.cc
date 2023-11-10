@@ -9,14 +9,8 @@ void
 handle_opts (int argc, char *argv[])
 {
   if (argc > 1)
-    {
-      if (strcmp (argv[1], "--verbose") == 0)
-	{
-	  std::cout << "argc:" << argc << std::endl;
-	  std::cout << "argv1:" << argv[1] << std::endl;
-	  g_log_lv = LogLv::DEBUG;
-	}
-    }
+    if (strcmp (argv[1], "--verbose") == 0)
+      g_log_lv = LogLv::DEBUG;
 }
 
 int

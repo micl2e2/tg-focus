@@ -1,5 +1,7 @@
+#include "lv_log.hh"
 #include "auth.hh"
 #include "common.hh"
+#include <td/telegram/td_api.h>
 
 TdAuth::TdAuth ()
 {
@@ -14,14 +16,11 @@ TdAuth::~TdAuth ()
 {
   send_query (td_api::make_object<td_api::close> (), [] (Object obj) {
     if (obj->get_id () == td_api::ok::ID)
-      log ("Closing...");
-    // std::cerr << "close cb, obj id:" << obj->get_id () << std::endl;
-    // is_tdlib_closed.store (true, std::memory_order_release);
+      lv_log (LogLv::INFO, "Closing...");
   });
 
   while (!is_tdlib_closed.load (std::memory_order_acquire))
     {
-      // std::cerr << "try closing...\n";
       auto response = client_manager_->receive (60);
       if (response.object)
 	{
@@ -41,8 +40,7 @@ TdAuth::loop ()
 	  process_response (std::move (response));
 	}
     }
-  log ("Logined successfully!");
-  // std::cout << "[td-auth] logined successfully!\n";
+  lv_log (LogLv::INFO, "Log in successfully!");
 }
 
 void
@@ -129,14 +127,13 @@ TdAuth::auth_query_callback ()
     else if (object->get_id () == td_api::error::ID)
       {
 	auto error = td::move_tl_object_as<td_api::error> (object);
-	log ("ERROR: {}", error->message_);
-	// std::cout << "auth err: " << to_string (error) << std::flush;
+	lv_log (LogLv::ERROR, "ERROR: {}", error->message_);
 	on_authorization_state_update ();
       }
     else
       {
-	std::cerr << "unexpected auth callback id: " << object->get_id ()
-		  << std::endl;
+	lv_log (LogLv::ERROR, "ERROR: unexpected auth callback id:{}",
+		object->get_id ());
       }
   };
 }
@@ -174,10 +171,9 @@ TdAuth::on_authorization_state_update ()
       }
 
       case td_api::authorizationStateClosed::ID: {
-	log ("Closed");
+	lv_log (LogLv::INFO, "Closed");
 	this->is_authorized = false;
 	is_tdlib_closed.store (true, std::memory_order_release);
-	// std::cout << "Actual Closed!" << std::endl;
 	break;
       }
 
@@ -196,6 +192,16 @@ TdAuth::on_authorization_state_update ()
 	std::string code;
 	std::cin >> code;
 	send_query (td_api::make_object<td_api::checkAuthenticationCode> (code),
+		    auth_query_callback ());
+	break;
+      }
+
+      case td_api::authorizationStateWaitPassword::ID: {
+	log_flush ("Enter authentication password: ");
+	std::string code;
+	std::cin >> code;
+	send_query (td_api::make_object<td_api::checkAuthenticationPassword> (
+		      code),
 		    auth_query_callback ());
 	break;
       }
@@ -241,6 +247,13 @@ TdAuth::on_authorization_state_update ()
 
 	send_query (std::move (request), auth_query_callback ());
 	break;
+      }
+
+      default: {
+	lv_log (LogLv::ERROR, "ERROR: unknown event {}",
+		this->auth_state_->get_id ());
+	lv_log (LogLv::ERROR, "Fatal errors. Please submit a bug report.");
+	std::exit (10);
       }
     }
 }

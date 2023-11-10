@@ -78,7 +78,7 @@ handle_auth_reset ()
   if (del_res == static_cast<std::uintmax_t> (-1))
     return 1;
 
-  log ("reset successfully");
+  lv_log (LogLv::INFO, "Reset successfully");
 
   return 0;
 }
@@ -95,7 +95,7 @@ handle_filters ()
   // std::system (fmt::format ("$EDITOR {}", fpath_cstr).c_str ());
   std::system (fmt::format ("nano {}", fpath_cstr).c_str ());
 
-  log ("Verifying filters...");
+  lv_log (LogLv::INFO, "Verifying filters...");
 
   bool is_invalid_toml = false;
   toml::value res;
@@ -110,20 +110,29 @@ handle_filters ()
     }
 
   if (is_invalid_toml)
-    log ("ERROR: Invalid toml");
+    lv_log (LogLv::ERROR, "ERROR: Invalid toml");
   else
     {
       FileReader reader{fpath_cstr};
       if (FocusFilterList::is_valid (reader.read_to_string ().value_or ("-")))
 	{
-	  log ("Saving filters...");
+	  lv_log (LogLv::INFO, "Saving filters...");
 	  tf_data.set_filters (tf_data.get_filters_tmp ());
 	}
       else
-	log ("ERROR: Invalid filters");
+	lv_log (LogLv::ERROR, "ERROR: Invalid filters");
     }
 
   return 0;
+}
+
+void
+handle_loglv (int argc, char *argv[])
+{
+  if (argc > 2)
+    for (int i = 1; i < argc; i++)
+      if (strcmp (argv[i], "--verbose") == 0)
+	g_log_lv = LogLv::DEBUG;
 }
 
 int
@@ -131,6 +140,7 @@ main (int argc, char *argv[])
 {
   if (argc != 2)
     return print_usage (argv);
+  handle_loglv (argc, argv);
 
   std::string subcmd = argv[1];
 
