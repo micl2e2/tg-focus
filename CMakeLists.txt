@@ -1,18 +1,23 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
+
+# set(CMAKE_CXX_COMPILER /usr/bin/clang++) # must precede project()
+
 project(tg-focus)
 
-set(CMAKE_CXX_FLAGS_RELEASE "-O3" CACHE STRING "" FORCE)
-
-# set(CMAKE_CXX_COMPILER clang++)
-
-# cpp std
+###
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+###
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
-# warning
-add_compile_options(-Wall -Wextra)
+###
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+  add_compile_options(-Wall -Wextra)
+  set(CMAKE_CXX_FLAGS_RELEASE "-O3" CACHE STRING "" FORCE)
+else()
+
+endif()
 
 # santinize, linked by all targets
 if (DEFINED ENV{WITH_SANITIZERS})
@@ -46,9 +51,15 @@ target_include_directories(
 )
 target_link_libraries(
   tf-conf
-  PRIVATE -static-libgcc -static-libstdc++
   PRIVATE Td::TdStatic
 )
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  target_link_libraries(
+    tf-conf
+    PRIVATE -static-libgcc -static-libstdc++
+  )
+endif()
+
 
 # tf-focusd
 add_executable(
@@ -70,9 +81,14 @@ target_include_directories(
 )
 target_link_libraries(
   tf-focusd
-  PRIVATE -static-libgcc -static-libstdc++
   PRIVATE Td::TdStatic
 )
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  target_link_libraries(
+    tf-focusd
+    PRIVATE -static-libgcc -static-libstdc++
+  )
+endif()
 
 # tests
 enable_testing()
