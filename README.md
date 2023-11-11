@@ -11,12 +11,15 @@
 - [About](#about)
 - [A Simple Demo](#a-simple-demo)
 - [How To Use](#how-to-use)
-  - [Use Docker Image](#use-docker-image)
-  - [Use Prebuilt Binaries](#use-prebuilt-binarieswork-in-progress)
+  - [Hardware Requirement](#hardware-requirement)
+  - [Deployment](#deployment)
+	- [Use DockerHub Image](#use-dockerhub-image)
+	- [Use Prebuilt Binaries](#use-prebuilt-binarieswork-in-progress)
 - [Filtering Rules](#filtering-rules)
   - [Filter Examples](#filter-examples)
 - [Q & A](#qa)
   - [Can I trust tg-focus?](#can-i-trust-tg-focus)
+  - [Too many TG-FOCUS chats created, what should I do?](#too-many-tg-focus-chats-created-what-should-i-do)
 - [Development](#development)
   - [Dependencies](#dependencies)
   - [Buidling](#building)
@@ -47,24 +50,26 @@ trying to fill the blank in the latter one.
 
 Notable features:
 
--   **Reliable & Consistent**: Built on top of native
+-   **Reliable & Consistent**: Built directly on top of official
     C++ interfaces([TDLib](https://core.telegram.org/tdlib/)). All
     communications towards Telegram servers are completely handled by
     TDLib.
 
--   **Easy to use**: Users can customize *Focus Filter* any
-    time they like. The filter accepts both simple text and regular 
-    expressions. The configuration file is in human-readable
+-   **Easy to customize**: Users can customize *Focus Filter* any
+    time they like. The filter accepts both simple text and [regular 
+    expressions](https://en.wikipedia.org/wiki/Regular_expression). The
+    configuration file is in human-readable 
     [TOML](https://toml.io/en/) format.
 
 -   **Ready to deploy**: Releases are made in three forms: source,
-    prebuilt docker image and prebuilt binary(work-in-progress). With
-    docker image, users can run it effortlessly on a laptop(Linux, PC
-    or Mac) or their servers.
+    prebuilt OCI image(docker/podman) and prebuilt
+    binary(Work-In-Progress).
 
 # A Simple Demo
 
-Below is a 9-step demonstration of common use cases for tg-focus. 
+Below is a simple 9-step demonstration of a common use case:
+forwarding the messages that contains the keywords we want, ignoring
+the message that sent from the users we don't want.
 
 <img src="demo/1.jpg" width="500px"/>
 
@@ -107,16 +112,33 @@ Before anything make sure you have:
 2. Telegram API ID and corresponding API HASH, they can be obtained 
    at https://my.telegram.org. 
 
+## Hardware Requirement
+
+There is no rigorous restriction on hardware, here is a memory usage
+overview in 7 days:
+
+| day1 | day2 | day3 | day4 | day5  | day6  | day7  |
+|------|------|------|------|-------|-------|-------|
+| 76MB | 84MB | 90MB | 96MB | 103MB | 108MB | 115MB |
+
+(NOTE: this table is just for reference, it is recorded by an account
+with about 30 public chats, most of which have over 1000 members and
+500 messages produced per day)
+
+
+## Deployment
+
 There are two different way to deploy and launch a tg-focus instance:
 
-1. Use docker image
-2. Use prebuilt binaries(work-in-progress)
+1. Use DockerHub Image
+2. Use Prebuilt Binaries(work-in-progress)
 
 Suppose you are going to:
 
-## Use Docker Image
+### Use DockerHub Image
 
-Make sure have Docker or Podman installed on your machine: 
+Make sure have [Docker](https://docs.docker.com/engine/) or
+[Podman](https://podman.io/) installed on your machine:
 
 1. Pull the image and run it in the background, assuming the newly
 created container's name is CONTAINER-NAME: 
@@ -126,8 +148,8 @@ docker pull docker.io/micl2e2/tg-focus:latest
 docker run -d docker.io/micl2e2/tg-focus
 ```
 
-2. Login your telegram account first, here you should provide API ID,
-API HASH, and your phone number:
+2. Login your telegram account first, here you should provide *API ID*,
+*API HASH*, and your *phone number*:
 
 ```sh
 docker exec -it CONTAINER-NAME tf-conf auth
@@ -140,17 +162,29 @@ docker exec -it CONTAINER-NAME tf-conf auth
 4. Note that by default, tg-focus will forward **all** messages
    you receive. You can change the *Focus Filter*s(the filter
    configuration) any time you like, to custom the messages you'd like
-   to receive on that chat. 
+   to receive on that chat. See [examples](#filter-examples).
 
 ```sh
 docker exec -it CONTAINER-NAME tf-conf filters
 ```
 
+(NOTE: This will open the embeded [GNU
+nano](https://www.nano-editor.org/) editor for configuration
+modification. After modification, press Ctrl-O, Enter, Ctrl-X to
+finish the work. If the modified one is valid, the last line of
+output shall be "Saving filters...")
+
 5. Done
 
+6. (Optional) Use following command if one wants to destroy the
+   instance and its Telegram-related credentials and resource:
+
+```sh
+docker rm --force CONTAINER-NAME
+```
 
 
-## Use Prebuilt Binaries(work-in-progress)
+### Use Prebuilt Binaries(Work-In-Progress)
 
 1. Download the binaries.
 
@@ -186,29 +220,45 @@ https://my.telegram.org:
 # Filtering Rules
 
 A *Focus Filter* is a filter used by tg-focus to match against the
-message's text content(text, emoji, or media caption). Users can add
-as many filters as they like, when a message comes, they are tried one
-by one, if there is any filter than can *match* the message and not
-*reject* the message , it will be forwarded.
+message's text content(text, emoji, or media caption). They are:
+- `title`
+- `keywords`
+- `no-keywords`
+- `senders`
+- `no-senders`
+- `rej-senders`
+
+Users can add as many filters as they like, they accept **simple
+text** or **regular expression**. 
+
+When a message comes, they are tried one by one, if there is any
+filter than can *match* the message and not *skip* the message , it
+will be forwarded.
 
 Currently *Focus Filter* can *match*:
 
-1. Chat title
-2. Keywords
-3. Senders
+- Chat title(`title`)
+- Keywords(`keywords`)
+- Senders(`senders`)
+
+can *skip*:
+
+- Keywords(`no-keywords`)
+- Senders(`no-senders`)
 
 can *reject*:
 
-1. Keywords
-2. Senders
+- Senders(`rej-senders`)
 
-A message is forwarded if and only if:
+A message is forwarded **if and only if**:
 
-- the message is matched by a *Focus Filter*, **and**
-- the message is not rejected by that *Focus Filter*.
+- it is *matched* by a *Focus Filter*, **and**
+- it is *not skipped* by that *Focus Filter*, **and**
+- it is *not rejected* by any previous *Focus Filter*.
 
-(Note that the first three rules can be regarded as **whitelist** ,
-the second two rules can be regarded as **blacklist**) 
+(Note that the first three rules can be regarded as **whitelist**,
+the second two rules can be regarded as **weak blacklist**, the third
+one can be regarded as **strong blacklist**) 
 
 
 ## Filter Examples
@@ -322,12 +372,47 @@ which in turn needs a phone number and login code,
 just as any functional Telegram client would require. It only saves
 API ID/HASH on the user's machine because these two are
 required each time TDLib initializes. But **under no
-circumstances** would tg-focus save the user's phone number or login
-code, even on your local machine.
+circumstances** would tg-focus save the user's phone number or any
+other credentials.
+
+## Too many TG-FOCUS chats created, what should I do?
+
+tg-focus creates a TG-FOCUS chat whenever tg-focus starts or restarts,
+it is not a bug or defeat, but an **intended** behavior. If there are
+many TG-FOCUS chats created, it is probably a misuse case and all you can
+do is delete them manually. Here are some reasons justifying that:
+
+1. tg-focus was originally developed as a
+   long-running server-side application, restarting shall not be
+   performed frequently.
+
+2. Each tg-focus instance has its own filter configuration, hence one
+   chat for one instance. Each of them is independent so that no one
+   could possibly interfere with another.
+   
+3. To be a comprehensive message filter, tg-focus has to be a User Bot,
+   which has far more privileges than a general-purpose
+   [Bot](https://core.telegram.org/bots).  There
+   are already some examples where some of the good-purpose User Bots
+   disappoint their users 
+   because of their misuse of Telegram APIs, such as repeatedly sending
+   random messages to users' random chats. This is probably one of the
+   reasons why Telegram userbots have a bad reputation. However, tg-focus will
+   not follow their paths, we have one strict principle: **all
+   tg-focus's messages will only be sent to a newly created
+   chat**. With this principle, it 
+   is firmly guaranteed that **no** messages generated by tg-focus will be
+   sent to the wrong chat. Additionally, there is **no** reason for tg-focus
+   users to worry about whether any existing or new features
+   will be harmful or not.
+   
+
+
+
 
 # Development
 
-Note that currently the development is documented only for Linux 
+**Note** that currently the development is documented only for Linux 
 platforms.
 
 ## Dependencies
@@ -364,8 +449,6 @@ cd build && ctest
 
 tg-focus is still far from perfect, any form of contribution is
 welcomed! 
-
-This is not an exhaustive list:
 
 - Ask question (open an issue with label [![](https://img.shields.io/static/v1?label=&message=question&color=purple)](https://github.com/micl2e2/tg-focus/issues/new))
 - Bug Report (open an issue with label [![](https://img.shields.io/static/v1?label=&message=bug&color=red)](https://github.com/micl2e2/tg-focus/issues/new))
