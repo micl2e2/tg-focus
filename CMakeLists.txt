@@ -31,7 +31,7 @@ link_libraries(fmt)
 
 # 030e440757478ef5f5fdb01f60c3c6d885330c72
 #   note: sync with build/fetch-tdlib
-find_package(Td 1.8.14 REQUIRED)
+find_package(Td 1.8.21 REQUIRED)
 
 # tf-conf
 add_executable(
