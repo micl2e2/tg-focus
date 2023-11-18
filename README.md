@@ -2,7 +2,7 @@
 
 
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/micl2e2/tg-focus/build-tgfocus.yml)
-![Static Badge](https://img.shields.io/badge/TDLib-1.8.14-lightblue)
+![Static Badge](https://img.shields.io/badge/TDLib-1.8.21-lightblue)
 ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/micl2e2/tg-focus/latest?color=lightgreen)
 
 
@@ -31,12 +31,12 @@
 # About
 
 tg-focus is a **T**ele**g**ram message filter that helps you
-**focus**. It supports several forms of messages, including
+**focus**. It supports several forms of text messages, including
 
-1. Text messages(raw/reply/forward messages)
-2. Media captions
-3. Emoji messages
-4. Channel updates
+1. Chat Message(Raw/Reply/Forward/Quoted)
+2. Media Caption
+3. Emoji
+4. Channel Update
 
 By customizing *Focus Filters*, tg-focus can forward any specific
 message from any chat to a dedicated chat named *TG-FOCUS*, that way
