@@ -29,8 +29,9 @@ endif()
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rd/fmt)
 link_libraries(fmt)
 
-# 030e440757478ef5f5fdb01f60c3c6d885330c72
-#   note: sync with build/fetch-tdlib
+# TDLib versions
+# note: sync with tg-focus-cicd
+execute_process(COMMAND bash dev/before-compile.bash)
 find_package(Td 1.8.21 REQUIRED)
 
 # tf-conf
