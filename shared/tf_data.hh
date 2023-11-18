@@ -28,10 +28,6 @@ public:
 
   std::filesystem::path path_api_hash () const;
 
-  std::filesystem::path path_phone () const;
-
-  std::filesystem::path path_vcode () const;
-
   std::filesystem::path path_auth_hint () const;
 
   std::filesystem::path path_filters () const;
@@ -46,10 +42,6 @@ public:
 
   std::string get_api_hash () const;
 
-  std::string get_phone () const;
-
-  std::string get_vcode () const;
-
   bool get_auth_hint () const;
 
   std::string get_filters () const;
@@ -61,10 +53,6 @@ public:
   void set_api_id (std::string &&in) const;
 
   void set_api_hash (std::string &&in) const;
-
-  void set_phone (std::string &&in) const;
-
-  void set_vcode (std::string &&in) const;
 
   // this flag will critically affect authorization process
   void set_auth_hint (bool flag);
@@ -79,8 +67,6 @@ private:
   static constexpr auto DIR_TDDATA = "tdlib";
   static constexpr auto FILE_APIID = "api_id";
   static constexpr auto FILE_APIHASH = "api_hash";
-  static constexpr auto FILE_PHONE = "phone";
-  static constexpr auto FILE_VCODE = "vcode";
   static constexpr auto FILE_AUTH_HINT = "auth_hint";
   static constexpr auto FILE_FILTERS = "filters.toml";
   static constexpr auto FILE_FILTERS_TMP = "filters.toml.tmp";

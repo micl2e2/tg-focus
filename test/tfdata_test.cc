@@ -33,12 +33,6 @@ tst_files_existence ()
   assert (fs::exists (tfdata.path_api_hash ()));
   assert (fs::is_regular_file (tfdata.path_api_hash ()));
 
-  assert (fs::exists (tfdata.path_phone ()));
-  assert (fs::is_regular_file (tfdata.path_phone ()));
-
-  assert (fs::exists (tfdata.path_vcode ()));
-  assert (fs::is_regular_file (tfdata.path_vcode ()));
-
   assert (fs::exists (tfdata.path_auth_hint ()));
   assert (fs::is_regular_file (tfdata.path_auth_hint ()));
 
@@ -121,34 +115,6 @@ tst_files_content ()
     tfdata.set_api_hash ("qqwwee");
     auto strdata = tfdata.get_api_hash ();
     assert (strdata == "qqwwee");
-  }
-
-  // set phone
-  {
-    tfdata.set_phone (std::string ("+1 12345"));
-    auto strdata = tfdata.get_phone ();
-    assert (strdata == "+1 12345");
-  }
-
-  // change phone
-  {
-    tfdata.set_phone ("+1 222333");
-    auto strdata = tfdata.get_phone ();
-    assert (strdata == "+1 222333");
-  }
-
-  // set vcode
-  {
-    tfdata.set_vcode (std::string ("91601"));
-    auto strdata = tfdata.get_vcode ();
-    assert (strdata == "91601");
-  }
-
-  // change vcode
-  {
-    tfdata.set_vcode ("11601");
-    auto strdata = tfdata.get_vcode ();
-    assert (strdata == "11601");
   }
 
   // set auth hint

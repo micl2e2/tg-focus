@@ -122,24 +122,6 @@ TgFocusData::TgFocusData (std::optional<std::filesystem::path> &&may_pred_home,
       fclose (fstrm);
   }
 
-  // phone
-  auto phone_file = droot_dir / FILE_PHONE;
-  {
-    FILE *fstrm = fopen (phone_file.c_str (), "a");
-    if (fstrm)
-      {
-	fclose (fstrm);
-      }
-  }
-
-  // vcode
-  auto vcode_file = droot_dir / FILE_VCODE;
-  {
-    FILE *fstrm = fopen (vcode_file.c_str (), "a");
-    if (fstrm)
-      fclose (fstrm);
-  }
-
   // auth_hint
   auto auth_hint_file = droot_dir / FILE_AUTH_HINT;
   {
@@ -226,20 +208,6 @@ TgFocusData::path_api_hash () const
 }
 
 std::filesystem::path
-TgFocusData::path_phone () const
-{
-  auto tmp = this->data_root;
-  return tmp.append (FILE_PHONE);
-}
-
-std::filesystem::path
-TgFocusData::path_vcode () const
-{
-  auto tmp = this->data_root;
-  return tmp.append (FILE_VCODE);
-}
-
-std::filesystem::path
 TgFocusData::path_auth_hint () const
 {
   auto tmp = this->data_root;
@@ -289,24 +257,6 @@ std::string
 TgFocusData::get_api_hash () const
 {
   FileReader freader{this->path_api_hash ().c_str ()};
-  auto strdata = freader.read_to_string ().value_or ("-");
-  trim (strdata);
-  return strdata;
-}
-
-std::string
-TgFocusData::get_phone () const
-{
-  FileReader freader{this->path_phone ().c_str ()};
-  auto strdata = freader.read_to_string ().value_or ("-");
-  trim (strdata);
-  return strdata;
-}
-
-std::string
-TgFocusData::get_vcode () const
-{
-  FileReader freader{this->path_vcode ().c_str ()};
   auto strdata = freader.read_to_string ().value_or ("-");
   trim (strdata);
   return strdata;
@@ -374,36 +324,6 @@ TgFocusData::set_api_hash (std::string &&in) const
     return;
 
   auto path = this->path_api_hash ();
-  auto filename = path.c_str ();
-  FILE *f = std::fopen (filename, "w+");
-  if (f == nullptr)
-    return;
-  std::fwrite (in.c_str (), 1, in.length (), f);
-  fclose (f);
-}
-
-void
-TgFocusData::set_phone (std::string &&in) const
-{
-  if (in.length () == 0)
-    return;
-
-  auto path = this->path_phone ();
-  auto filename = path.c_str ();
-  FILE *f = std::fopen (filename, "w+");
-  if (f == nullptr)
-    return;
-  std::fwrite (in.c_str (), 1, in.length (), f);
-  fclose (f);
-}
-
-void
-TgFocusData::set_vcode (std::string &&in) const
-{
-  if (in.length () == 0)
-    return;
-
-  auto path = this->path_vcode ();
   auto filename = path.c_str ();
   FILE *f = std::fopen (filename, "w+");
   if (f == nullptr)
