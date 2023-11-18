@@ -156,9 +156,9 @@ TdCollector::collect_msg (const TgMsg &msg, size_t c_count)
 						  std::move (text_deco_list));
   td_api::object_ptr<td_api::Function> send_message_request
     = td_api::make_object<td_api::sendMessage> (
-      this->collector_id, 0, 0, nullptr, nullptr,
+      this->collector_id, 0, nullptr, nullptr, nullptr,
       td_api::make_object<td_api::inputMessageText> (std::move (message_text),
-						     false, true));
+						     nullptr, true));
 
   send_query (std::move (send_message_request), [this, msg] (Object object) {
     if (object->get_id () == td_api::message::ID)
