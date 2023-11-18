@@ -8,11 +8,12 @@
 
 - [About](#about)
 - [A Simple Demo](#a-simple-demo)
+- [Supported Platforms](#supported-platforms)
 - [How To Use](#how-to-use)
   - [Hardware Requirement](#hardware-requirement)
   - [Deployment](#deployment)
 	- [Use DockerHub Image](#use-dockerhub-image)
-	- [Use Prebuilt Binaries](#use-prebuilt-binarieswork-in-progress)
+	- [Use Prebuilt Binaries](#use-prebuilt-binaries)
 - [Filtering Rules](#filtering-rules)
   - [Filter Examples](#filter-examples)
 - [Q & A](#qa)
@@ -101,13 +102,56 @@ the message that sent from the users we don't want.
 [Back to start](#a-simple-demo)
 
 
+# Supported Platforms
+
+| Operating System    | Support(x86_64) |
+|---------------------|-----------------|
+| Windows             | ❌              |
+| Windows with WSL 1  | ✅              |
+| Windows with WSL 2  | ✅              |
+|                     |                 |
+| AlmaLinux 9         | ✅              |
+| AlmaLinux 8         | ✅              |
+| Amazon Linux 2023   | ✅              |
+| Amazon Linux 2      | ❌              |
+| Amazon Linux 1      | ❌              |
+| Arch Linux          | ✅              |
+| Debian 12           | ✅              |
+| Debian 11           | ✅              |
+| Debian 10           | ✅              |
+| Fedora 39           | ✅              |
+| Fedora 38           | ✅              |
+| Fedora 37           | ✅              |
+| openSUSE Leap 15.5  | ✅              |
+| openSUSE Leap 15.4  | ✅              |
+| openSUSE Tumbleweed | ✅              |
+| Oracle Linux 9      | ✅              |
+| Oracle Linux 8      | ✅              |
+| Oracle Linux 7      | ❌              |
+| Rocky Linux 9       | ✅              |
+| Rocky Linux 8       | ✅              |
+| Slackware 15.0      | ✅              |
+| Slackware 14.2      | ❌              |
+| Solus               | ✅              |
+| Ubuntu 23.10        | ✅              |
+| Ubuntu 23.04        | ✅              |
+| Ubuntu 22.04        | ✅              |
+| Ubuntu 20.04        | ✅              |
+| Void Linux          | ✅              |
+|                     |                 |
+
+NOTE: this is not an exhaustive list, missing platforms can be added
+to the list by opening an issue or a pull request.
+
+
+
 # How To Use
 
 Before anything make sure you have:
 
 1. A Telegram account
-2. Telegram API ID and corresponding API HASH, they can be obtained 
-   at https://my.telegram.org. 
+2. A Telegram API ID and the corresponding API HASH, they can be
+   obtained at https://my.telegram.org. 
 
 ## Hardware Requirement
 
@@ -127,8 +171,8 @@ with about 30 public chats, most of which have over 1000 members and
 
 There are two different way to deploy and launch a tg-focus instance:
 
-1. Use DockerHub Image
-2. Use Prebuilt Binaries
+1. [Use DockerHub Image](#use-dockerhub-image)
+2. [Use Prebuilt Binaries](#use-prebuilt-binaries)
 
 Suppose you are going to:
 
@@ -145,8 +189,9 @@ docker pull docker.io/micl2e2/tg-focus:latest
 docker run -d docker.io/micl2e2/tg-focus
 ```
 
-2. Login your telegram account first, here you should provide *API ID*,
-*API HASH*, and your *phone number*:
+2. Login your telegram account first, here you should provide API ID,
+API HASH, your phone number(in international format), and a login
+code, the first two can be obtained in https://my.telegram.org:
 
 ```sh
 docker exec -it CONTAINER-NAME tf-conf auth
@@ -181,13 +226,15 @@ docker rm --force CONTAINER-NAME
 ```
 
 
-### Use Prebuilt Binaries(Work-In-Progress)
+### Use Prebuilt Binaries
 
-1. Download the binaries.
+1. Download the binaries at GitHub releases
+   [page](https://github.com/micl2e2/tg-focus/releases). Please check
+   whether your [platform](#supported-platforms) is supported or not.
 
 2. Login your Telegram account first, it needs API ID, API HASH,
-your phone number and login code, the first two can be obtained in
-https://my.telegram.org:  
+your phone number(in international format) and a login code, the first two
+can be obtained in https://my.telegram.org:
 
 ```sh
 /path/to/tf-conf auth
@@ -436,7 +483,7 @@ git clone --depth=1 https://github.com/micl2e2/tg-focus
 # Make sure in the source root directory
 cd tg-focus
 
-# Download the dependencies of tg-focus
+# Prepare the dependencies of tg-focus. This takes a long time.
 bash dev/install-deps.bash
 
 # Setup a release build
