@@ -14,7 +14,7 @@
 #include <fmt/core.h>
 
 constexpr auto TF_DEV = "TG-FOCUS";
-constexpr auto TF_VER = "1.5-rc1";
+constexpr auto TF_VER = "1.5";
 constexpr auto TF_COLL_CHAT_TITLE = "TG-FOCUS";
 constexpr auto TDLIB_VER = "1.8.21";
 constexpr auto TDLIB_SRC = "ec788c7505c4f2b31b59743d2f4f97d6fdcba451";

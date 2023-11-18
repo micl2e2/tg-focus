@@ -1,7 +1,5 @@
 # TG-Focus
 
-
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/micl2e2/tg-focus/build-tgfocus.yml)
 ![Static Badge](https://img.shields.io/badge/TDLib-1.8.21-lightblue)
 ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/micl2e2/tg-focus/latest?color=lightgreen)
 
@@ -62,8 +60,7 @@ Notable features:
     [TOML](https://toml.io/en/) format.
 
 -   **Ready to deploy**: Releases are made in three forms: source,
-    prebuilt OCI image(docker/podman) and prebuilt
-    binary(Work-In-Progress).
+    Docker image and prebuilt binary.
 
 # A Simple Demo
 
@@ -131,7 +128,7 @@ with about 30 public chats, most of which have over 1000 members and
 There are two different way to deploy and launch a tg-focus instance:
 
 1. Use DockerHub Image
-2. Use Prebuilt Binaries(work-in-progress)
+2. Use Prebuilt Binaries
 
 Suppose you are going to:
 
@@ -188,9 +185,9 @@ docker rm --force CONTAINER-NAME
 
 1. Download the binaries.
 
-2. Login your Telegram account first, it needs API ID, API HASH, and
-your phone number, the first two can be obtained in
-https://my.telegram.org: 
+2. Login your Telegram account first, it needs API ID, API HASH,
+your phone number and login code, the first two can be obtained in
+https://my.telegram.org:  
 
 ```sh
 /path/to/tf-conf auth
@@ -206,15 +203,22 @@ https://my.telegram.org:
    created, the subsequent messages will be filtered and forwarded to
    this chat.
 
-5. Change the *Focus Filter*s any time you like, to make adjustment on
-   the messages you would like to see on that chat.
+
+5. Note that by default, tg-focus will forward **all** messages
+   you receive. You can change the *Focus Filter*s(the filter
+   configuration) any time you like, to custom the messages you'd like
+   to receive on that chat. See [examples](#filter-examples).
 
 ```sh
 /path/to/tf-conf filters
 ```
 
-6. Done
+(NOTE: This will open the [GNU nano](https://www.nano-editor.org/)
+editor for configuration modification. After modification, press
+Ctrl-O, Enter, Ctrl-X to finish the work. If the modified one is
+valid, the last line of output shall be "Saving filters...")
 
+6. Done
 
 
 # Filtering Rules
