@@ -9,6 +9,7 @@
 	- Support two-setup authentication
 	- Simplify TDLib version management
 	- Dedicated CI/CD repository
+	- Support various platforms
 
 2023-09-25  Michael Lee  <micl2e2@proton.me>
 
