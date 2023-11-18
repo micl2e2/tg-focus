@@ -1,5 +1,17 @@
 2023-09-25  Michael Lee  <micl2e2@proton.me>
 
+	* RELEASE: 1.5
+
+	Changes:
+
+	- Update TDLib from 1.8.14 to 1.8.21
+	- Support quoted messages
+	- Support two-setup authentication
+	- Simplify TDLib version management
+	- Dedicated CI/CD repository
+
+2023-09-25  Michael Lee  <micl2e2@proton.me>
+
 	* RELEASE: 1.4.1814, ec2d3f5cf4854875dfd9c6dcd90f31e03aa8bd7a
 
 	Backward compatible changes:
