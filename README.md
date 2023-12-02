@@ -1,7 +1,9 @@
 # TG-Focus
 
-![Static Badge](https://img.shields.io/badge/TDLib-1.8.21-lightblue)
-![Docker Image Size (tag)](https://img.shields.io/docker/image-size/micl2e2/tg-focus/latest?color=lightgreen)
+![GitHub License](https://img.shields.io/github/license/micl2e2/tg-focus?logo=gnu&color=blue&link=https%3A%2F%2Fgithub.com%2Fmicl2e2%2Ftg-focus%2Fblob%2Fmaster%2FLICENSE-GPL)
+![Docker Image Size (tag)](https://img.shields.io/docker/image-size/micl2e2/tg-focus/latest?logo=docker&logoColor=white&color=lightgreen&link=https%3A%2F%2Fhub.docker.com%2Fr%2Fmicl2e2%2Ftg-focus)
+![GitHub commits difference between two branches/tags/commits](https://img.shields.io/github/commits-difference/tdlib/td?base=ec788c7505c4f2b31b59743d2f4f97d6fdcba451&head=master&logo=gitextensions&label=pending%20TDLib%20updates&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd)
+
 
 
 # Table of Contents
@@ -12,8 +14,8 @@
 - [How To Use](#how-to-use)
   - [Hardware Requirement](#hardware-requirement)
   - [Deployment](#deployment)
-	- [Use DockerHub Image](#use-dockerhub-image)
-	- [Use Prebuilt Binaries](#use-prebuilt-binaries)
+	- [Using Docker Image(recommended)](#using-docker-imagerecommended)
+	- [Using Prebuilt Binaries](#using-prebuilt-binaries)
 - [Filtering Rules](#filtering-rules)
   - [Filter Examples](#filter-examples)
 - [Q & A](#qa)
@@ -172,14 +174,9 @@ with about 30 public chats, most of which have over 1000 members and
 
 ## Deployment
 
-There are two different way to deploy and launch a tg-focus instance:
+There are two different way to deploy:
 
-1. [Use DockerHub Image](#use-dockerhub-image)
-2. [Use Prebuilt Binaries](#use-prebuilt-binaries)
-
-Suppose you are going to:
-
-### Use DockerHub Image
+### Using Docker Image(recommended)
 
 Make sure have [Docker](https://docs.docker.com/engine/) or
 [Podman](https://podman.io/) installed on your machine:
@@ -229,7 +226,7 @@ docker rm --force CONTAINER-NAME
 ```
 
 
-### Use Prebuilt Binaries
+### Using Prebuilt Binaries
 
 1. Download the binaries at GitHub releases
    [page](https://github.com/micl2e2/tg-focus/releases). Please check
