@@ -1,175 +1,166 @@
+PROXY_FRONTEND=
+
+if [[ ! -z $USE_PROXYCHAINS ]]
+then
+    PROXY_FRONTEND=proxychains
+fi
+
 if [[ ! $(pwd) =~ tg-focus$ ]]
 then
     echo '[ERROR] current directory is NOT tg-focus source root'
     exit 10
 fi
 
+if [[ -f /etc/os-release ]]
+then
+    source /etc/os-release
+fi
 
-distro_id=$(uname -a)
+os_id= # e.g. deb12 deb11 fc38
 
-os_id=0 # 1:debian 2:fedora 3:alpine 4:mingw/cygwin
+######################################################################
+###  Check distros
+######################################################################
 
-# Check distros
-if [[ $distro_id =~ "debian" ]]
+if [[ $VERSION == "12 (bookworm)" ]]
 then
-    os_id=1
-elif [[ $distro_id =~ "fedora" ]]
+    os_id=deb12
+elif [[ $VERSION == "11 (bullseye)" ]]
 then
-    os_id=2
-elif [[ $distro_id =~ "alpine" ]]
+    os_id=deb11
+elif [[ $VERSION == "10 (buster)" ]]
 then
-    os_id=3
-elif [[ $distro_id =~ "MINGW" ||  $distro_id =~ "CYGWIN" ]]
+    os_id=deb10
+elif [[ $VERSION == "alpine" ]]
 then
-    os_id=4
+    os_id=alp318
+elif [[ $VERSION == "Fedora" ]]
+then
+    os_id=fc38
+elif [[ $VERSION == "CYGWIN" ]]
+then
+    os_id=cygwin
 else
     echo '[ERROR] this platform is not supported'
     exit 1
 fi
 
+echo "OS ID: $os_id"
+
+######################################################################
+###  Install Packages
+######################################################################
+
+echo "[INFO] Installing essential packages, administractive privileges required."
 # Install packages
-if [[ $os_id -eq 1 ]]
+if [[ $os_id == deb10 || $os_id == deb11 || $os_id == deb12 ]]
 then
-    su -c 'apt install gperf zlib-dev libssl-dev -y --quiet'
-    # TODO
-elif [[ $os_id -eq 2 ]]
-then
-    
-    echo '[INFO] Installing dependencies for TDLib...'
+    su -c 'apt install build-essential cmake gperf zlib1g-dev libssl-dev -y --quiet'
+elif [[ $os_id == fc38 ]]
+then    
     # tdlib
     sudo dnf install \
 	 -y --quiet \
 	 gperf zlib-devel openssl-devel cmake
     
     test $? -eq 0 || exit 1    
-    echo '[INFO] Installing dependencies for TDLib...ok'
 
-    echo '[INFO] Installing other dependencies...'
     # others
     sudo dnf install \
 	 -y --quiet \
 	 libstdc++-static
     test $? -eq 0 || exit 1    
-    echo '[INFO] Installing other dependencies...ok'
-    
 elif [[ $os_id -eq 3 ]]
 then
-    echo '[INFO] Installing dependencies for TDLib...'
     # tdlib
-    https_proxy=$HTTPS_PROXY apk add \
-			     --quiet \
-			     cmake gperf g++ openssl-dev \
-			     git make linux-headers zlib-dev
+    apk add \
+	--quiet \
+	cmake gperf g++ openssl-dev \
+	git make linux-headers zlib-dev
     test $? -eq 0 || exit 1
     
-    echo '[INFO] Installing other dependencies...'
     # others
     # apk add --quiet fmt-dev
-    test $? -eq 0 || exit 1
-
-    # fetch tdlib
-elif [[ $os_id -eq 4 ]]
-then
-    echo '[INFO] Installing dependencies for TDLib...WIP'
+    # test $? -eq 0 || exit 1
 fi
 
 test $? -eq 0 || exit 2
 
 function dl-3rd-deps
 {
-    if [[ -d 3rd ]]
-    then
-	echo '[INFO] third-party dependencies exist'
-	return 0
-    fi
-    
     mkdir -p 3rd
 
-    # !!!
-    cd 3rd
-
     # fmt
-    echo "[INFO] Fetching 'fmt'..."
-    https_proxy=$HTTPS_PROXY git clone --quiet https://github.com/fmtlib/fmt fmt
-    test $? -eq 0 || exit 2
-    echo "[INFO] Fetching 'fmt'...ok"
-
-    # !!!
-    cd fmt && \
-	git checkout --quiet $pick_src_fmt # 10.1.1
-    test $? -eq 0 || exit 2
+    if [[ ! -d 3rd/fmt ]]
+    then
+	echo "[INFO] Fetching 'fmt'..."
+	$PROXY_FRONTEND git clone https://github.com/fmtlib/fmt 3rd/fmt
+	test $? -eq 0 || return 2
+	echo "[INFO] Fetching 'fmt'...ok"
+    fi
+    git -C 3rd/fmt checkout --quiet $pick_src_fmt # 10.1.1
+    test $? -eq 0 || return 2
     echo "[INFO] 'fmt' source picked"
-    cd .. #  back to 3rd
 
     # toml11
-    echo "[INFO] Fetching 'toml11'..."
-    https_proxy=$HTTPS_PROXY git clone --quiet https://github.com/ToruNiina/toml11 toml11
-    test $? -eq 0 || exit 2
-    echo "[INFO] Fetching 'toml11'...ok"
-
-    # !!!
-    cd toml11 && \
-	git checkout --quiet $pick_src_toml11 # v3.7.1
-    test $? -eq 0 || exit 2
-    echo "[INFO] 'toml11' source picked"
-    cd .. #  back to 3rd
-
-    if [[  $os_id -eq 4 ]]
+    if [[ ! -d 3rd/toml11 ]]
     then
-	return 0
+	echo "[INFO] Fetching 'toml11'..."
+	$PROXY_FRONTEND git clone https://github.com/ToruNiina/toml11 3rd/toml11
+	test $? -eq 0 || return 2
+	echo "[INFO] Fetching 'toml11'...ok"
     fi
+    git -C 3rd/toml11 checkout --quiet $pick_src_toml11 # v3.7.1
+    test $? -eq 0 || return 2
+    echo "[INFO] 'toml11' source picked"
     
-    # tdlib
-    echo "[INFO] Fetching 'tdlib'..."
-    https_proxy=$HTTPS_PROXY git clone --quiet https://github.com/tdlib/td tdlib
-    test $? -eq 0 || exit 2
-    echo "[INFO] Fetching 'tdlib'...ok"
-
-    # !!!
-    cd tdlib && \
-	git checkout --quiet $pick_src_tdlib
-    test $? -eq 0 || exit 3
+    if [[ ! -d 3rd/td ]]
+    then
+	# tdlib
+	echo "[INFO] Fetching 'tdlib'..."
+	$PROXY_FRONTEND git clone https://github.com/tdlib/td 3rd/td
+	test $? -eq 0 || return 2
+	echo "[INFO] Fetching 'tdlib'...ok"
+    fi
+    git -C 3rd/td checkout --quiet $pick_src_tdlib
+    test $? -eq 0 || return 3
     echo "[INFO] 'tdlib' source picked"
-    cd .. #  back to 3rd
-
-    cd .. #  back to dev
 
     return 0
 }
 
 
+
+######################################################################
+###  Build
+######################################################################
+
 function build-tdlib
 {
-    if [[ -e /usr/local/lib/libtdclient.a ]]
+    ls /usr/local/lib | grep "libtdjson.so.$(cat dev/pick-ver-tdlib)"
+    if [[ $? -eq 0 ]]
     then
-	echo '[INFO] TDLib built and installed, skip'
+	echo '[INFO] TDLib built, skip'
 	return 0
     fi
 
-    # !!!
-    cd 3rd/tdlib
-    
-    if [[ ! -e build/libtdclient.a ]]
+    if [[ $os_id == deb10 ]]
     then
-	echo '[INFO] Building TDLib...'
-	cmake -DCMAKE_BUILD_TYPE=Debug -B build
+	(cd 3rd/td && cmake -DCMAKE_BUILD_TYPE=Debug -DZLIB_LIBRARY=/usr/lib/x86_64-linux-gnu/libz.a -DOPENSSL_USE_STATIC_LIBS=TRUE -DCMAKE_C_COMPILER=alt-gcc -DCMAKE_CXX_COMPILER=alt-g++ -B build)
 	test $? -eq 0 || exit 3
-	cmake --build build
+	export LD_LIBRARY_PATH=/usr/local/lib64
+	(cd 3rd/td/build && make -j$(nproc) && su -c 'LD_LIBRARY_PATH=/usr/local/lib64 make install')
 	test $? -eq 0 || exit 3
-	echo '[INFO] Building TDLib...ok'
-    fi
-
-    echo '[INFO] Installing TDLib...'
-    if [[ $os_id -eq 3 ]]
-    then
-	cmake --install build
+	(cd 3rd/td/build && make test)
+	test $? -eq 0 || exit 3
     else
-	sudo cmake --install build
+	(cd 3rd/td && cmake -DCMAKE_BUILD_TYPE=Debug -B build)
+	test $? -eq 0 || exit 3    
+	(cd 3rd/td/build && make -j$(nproc) && make install)
+	test $? -eq 0 || exit 3
+	(cd 3rd/td/build && make test)
+	test $? -eq 0 || exit 3
     fi
-    test $? -eq 0 || exit 3
-    echo '[INFO] Installing TDLib...ok'
-
-    cd ../..
     
     return 0
 }
@@ -180,24 +171,21 @@ function build-tdlib-win
 }
 
 
+
+######################################################################
+### Main
+######################################################################
+
 pick_src_fmt=$(cat dev/pick-src-fmt)
 pick_src_toml11=$(cat dev/pick-src-toml11)
 pick_src_tdlib=$(cat dev/pick-src-tdlib)
 dl-3rd-deps
 
-if [[ $os_id -eq 4 ]]
+if [[ $os_id == cygwin ]]
 then
-    build-tdlib-win
+    echo build-tdlib-win
 else
-    build-tdlib
-fi
-
-
-
-if [[ ! $(pwd) =~ tg-focus$ ]]
-then
-    echo '[ERROR] current directory is NOT tg-focus source root'
-    exit 10
+     build-tdlib
 fi
 
 echo "[INFO] Done, all dependencies installed!"
