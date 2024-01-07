@@ -149,17 +149,19 @@ function build-tdlib
 	(cd 3rd/td && cmake -DCMAKE_BUILD_TYPE=Debug -DZLIB_LIBRARY=/usr/lib/x86_64-linux-gnu/libz.a -DOPENSSL_USE_STATIC_LIBS=TRUE -DCMAKE_C_COMPILER=alt-gcc -DCMAKE_CXX_COMPILER=alt-g++ -B build)
 	test $? -eq 0 || exit 3
 	export LD_LIBRARY_PATH=/usr/local/lib64
-	(cd 3rd/td/build && make -j$(nproc) && su -c 'LD_LIBRARY_PATH=/usr/local/lib64 make install')
+	(cd 3rd/td/build && make -j$(nproc))
 	test $? -eq 0 || exit 3
 	(cd 3rd/td/build && make test)
 	test $? -eq 0 || exit 3
+	echo "[INFO] Install TDLib by running: cd 3rd/td/build && su -c 'LD_LIBRARY_PATH=/usr/local/lib64 make install'"
     else
 	(cd 3rd/td && cmake -DCMAKE_BUILD_TYPE=Debug -B build)
-	test $? -eq 0 || exit 3    
-	(cd 3rd/td/build && make -j$(nproc) && make install)
+	test $? -eq 0 || exit 3
+	(cd 3rd/td/build && make -j$(nproc))
 	test $? -eq 0 || exit 3
 	(cd 3rd/td/build && make test)
 	test $? -eq 0 || exit 3
+	echo "[INFO] Install TDLib by running: cd 3rd/td/build && su -c 'make install'"
     fi
     
     return 0
@@ -179,7 +181,10 @@ function build-tdlib-win
 pick_src_fmt=$(cat dev/pick-src-fmt)
 pick_src_toml11=$(cat dev/pick-src-toml11)
 pick_src_tdlib=$(cat dev/pick-src-tdlib)
+
 dl-3rd-deps
+test $? -eq 0 || exit 5
+
 
 if [[ $os_id == cygwin ]]
 then
