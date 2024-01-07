@@ -32,7 +32,7 @@ link_libraries(fmt)
 # TDLib versions
 # note: sync with tg-focus-cicd
 execute_process(COMMAND bash ${PROJECT_SOURCE_DIR}/dev/before-compile.bash)
-find_package(Td 1.8.21 REQUIRED)
+find_package(Td 1.8.23 REQUIRED)
 
 # tf-conf
 add_executable(
