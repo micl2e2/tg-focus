@@ -7,7 +7,9 @@ main ()
 {
   using namespace std;
 
-  std::setlocale (LC_ALL, "en_HK.ISO-8859-1"); // FIXME
+  std::setlocale (LC_ALL, "C.UTF-8"); // FIXME
+  std::setlocale (LC_ALL, "af_ZA.UTF-8"); // FIXME
+  std::setlocale (LC_ALL, "zh_CN.GB2312"); // FIXME
 
   // ascii + nonascii
   {
