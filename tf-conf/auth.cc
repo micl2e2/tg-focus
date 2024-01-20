@@ -16,7 +16,7 @@ TdAuth::~TdAuth ()
 {
   send_query (td_api::make_object<td_api::close> (), [] (Object obj) {
     if (obj->get_id () == td_api::ok::ID)
-      lv_log (LogLv::INFO, "Closing...");
+      lvlog (LogLv::INFO, "Closing...");
   });
 
   while (!is_tdlib_closed.load (std::memory_order_acquire))
@@ -40,7 +40,7 @@ TdAuth::loop ()
 	  process_response (std::move (response));
 	}
     }
-  lv_log (LogLv::INFO, "Log in successfully!");
+  lvlog (LogLv::INFO, "Log in successfully!");
 }
 
 void
@@ -129,43 +129,43 @@ TdAuth::auth_query_callback ()
 	auto error = td::move_tl_object_as<td_api::error> (object);
 
 	if (error->message_.find ("PHONE_NUMBER_INVALID") != std::string::npos)
-	  lv_log (LogLv::ERROR, "The phone number is invalid");
+	  lvlog (LogLv::ERROR, "The phone number is invalid");
 	else if (error->message_.find ("PHONE_CODE_HASH_EMPTY")
 		 != std::string::npos)
-	  lv_log (LogLv::ERROR, "phone_code_hash is missing");
+	  lvlog (LogLv::ERROR, "phone_code_hash is missing");
 	else if (error->message_.find ("PHONE_CODE_EMPTY") != std::string::npos)
-	  lv_log (LogLv::ERROR, "phone_code is missing");
+	  lvlog (LogLv::ERROR, "phone_code is missing");
 	else if (error->message_.find ("PHONE_CODE_EXPIRED")
 		 != std::string::npos)
-	  lv_log (LogLv::ERROR, "The confirmation code has expired");
+	  lvlog (LogLv::ERROR, "The confirmation code has expired");
 	else if (error->message_.find ("PHONE_CODE_INVALID")
 		 != std::string::npos)
-	  lv_log (LogLv::ERROR, "The login code is invalid");
+	  lvlog (LogLv::ERROR, "The login code is invalid");
 	else if (error->message_.find ("API_ID_INVALID") != std::string::npos)
-	  lv_log (LogLv::ERROR, "The api_id/api_hash combination is invalid"
-				"(restart might be needed)");
+	  lvlog (LogLv::ERROR, "The api_id/api_hash combination is invalid"
+			       "(restart might be needed)");
 	else if (error->message_.find ("PASSWORD_HASH_INVALID")
 		 != std::string::npos)
-	  lv_log (LogLv::ERROR, "Incorrect password");
+	  lvlog (LogLv::ERROR, "Incorrect password");
 	else if (error->message_.find ("PHONE_NUMBER_UNOCCUPIED")
 		 != std::string::npos)
-	  lv_log (LogLv::ERROR, "The phone number is not yet being used");
+	  lvlog (LogLv::ERROR, "The phone number is not yet being used");
 	else if (error->message_.find (
 		   "Valid api_id must be provided. Can be obtained at")
 		 != std::string::npos)
-	  lv_log (LogLv::ERROR, "Invalid API ID");
+	  lvlog (LogLv::ERROR, "Invalid API ID");
 	else
 	  {
-	    lv_log (LogLv::ERROR, "ERROR: {}", error->message_);
-	    lv_log (LogLv::ERROR, "Fatal errors. Please submit a bug report.");
+	    lvlog (LogLv::ERROR, "ERROR: {}", error->message_);
+	    lvlog (LogLv::ERROR, "Fatal errors. Please submit a bug report.");
 	    std::exit (11);
 	  }
 	on_authorization_state_update ();
       }
     else
       {
-	lv_log (LogLv::ERROR, "ERROR: unexpected auth callback id:{}",
-		object->get_id ());
+	lvlog (LogLv::ERROR, "ERROR: unexpected auth callback id:{}",
+	       object->get_id ());
       }
   };
 }
@@ -181,7 +181,7 @@ TdAuth::on_authorization_state_update ()
 	this->is_authorized = true;
 
 	// persistant
-	tf_data.set_api_id (fmt::format ("{}", this->api_id_));
+	tf_data.set_api_id (std::to_string (this->api_id_));
 	tf_data.set_api_hash (std::move (this->api_hash_));
 	tf_data.set_auth_hint (true);
 
@@ -203,14 +203,14 @@ TdAuth::on_authorization_state_update ()
       }
 
       case td_api::authorizationStateClosed::ID: {
-	lv_log (LogLv::INFO, "Closed");
+	lvlog (LogLv::INFO, "Closed");
 	this->is_authorized = false;
 	is_tdlib_closed.store (true, std::memory_order_release);
 	break;
       }
 
       case td_api::authorizationStateWaitPhoneNumber::ID: {
-	log_flush ("Enter phone number: ");
+	std::cout << ("Enter phone number: ") << std::flush;
 	std::string phone_number;
 	std::cin >> phone_number;
 	send_query (td_api::make_object<td_api::setAuthenticationPhoneNumber> (
@@ -220,7 +220,7 @@ TdAuth::on_authorization_state_update ()
       }
 
       case td_api::authorizationStateWaitCode::ID: {
-	log_flush ("Enter authentication code: ");
+	std::cout << ("Enter authentication code: ") << std::flush;
 	std::string code;
 	std::cin >> code;
 	send_query (td_api::make_object<td_api::checkAuthenticationCode> (code),
@@ -229,7 +229,7 @@ TdAuth::on_authorization_state_update ()
       }
 
       case td_api::authorizationStateWaitPassword::ID: {
-	log_flush ("Enter authentication password: ");
+	std::cout << ("Enter authentication password: ") << std::flush;
 	std::string code;
 	std::cin >> code;
 	send_query (td_api::make_object<td_api::checkAuthenticationPassword> (
@@ -251,7 +251,7 @@ TdAuth::on_authorization_state_update ()
 	  }
 	else
 	  {
-	    log_flush ("Enter api id: ");
+	    std::cout << ("Enter api id: ") << std::flush;
 	    std::cin >> may_api_id;
 
 	    if (is_valid_int32 (may_api_id))
@@ -259,7 +259,7 @@ TdAuth::on_authorization_state_update ()
 	    else
 	      api_id = 0;
 
-	    log_flush ("Enter api hash: ");
+	    std::cout << ("Enter api hash: ") << std::flush;
 	    std::cin >> api_hash;
 	  }
 
@@ -282,9 +282,9 @@ TdAuth::on_authorization_state_update ()
       }
 
       default: {
-	lv_log (LogLv::ERROR, "ERROR: unknown event {}",
-		this->auth_state_->get_id ());
-	lv_log (LogLv::ERROR, "Fatal errors. Please submit a bug report.");
+	lvlog (LogLv::ERROR, "ERROR: unknown event {}",
+	       this->auth_state_->get_id ());
+	lvlog (LogLv::ERROR, "Fatal errors. Please submit a bug report.");
 	std::exit (10);
       }
     }

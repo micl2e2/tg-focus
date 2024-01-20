@@ -1,15 +1,15 @@
 #ifndef _TF_MSG_H
 #define _TF_MSG_H
 
+#include <iostream>
 #include <stdint.h>
+#include <string>
+#include <time.h>
+#include <tuple>
 #include <uchar.h>
 #include <vector>
-#include <tuple>
-#include <time.h>
-#include <iostream>
-#include <string>
 
-#include "fmt/core.h"
+#include "common.hh"
 
 class TgMsg
 {
@@ -35,11 +35,25 @@ public:
 
   inline const std::string &get_timestamp () const { return this->tstamp_; }
 
+  std::string to_locale_string () const;
+
   std::string to_string () const
   {
-    std::string ret = fmt::format (
-      "Telegram Message-<title,{}>-<sender,{}>-<txt,{}>-<tstamp,{}>",
-      this->title_, this->sender_, this->txt_, this->tstamp_);
+    std::string ret = "";
+
+    ret += "Telegram Message";
+    ret += "-<title,";
+    ret += this->title_;
+    ret += ">";
+    ret += "-<sender,";
+    ret += this->sender_;
+    ret += ">";
+    ret += "-<txt,";
+    ret += this->txt_;
+    ret += ">";
+    ret += "-<tstamp,";
+    ret += this->tstamp_;
+    ret += ">";
 
     return ret;
   }
@@ -53,6 +67,15 @@ private:
   std::string tstamp_;
 };
 
+// Check host environment supports decoration.
+// Note: If it is decorable, this will change the default locale.
+bool
+can_decor ();
+
+//
+// Decorate the incoming TfMsg if any suitable locale is supported on host,
+// otherwise rendering a empty result.
+//
 std::vector<std::tuple<int, int>>
 get_decor_pos (const std::string &str);
 

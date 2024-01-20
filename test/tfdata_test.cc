@@ -4,8 +4,6 @@
 #include <iostream>
 #include <string>
 
-#include <fmt/core.h>
-
 namespace fs = std::filesystem;
 
 #include "tf_data.hh"
@@ -42,7 +40,14 @@ tst_files_existence ()
   assert (fs::exists (tfdata.path_filters_tmp ()));
   assert (fs::is_regular_file (tfdata.path_filters_tmp ()));
 
-  auto expected = fmt::format ("{}/{}/abc", PRED_HOME, tfdata.name_droot ());
+  // "{}/{}/abc"
+  string expected = "";
+  expected += PRED_HOME;
+  expected += "/";
+  expected += tfdata.name_droot ();
+  expected += "/";
+  expected += "/abc";
+
   cerr << "expected: " << expected << endl;
   assert (tfdata.abspath_of ("abc") == expected);
 }

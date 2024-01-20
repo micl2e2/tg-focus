@@ -13,7 +13,6 @@
 #include <map>
 #include <functional>
 #include <atomic>
-#include <fmt/core.h>
 #include <chrono>
 #include <iostream>
 #include "lv_log.hh"

@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
 project(tg-focus)
 
+
 ###
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -26,8 +27,9 @@ if (DEFINED ENV{WITH_SANITIZERS})
 endif()
 
 # deps
-add_subdirectory(${PROJECT_SOURCE_DIR}/3rd/fmt)
-link_libraries(fmt)
+# add_subdirectory(${PROJECT_SOURCE_DIR}/3rd/fmt)
+# link_libraries(fmt)
+
 
 # TDLib versions
 # note: sync with tg-focus-cicd
@@ -44,6 +46,7 @@ add_executable(
   ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
   ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc
   ${PROJECT_SOURCE_DIR}/shared/lv_log.cc
+  ${PROJECT_SOURCE_DIR}/shared/tf_locale.cc
 )
 target_include_directories(
   tf-conf
@@ -74,6 +77,7 @@ add_executable(
   ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc
   ${PROJECT_SOURCE_DIR}/shared/tf_msg.cc
   ${PROJECT_SOURCE_DIR}/shared/lv_log.cc
+  ${PROJECT_SOURCE_DIR}/shared/tf_locale.cc  
 )
 target_include_directories(
   tf-focusd

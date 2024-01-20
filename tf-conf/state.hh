@@ -2,7 +2,6 @@
 #define _TFCONF_STATE_H
 
 #include <atomic>
-#include <fmt/core.h>
 #include <string_view>
 #include <iostream>
 #include "tf_data.hh"

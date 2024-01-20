@@ -1,17 +1,15 @@
 #ifndef _COMMON_H
 #define _COMMON_H 1
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <ctype.h>
 #include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
 
+#include <algorithm>
 #include <optional>
 #include <string>
 #include <vector>
-#include <algorithm>
-
-#include <fmt/core.h>
 
 constexpr auto TF_DEV = "TG-FOCUS";
 constexpr auto TF_VER = "1.5";
@@ -128,7 +126,8 @@ is_valid_int32 (const std::string &in)
 
   if (as_num < INT_MIN || as_num > INT_MAX)
     return false;
-  if (fmt::format ("{}", as_num) != in)
+
+  if (std::to_string (as_num) != in)
     return false;
 
   return true;
