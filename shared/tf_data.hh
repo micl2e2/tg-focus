@@ -34,6 +34,8 @@ public:
 
   std::filesystem::path path_filters_tmp () const;
 
+  std::filesystem::path path_tgfid () const;
+
   bool prepare_filters_tmp () const;
 
   std::string get_api_id () const;
@@ -48,6 +50,10 @@ public:
 
   std::string get_filters_tmp () const;
 
+  int64_t get_tgfid () const;
+
+  bool is_tgfid_valid () const;
+
   // setter
 
   void set_api_id (std::string &&in) const;
@@ -58,6 +64,8 @@ public:
   void set_auth_hint (bool flag);
 
   void set_filters (std::string &&in) const;
+
+  void set_tgfid (int64_t in) const;
 
 private:
   FILE *lck_droot{nullptr};
@@ -70,7 +78,7 @@ private:
   static constexpr auto FILE_AUTH_HINT = "auth_hint";
   static constexpr auto FILE_FILTERS = "filters.toml";
   static constexpr auto FILE_FILTERS_TMP = "filters.toml.tmp";
-
+  static constexpr auto FILE_TGFID = "tgfid";
   static constexpr auto FILE_LOCK_DROOT = "droot.lock";
   static constexpr auto FILE_LOCK_FILTERS = "filters.lock";
 };

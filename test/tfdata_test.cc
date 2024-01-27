@@ -59,6 +59,8 @@ tst_files_content ()
 
   TgFocusData tfdata{make_optional (PRED_HOME), RESET_ALL_DUMMPY_HOME};
 
+  // return;
+
   {
     auto strdata = tfdata.get_api_id ();
     assert (strdata == "");
@@ -221,6 +223,52 @@ keywords = ["xyz"]
 )");
 	  }
       }
+  }
+
+  // tgfid //
+
+  // initial tgfid
+  {
+    int64_t strdata = tfdata.get_tgfid ();
+    assert (strdata == -1);
+    assert (tfdata.is_tgfid_valid () == false);
+  }
+
+  {
+    tfdata.set_tgfid (-4115780813);
+    int64_t strdata = tfdata.get_tgfid ();
+    assert (strdata == -4115780813);
+    assert (tfdata.is_tgfid_valid () == true);
+  }
+
+  {
+    tfdata.set_tgfid (-1);
+    int64_t strdata = tfdata.get_tgfid ();
+    assert (strdata == -1);
+    assert (tfdata.is_tgfid_valid () == false);
+  }
+
+  {
+    tfdata.set_tgfid (-2);
+    int64_t strdata = tfdata.get_tgfid ();
+    assert (strdata == -2);
+    assert (tfdata.is_tgfid_valid () == true);
+  }
+
+  // set tgfid
+  {
+    tfdata.set_tgfid (-4162446887);
+    int64_t strdata = tfdata.get_tgfid ();
+    assert (strdata == -4162446887);
+    assert (tfdata.is_tgfid_valid () == true);
+  }
+
+  // set tgfid
+  {
+    tfdata.set_tgfid (-4101385855);
+    int64_t strdata = tfdata.get_tgfid ();
+    assert (strdata == -4101385855);
+    assert (tfdata.is_tgfid_valid () == true);
   }
 }
 

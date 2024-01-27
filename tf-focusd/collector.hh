@@ -24,8 +24,8 @@ namespace td_api = td::td_api;
 class TdCollector
 {
 public:
-  bool tried_create_collector{false};
-  bool done_create_collector{false};
+  bool tried_create_tgfchat{false};
+  // bool done_create_collector{false};
 
   TdCollector () = default;
 
@@ -35,7 +35,7 @@ public:
 
   //
   // create collector chat
-  void create_tgfocus_group ();
+  void try_create_tgfchat ();
   //
   // send message to collector chat
   void collect_msg (const TgMsg &msg, size_t c_count);
@@ -58,7 +58,7 @@ private:
   std::int32_t client_id_{0};			      // client id
 
   td_api::object_ptr<td_api::AuthorizationState> auth_state_;
-  td::td_api::int53 collector_id{0};
+  // td::td_api::int53 collector_id{0};
   std::uint64_t current_query_id_{0}; // increase by each query
   std::uint64_t authentication_query_id_{0};
 

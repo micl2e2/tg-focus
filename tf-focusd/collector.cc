@@ -61,39 +61,14 @@ TdCollector::init ()
 }
 
 void
-TdCollector::create_tgfocus_group ()
+TdCollector::try_create_tgfchat () // FIXME: is try
 {
-  // the handle call time maybe a little late, one possible order:
-  /*
-no message!
-no message!
-Authorization is completed
-no message!
-no message!
-...
- msg:xxx
- left: 0
- consume_cnt: 91
-...
- msg:xxx
- left: 0
- consume_cnt: 97
-...
- msg:xxx
- left: 0
- consume_cnt: 100
-...
-no message!
-no message!
-group created!  chat id:-4078504482 chat title:TG-FOCUS
-no message!
-no message!
-...
-   */
-  if (this->is_authorized && !this->tried_create_collector
-      && !this->done_create_collector)
+  if (this->is_authorized && !tf_data.is_tgfid_valid ()
+      && !this->tried_create_tgfchat)
+    // if (this->is_authorized && !this->tried_create_tgfchat
+    // && !this->done_create_collector)
     {
-      this->tried_create_collector = true;
+      this->tried_create_tgfchat = true;
       send_query (td_api::make_object<td_api::createNewBasicGroupChat> (
 		    std::vector<td::td_api::int53> (0), TF_COLL_CHAT_TITLE, 0),
 		  [this] (Object object) {
@@ -101,11 +76,12 @@ no message!
 		      {
 			auto chat
 			  = td::move_tl_object_as<td_api::chat> (object);
-			lvlog (LogLv::INFO,
-			       "group created, chat id:{}, chat title:{}",
-			       chat->id_, chat->title_);
-			this->collector_id = chat->id_;
-			this->done_create_collector = true;
+			lvlog (LogLv::INFO, " group created",
+			       " chat id:", chat->id_,
+			       " chat title:", chat->title_);
+			// this->collector_id = chat->id_;
+			tf_data.set_tgfid (static_cast<int64_t> (chat->id_));
+			// this->done_create_collector = true;
 		      }
 		  });
     }
@@ -119,9 +95,9 @@ decorate_msg (const std::string &msg)
   auto pos_info = get_decor_pos (msg);
 
   // FIXME: only when very verbose
-  lvlog (LogLv::DEBUG, "consumer_cnt:{}, decorating u8str:{} pos_info:{}",
-	 it_cnt_consumer.load (std::memory_order_relaxed), msg,
-	 decor_pos_to_str (pos_info));
+  lvlog (LogLv::DEBUG,
+	 "consumer_cnt:", it_cnt_consumer.load (std::memory_order_relaxed),
+	 " decorating u8str:", msg, " pos_info:", decor_pos_to_str (pos_info));
 
   auto deco_list = td_api::array<td_api::object_ptr<td_api::textEntity>> ();
 
@@ -145,9 +121,12 @@ TdCollector::collect_msg (const TgMsg &msg, size_t c_count)
   auto message_text
     = td_api::make_object<td_api::formattedText> (tfmsg_str,
 						  std::move (text_deco_list));
+
   td_api::object_ptr<td_api::Function> send_message_request
     = td_api::make_object<td_api::sendMessage> (
-      this->collector_id, 0, nullptr, nullptr, nullptr,
+      // this->collector_id, //
+      tf_data.get_tgfid (), //
+      0, nullptr, nullptr, nullptr,
       td_api::make_object<td_api::inputMessageText> (std::move (message_text),
 						     nullptr, true));
 
@@ -155,9 +134,22 @@ TdCollector::collect_msg (const TgMsg &msg, size_t c_count)
     if (object->get_id () == td_api::message::ID)
       {
 	// FIXME: do not use operator <<
-	lvlog (LogLv::INFO, "consumer_cnt:{} msg collected:{}",
+	lvlog (LogLv::INFO, "consumer_cnt:",
 	       it_cnt_consumer.load (std::memory_order_relaxed),
-	       msg.to_string ());
+	       " msg collected:", msg.to_string ());
+      }
+    else if (object->get_id () == td_api::error::ID)
+      {
+	auto error = td::move_tl_object_as<td_api::error> (object);
+	lvlog (LogLv::ERROR, " msg not collected", " error code:", error->code_,
+	       " error message:", error->message_);
+	if (error->message_.find ("Have no write access to the chat")
+	      != std::string::npos
+	    || error->message_.find ("Chat not found") != std::string::npos)
+	  {
+	    this->tried_create_tgfchat = false;
+	    tf_data.set_tgfid (-1);
+	  }
       }
   });
 }
@@ -168,8 +160,10 @@ TdCollector::fetch_updates ()
   auto response = client_manager_->receive (60);
   if (response.object)
     {
-      lvlog (LogLv::DEBUG, "producer_iter:{}, td-client, resp recv id:{}",
-	     it_cnt_producer.load (std::memory_order_relaxed),
+      lvlog (LogLv::DEBUG,
+	     "producer_iter:", it_cnt_producer.load (std::memory_order_relaxed),
+	     " td-client, resp recv id:",
+
 	     response.object->get_id ());
       process_response (std::move (response));
     }
@@ -197,17 +191,18 @@ TdCollector::process_response (td::ClientManager::Response response)
     {
       return;
     }
+
   if (response.request_id == 0)
     {
       return process_update (std::move (response.object));
     }
+
   auto it = handlers_.find (response.request_id);
   if (it != handlers_.end ())
     {
       lvlog (LogLv::DEBUG,
-	     "producer_iter:{}, td-client, handlers_.size():{} it->first:{}",
-	     it_cnt_producer.load (std::memory_order_relaxed),
-	     handlers_.size (), it->first);
+	     "producer_iter:", it_cnt_producer.load (std::memory_order_relaxed),
+	     " handlers_.size():", handlers_.size (), " it->first:", it->first);
 
       it->second (std::move (response.object));
       handlers_.erase (it);
@@ -376,10 +371,9 @@ TdCollector::process_update (td_api::object_ptr<td_api::Object> update)
       }
 
       default: {
-	lvlog (LogLv::DEBUG,
-	       "producer_iter:{}, td-client, ignored update with id:{}",
+	lvlog (LogLv::DEBUG, "producer_iter:",
 	       it_cnt_producer.load (std::memory_order_relaxed),
-	       update->get_id ());
+	       " ignored update with id:", update->get_id ());
 	break;
       }
     }

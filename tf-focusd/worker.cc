@@ -15,8 +15,9 @@ focusd_producer ()
     {
       is_csm_mq.wait (true, std::memory_order_acquire);
 
-      lvlog (LogLv::DEBUG, "producer_iter:{}, mq size: {}",
-	     it_cnt_producer.load (std::memory_order_relaxed), mq.size ());
+      lvlog (LogLv::DEBUG,
+	     "producer_iter:", it_cnt_producer.load (std::memory_order_relaxed),
+	     " mq size:", mq.size ());
 
       collector.fetch_updates ();
 
@@ -28,8 +29,10 @@ bool
 need_collect (const TgMsg &msg)
 {
   auto tomlstr = tf_data.get_filters ();
-  lvlog (LogLv::INFO, "consumer_iter:{}, filters reloaded",
-	 it_cnt_consumer.load (std::memory_order_relaxed));
+  lvlog (LogLv::INFO,
+	 " consumer_iter:", it_cnt_consumer.load (std::memory_order_relaxed),
+	 " filters reloaded");
+
   auto fcf_list = FocusFilterList (tomlstr);
   if (fcf_list.is_tgmsg_match (msg))
     return true;
@@ -48,9 +51,9 @@ focusd_consumer ()
 
       is_csm_mq.wait (false, std::memory_order_acquire);
 
-      if (!collector.tried_create_collector)
+      if (!tf_data.is_tgfid_valid () && !collector.tried_create_tgfchat)
 	{
-	  collector.create_tgfocus_group ();
+	  collector.try_create_tgfchat ();
 	  continue;
 	}
 
@@ -58,16 +61,17 @@ focusd_consumer ()
       {
 	std::lock_guard<std::mutex> mq_guard (mq_lock);
 
-	if (mq.size () > 0 && collector.done_create_collector)
+	// if (mq.size () > 0 && collector.done_create_collector)
+	if (mq.size () > 0 && tf_data.is_tgfid_valid ())
 	  {
-	    lvlog (LogLv::DEBUG,
-		   "consumer_iter:{}, mq consumable, mq.size():{} ",
+	    lvlog (LogLv::DEBUG, "consumer_iter:",
 		   it_cnt_consumer.load (std::memory_order_relaxed),
-		   mq.size ());
+		   " mq consumable, mq.size():", mq.size ());
 
 	    for (auto it = mq.begin (); it != mq.end (); it += 1)
 	      {
 		auto curr_msg = *it;
+		// break; // stop collect
 		if (!curr_msg.is_from_tgfocus ())
 		  {
 		    // FIXME: too many disk io incurred by need_collect
@@ -78,10 +82,9 @@ focusd_consumer ()
 			consume_cnt++;
 		      }
 		    else
-		      lvlog (LogLv::DEBUG,
-			     "consume cnt:{} message not collected: {}",
+		      lvlog (LogLv::DEBUG, " consume cnt:",
 			     it_cnt_consumer.load (std::memory_order_relaxed),
-			     curr_msg.to_string ());
+			     " message not collected:", curr_msg.to_string ());
 		  }
 	      }
 
@@ -91,10 +94,9 @@ focusd_consumer ()
 	  }
 	else
 	  {
-	    lvlog (LogLv::DEBUG,
-		   "consumer_iter:{}, mq not consumable, mq.size():{} ",
+	    lvlog (LogLv::DEBUG, "consumer_iter:",
 		   it_cnt_consumer.load (std::memory_order_relaxed),
-		   mq.size ());
+		   " mq not consumable,mq.size():", mq.size ());
 	  }
       }
 
@@ -112,21 +114,20 @@ focusd_switcher ()
       std::this_thread::sleep_for (std::chrono::seconds (5));
 
       {
-	lvlog (LogLv::INFO,
-	       "switcher summary, P,{} C,{} S,{} mqsize:{} "
-	       "nhandle:{},nuser:{},nchattitle:{}  ",
-	       it_cnt_producer.load (std::memory_order_relaxed),
-	       it_cnt_consumer.load (std::memory_order_relaxed),
-	       it_cnt_switcher.load (std::memory_order_relaxed), mq.size (),
-	       collector.n_handlers (), collector.n_users (),
-	       collector.n_chat_titles ());
+	lvlog (LogLv::INFO, "switcher summary ",
+	       "P:", it_cnt_producer.load (std::memory_order_relaxed),
+	       " C:", it_cnt_consumer.load (std::memory_order_relaxed),
+	       " S:", it_cnt_switcher.load (std::memory_order_relaxed),
+	       " mqsize:", mq.size (), " nhandle:", collector.n_handlers (),
+	       " nuser:", collector.n_users (),
+	       " nchattitle:", collector.n_chat_titles ());
       }
 
       if (is_csm_mq.load (std::memory_order_acquire))
 	{
-	  lvlog (LogLv::INFO,
-		 "switcher cnt:{}, has msg, consumer maybe handling...",
-		 it_cnt_switcher.load (std::memory_order_relaxed));
+	  lvlog (LogLv::INFO, "switcher cnt:",
+		 it_cnt_switcher.load (std::memory_order_relaxed),
+		 " has msg, consumer maybe handling...");
 	  continue;
 	}
 
