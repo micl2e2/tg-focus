@@ -52,6 +52,13 @@ then
     if [[ $? -eq 0 ]]
     then
 	echo 'sync: tdlib source'
+    fi
+    sed -i -E \
+	"s/base=${TDLIB_SRC_PREV}/base=${TDLIB_SRC_CURR}/" \
+	README.md
+    if [[ $? -eq 0 ]]
+    then
+	echo 'sync: tdlib readme source'
 	cp dev/pick-src-tdlib{,.prev}
     fi
 fi
