@@ -26,11 +26,6 @@ if (DEFINED ENV{WITH_SANITIZERS})
   link_libraries(asan ubsan)
 endif()
 
-# deps
-# add_subdirectory(${PROJECT_SOURCE_DIR}/3rd/fmt)
-# link_libraries(fmt)
-
-
 # TDLib versions
 # note: sync with tg-focus-cicd
 execute_process(COMMAND bash ${PROJECT_SOURCE_DIR}/dev/before-compile.bash)
