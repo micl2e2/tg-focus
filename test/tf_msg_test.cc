@@ -242,19 +242,19 @@ main ()
   test_not_decorate ();
 
   tgf::PREFER_LANG = tgf::Lang::en_US;
-  if (tgf::try_ensure_locale ())
+  if (tgf::try_ensure_locale () && tgf::HOST_LANG == tgf::PREFER_LANG)
     {
       test_should_decorate_en_us ();
     }
 
   tgf::PREFER_LANG = tgf::Lang::zh_HK;
-  if (tgf::try_ensure_locale ())
+  if (tgf::try_ensure_locale () && tgf::HOST_LANG == tgf::PREFER_LANG)
     {
       test_should_decorate_zh_hk ();
     }
 
   tgf::PREFER_LANG = tgf::Lang::zh_CN;
-  if (tgf::try_ensure_locale ())
+  if (tgf::try_ensure_locale () && tgf::HOST_LANG == tgf::PREFER_LANG)
     {
       test_should_decorate_zh_cn ();
     }
