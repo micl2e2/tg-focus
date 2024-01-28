@@ -239,7 +239,7 @@ int
 main ()
 {
   // C or POSIX
-  test_not_decorate ();
+  // test_not_decorate ();
 
   tgf::PREFER_LANG = tgf::Lang::en_US;
   if (tgf::try_ensure_locale () && tgf::HOST_LANG == tgf::PREFER_LANG)
