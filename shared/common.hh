@@ -12,10 +12,10 @@
 #include <vector>
 
 constexpr auto TF_DEV = "TG-FOCUS";
-constexpr auto TF_VER = "1.5";
+constexpr auto TF_VER = "1.6";
 constexpr auto TF_COLL_CHAT_TITLE = "TG-FOCUS";
-constexpr auto TDLIB_VER = "1.8.23";
-constexpr auto TDLIB_SRC = "d963044eb9b8bb075e3f63b8bfd8da735c4c37d9";
+constexpr auto TDLIB_VER = "1.8.24";
+constexpr auto TDLIB_SRC = "c5c55092dd61b9eb15d6bbfd0f02c04c593450e7";
 
 class FileReader
 {
