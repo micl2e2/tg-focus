@@ -866,6 +866,7 @@ try_ensure_locale ()
 
   if (supported.size () > 0)
     {
+      // FIXME: setlocale
       HOST_LANG = supported[0];
       return true;
     }

@@ -15,7 +15,7 @@ test_not_decorate ()
     string expected = R"([ CHAT ] michael2 | TG-Focusing
 [ SENDER ] michael2 | TG-Focusing
 [ CONTENT ] XXXXXXXXX
-[ DATE ] 2024-01-20 16:52:04 +0800 HKT
+[ DATE ] 2024-01-20 08:52:04 +0000 UTC
 [ ID ] -1
 )";
     cout << msg_lcstr << endl;
@@ -41,7 +41,7 @@ test_should_decorate_en_us ()
     string expected = R"([ CHAT ] michael2 | TG-Focusing
 [ SENDER ] michael2 | TG-Focusing
 [ CONTENT ] 好好好好好好好好好好好好好好好。
-[ DATE ] 2024-01-20 16:52:04 +0800 HKT
+[ DATE ] 2024-01-20 08:52:04 +0000 UTC
 [ ID ] -1
 )";
     cout << msg_lcstr << endl;
@@ -67,7 +67,7 @@ test_should_decorate_en_us ()
     string expected = R"([ CHAT ] michael2 | TG-Focusing
 [ SENDER ] michael2 | TG-Focusing
 [ CONTENT ] ののののののののAA...
-[ DATE ] 2024-01-20 16:52:04 +0800 HKT
+[ DATE ] 2024-01-20 08:52:04 +0000 UTC
 [ ID ] -1
 )";
     cout << msg_lcstr << endl;
@@ -93,7 +93,7 @@ test_should_decorate_en_us ()
     string expected = R"([ CHAT ] michael2 | TG-Focusing
 [ SENDER ] michael2 | TG-Focusing
 [ CONTENT ] 🤣🤣🤣🤣🤣🤣🤣🤣AA...
-[ DATE ] 2024-01-20 16:52:04 +0800 HKT
+[ DATE ] 2024-01-20 08:52:04 +0000 UTC
 [ ID ] -1
 )";
     cout << msg_lcstr << endl;
@@ -128,7 +128,7 @@ test_should_decorate_en_us ()
       = R"([ CHAT ] michael2🐰🐭🐹🐻🐶🐱🌼🏵️💮🌸🪷🌺 | TG-Focusing
 [ SENDER ] michael2🐰🐭🐹🐻🐶🐱🌼🏵️💮🌸🪷🌺 | TG-Focusing
 [ CONTENT ] 🤣🤣🤣🤣🤣のののののAAAAA好好好好好
-[ DATE ] 2024-01-20 16:52:04 +0800 HKT
+[ DATE ] 2024-01-20 08:52:04 +0000 UTC
 [ ID ] -1
 )";
     cout << msg_lcstr << endl;
@@ -155,7 +155,7 @@ test_should_decorate_en_us ()
     string expected = R"([ CHAT ] michael2 | TG-Focusing
 [ SENDER ] michael2 | TG-Focusing
 [ CONTENT ] aaa😮‍💨😮‍💨😮‍💨aaa
-[ DATE ] 2024-01-20 16:52:04 +0800 HKT
+[ DATE ] 2024-01-20 08:52:04 +0000 UTC
 [ ID ] -1
 )";
     cout << msg_lcstr << endl;
@@ -187,7 +187,7 @@ test_should_decorate_zh_cn ()
     string expected = R"([ 群组 ] michael2
 [ 用户 ] michael2
 [ 信息 ] 好好好。
-[ 时间 ] 2024-01-20 16:52:04 +0800 HKT
+[ 时间 ] 2024-01-20 08:52:04 +0000 UTC
 [ 标识 ] -1
 )";
     cout << msg_lcstr << endl;
@@ -217,7 +217,7 @@ test_should_decorate_zh_hk ()
     string expected = R"([ 群組 ] michael2
 [ 用戶 ] michael2
 [ 訊息 ] 好好好。
-[ 時間 ] 2024-01-20 16:52:04 +0800 HKT
+[ 時間 ] 2024-01-20 08:52:04 +0000 UTC
 [ 標識 ] -1
 )";
     cout << msg_lcstr << endl;
@@ -235,11 +235,15 @@ test_should_decorate_zh_hk ()
   }
 }
 
+//
+// ATTENTION: make sure TZ is UTC when testing
+//
+
 int
 main ()
 {
   // C or POSIX
-  // test_not_decorate ();
+  test_not_decorate ();
 
   tgf::PREFER_LANG = tgf::Lang::en_US;
   if (tgf::try_ensure_locale () && tgf::HOST_LANG == tgf::PREFER_LANG)
