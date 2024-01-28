@@ -10,6 +10,10 @@ TdAuth::TdAuth ()
   client_manager_ = std::make_unique<td::ClientManager> ();
   client_id_ = client_manager_->create_client_id ();
   send_query (td_api::make_object<td_api::getOption> ("version"), {});
+  send_query (td_api::make_object<td_api::setOption> (
+		"use_storage_optimizer",
+		td_api::make_object<td_api::optionValueBoolean> (true)),
+	      {});
 }
 
 TdAuth::~TdAuth ()
@@ -272,7 +276,6 @@ TdAuth::on_authorization_state_update ()
 	request->system_language_code_ = "en";
 	request->device_model_ = TF_DEV;
 	request->application_version_ = TF_VER;
-	request->enable_storage_optimizer_ = true;
 
 	this->api_id_ = api_id;
 	this->api_hash_ = api_hash;
