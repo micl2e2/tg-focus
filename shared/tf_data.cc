@@ -452,3 +452,15 @@ TgFocusData::is_tgfid_valid () const
 
   return res != -1;
 }
+
+tgf::Lang
+TgFocusData::get_lcall () const
+{
+  return tgf::Lang::unknown;
+}
+
+void
+TgFocusData::set_lcall (tgf::Lang l) const
+{
+  return;
+}

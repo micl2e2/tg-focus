@@ -5,6 +5,7 @@
 #include <string>
 #include <filesystem>
 #include <stdio.h>
+#include "tf_locale.hh"
 
 class TgFocusData
 {
@@ -54,6 +55,8 @@ public:
 
   bool is_tgfid_valid () const;
 
+  tgf::Lang get_lcall () const;
+
   // setter
 
   void set_api_id (std::string &&in) const;
@@ -66,6 +69,8 @@ public:
   void set_filters (std::string &&in) const;
 
   void set_tgfid (int64_t in) const;
+
+  void set_lcall (tgf::Lang) const;
 
 private:
   FILE *lck_droot{nullptr};
