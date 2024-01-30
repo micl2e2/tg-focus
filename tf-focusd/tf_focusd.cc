@@ -17,18 +17,6 @@ Usage: %s <options>
 Available Options:
   --help           Print this message
   --verbose        Turn on verbose output
-  --lang           Language preference. When specified, tg-focus will
-                   try to display information using the language specified,
-                   as long as the language is supported by operating system.
-
-                   For example, 'tf-focusd --lang en_US' will use 'English
-                   (United States)' for information displaying. 'tf-focusd
-                   --lang en_US' will use 'English (United Kingdom)' for
-                   information displaying.
-
-                   Currently supported languages:
-
-                   - en_US: English (United States)
 )",
 	  argv[0]);
 }

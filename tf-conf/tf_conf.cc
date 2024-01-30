@@ -29,11 +29,24 @@ print_usage (char *argv[])
 Usage: %s [command]
 
 Available Commands:
-  auth           Log in Telegram
-  auth-reset     Log out Telegram
-  filters        Customize focus filter(s)
-  version        Print TG-Focus version
-  help           Print this message
+  auth              Log in Telegram
+  auth-reset        Log out Telegram
+  filters           Customize focus filter(s)
+  version           Print TG-Focus version
+  help              Print this message
+  lang <LANG_CODE>  Program-wide language preference. tg-focus will try to
+                    use the language specified, as long as it is supported
+                    by system. The LANG_CODE conforms to "Language-Region"
+                    definition in RFC5646.
+
+                    For example, 'tf-conf lang en-US' indicates that 'English
+                    (United States)' is in use. 'tf-conf lang en-GB' indicates
+                    'English (United Kingdom)' is in use.
+
+                    Currently supported languages:
+                    - <LANG-CODE>: <LANGUAGE> (<REGION>)
+                    - en_US: English (United States)
+                    - en_GB: English (United Kingdom)
 )",
 	  argv[0]);
   return 0;
@@ -137,6 +150,14 @@ handle_loglv (int argc, char *argv[])
 }
 
 int
+handle_lang (const char *lang_code)
+{
+  lvlog (LogLv::INFO, "setting up language ", lang_code);
+
+  return 0;
+}
+
+int
 main (int argc, char *argv[])
 {
   if (!tgf::try_ensure_locale ())
@@ -144,11 +165,11 @@ main (int argc, char *argv[])
       lvlog (LogLv::WARNING, "Available locales not found");
     }
 
-  if (argc != 2)
+  if (argc < 2)
     return print_usage (argv);
   handle_loglv (argc, argv);
 
-  std::string subcmd = argv[1];
+  std::string subcmd = argv[1]; // FIXME: use cstr
 
   if (subcmd == "auth-reset")
     return handle_auth_reset ();
@@ -161,6 +182,17 @@ main (int argc, char *argv[])
 
   if (subcmd == "version" || subcmd == "--version" || subcmd == "-v")
     return handle_version ();
+
+  if (subcmd == "lang")
+    {
+      if (argc != 3)
+	{
+	  print_usage (argv);
+	  return 0;
+	}
+
+      return handle_lang (argv[2]);
+    }
 
   return print_usage (argv);
 }
