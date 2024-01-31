@@ -39,6 +39,7 @@ add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 set(CurrTestName tfdata_test)
 add_executable(${CurrTestName} ${CurrTestName}.cc
    ${PROJECT_SOURCE_DIR}/shared/tf_data.cc
+   ${PROJECT_SOURCE_DIR}/shared/tf_locale.cc
 )
 target_include_directories(${CurrTestName} PRIVATE
   ${PROJECT_SOURCE_DIR}/shared)

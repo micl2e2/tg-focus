@@ -61,6 +61,8 @@ tst_files_content ()
 
   // return;
 
+  // api_id ------------------------
+
   {
     auto strdata = tfdata.get_api_id ();
     assert (strdata == "");
@@ -110,6 +112,8 @@ tst_files_content ()
     assert (strdata == "2147483647");
   }
 
+  // api_hash ------------------------
+
   // set api_hash
   {
     tfdata.set_api_hash (std::string ("aabbccddee"));
@@ -123,6 +127,8 @@ tst_files_content ()
     auto strdata = tfdata.get_api_hash ();
     assert (strdata == "qqwwee");
   }
+
+  // auth_hint ------------------------
 
   // set auth hint
   {
@@ -144,6 +150,8 @@ tst_files_content ()
     auto may_authorized = tfdata.get_auth_hint ();
     assert (may_authorized == true);
   }
+
+  // filters ------------------------
 
   // default filters
   {
@@ -169,6 +177,8 @@ title = ".*"
 keywords = ["abc"]
 )");
   }
+
+  // filters_tmp ------------------------
 
   // filters tmp
   {
@@ -225,9 +235,8 @@ keywords = ["xyz"]
       }
   }
 
-  // tgfid //
+  // tgfid ------------------------
 
-  // initial tgfid
   {
     int64_t strdata = tfdata.get_tgfid ();
     assert (strdata == -1);
@@ -255,7 +264,6 @@ keywords = ["xyz"]
     assert (tfdata.is_tgfid_valid () == true);
   }
 
-  // set tgfid
   {
     tfdata.set_tgfid (-4162446887);
     int64_t strdata = tfdata.get_tgfid ();
@@ -263,12 +271,40 @@ keywords = ["xyz"]
     assert (tfdata.is_tgfid_valid () == true);
   }
 
-  // set tgfid
   {
     tfdata.set_tgfid (-4101385855);
     int64_t strdata = tfdata.get_tgfid ();
     assert (strdata == -4101385855);
     assert (tfdata.is_tgfid_valid () == true);
+  }
+
+  // pref_lang ------------------------
+
+  {
+    tgf::Lang data = tfdata.get_pref_lang ();
+    cout << data << endl;
+    assert (data == tgf::Lang::unknown);
+  }
+
+  {
+    tfdata.set_pref_lang (tgf::Lang::aa_DJ);
+    tgf::Lang data = tfdata.get_pref_lang ();
+    cout << data << endl;
+    assert (data == tgf::Lang::aa_DJ);
+  }
+
+  {
+    tfdata.set_pref_lang (tgf::Lang::en_HK);
+    tgf::Lang data = tfdata.get_pref_lang ();
+    cout << data << endl;
+    assert (data == tgf::Lang::en_HK);
+  }
+
+  {
+    tfdata.set_pref_lang (tgf::Lang::en_ZW);
+    tgf::Lang data = tfdata.get_pref_lang ();
+    cout << data << endl;
+    assert (data == tgf::Lang::en_ZW);
   }
 }
 

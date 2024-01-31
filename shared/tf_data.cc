@@ -14,6 +14,8 @@
 
 #include "tf_data.hh"
 
+namespace fs = std::filesystem;
+
 bool
 lock_stream (FILE *strm)
 {
@@ -177,6 +179,21 @@ title = ".*"
 	}
     }
 
+  // pref_lang
+  namespace fs = std::filesystem;
+  fs::path p_pref_lang = droot_dir / FILE_PREF_LANG;
+  if (!fs::exists (p_pref_lang))
+    {
+      FILE *f = fopen (p_pref_lang.c_str (), "w");
+
+      if (f)
+	{
+	  char b = 0x00;
+	  fwrite (&b, 1, 1, f);
+	  fclose (f);
+	}
+    }
+
   // UNLOCK
   if (!unlock_stream (this->lck_droot))
     return;
@@ -248,6 +265,13 @@ TgFocusData::path_tgfid () const
 {
   auto tmp = this->data_root;
   return tmp.append (FILE_TGFID);
+}
+
+std::filesystem::path
+TgFocusData::path_pref_lang () const
+{
+  fs::path tmp = this->data_root;
+  return tmp.append (FILE_PREF_LANG);
 }
 
 bool
@@ -454,13 +478,27 @@ TgFocusData::is_tgfid_valid () const
 }
 
 tgf::Lang
-TgFocusData::get_lcall () const
+TgFocusData::get_pref_lang () const
 {
-  return tgf::Lang::unknown;
+  auto path = this->path_pref_lang ();
+  auto filename = path.c_str ();
+  FILE *f = fopen (filename, "r");
+  uint8_t b = 0;
+  fread (&b, 1, 1, f);
+  tgf::Lang ret = static_cast<tgf::Lang> (b);
+  fclose (f);
+
+  return ret;
 }
 
 void
-TgFocusData::set_lcall (tgf::Lang l) const
+TgFocusData::set_pref_lang (tgf::Lang l) const
 {
-  return;
+  auto path = this->path_pref_lang ();
+  auto filename = path.c_str ();
+  FILE *f = fopen (filename, "w");
+  uint8_t b = static_cast<uint8_t> (l);
+  fwrite (&b, 1, 1, f);
+
+  fclose (f);
 }

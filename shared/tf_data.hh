@@ -37,6 +37,8 @@ public:
 
   std::filesystem::path path_tgfid () const;
 
+  std::filesystem::path path_pref_lang () const;
+
   bool prepare_filters_tmp () const;
 
   std::string get_api_id () const;
@@ -55,7 +57,7 @@ public:
 
   bool is_tgfid_valid () const;
 
-  tgf::Lang get_lcall () const;
+  tgf::Lang get_pref_lang () const;
 
   // setter
 
@@ -70,7 +72,7 @@ public:
 
   void set_tgfid (int64_t in) const;
 
-  void set_lcall (tgf::Lang) const;
+  void set_pref_lang (tgf::Lang) const;
 
 private:
   FILE *lck_droot{nullptr};
@@ -84,6 +86,7 @@ private:
   static constexpr auto FILE_FILTERS = "filters.toml";
   static constexpr auto FILE_FILTERS_TMP = "filters.toml.tmp";
   static constexpr auto FILE_TGFID = "tgfid";
+  static constexpr auto FILE_PREF_LANG = "pref_lang";
   static constexpr auto FILE_LOCK_DROOT = "droot.lock";
   static constexpr auto FILE_LOCK_FILTERS = "filters.lock";
 };

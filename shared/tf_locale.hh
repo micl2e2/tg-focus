@@ -2,12 +2,14 @@
 #define _TF_LOCALE_H
 
 #include <iostream>
+#include "stdint.h"
 
 namespace tgf {
 
-enum Lang
+enum Lang : uint8_t
+// enum Lang
 {
-  unknown,
+  unknown = 0,
   aa_DJ,
   af_ZA,
   an_ES,
