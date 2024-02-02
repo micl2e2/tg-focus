@@ -55,7 +55,13 @@ Available Commands:
 int
 handle_version ()
 {
+  tgf::PREFER_LANG = tf_data.get_pref_lang ();
+
+  if (!tgf::try_ensure_locale ())
+    lvlog (LogLv::WARNING, "Available utf8 locales not found");
+
   printf (R"(TG-Focus:     %s
+Language:     %s
 Default Chat: %s
 Device ID:    %s
 TDLib:        %s(%s)
@@ -65,7 +71,8 @@ License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
 )",
-	  TF_VER, TF_COLL_CHAT_TITLE, TF_DEV, TDLIB_VER, TDLIB_SRC);
+	  TF_VER, tgf::lang_to_cstr (tgf::HOST_LANG), TF_COLL_CHAT_TITLE,
+	  TF_DEV, TDLIB_VER, TDLIB_SRC);
 
   return 0;
 }
@@ -152,8 +159,8 @@ handle_loglv (int argc, char *argv[])
 int
 handle_lang (const char *lang_code)
 {
-  lvlog (LogLv::INFO, "setting up language ", lang_code);
-
+  tf_data.set_pref_lang (tgf::lang_from_cstr (lang_code));
+  lvlog (LogLv::INFO, "setting up language...done");
   return 0;
 }
 

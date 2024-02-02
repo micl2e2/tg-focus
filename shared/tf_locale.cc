@@ -322,6 +322,20 @@ lang_from_cstr (const char *cstr)
   return Lang::unknown;
 }
 
+const char *
+lang_to_cstr (Lang l)
+{
+  switch (l)
+    {
+    case Lang::aa_DJ:
+      return "aa_DJ";
+      break;
+    default:
+      return "???_???";
+      break;
+    }
+}
+
 std::ostream &
 operator<< (std::ostream &os, const Lang l)
 {
