@@ -947,6 +947,7 @@ try_ensure_locale ()
 {
   using namespace std;
 
+  // FIXME: use constant instead
   vector<tuple<string, Lang>> lclist = {
     // {"C.UTF-8", unknown}, // we dont need this
     {"aa_DJ.UTF-8", aa_DJ},   {"af_ZA.UTF-8", af_ZA}, {"an_ES.UTF-8", an_ES},
