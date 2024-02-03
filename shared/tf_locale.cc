@@ -12,312 +12,464 @@ namespace tgf {
 enum Lang HOST_LANG = Lang::unknown;
 enum Lang PREFER_LANG = Lang::unknown;
 
+const char *STRNAME_unknown = "?-?";
+// const char *STRNAME_aa_DJ = "aa-DJ";
+// const char *STRNAME_af_ZA = "af-ZA";
+// const char *STRNAME_an_ES = "an-ES";
+// const char *STRNAME_ar_AE = "ar-AE";
+// const char *STRNAME_ar_BH = "ar-BH";
+// const char *STRNAME_ar_DZ = "ar-DZ";
+// const char *STRNAME_ar_EG = "ar-EG";
+// const char *STRNAME_ar_IQ = "ar-IQ";
+// const char *STRNAME_ar_JO = "ar-JO";
+// const char *STRNAME_ar_KW = "ar-KW";
+// const char *STRNAME_ar_LB = "ar-LB";
+// const char *STRNAME_ar_LY = "ar-LY";
+// const char *STRNAME_ar_MA = "ar-MA";
+// const char *STRNAME_ar_OM = "ar-OM";
+// const char *STRNAME_ar_QA = "ar-QA";
+// const char *STRNAME_ar_SA = "ar-SA";
+// const char *STRNAME_ar_SD = "ar-SD";
+// const char *STRNAME_ar_SY = "ar-SY";
+// const char *STRNAME_ar_TN = "ar-TN";
+// const char *STRNAME_ar_YE = "ar-YE";
+// const char *STRNAME_ast_ES = "ast-ES";
+// const char *STRNAME_be_BY = "be-BY";
+// const char *STRNAME_bg_BG = "bg-BG";
+// const char *STRNAME_bhb_IN = "bhb-IN";
+// const char *STRNAME_br_FR = "br-FR";
+// const char *STRNAME_bs_BA = "bs-BA";
+// const char *STRNAME_ca_AD = "ca-AD";
+// const char *STRNAME_ca_ES = "ca-ES";
+// const char *STRNAME_ca_FR = "ca-FR";
+// const char *STRNAME_ca_IT = "ca-IT";
+// const char *STRNAME_cs_CZ = "cs-CZ";
+// const char *STRNAME_cy_GB = "cy-GB";
+// const char *STRNAME_da_DK = "da-DK";
+// const char *STRNAME_de_AT = "de-AT";
+// const char *STRNAME_de_BE = "de-BE";
+// const char *STRNAME_de_CH = "de-CH";
+// const char *STRNAME_de_DE = "de-DE";
+// const char *STRNAME_de_IT = "de-IT";
+// const char *STRNAME_de_LI = "de-LI";
+// const char *STRNAME_de_LU = "de-LU";
+// const char *STRNAME_el_CY = "el-CY";
+// const char *STRNAME_el_GR = "el-GR";
+// const char *STRNAME_en_AU = "en-AU";
+// const char *STRNAME_en_BW = "en-BW";
+// const char *STRNAME_en_CA = "en-CA";
+// const char *STRNAME_en_DK = "en-DK";
+// const char *STRNAME_en_GB = "en-GB";
+const char *STRNAME_en_HK = "en-HK";
+// const char *STRNAME_en_IE = "en-IE";
+// const char *STRNAME_en_NZ = "en-NZ";
+// const char *STRNAME_en_PH = "en-PH";
+// const char *STRNAME_en_SC = "en-SC";
+// const char *STRNAME_en_SG = "en-SG";
+const char *STRNAME_en_US = "en-US";
+// const char *STRNAME_en_ZA = "en-ZA";
+// const char *STRNAME_en_ZW = "en-ZW";
+// const char *STRNAME_es_AR = "es-AR";
+// const char *STRNAME_es_BO = "es-BO";
+// const char *STRNAME_es_CL = "es-CL";
+// const char *STRNAME_es_CO = "es-CO";
+// const char *STRNAME_es_CR = "es-CR";
+// const char *STRNAME_es_DO = "es-DO";
+// const char *STRNAME_es_EC = "es-EC";
+// const char *STRNAME_es_ES = "es-ES";
+// const char *STRNAME_es_GT = "es-GT";
+// const char *STRNAME_es_HN = "es-HN";
+// const char *STRNAME_es_MX = "es-MX";
+// const char *STRNAME_es_NI = "es-NI";
+// const char *STRNAME_es_PA = "es-PA";
+// const char *STRNAME_es_PE = "es-PE";
+// const char *STRNAME_es_PR = "es-PR";
+// const char *STRNAME_es_PY = "es-PY";
+// const char *STRNAME_es_SV = "es-SV";
+// const char *STRNAME_es_US = "es-US";
+// const char *STRNAME_es_UY = "es-UY";
+// const char *STRNAME_es_VE = "es-VE";
+// const char *STRNAME_et_EE = "et-EE";
+// const char *STRNAME_eu_ES = "eu-ES";
+// const char *STRNAME_eu_FR = "eu-FR";
+// const char *STRNAME_fi_FI = "fi-FI";
+// const char *STRNAME_fo_FO = "fo-FO";
+// const char *STRNAME_fr_BE = "fr-BE";
+// const char *STRNAME_fr_CA = "fr-CA";
+// const char *STRNAME_fr_CH = "fr-CH";
+// const char *STRNAME_fr_FR = "fr-FR";
+// const char *STRNAME_fr_LU = "fr-LU";
+// const char *STRNAME_ga_IE = "ga-IE";
+// const char *STRNAME_gd_GB = "gd-GB";
+// const char *STRNAME_gl_ES = "gl-ES";
+// const char *STRNAME_gv_GB = "gv-GB";
+// const char *STRNAME_he_IL = "he-IL";
+// const char *STRNAME_hr_HR = "hr-HR";
+// const char *STRNAME_hsb_DE = "hsb-DE";
+// const char *STRNAME_hu_HU = "hu-HU";
+// const char *STRNAME_id_ID = "id-ID";
+// const char *STRNAME_is_IS = "is-IS";
+// const char *STRNAME_it_CH = "it-CH";
+// const char *STRNAME_it_IT = "it-IT";
+// const char *STRNAME_ja_JP = "ja-JP";
+// const char *STRNAME_ka_GE = "ka-GE";
+// const char *STRNAME_kk_KZ = "kk-KZ";
+// const char *STRNAME_kl_GL = "kl-GL";
+// const char *STRNAME_ko_KR = "ko-KR";
+// const char *STRNAME_ku_TR = "ku-TR";
+// const char *STRNAME_kw_GB = "kw-GB";
+// const char *STRNAME_lg_UG = "lg-UG";
+// const char *STRNAME_lt_LT = "lt-LT";
+// const char *STRNAME_lv_LV = "lv-LV";
+// const char *STRNAME_mg_MG = "mg-MG";
+// const char *STRNAME_mi_NZ = "mi-NZ";
+// const char *STRNAME_mk_MK = "mk-MK";
+// const char *STRNAME_ms_MY = "ms-MY";
+// const char *STRNAME_mt_MT = "mt-MT";
+// const char *STRNAME_nb_NO = "nb-NO";
+// const char *STRNAME_nl_BE = "nl-BE";
+// const char *STRNAME_nl_NL = "nl-NL";
+// const char *STRNAME_nn_NO = "nn-NO";
+// const char *STRNAME_oc_FR = "oc-FR";
+// const char *STRNAME_om_KE = "om-KE";
+// const char *STRNAME_pl_PL = "pl-PL";
+// const char *STRNAME_pt_BR = "pt-BR";
+// const char *STRNAME_pt_PT = "pt-PT";
+// const char *STRNAME_ro_RO = "ro-RO";
+// const char *STRNAME_ru_RU = "ru-RU";
+// const char *STRNAME_ru_UA = "ru-UA";
+// const char *STRNAME_sk_SK = "sk-SK";
+// const char *STRNAME_sl_SI = "sl-SI";
+// const char *STRNAME_so_DJ = "so-DJ";
+// const char *STRNAME_so_KE = "so-KE";
+// const char *STRNAME_so_SO = "so-SO";
+// const char *STRNAME_sq_AL = "sq-AL";
+// const char *STRNAME_st_ZA = "st-ZA";
+// const char *STRNAME_sv_FI = "sv-FI";
+// const char *STRNAME_sv_SE = "sv-SE";
+// const char *STRNAME_tcy_IN = "tcy-IN";
+// const char *STRNAME_tg_TJ = "tg-TJ";
+// const char *STRNAME_th_TH = "th-TH";
+// const char *STRNAME_tl_PH = "tl-PH";
+// const char *STRNAME_tr_CY = "tr-CY";
+// const char *STRNAME_tr_TR = "tr-TR";
+// const char *STRNAME_uk_UA = "uk-UA";
+// const char *STRNAME_uz_UZ = "uz-UZ";
+// const char *STRNAME_wa_BE = "wa-BE";
+// const char *STRNAME_xh_ZA = "xh-ZA";
+// const char *STRNAME_yi_US = "yi-US";
+const char *STRNAME_zh_CN = "zh-CN";
+const char *STRNAME_zh_HK = "zh-HK";
+// const char *STRNAME_zh_SG = "zh-SG";
+// const char *STRNAME_zh_TW = "zh-TW";
+// const char *STRNAME_zu_ZA = "zu-ZA";
+
 extern Lang
 lang_from_cstr (const char *cstr)
 {
   if (strlen (cstr) < 5)
     return Lang::unknown;
 
-  if (strcmp (cstr, "aa_DJ") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "af_ZA") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "an_ES") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ar_AE") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ar_BH") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ar_DZ") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ar_EG") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ar_IQ") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ar_JO") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ar_KW") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ar_LB") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ar_LY") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ar_MA") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ar_OM") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ar_QA") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ar_SA") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ar_SD") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ar_SY") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ar_TN") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ar_YE") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ast_ES") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "be_BY") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "bg_BG") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "bhb_IN") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "br_FR") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "bs_BA") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ca_AD") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ca_ES") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ca_FR") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ca_IT") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "cs_CZ") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "cy_GB") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "da_DK") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "de_AT") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "de_BE") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "de_CH") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "de_DE") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "de_IT") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "de_LI") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "de_LU") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "el_CY") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "el_GR") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "en_AU") == 0)
-    return Lang::en_AU;
-  if (strcmp (cstr, "en_BW") == 0)
-    return Lang::en_BW;
-  if (strcmp (cstr, "en_CA") == 0)
-    return Lang::en_CA;
-  if (strcmp (cstr, "en_DK") == 0)
-    return Lang::en_DK;
-  if (strcmp (cstr, "en_GB") == 0)
-    return Lang::en_GB;
-  if (strcmp (cstr, "en_HK") == 0)
+  // if (strcmp (cstr, STRNAME_aa_DJ) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_af_ZA) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_an_ES) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ar_AE) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ar_BH) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ar_DZ) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ar_EG) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ar_IQ) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ar_JO) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ar_KW) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ar_LB) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ar_LY) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ar_MA) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ar_OM) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ar_QA) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ar_SA) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ar_SD) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ar_SY) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ar_TN) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ar_YE) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ast_ES) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_be_BY) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_bg_BG) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_bhb_IN) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_br_FR) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_bs_BA) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ca_AD) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ca_ES) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ca_FR) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ca_IT) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_cs_CZ) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_cy_GB) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_da_DK) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_de_AT) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_de_BE) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_de_CH) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_de_DE) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_de_IT) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_de_LI) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_de_LU) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_el_CY) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_el_GR) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_en_AU) == 0)
+  //   return Lang::en_AU;
+  // if (strcmp (cstr, STRNAME_en_BW) == 0)
+  //   return Lang::en_BW;
+  // if (strcmp (cstr, STRNAME_en_CA) == 0)
+  //   return Lang::en_CA;
+  // if (strcmp (cstr, STRNAME_en_DK) == 0)
+  //   return Lang::en_DK;
+  // if (strcmp (cstr, STRNAME_en_GB) == 0)
+  //   return Lang::en_GB;
+  if (strcmp (cstr, STRNAME_en_HK) == 0)
     return Lang::en_HK;
-  if (strcmp (cstr, "en_IE") == 0)
-    return Lang::en_IE;
-  if (strcmp (cstr, "en_NZ") == 0)
-    return Lang::en_NZ;
-  if (strcmp (cstr, "en_PH") == 0)
-    return Lang::en_PH;
-  if (strcmp (cstr, "en_SC") == 0)
-    return Lang::en_SC;
-  if (strcmp (cstr, "en_SG") == 0)
-    return Lang::en_SG;
-  if (strcmp (cstr, "en_US") == 0)
+  // if (strcmp (cstr, STRNAME_en_IE) == 0)
+  //   return Lang::en_IE;
+  // if (strcmp (cstr, STRNAME_en_NZ) == 0)
+  //   return Lang::en_NZ;
+  // if (strcmp (cstr, STRNAME_en_PH) == 0)
+  //   return Lang::en_PH;
+  // if (strcmp (cstr, STRNAME_en_SC) == 0)
+  //   return Lang::en_SC;
+  // if (strcmp (cstr, STRNAME_en_SG) == 0)
+  //   return Lang::en_SG;
+  if (strcmp (cstr, STRNAME_en_US) == 0)
     return Lang::en_US;
-  if (strcmp (cstr, "en_ZA") == 0)
-    return Lang::en_ZA;
-  if (strcmp (cstr, "en_ZW") == 0)
-    return Lang::en_ZW;
-  if (strcmp (cstr, "es_AR") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "es_BO") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "es_CL") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "es_CO") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "es_CR") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "es_DO") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "es_EC") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "es_ES") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "es_GT") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "es_HN") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "es_MX") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "es_NI") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "es_PA") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "es_PE") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "es_PR") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "es_PY") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "es_SV") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "es_US") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "es_UY") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "es_VE") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "et_EE") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "eu_ES") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "eu_FR") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "fi_FI") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "fo_FO") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "fr_BE") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "fr_CA") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "fr_CH") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "fr_FR") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "fr_LU") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ga_IE") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "gd_GB") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "gl_ES") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "gv_GB") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "he_IL") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "hr_HR") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "hsb_DE") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "hu_HU") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "id_ID") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "is_IS") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "it_CH") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "it_IT") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ja_JP") == 0)
-    return Lang::ja_JP;
-  if (strcmp (cstr, "ka_GE") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "kk_KZ") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "kl_GL") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ko_KR") == 0)
-    return Lang::ko_KR;
-  if (strcmp (cstr, "ku_TR") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "kw_GB") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "lg_UG") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "lt_LT") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "lv_LV") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "mg_MG") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "mi_NZ") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "mk_MK") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ms_MY") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "mt_MT") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "nb_NO") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "nl_BE") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "nl_NL") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "nn_NO") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "oc_FR") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "om_KE") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "pl_PL") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "pt_BR") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "pt_PT") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ro_RO") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ru_RU") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "ru_UA") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "sk_SK") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "sl_SI") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "so_DJ") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "so_KE") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "so_SO") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "sq_AL") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "st_ZA") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "sv_FI") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "sv_SE") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "tcy_IN") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "tg_TJ") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "th_TH") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "tl_PH") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "tr_CY") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "tr_TR") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "uk_UA") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "uz_UZ") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "wa_BE") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "xh_ZA") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "yi_US") == 0)
-    return Lang::unknown;
-  if (strcmp (cstr, "zh_CN") == 0)
+  // if (strcmp (cstr, STRNAME_en_ZA) == 0)
+  //   return Lang::en_ZA;
+  // if (strcmp (cstr, STRNAME_en_ZW) == 0)
+  //   return Lang::en_ZW;
+  // if (strcmp (cstr, STRNAME_es_AR) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_es_BO) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_es_CL) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_es_CO) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_es_CR) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_es_DO) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_es_EC) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_es_ES) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_es_GT) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_es_HN) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_es_MX) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_es_NI) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_es_PA) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_es_PE) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_es_PR) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_es_PY) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_es_SV) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_es_US) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_es_UY) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_es_VE) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_et_EE) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_eu_ES) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_eu_FR) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_fi_FI) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_fo_FO) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_fr_BE) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_fr_CA) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_fr_CH) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_fr_FR) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_fr_LU) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ga_IE) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_gd_GB) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_gl_ES) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_gv_GB) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_he_IL) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_hr_HR) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_hsb_DE) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_hu_HU) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_id_ID) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_is_IS) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_it_CH) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_it_IT) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ja_JP) == 0)
+  //   return Lang::ja_JP;
+  // if (strcmp (cstr, STRNAME_ka_GE) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_kk_KZ) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_kl_GL) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ko_KR) == 0)
+  //   return Lang::ko_KR;
+  // if (strcmp (cstr, STRNAME_ku_TR) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_kw_GB) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_lg_UG) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_lt_LT) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_lv_LV) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_mg_MG) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_mi_NZ) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_mk_MK) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ms_MY) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_mt_MT) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_nb_NO) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_nl_BE) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_nl_NL) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_nn_NO) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_oc_FR) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_om_KE) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_pl_PL) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_pt_BR) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_pt_PT) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ro_RO) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ru_RU) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_ru_UA) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_sk_SK) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_sl_SI) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_so_DJ) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_so_KE) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_so_SO) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_sq_AL) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_st_ZA) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_sv_FI) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_sv_SE) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_tcy_IN) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_tg_TJ) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_th_TH) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_tl_PH) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_tr_CY) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_tr_TR) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_uk_UA) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_uz_UZ) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_wa_BE) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_xh_ZA) == 0)
+  //   return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_yi_US) == 0)
+  //   return Lang::unknown;
+  if (strcmp (cstr, STRNAME_zh_CN) == 0)
     return Lang::zh_CN;
-  if (strcmp (cstr, "zh_HK") == 0)
+  if (strcmp (cstr, STRNAME_zh_HK) == 0)
     return Lang::zh_HK;
-  if (strcmp (cstr, "zh_SG") == 0)
-    return Lang::zh_SG;
-  if (strcmp (cstr, "zh_TW") == 0)
-    return Lang::zh_TW;
-  if (strcmp (cstr, "zu_ZA") == 0)
-    return Lang::unknown;
+  // if (strcmp (cstr, STRNAME_zh_SG) == 0)
+  //   return Lang::zh_SG;
+  // if (strcmp (cstr, STRNAME_zh_TW) == 0)
+  //   return Lang::zh_TW;
+  // if (strcmp (cstr, STRNAME_zu_ZA) == 0)
+  //   return Lang::unknown;
 
   return Lang::unknown;
 }
@@ -327,11 +479,458 @@ lang_to_cstr (Lang l)
 {
   switch (l)
     {
-    case Lang::aa_DJ:
-      return "aa_DJ";
+    // case Lang::aa_DJ:
+    //   return STRNAME_aa_DJ;
+    //   break;
+    // case Lang::af_ZA:
+    //   return STRNAME_af_ZA;
+    //   break;
+    // case Lang::an_ES:
+    //   return STRNAME_an_ES;
+    //   break;
+    // case Lang::ar_AE:
+    //   return STRNAME_ar_AE;
+    //   break;
+    // case Lang::ar_BH:
+    //   return STRNAME_ar_BH;
+    //   break;
+    // case Lang::ar_DZ:
+    //   return STRNAME_ar_DZ;
+    //   break;
+    // case Lang::ar_EG:
+    //   return STRNAME_ar_EG;
+    //   break;
+    // case Lang::ar_IQ:
+    //   return STRNAME_ar_IQ;
+    //   break;
+    // case Lang::ar_JO:
+    //   return STRNAME_ar_JO;
+    //   break;
+    // case Lang::ar_KW:
+    //   return STRNAME_ar_KW;
+    //   break;
+    // case Lang::ar_LB:
+    //   return STRNAME_ar_LB;
+    //   break;
+    // case Lang::ar_LY:
+    //   return STRNAME_ar_LY;
+    //   break;
+    // case Lang::ar_MA:
+    //   return STRNAME_ar_MA;
+    //   break;
+    // case Lang::ar_OM:
+    //   return STRNAME_ar_OM;
+    //   break;
+    // case Lang::ar_QA:
+    //   return STRNAME_ar_QA;
+    //   break;
+    // case Lang::ar_SA:
+    //   return STRNAME_ar_SA;
+    //   break;
+    // case Lang::ar_SD:
+    //   return STRNAME_ar_SD;
+    //   break;
+    // case Lang::ar_SY:
+    //   return STRNAME_ar_SY;
+    //   break;
+    // case Lang::ar_TN:
+    //   return STRNAME_ar_TN;
+    //   break;
+    // case Lang::ar_YE:
+    //   return STRNAME_ar_YE;
+    //   break;
+    // case Lang::ast_ES:
+    //   return STRNAME_ast_ES;
+    //   break;
+    // case Lang::be_BY:
+    //   return STRNAME_be_BY;
+    //   break;
+    // case Lang::bg_BG:
+    //   return STRNAME_bg_BG;
+    //   break;
+    // case Lang::bhb_IN:
+    //   return STRNAME_bhb_IN;
+    //   break;
+    // case Lang::br_FR:
+    //   return STRNAME_br_FR;
+    //   break;
+    // case Lang::bs_BA:
+    //   return STRNAME_bs_BA;
+    //   break;
+    // case Lang::ca_AD:
+    //   return STRNAME_ca_AD;
+    //   break;
+    // case Lang::ca_ES:
+    //   return STRNAME_ca_ES;
+    //   break;
+    // case Lang::ca_FR:
+    //   return STRNAME_ca_FR;
+    //   break;
+    // case Lang::ca_IT:
+    //   return STRNAME_ca_IT;
+    //   break;
+    // case Lang::cs_CZ:
+    //   return STRNAME_cs_CZ;
+    //   break;
+    // case Lang::cy_GB:
+    //   return STRNAME_cy_GB;
+    //   break;
+    // case Lang::da_DK:
+    //   return STRNAME_da_DK;
+    //   break;
+    // case Lang::de_AT:
+    //   return STRNAME_de_AT;
+    //   break;
+    // case Lang::de_BE:
+    //   return STRNAME_de_BE;
+    //   break;
+    // case Lang::de_CH:
+    //   return STRNAME_de_CH;
+    //   break;
+    // case Lang::de_DE:
+    //   return STRNAME_de_DE;
+    //   break;
+    // case Lang::de_IT:
+    //   return STRNAME_de_IT;
+    //   break;
+    // case Lang::de_LI:
+    //   return STRNAME_de_LI;
+    //   break;
+    // case Lang::de_LU:
+    //   return STRNAME_de_LU;
+    //   break;
+    // case Lang::el_CY:
+    //   return STRNAME_el_CY;
+    //   break;
+    // case Lang::el_GR:
+    //   return STRNAME_el_GR;
+    //   break;
+    // case Lang::en_AU:
+    //   return STRNAME_en_AU;
+    //   break;
+    // case Lang::en_BW:
+    //   return STRNAME_en_BW;
+    //   break;
+    // case Lang::en_CA:
+    //   return STRNAME_en_CA;
+    //   break;
+    // case Lang::en_DK:
+    //   return STRNAME_en_DK;
+    //   break;
+    // case Lang::en_GB:
+    //   return STRNAME_en_GB;
+    //   break;
+    case Lang::en_HK:
+      return STRNAME_en_HK;
       break;
+    // case Lang::en_IE:
+    //   return STRNAME_en_IE;
+    //   break;
+    // case Lang::en_NZ:
+    //   return STRNAME_en_NZ;
+    //   break;
+    // case Lang::en_PH:
+    //   return STRNAME_en_PH;
+    //   break;
+    // case Lang::en_SC:
+    //   return STRNAME_en_SC;
+    //   break;
+    // case Lang::en_SG:
+    //   return STRNAME_en_SG;
+    //   break;
+    case Lang::en_US:
+      return STRNAME_en_US;
+      break;
+    // case Lang::en_ZA:
+    //   return STRNAME_en_ZA;
+    //   break;
+    // case Lang::en_ZW:
+    //   return STRNAME_en_ZW;
+    //   break;
+    // case Lang::es_AR:
+    //   return STRNAME_es_AR;
+    //   break;
+    // case Lang::es_BO:
+    //   return STRNAME_es_BO;
+    //   break;
+    // case Lang::es_CL:
+    //   return STRNAME_es_CL;
+    //   break;
+    // case Lang::es_CO:
+    //   return STRNAME_es_CO;
+    //   break;
+    // case Lang::es_CR:
+    //   return STRNAME_es_CR;
+    //   break;
+    // case Lang::es_DO:
+    //   return STRNAME_es_DO;
+    //   break;
+    // case Lang::es_EC:
+    //   return STRNAME_es_EC;
+    //   break;
+    // case Lang::es_ES:
+    //   return STRNAME_es_ES;
+    //   break;
+    // case Lang::es_GT:
+    //   return STRNAME_es_GT;
+    //   break;
+    // case Lang::es_HN:
+    //   return STRNAME_es_HN;
+    //   break;
+    // case Lang::es_MX:
+    //   return STRNAME_es_MX;
+    //   break;
+    // case Lang::es_NI:
+    //   return STRNAME_es_NI;
+    //   break;
+    // case Lang::es_PA:
+    //   return STRNAME_es_PA;
+    //   break;
+    // case Lang::es_PE:
+    //   return STRNAME_es_PE;
+    //   break;
+    // case Lang::es_PR:
+    //   return STRNAME_es_PE;
+    //   break;
+    // case Lang::es_PY:
+    //   return STRNAME_es_PY;
+    //   break;
+    // case Lang::es_SV:
+    //   return STRNAME_es_SV;
+    //   break;
+    // case Lang::es_US:
+    //   return STRNAME_es_US;
+    //   break;
+    // case Lang::es_UY:
+    //   return STRNAME_es_UY;
+    //   break;
+    // case Lang::es_VE:
+    //   return STRNAME_es_VE;
+    //   break;
+    // case Lang::et_EE:
+    //   return STRNAME_et_EE;
+    //   break;
+    // case Lang::eu_ES:
+    //   return STRNAME_eu_ES;
+    //   break;
+    // case Lang::eu_FR:
+    //   return STRNAME_eu_FR;
+    //   break;
+    // case Lang::fi_FI:
+    //   return STRNAME_fi_FI;
+    //   break;
+    // case Lang::fo_FO:
+    //   return STRNAME_fo_FO;
+    //   break;
+    // case Lang::fr_BE:
+    //   return STRNAME_fr_BE;
+    //   break;
+    // case Lang::fr_CA:
+    //   return STRNAME_fr_CA;
+    //   break;
+    // case Lang::fr_CH:
+    //   return STRNAME_fr_CH;
+    //   break;
+    // case Lang::fr_FR:
+    //   return STRNAME_fr_FR;
+    //   break;
+    // case Lang::fr_LU:
+    //   return STRNAME_fr_LU;
+    //   break;
+    // case Lang::ga_IE:
+    //   return STRNAME_ga_IE;
+    //   break;
+    // case Lang::gd_GB:
+    //   return STRNAME_gd_GB;
+    //   break;
+    // case Lang::gl_ES:
+    //   return STRNAME_gl_ES;
+    //   break;
+    // case Lang::gv_GB:
+    //   return STRNAME_gv_GB;
+    //   break;
+    // case Lang::he_IL:
+    //   return STRNAME_he_IL;
+    //   break;
+    // case Lang::hr_HR:
+    //   return STRNAME_hr_HR;
+    //   break;
+    // case Lang::hsb_DE:
+    //   return STRNAME_hsb_DE;
+    //   break;
+    // case Lang::hu_HU:
+    //   return STRNAME_hu_HU;
+    //   break;
+    // case Lang::id_ID:
+    //   return STRNAME_id_ID;
+    //   break;
+    // case Lang::is_IS:
+    //   return STRNAME_is_IS;
+    //   break;
+    // case Lang::it_CH:
+    //   return STRNAME_it_CH;
+    //   break;
+    // case Lang::it_IT:
+    //   return STRNAME_it_IT;
+    //   break;
+    // case Lang::ja_JP:
+    //   return STRNAME_ja_JP;
+    //   break;
+    // case Lang::ka_GE:
+    //   return STRNAME_ka_GE;
+    //   break;
+    // case Lang::kk_KZ:
+    //   return STRNAME_kk_KZ;
+    //   break;
+    // case Lang::kl_GL:
+    //   return STRNAME_kl_GL;
+    //   break;
+    // case Lang::ko_KR:
+    //   return STRNAME_ko_KR;
+    //   break;
+    // case Lang::ku_TR:
+    //   return STRNAME_ku_TR;
+    //   break;
+    // case Lang::kw_GB:
+    //   return STRNAME_kw_GB;
+    //   break;
+    // case Lang::lg_UG:
+    //   return STRNAME_lg_UG;
+    //   break;
+    // case Lang::lt_LT:
+    //   return STRNAME_lt_LT;
+    //   break;
+    // case Lang::lv_LV:
+    //   return STRNAME_lv_LV;
+    //   break;
+    // case Lang::mg_MG:
+    //   return STRNAME_mg_MG;
+    //   break;
+    // case Lang::mi_NZ:
+    //   return STRNAME_mi_NZ;
+    //   break;
+    // case Lang::mk_MK:
+    //   return STRNAME_mk_MK;
+    //   break;
+    // case Lang::ms_MY:
+    //   return STRNAME_ms_MY;
+    //   break;
+    // case Lang::mt_MT:
+    //   return STRNAME_mt_MT;
+    //   break;
+    // case Lang::nb_NO:
+    //   return STRNAME_nb_NO;
+    //   break;
+    // case Lang::nl_BE:
+    //   return STRNAME_nl_NL;
+    //   break;
+    // case Lang::nl_NL:
+    //   return STRNAME_nl_NL;
+    //   break;
+    // case Lang::nn_NO:
+    //   return STRNAME_nn_NO;
+    //   break;
+    // case Lang::oc_FR:
+    //   return STRNAME_oc_FR;
+    //   break;
+    // case Lang::om_KE:
+    //   return STRNAME_om_KE;
+    //   break;
+    // case Lang::pl_PL:
+    //   return STRNAME_pl_PL;
+    //   break;
+    // case Lang::pt_BR:
+    //   return STRNAME_pt_BR;
+    //   break;
+    // case Lang::pt_PT:
+    //   return STRNAME_pt_PT;
+    //   break;
+    // case Lang::ro_RO:
+    //   return STRNAME_ro_RO;
+    //   break;
+    // case Lang::ru_RU:
+    //   return STRNAME_ru_RU;
+    //   break;
+    // case Lang::ru_UA:
+    //   return STRNAME_ru_UA;
+    //   break;
+    // case Lang::sk_SK:
+    //   return STRNAME_sk_SK;
+    //   break;
+    // case Lang::sl_SI:
+    //   return STRNAME_sl_SI;
+    //   break;
+    // case Lang::so_DJ:
+    //   return STRNAME_so_DJ;
+    //   break;
+    // case Lang::so_KE:
+    //   return STRNAME_so_KE;
+    //   break;
+    // case Lang::so_SO:
+    //   return STRNAME_so_SO;
+    //   break;
+    // case Lang::sq_AL:
+    //   return STRNAME_sq_AL;
+    //   break;
+    // case Lang::st_ZA:
+    //   return STRNAME_st_ZA;
+    //   break;
+    // case Lang::sv_FI:
+    //   return STRNAME_sv_FI;
+    //   break;
+    // case Lang::sv_SE:
+    //   return STRNAME_sv_SE;
+    //   break;
+    // case Lang::tcy_IN:
+    //   return STRNAME_tcy_IN;
+    //   break;
+    // case Lang::tg_TJ:
+    //   return STRNAME_tg_TJ;
+    //   break;
+    // case Lang::th_TH:
+    //   return STRNAME_th_TH;
+    //   break;
+    // case Lang::tl_PH:
+    //   return STRNAME_tl_PH;
+    //   break;
+    // case Lang::tr_CY:
+    //   return STRNAME_tr_CY;
+    //   break;
+    // case Lang::tr_TR:
+    //   return STRNAME_tr_TR;
+    //   break;
+    // case Lang::uk_UA:
+    //   return STRNAME_uk_UA;
+    //   break;
+    // case Lang::uz_UZ:
+    //   return STRNAME_uz_UZ;
+    //   break;
+    // case Lang::wa_BE:
+    //   return STRNAME_wa_BE;
+    //   break;
+    // case Lang::xh_ZA:
+    //   return STRNAME_xh_ZA;
+    //   break;
+    // case Lang::yi_US:
+    //   return STRNAME_yi_US;
+    //   break;
+    case Lang::zh_CN:
+      return STRNAME_zh_CN;
+      break;
+    case Lang::zh_HK:
+      return STRNAME_zh_HK;
+      break;
+    // case Lang::zh_SG:
+    //   return STRNAME_zh_SG;
+    //   break;
+    // case Lang::zh_TW:
+    //   return STRNAME_zh_TW;
+    //   break;
+    // case Lang::zu_ZA:
+    //   return STRNAME_zu_ZA;
+    //   break;
     default:
-      return "???_???";
+      return STRNAME_unknown;
       break;
     }
 }
@@ -339,464 +938,7 @@ lang_to_cstr (Lang l)
 std::ostream &
 operator<< (std::ostream &os, const Lang l)
 {
-  switch (l)
-    {
-    case Lang::aa_DJ:
-      os << "aa_DJ";
-      break;
-    case Lang::af_ZA:
-      os << "af_ZA";
-      break;
-    case Lang::an_ES:
-      os << "an_ES";
-      break;
-    case Lang::ar_AE:
-      os << "ar_AE";
-      break;
-    case Lang::ar_BH:
-      os << "ar_BH";
-      break;
-    case Lang::ar_DZ:
-      os << "ar_DZ";
-      break;
-    case Lang::ar_EG:
-      os << "ar_EG";
-      break;
-    case Lang::ar_IQ:
-      os << "ar_IQ";
-      break;
-    case Lang::ar_JO:
-      os << "ar_JO";
-      break;
-    case Lang::ar_KW:
-      os << "ar_KW";
-      break;
-    case Lang::ar_LB:
-      os << "ar_LB";
-      break;
-    case Lang::ar_LY:
-      os << "ar_LY";
-      break;
-    case Lang::ar_MA:
-      os << "ar_MA";
-      break;
-    case Lang::ar_OM:
-      os << "ar_OM";
-      break;
-    case Lang::ar_QA:
-      os << "ar_QA";
-      break;
-    case Lang::ar_SA:
-      os << "ar_SA";
-      break;
-    case Lang::ar_SD:
-      os << "ar_SD";
-      break;
-    case Lang::ar_SY:
-      os << "ar_SY";
-      break;
-    case Lang::ar_TN:
-      os << "ar_TN";
-      break;
-    case Lang::ar_YE:
-      os << "ar_YE";
-      break;
-    case Lang::ast_ES:
-      os << "ast_ES";
-      break;
-    case Lang::be_BY:
-      os << "be_BY";
-      break;
-    case Lang::bg_BG:
-      os << "bg_BG";
-      break;
-    case Lang::bhb_IN:
-      os << "bhb_IN";
-      break;
-    case Lang::br_FR:
-      os << "br_FR";
-      break;
-    case Lang::bs_BA:
-      os << "bs_BA";
-      break;
-    case Lang::ca_AD:
-      os << "ca_AD";
-      break;
-    case Lang::ca_ES:
-      os << "ca_ES";
-      break;
-    case Lang::ca_FR:
-      os << "ca_FR";
-      break;
-    case Lang::ca_IT:
-      os << "ca_IT";
-      break;
-    case Lang::cs_CZ:
-      os << "cs_CZ";
-      break;
-    case Lang::cy_GB:
-      os << "cy_GB";
-      break;
-    case Lang::da_DK:
-      os << "da_DK";
-      break;
-    case Lang::de_AT:
-      os << "de_AT";
-      break;
-    case Lang::de_BE:
-      os << "de_BE";
-      break;
-    case Lang::de_CH:
-      os << "de_CH";
-      break;
-    case Lang::de_DE:
-      os << "de_DE";
-      break;
-    case Lang::de_IT:
-      os << "de_IT";
-      break;
-    case Lang::de_LI:
-      os << "de_LI";
-      break;
-    case Lang::de_LU:
-      os << "de_LU";
-      break;
-    case Lang::el_CY:
-      os << "el_CY";
-      break;
-    case Lang::el_GR:
-      os << "el_GR";
-      break;
-    case Lang::en_AU:
-      os << "en_AU";
-      break;
-    case Lang::en_BW:
-      os << "en_BW";
-      break;
-    case Lang::en_CA:
-      os << "en_CA";
-      break;
-    case Lang::en_DK:
-      os << "en_DK";
-      break;
-    case Lang::en_GB:
-      os << "en_GB";
-      break;
-    case Lang::en_HK:
-      os << "en_HK";
-      break;
-    case Lang::en_IE:
-      os << "en_IE";
-      break;
-    case Lang::en_NZ:
-      os << "en_NZ";
-      break;
-    case Lang::en_PH:
-      os << "en_PH";
-      break;
-    case Lang::en_SC:
-      os << "en_SC";
-      break;
-    case Lang::en_SG:
-      os << "en_SG";
-      break;
-    case Lang::en_US:
-      os << "en_US";
-      break;
-    case Lang::en_ZA:
-      os << "en_ZA";
-      break;
-    case Lang::en_ZW:
-      os << "en_ZW";
-      break;
-    case Lang::es_AR:
-      os << "es_AR";
-      break;
-    case Lang::es_BO:
-      os << "es_BO";
-      break;
-    case Lang::es_CL:
-      os << "es_CL";
-      break;
-    case Lang::es_CO:
-      os << "es_CO";
-      break;
-    case Lang::es_CR:
-      os << "es_CR";
-      break;
-    case Lang::es_DO:
-      os << "es_DO";
-      break;
-    case Lang::es_EC:
-      os << "es_EC";
-      break;
-    case Lang::es_ES:
-      os << "es_ES";
-      break;
-    case Lang::es_GT:
-      os << "es_GT";
-      break;
-    case Lang::es_HN:
-      os << "es_HN";
-      break;
-    case Lang::es_MX:
-      os << "es_MX";
-      break;
-    case Lang::es_NI:
-      os << "es_NI";
-      break;
-    case Lang::es_PA:
-      os << "es_PA";
-      break;
-    case Lang::es_PE:
-      os << "es_PE";
-      break;
-    case Lang::es_PR:
-      os << "es_PR";
-      break;
-    case Lang::es_PY:
-      os << "es_PY";
-      break;
-    case Lang::es_SV:
-      os << "es_SV";
-      break;
-    case Lang::es_US:
-      os << "es_US";
-      break;
-    case Lang::es_UY:
-      os << "es_UY";
-      break;
-    case Lang::es_VE:
-      os << "es_VE";
-      break;
-    case Lang::et_EE:
-      os << "et_EE";
-      break;
-    case Lang::eu_ES:
-      os << "eu_ES";
-      break;
-    case Lang::eu_FR:
-      os << "eu_FR";
-      break;
-    case Lang::fi_FI:
-      os << "fi_FI";
-      break;
-    case Lang::fo_FO:
-      os << "fo_FO";
-      break;
-    case Lang::fr_BE:
-      os << "fr_BE";
-      break;
-    case Lang::fr_CA:
-      os << "fr_CA";
-      break;
-    case Lang::fr_CH:
-      os << "fr_CH";
-      break;
-    case Lang::fr_FR:
-      os << "fr_FR";
-      break;
-    case Lang::fr_LU:
-      os << "fr_LU";
-      break;
-    case Lang::ga_IE:
-      os << "ga_IE";
-      break;
-    case Lang::gd_GB:
-      os << "gd_GB";
-      break;
-    case Lang::gl_ES:
-      os << "gl_ES";
-      break;
-    case Lang::gv_GB:
-      os << "gv_GB";
-      break;
-    case Lang::he_IL:
-      os << "he_IL";
-      break;
-    case Lang::hr_HR:
-      os << "hr_HR";
-      break;
-    case Lang::hsb_DE:
-      os << "hsb_DE";
-      break;
-    case Lang::hu_HU:
-      os << "hu_HU";
-      break;
-    case Lang::id_ID:
-      os << "id_ID";
-      break;
-    case Lang::is_IS:
-      os << "is_IS";
-      break;
-    case Lang::it_CH:
-      os << "it_CH";
-      break;
-    case Lang::it_IT:
-      os << "it_IT";
-      break;
-    case Lang::ja_JP:
-      os << "ja_JP";
-      break;
-    case Lang::ka_GE:
-      os << "ka_GE";
-      break;
-    case Lang::kk_KZ:
-      os << "kk_KZ";
-      break;
-    case Lang::kl_GL:
-      os << "kl_GL";
-      break;
-    case Lang::ko_KR:
-      os << "ko_KR";
-      break;
-    case Lang::ku_TR:
-      os << "ku_TR";
-      break;
-    case Lang::kw_GB:
-      os << "kw_GB";
-      break;
-    case Lang::lg_UG:
-      os << "lg_UG";
-      break;
-    case Lang::lt_LT:
-      os << "lt_LT";
-      break;
-    case Lang::lv_LV:
-      os << "lv_LV";
-      break;
-    case Lang::mg_MG:
-      os << "mg_MG";
-      break;
-    case Lang::mi_NZ:
-      os << "mi_NZ";
-      break;
-    case Lang::mk_MK:
-      os << "mk_MK";
-      break;
-    case Lang::ms_MY:
-      os << "ms_MY";
-      break;
-    case Lang::mt_MT:
-      os << "mt_MT";
-      break;
-    case Lang::nb_NO:
-      os << "nb_NO";
-      break;
-    case Lang::nl_BE:
-      os << "nl_BE";
-      break;
-    case Lang::nl_NL:
-      os << "nl_NL";
-      break;
-    case Lang::nn_NO:
-      os << "nn_NO";
-      break;
-    case Lang::oc_FR:
-      os << "os";
-      break;
-    case Lang::om_KE:
-      os << "os";
-      break;
-    case Lang::pl_PL:
-      os << "pl_PL";
-      break;
-    case Lang::pt_BR:
-      os << "pt_BR";
-      break;
-    case Lang::pt_PT:
-      os << "pt_PT";
-      break;
-    case Lang::ro_RO:
-      os << "ro_RO";
-      break;
-    case Lang::ru_RU:
-      os << "ru_RU";
-      break;
-    case Lang::ru_UA:
-      os << "ru_UA";
-      break;
-    case Lang::sk_SK:
-      os << "sk_SK";
-      break;
-    case Lang::sl_SI:
-      os << "sl_SI";
-      break;
-    case Lang::so_DJ:
-      os << "so_DJ";
-      break;
-    case Lang::so_KE:
-      os << "so_KE";
-      break;
-    case Lang::so_SO:
-      os << "so_SO";
-      break;
-    case Lang::sq_AL:
-      os << "sq_AL";
-      break;
-    case Lang::st_ZA:
-      os << "st_ZA";
-      break;
-    case Lang::sv_FI:
-      os << "sv_FI";
-      break;
-    case Lang::sv_SE:
-      os << "sv_SE";
-      break;
-    case Lang::tcy_IN:
-      os << "tcy_IN";
-      break;
-    case Lang::tg_TJ:
-      os << "tg_TJ";
-      break;
-    case Lang::th_TH:
-      os << "th_TH";
-      break;
-    case Lang::tl_PH:
-      os << "tl_PH";
-      break;
-    case Lang::tr_CY:
-      os << "tr_CY";
-      break;
-    case Lang::tr_TR:
-      os << "tr_TR";
-      break;
-    case Lang::uk_UA:
-      os << "uk_UA";
-      break;
-    case Lang::uz_UZ:
-      os << "uz_UZ";
-      break;
-    case Lang::wa_BE:
-      os << "wa_BE";
-      break;
-    case Lang::xh_ZA:
-      os << "xh_ZA";
-      break;
-    case Lang::yi_US:
-      os << "yi_US";
-      break;
-    case Lang::zh_CN:
-      os << "zh_CN";
-      break;
-    case Lang::zh_HK:
-      os << "zh_HK";
-      break;
-    case Lang::zh_SG:
-      os << "zh_SG";
-      break;
-    case Lang::zh_TW:
-      os << "zh_TW";
-      break;
-    case Lang::zu_ZA:
-      os << "zu_ZA";
-      break;
-
-    default:
-      os << "???_???";
-      break;
-    }
-
+  os << lang_to_cstr (l);
   return os;
 }
 
@@ -860,7 +1002,7 @@ try_ensure_locale ()
     {"zu_ZA.UTF-8", zu_ZA},
   };
 
-  vector<Lang> supported = {};
+  vector<tuple<string, Lang>> supported = {};
 
   for (const tuple<string, Lang> &t : lclist)
     if (setlocale (LC_ALL, get<0> (t).c_str ()) != nullptr)
@@ -874,14 +1016,14 @@ try_ensure_locale ()
 	  }
 	else
 	  {
-	    supported.push_back (lc);
+	    supported.push_back (t);
 	  }
       }
 
   if (supported.size () > 0)
     {
-      // FIXME: setlocale
-      HOST_LANG = supported[0];
+      setlocale (LC_ALL, get<0> (supported[0]).c_str ());
+      HOST_LANG = get<1> (supported[0]);
       return true;
     }
 

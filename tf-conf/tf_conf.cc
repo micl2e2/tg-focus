@@ -159,9 +159,14 @@ handle_loglv (int argc, char *argv[])
 int
 handle_lang (const char *lang_code)
 {
-  tf_data.set_pref_lang (tgf::lang_from_cstr (lang_code));
-  lvlog (LogLv::INFO, "setting up language...done");
-  return 0;
+  tgf::Lang l = tgf::lang_from_cstr (lang_code);
+  tf_data.set_pref_lang (l);
+  tgf::PREFER_LANG = l;
+  tgf::try_ensure_locale ();
+  bool is_good = tgf::HOST_LANG == l;
+  lvlog (LogLv::INFO, "setting up language...", is_good ? "done" : "failed");
+
+  return is_good ? 0 : 1;
 }
 
 int
