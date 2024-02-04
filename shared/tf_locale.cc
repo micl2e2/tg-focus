@@ -12,6 +12,9 @@ namespace tgf {
 enum Lang HOST_LANG = Lang::unknown;
 enum Lang PREFER_LANG = Lang::unknown;
 
+//
+// Currently supported languages: en_HK, en_US, zh_CN, zh_HK
+//
 const char *STRNAME_unknown = "?-?";
 // const char *STRNAME_aa_DJ = "aa-DJ";
 // const char *STRNAME_af_ZA = "af-ZA";
@@ -68,7 +71,7 @@ const char *STRNAME_en_HK = "en-HK";
 // const char *STRNAME_en_SG = "en-SG";
 const char *STRNAME_en_US = "en-US";
 // const char *STRNAME_en_ZA = "en-ZA";
-// const char *STRNAME_en_ZW = "en-ZW";
+const char *STRNAME_en_ZW = "en-ZW";
 // const char *STRNAME_es_AR = "es-AR";
 // const char *STRNAME_es_BO = "es-BO";
 // const char *STRNAME_es_CL = "es-CL";
@@ -280,8 +283,8 @@ lang_from_cstr (const char *cstr)
     return Lang::en_US;
   // if (strcmp (cstr, STRNAME_en_ZA) == 0)
   //   return Lang::en_ZA;
-  // if (strcmp (cstr, STRNAME_en_ZW) == 0)
-  //   return Lang::en_ZW;
+  if (strcmp (cstr, STRNAME_en_ZW) == 0)
+    return Lang::en_ZW;
   // if (strcmp (cstr, STRNAME_es_AR) == 0)
   //   return Lang::unknown;
   // if (strcmp (cstr, STRNAME_es_BO) == 0)
@@ -644,8 +647,8 @@ lang_to_cstr (Lang l)
     // case Lang::en_ZA:
     //   return STRNAME_en_ZA;
     //   break;
-    // case Lang::en_ZW:
-    //   return STRNAME_en_ZW;
+    case Lang::en_ZW:
+      return STRNAME_en_ZW;
     //   break;
     // case Lang::es_AR:
     //   return STRNAME_es_AR;
@@ -948,82 +951,107 @@ try_ensure_locale ()
   using namespace std;
 
   // FIXME: use constant instead
-  vector<tuple<string, Lang>> lclist = {
+  vector<tuple<const char *, Lang>> lclist = {
     // {"C.UTF-8", unknown}, // we dont need this
-    {"aa_DJ.UTF-8", aa_DJ},   {"af_ZA.UTF-8", af_ZA}, {"an_ES.UTF-8", an_ES},
-    {"ar_AE.UTF-8", ar_AE},   {"ar_BH.UTF-8", ar_BH}, {"ar_DZ.UTF-8", ar_DZ},
-    {"ar_EG.UTF-8", ar_EG},   {"ar_IQ.UTF-8", ar_IQ}, {"ar_JO.UTF-8", ar_JO},
-    {"ar_KW.UTF-8", ar_KW},   {"ar_LB.UTF-8", ar_LB}, {"ar_LY.UTF-8", ar_LY},
-    {"ar_MA.UTF-8", ar_MA},   {"ar_OM.UTF-8", ar_OM}, {"ar_QA.UTF-8", ar_QA},
-    {"ar_SA.UTF-8", ar_SA},   {"ar_SD.UTF-8", ar_SD}, {"ar_SY.UTF-8", ar_SY},
-    {"ar_TN.UTF-8", ar_TN},   {"ar_YE.UTF-8", ar_YE}, {"ast_ES.UTF-8", ast_ES},
-    {"be_BY.UTF-8", be_BY},   {"bg_BG.UTF-8", bg_BG}, {"bhb_IN.UTF-8", bhb_IN},
-    {"br_FR.UTF-8", br_FR},   {"bs_BA.UTF-8", bs_BA}, {"ca_AD.UTF-8", ca_AD},
-    {"ca_ES.UTF-8", ca_ES},   {"ca_FR.UTF-8", ca_FR}, {"ca_IT.UTF-8", ca_IT},
-    {"cs_CZ.UTF-8", cs_CZ},   {"cy_GB.UTF-8", cy_GB}, {"da_DK.UTF-8", da_DK},
-    {"de_AT.UTF-8", de_AT},   {"de_BE.UTF-8", de_BE}, {"de_CH.UTF-8", de_CH},
-    {"de_DE.UTF-8", de_DE},   {"de_IT.UTF-8", de_IT}, {"de_LI.UTF-8", de_LI},
-    {"de_LU.UTF-8", de_LU},   {"el_CY.UTF-8", el_CY}, {"el_GR.UTF-8", el_GR},
-    {"en_HK.UTF-8", en_HK},   {"en_AU.UTF-8", en_AU}, {"en_BW.UTF-8", en_BW},
-    {"en_CA.UTF-8", en_CA},   {"en_DK.UTF-8", en_DK}, {"en_GB.UTF-8", en_GB},
-    {"en_HK.UTF-8", en_HK},   {"en_IE.UTF-8", en_IE}, {"en_NZ.UTF-8", en_NZ},
-    {"en_PH.UTF-8", en_PH},   {"en_SC.UTF-8", en_SC}, {"en_SG.UTF-8", en_SG},
-    {"en_US.UTF-8", en_US},   {"en_ZA.UTF-8", en_ZA}, {"en_ZW.UTF-8", en_ZW},
-    {"es_AR.UTF-8", es_AR},   {"es_BO.UTF-8", es_BO}, {"es_CL.UTF-8", es_CL},
-    {"es_CO.UTF-8", es_CO},   {"es_CR.UTF-8", es_CR}, {"es_DO.UTF-8", es_DO},
-    {"es_EC.UTF-8", es_EC},   {"es_ES.UTF-8", es_ES}, {"es_GT.UTF-8", es_GT},
-    {"es_HN.UTF-8", es_HN},   {"es_MX.UTF-8", es_MX}, {"es_NI.UTF-8", es_NI},
-    {"es_PA.UTF-8", es_PA},   {"es_PE.UTF-8", es_PE}, {"es_PR.UTF-8", es_PR},
-    {"es_PY.UTF-8", es_PY},   {"es_SV.UTF-8", es_SV}, {"es_US.UTF-8", es_US},
-    {"es_UY.UTF-8", es_UY},   {"es_VE.UTF-8", es_VE}, {"et_EE.UTF-8", et_EE},
-    {"eu_ES.UTF-8", eu_ES},   {"eu_FR.UTF-8", eu_FR}, {"fi_FI.UTF-8", fi_FI},
-    {"fo_FO.UTF-8", eu_FR},   {"fr_BE.UTF-8", fr_BE}, {"fr_CA.UTF-8", fr_CA},
-    {"fr_CH.UTF-8", fr_CH},   {"fr_FR.UTF-8", fr_FR}, {"fr_LU.UTF-8", fr_LU},
-    {"ga_IE.UTF-8", ga_IE},   {"gd_GB.UTF-8", gd_GB}, {"gl_ES.UTF-8", gl_ES},
-    {"gv_GB.UTF-8", gv_GB},   {"he_IL.UTF-8", he_IL}, {"hr_HR.UTF-8", hr_HR},
-    {"hsb_DE.UTF-8", hsb_DE}, {"hu_HU.UTF-8", hu_HU}, {"id_ID.UTF-8", id_ID},
-    {"is_IS.UTF-8", is_IS},   {"it_CH.UTF-8", it_CH}, {"it_IT.UTF-8", it_IT},
-    {"ja_JP.UTF-8", ja_JP},   {"ka_GE.UTF-8", ka_GE}, {"kk_KZ.UTF-8", kk_KZ},
-    {"kl_GL.UTF-8", kl_GL},   {"ko_KR.UTF-8", ko_KR}, {"ku_TR.UTF-8", ku_TR},
-    {"kw_GB.UTF-8", kw_GB},   {"lg_UG.UTF-8", lg_UG}, {"lt_LT.UTF-8", lt_LT},
-    {"lv_LV.UTF-8", lv_LV},   {"mg_MG.UTF-8", mg_MG}, {"mi_NZ.UTF-8", mi_NZ},
-    {"mk_MK.UTF-8", mk_MK},   {"ms_MY.UTF-8", ms_MY}, {"mt_MT.UTF-8", mt_MT},
-    {"nb_NO.UTF-8", nb_NO},   {"nl_BE.UTF-8", nl_BE}, {"nl_NL.UTF-8", nl_NL},
-    {"nn_NO.UTF-8", nn_NO},   {"oc_FR.UTF-8", oc_FR}, {"om_KE.UTF-8", om_KE},
-    {"pl_PL.UTF-8", pl_PL},   {"pt_BR.UTF-8", pt_BR}, {"pt_PT.UTF-8", pt_PT},
-    {"ro_RO.UTF-8", ro_RO},   {"ru_RU.UTF-8", ru_RU}, {"ru_UA.UTF-8", ru_UA},
-    {"sk_SK.UTF-8", sk_SK},   {"sl_SI.UTF-8", sl_SI}, {"so_DJ.UTF-8", so_DJ},
-    {"so_KE.UTF-8", so_KE},   {"so_SO.UTF-8", so_SO}, {"sq_AL.UTF-8", sq_AL},
-    {"st_ZA.UTF-8", st_ZA},   {"sv_FI.UTF-8", sv_FI}, {"sv_SE.UTF-8", sv_SE},
-    {"tcy_IN.UTF-8", tcy_IN}, {"tg_TJ.UTF-8", tg_TJ}, {"th_TH.UTF-8", th_TH},
-    {"tl_PH.UTF-8", tl_PH},   {"tr_CY.UTF-8", tr_CY}, {"tr_TR.UTF-8", tr_TR},
-    {"uk_UA.UTF-8", uk_UA},   {"uz_UZ.UTF-8", uz_UZ}, {"wa_BE.UTF-8", wa_BE},
-    {"xh_ZA.UTF-8", xh_ZA},   {"yi_US.UTF-8", yi_US}, {"zh_CN.UTF-8", zh_CN},
-    {"zh_HK.UTF-8", zh_HK},   {"zh_SG.UTF-8", zh_SG}, {"zh_TW.UTF-8", zh_TW},
-    {"zu_ZA.UTF-8", zu_ZA},
+    // {STRNAME_aa_DJ, aa_DJ}, {STRNAME_af_ZA, af_ZA}, {STRNAME_an_ES, an_ES},
+    // {STRNAME_ar_AE, ar_AE}, {STRNAME_ar_BH, ar_BH}, {STRNAME_ar_DZ, ar_DZ},
+    // {STRNAME_ar_EG, ar_EG}, {STRNAME_ar_IQ, ar_IQ}, {STRNAME_ar_JO, ar_JO},
+    // {STRNAME_ar_KW, ar_KW}, {STRNAME_ar_LB, ar_LB}, {STRNAME_ar_LY, ar_LY},
+    // {STRNAME_ar_MA, ar_MA}, {STRNAME_ar_OM, ar_OM}, {STRNAME_ar_QA, ar_QA},
+    // {STRNAME_ar_SA, ar_SA}, {STRNAME_ar_SD, ar_SD}, {STRNAME_ar_SY, ar_SY},
+    // {STRNAME_ar_TN, ar_TN}, {STRNAME_ar_YE, ar_YE}, {STRNAME_ast_ES, ast_ES},
+    // {STRNAME_be_BY, be_BY}, {STRNAME_bg_BG, bg_BG}, {STRNAME_bhb_IN, bhb_IN},
+    // {STRNAME_br_FR, br_FR}, {STRNAME_bs_BA, bs_BA}, {STRNAME_ca_AD, ca_AD},
+    // {STRNAME_ca_ES, ca_ES}, {STRNAME_ca_FR, ca_FR}, {STRNAME_ca_IT, ca_IT},
+    // {STRNAME_cs_CZ, cs_CZ}, {STRNAME_cy_GB, cy_GB}, {STRNAME_da_DK, da_DK},
+    // {STRNAME_de_AT, de_AT}, {STRNAME_de_BE, de_BE}, {STRNAME_de_CH, de_CH},
+    // {STRNAME_de_DE, de_DE}, {STRNAME_de_IT, de_IT}, {STRNAME_de_LI, de_LI},
+    // {STRNAME_de_LU, de_LU}, {STRNAME_el_CY, el_CY}, {STRNAME_el_GR, el_GR},
+    // {STRNAME_en_AU, en_AU}, {STRNAME_en_BW, en_BW}, {STRNAME_en_CA, en_CA},
+    // {STRNAME_en_DK, en_DK}, {STRNAME_en_GB, en_GB},
+    {STRNAME_en_HK, en_HK},
+    // {STRNAME_en_IE, en_IE}, {STRNAME_en_NZ, en_NZ}, {STRNAME_en_PH, en_PH},
+    // {STRNAME_en_SC, en_SC}, {STRNAME_en_SG, en_SG},
+    {STRNAME_en_US, en_US},
+    // {STRNAME_en_ZA, en_ZA},
+    {STRNAME_en_ZW, en_ZW},
+    // {STRNAME_es_AR, es_AR},
+    // {STRNAME_es_BO, es_BO}, {STRNAME_es_CL, es_CL}, {STRNAME_es_CO, es_CO},
+    // {STRNAME_es_CR, es_CR}, {STRNAME_es_DO, es_DO}, {STRNAME_es_EC, es_EC},
+    // {STRNAME_es_ES, es_ES}, {STRNAME_es_GT, es_GT}, {STRNAME_es_HN, es_HN},
+    // {STRNAME_es_MX, es_MX}, {STRNAME_es_NI, es_NI}, {STRNAME_es_PA, es_PA},
+    // {STRNAME_es_PE, es_PE}, {STRNAME_es_PR, es_PR}, {STRNAME_es_PY, es_PY},
+    // {STRNAME_es_SV, es_SV}, {STRNAME_es_US, es_US}, {STRNAME_es_UY, es_UY},
+    // {STRNAME_es_VE, es_VE}, {STRNAME_et_EE, et_EE}, {STRNAME_eu_ES, eu_ES},
+    // {STRNAME_eu_FR, eu_FR}, {STRNAME_fi_FI, fi_FI}, {STRNAME_fo_FO, eu_FR},
+    // {STRNAME_fr_BE, fr_BE}, {STRNAME_fr_CA, fr_CA}, {STRNAME_fr_CH, fr_CH},
+    // {STRNAME_fr_FR, fr_FR}, {STRNAME_fr_LU, fr_LU}, {STRNAME_ga_IE, ga_IE},
+    // {STRNAME_gd_GB, gd_GB}, {STRNAME_gl_ES, gl_ES}, {STRNAME_gv_GB, gv_GB},
+    // {STRNAME_he_IL, he_IL}, {STRNAME_hr_HR, hr_HR}, {STRNAME_hsb_DE, hsb_DE},
+    // {STRNAME_hu_HU, hu_HU}, {STRNAME_id_ID, id_ID}, {STRNAME_is_IS, is_IS},
+    // {STRNAME_it_CH, it_CH}, {STRNAME_it_IT, it_IT}, {STRNAME_ja_JP, ja_JP},
+    // {STRNAME_ka_GE, ka_GE}, {STRNAME_kk_KZ, kk_KZ}, {STRNAME_kl_GL, kl_GL},
+    // {STRNAME_ko_KR, ko_KR}, {STRNAME_ku_TR, ku_TR}, {STRNAME_kw_GB, kw_GB},
+    // {STRNAME_lg_UG, lg_UG}, {STRNAME_lt_LT, lt_LT}, {STRNAME_lv_LV, lv_LV},
+    // {STRNAME_mg_MG, mg_MG}, {STRNAME_mi_NZ, mi_NZ}, {STRNAME_mk_MK, mk_MK},
+    // {STRNAME_ms_MY, ms_MY}, {STRNAME_mt_MT, mt_MT}, {STRNAME_nb_NO, nb_NO},
+    // {STRNAME_nl_BE, nl_BE}, {STRNAME_nl_NL, nl_NL}, {STRNAME_nn_NO, nn_NO},
+    // {STRNAME_oc_FR, oc_FR}, {STRNAME_om_KE, om_KE}, {STRNAME_pl_PL, pl_PL},
+    // {STRNAME_pt_BR, pt_BR}, {STRNAME_pt_PT, pt_PT}, {STRNAME_ro_RO, ro_RO},
+    // {STRNAME_ru_RU, ru_RU}, {STRNAME_ru_UA, ru_UA}, {STRNAME_sk_SK, sk_SK},
+    // {STRNAME_sl_SI, sl_SI}, {STRNAME_so_DJ, so_DJ}, {STRNAME_so_KE, so_KE},
+    // {STRNAME_so_SO, so_SO}, {STRNAME_sq_AL, sq_AL}, {STRNAME_st_ZA, st_ZA},
+    // {STRNAME_sv_FI, sv_FI}, {STRNAME_sv_SE, sv_SE}, {STRNAME_tcy_IN, tcy_IN},
+    // {STRNAME_tg_TJ, tg_TJ}, {STRNAME_th_TH, th_TH}, {STRNAME_tl_PH, tl_PH},
+    // {STRNAME_tr_CY, tr_CY}, {STRNAME_tr_TR, tr_TR}, {STRNAME_uk_UA, uk_UA},
+    // {STRNAME_uz_UZ, uz_UZ}, {STRNAME_wa_BE, wa_BE}, {STRNAME_xh_ZA, xh_ZA},
+    // {STRNAME_yi_US, yi_US},
+    {STRNAME_zh_CN, zh_CN},
+    {STRNAME_zh_HK, zh_HK},
+    // {STRNAME_zh_SG, zh_SG}, {STRNAME_zh_TW, zh_TW}, {STRNAME_zu_ZA, zu_ZA},
   };
 
-  vector<tuple<string, Lang>> supported = {};
+  vector<tuple<const char *, Lang>> supported = {};
 
-  for (const tuple<string, Lang> &t : lclist)
-    if (setlocale (LC_ALL, get<0> (t).c_str ()) != nullptr)
-      {
-	auto lc = get<1> (t);
+  const char *trailing_enc = ".UTF-8";
+  size_t n_trailing_enc = 6;
 
-	if (lc == PREFER_LANG)
-	  {
-	    HOST_LANG = lc;
-	    return true;
-	  }
-	else
-	  {
-	    supported.push_back (t);
-	  }
-      }
+  char *tmpbuf = (char *) alloca (6 + 6);
+  for (const tuple<const char *, Lang> &t : lclist)
+    {
+      const char *strname = get<0> (t);
+      size_t nchar = strlen (strname);
+      memcpy (tmpbuf, strname, nchar);
+      if (nchar == 5 && tmpbuf[2] == '-')
+	{
+	  tmpbuf[2] = '_';
+	  memcpy (tmpbuf + 5, (void *) trailing_enc, n_trailing_enc);
+	  tmpbuf[11] = 0;
+	}
+      else if (nchar == 6 && tmpbuf[3] == '-')
+	{
+	  tmpbuf[3] = '_';
+	  memcpy (tmpbuf + 6, (void *) trailing_enc, n_trailing_enc);
+	}
+      if (setlocale (LC_ALL, tmpbuf) != nullptr)
+	{
+	  Lang lc = get<1> (t);
+
+	  if (lc == PREFER_LANG)
+	    {
+	      HOST_LANG = lc;
+	      return true;
+	    }
+	  else
+	    {
+	      supported.push_back (t);
+	    }
+	}
+    }
 
   if (supported.size () > 0)
     {
-      setlocale (LC_ALL, get<0> (supported[0]).c_str ());
+      setlocale (LC_ALL, get<0> (supported[0]));
       HOST_LANG = get<1> (supported[0]);
       return true;
     }
