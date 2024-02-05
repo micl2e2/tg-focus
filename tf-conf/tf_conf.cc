@@ -19,7 +19,7 @@
 #include "state.hh"
 #include "auth.hh"
 #include "focus_filter.hh"
-#include "tf_locale.hh"
+#include "tgf_locale.hh"
 
 int
 print_usage (char *argv[])

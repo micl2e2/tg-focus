@@ -1,5 +1,5 @@
-#ifndef _TF_LOCALE_H
-#define _TF_LOCALE_H
+#ifndef _TGF_LOCALE_H
+#define _TGF_LOCALE_H
 
 #include <iostream>
 #include "stdint.h"
