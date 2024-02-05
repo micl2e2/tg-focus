@@ -1,7 +1,7 @@
 include(CTest)
 
 # add a test
-set(CurrTestName posix_regex_test)
+set(CurrTestName posix_regex)
 add_executable(${CurrTestName} ${CurrTestName}.cc
    ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
 )
@@ -9,7 +9,7 @@ target_include_directories(${CurrTestName} PRIVATE ${PROJECT_SOURCE_DIR}/shared)
 add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 
 # add a test
-set(CurrTestName tst_focus_filter_config)
+set(CurrTestName focus_filter_config)
 add_executable(${CurrTestName} ${CurrTestName}.cc
    ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc
    ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
@@ -22,13 +22,12 @@ target_include_directories(${CurrTestName} PRIVATE
 add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 
 # add a test
-set(CurrTestName focus_filter_test)
+set(CurrTestName focus_filter)
 add_executable(${CurrTestName} ${CurrTestName}.cc
    ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc
    ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
    ${PROJECT_SOURCE_DIR}/shared/tgf_msg.cc
-      ${PROJECT_SOURCE_DIR}/shared/tgf_locale.cc
-
+   ${PROJECT_SOURCE_DIR}/shared/tgf_locale.cc
 )
 target_include_directories(${CurrTestName} PRIVATE
   ${PROJECT_SOURCE_DIR}/shared
