@@ -33,11 +33,6 @@ handle_opts (int argc, char *argv[])
 	    {
 	      g_log_lv = LogLv::DEBUG;
 	    }
-	  else if (strcmp (argv[i], "--lang") == 0 && i + 1 < argc
-		   && strlen (argv[i + 1]) >= 5)
-	    {
-	      tgf::PREFER_LANG = tgf::lang_from_cstr (argv[++i]);
-	    }
 	  else if (strcmp (argv[i], "--help") == 0)
 	    {
 	      print_usage (argv);
@@ -57,6 +52,9 @@ main (int argc, char *argv[])
   bool is_handled = handle_opts (argc, argv);
   if (is_handled)
     return 0;
+
+  // typically initialized by tgf-conf
+  tgf::PREFER_LANG = tgf_data.get_pref_lang ();
 
   if (!tgf::try_ensure_locale ())
     lvlog (LogLv::WARNING, "Available utf8 locales not found");
