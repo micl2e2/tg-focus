@@ -8,7 +8,7 @@
 
 #include "collector.hh"
 #include "tgf_data.hh"
-#include "tf_msg.hh"
+#include "tgf_msg.hh"
 
 extern std::atomic<std::uint32_t> it_cnt_switcher;
 extern std::atomic<std::uint32_t> it_cnt_producer;

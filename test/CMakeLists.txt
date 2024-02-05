@@ -13,7 +13,7 @@ set(CurrTestName tst_focus_filter_config)
 add_executable(${CurrTestName} ${CurrTestName}.cc
    ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc
    ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
-   ${PROJECT_SOURCE_DIR}/shared/tf_msg.cc
+   ${PROJECT_SOURCE_DIR}/shared/tgf_msg.cc
    ${PROJECT_SOURCE_DIR}/shared/tgf_locale.cc
 )
 target_include_directories(${CurrTestName} PRIVATE
@@ -26,7 +26,7 @@ set(CurrTestName focus_filter_test)
 add_executable(${CurrTestName} ${CurrTestName}.cc
    ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc
    ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
-   ${PROJECT_SOURCE_DIR}/shared/tf_msg.cc
+   ${PROJECT_SOURCE_DIR}/shared/tgf_msg.cc
       ${PROJECT_SOURCE_DIR}/shared/tgf_locale.cc
 
 )
@@ -46,9 +46,9 @@ target_include_directories(${CurrTestName} PRIVATE
 add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 
 # add a test
-set(CurrTestName tf_msg_test)
+set(CurrTestName tgf_msg)
 add_executable(${CurrTestName} ${CurrTestName}.cc
-  ${PROJECT_SOURCE_DIR}/shared/tf_msg.cc
+  ${PROJECT_SOURCE_DIR}/shared/tgf_msg.cc
   ${PROJECT_SOURCE_DIR}/shared/tgf_locale.cc
 )
 target_include_directories(${CurrTestName} PRIVATE ${PROJECT_SOURCE_DIR}/shared)

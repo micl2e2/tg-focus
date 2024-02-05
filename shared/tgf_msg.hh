@@ -1,5 +1,5 @@
-#ifndef _TF_MSG_H
-#define _TF_MSG_H
+#ifndef _TGF_MSG_H
+#define _TGF_MSG_H
 
 #include <iostream>
 #include <stdint.h>

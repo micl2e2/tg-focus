@@ -6,7 +6,7 @@
 #include "lv_log.hh"
 #include "state.hh"
 #include "focus_filter.hh"
-#include "tf_msg.hh"
+#include "tgf_msg.hh"
 
 void
 focusd_producer ()

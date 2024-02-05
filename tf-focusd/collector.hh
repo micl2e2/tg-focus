@@ -16,7 +16,7 @@
 #include <td/telegram/td_api.h>
 #include <td/telegram/td_api.hpp>
 
-#include "tf_msg.hh"
+#include "tgf_msg.hh"
 #include "tgf_data.hh"
 
 namespace td_api = td::td_api;
