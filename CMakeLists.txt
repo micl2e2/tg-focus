@@ -31,12 +31,12 @@ endif()
 execute_process(COMMAND bash ${PROJECT_SOURCE_DIR}/dev/before-compile.bash)
 find_package(Td 1.8.23 REQUIRED)
 
-# tf-conf
+# tgf-conf
 add_executable(
-  tf-conf
-  ${PROJECT_SOURCE_DIR}/tf-conf/tf_conf.cc
-  ${PROJECT_SOURCE_DIR}/tf-conf/state.cc
-  ${PROJECT_SOURCE_DIR}/tf-conf/auth.cc
+  tgf-conf
+  ${PROJECT_SOURCE_DIR}/tgf-conf/tgf_conf.cc
+  ${PROJECT_SOURCE_DIR}/tgf-conf/state.cc
+  ${PROJECT_SOURCE_DIR}/tgf-conf/auth.cc
   ${PROJECT_SOURCE_DIR}/shared/tgf_data.cc
   ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
   ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc
@@ -44,17 +44,17 @@ add_executable(
   ${PROJECT_SOURCE_DIR}/shared/tgf_locale.cc
 )
 target_include_directories(
-  tf-conf
+  tgf-conf
   PRIVATE ${PROJECT_SOURCE_DIR}/shared
   PRIVATE ${PROJECT_SOURCE_DIR}/3rd/toml11
 )
 target_link_libraries(
-  tf-conf
+  tgf-conf
   PRIVATE Td::TdStatic
 )
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   target_link_libraries(
-    tf-conf
+    tgf-conf
     PRIVATE -static-libgcc -static-libstdc++
   )
 endif()
