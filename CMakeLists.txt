@@ -60,13 +60,13 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 endif()
 
 
-# tf-focusd
+# tgf-focusd
 add_executable(
-  tf-focusd
-  ${PROJECT_SOURCE_DIR}/tf-focusd/tf_focusd.cc
-  ${PROJECT_SOURCE_DIR}/tf-focusd/state.cc
-  ${PROJECT_SOURCE_DIR}/tf-focusd/worker.cc
-  ${PROJECT_SOURCE_DIR}/tf-focusd/collector.cc
+  tgf-focusd
+  ${PROJECT_SOURCE_DIR}/tgf-focusd/tgf_focusd.cc
+  ${PROJECT_SOURCE_DIR}/tgf-focusd/state.cc
+  ${PROJECT_SOURCE_DIR}/tgf-focusd/worker.cc
+  ${PROJECT_SOURCE_DIR}/tgf-focusd/collector.cc
   ${PROJECT_SOURCE_DIR}/shared/tgf_data.cc
   ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
   ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc
@@ -75,17 +75,17 @@ add_executable(
   ${PROJECT_SOURCE_DIR}/shared/tgf_locale.cc  
 )
 target_include_directories(
-  tf-focusd
+  tgf-focusd
   PRIVATE ${PROJECT_SOURCE_DIR}/shared
   PRIVATE ${PROJECT_SOURCE_DIR}/3rd/toml11
 )
 target_link_libraries(
-  tf-focusd
+  tgf-focusd
   PRIVATE Td::TdStatic
 )
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   target_link_libraries(
-    tf-focusd
+    tgf-focusd
     PRIVATE -static-libgcc -static-libstdc++
   )
 endif()
