@@ -185,9 +185,9 @@ TdAuth::on_authorization_state_update ()
 	this->is_authorized = true;
 
 	// persistant
-	tf_data.set_api_id (std::to_string (this->api_id_));
-	tf_data.set_api_hash (std::move (this->api_hash_));
-	tf_data.set_auth_hint (true);
+	tgf_data.set_api_id (std::to_string (this->api_id_));
+	tgf_data.set_api_hash (std::move (this->api_hash_));
+	tgf_data.set_auth_hint (true);
 
 	is_login.store (true, std::memory_order_release);
 
@@ -248,10 +248,10 @@ TdAuth::on_authorization_state_update ()
 	std::string may_api_id;
 	std::string api_hash;
 
-	if (tf_data.get_auth_hint ())
+	if (tgf_data.get_auth_hint ())
 	  {
-	    api_id = tf_data.get_api_id_as_int32 ();
-	    api_hash = tf_data.get_api_hash ();
+	    api_id = tgf_data.get_api_id_as_int32 ();
+	    api_hash = tgf_data.get_api_hash ();
 	  }
 	else
 	  {
@@ -268,7 +268,7 @@ TdAuth::on_authorization_state_update ()
 	  }
 
 	auto request = td_api::make_object<td_api::setTdlibParameters> ();
-	request->database_directory_ = tf_data.path_tddata ();
+	request->database_directory_ = tgf_data.path_tddata ();
 	request->use_message_database_ = true;
 	request->use_secret_chats_ = true;
 	request->api_id_ = api_id;

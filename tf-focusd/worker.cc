@@ -28,7 +28,7 @@ focusd_producer ()
 bool
 need_collect (const TgMsg &msg)
 {
-  auto tomlstr = tf_data.get_filters ();
+  auto tomlstr = tgf_data.get_filters ();
   lvlog (LogLv::INFO,
 	 " consumer_iter:", it_cnt_consumer.load (std::memory_order_relaxed),
 	 " filters reloaded");
@@ -51,7 +51,7 @@ focusd_consumer ()
 
       is_csm_mq.wait (false, std::memory_order_acquire);
 
-      if (!tf_data.is_tgfid_valid () && !collector.tried_create_tgfchat)
+      if (!tgf_data.is_tgfid_valid () && !collector.tried_create_tgfchat)
 	{
 	  collector.try_create_tgfchat ();
 	  continue;
@@ -62,7 +62,7 @@ focusd_consumer ()
 	std::lock_guard<std::mutex> mq_guard (mq_lock);
 
 	// if (mq.size () > 0 && collector.done_create_collector)
-	if (mq.size () > 0 && tf_data.is_tgfid_valid ())
+	if (mq.size () > 0 && tgf_data.is_tgfid_valid ())
 	  {
 	    lvlog (LogLv::DEBUG, "consumer_iter:",
 		   it_cnt_consumer.load (std::memory_order_relaxed),

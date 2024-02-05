@@ -18,13 +18,13 @@
 
 #include "common.hh"
 #include "lv_log.hh"
-#include "tf_data.hh"
+#include "tgf_data.hh"
 #include "collector.hh"
 
 extern std::vector<TgMsg> mq;
 extern std::mutex mq_lock;
 extern std::atomic<bool> is_csm_mq;
-extern TgFocusData tf_data;
+extern TgFocusData tgf_data;
 extern std::atomic<std::uint32_t> it_cnt_producer;
 extern std::atomic<std::uint32_t> it_cnt_consumer;
 
@@ -67,7 +67,7 @@ TdCollector::init ()
 void
 TdCollector::try_create_tgfchat () // FIXME: is try
 {
-  if (this->is_authorized && !tf_data.is_tgfid_valid ()
+  if (this->is_authorized && !tgf_data.is_tgfid_valid ()
       && !this->tried_create_tgfchat)
     // if (this->is_authorized && !this->tried_create_tgfchat
     // && !this->done_create_collector)
@@ -84,7 +84,7 @@ TdCollector::try_create_tgfchat () // FIXME: is try
 			       " chat id:", chat->id_,
 			       " chat title:", chat->title_);
 			// this->collector_id = chat->id_;
-			tf_data.set_tgfid (static_cast<int64_t> (chat->id_));
+			tgf_data.set_tgfid (static_cast<int64_t> (chat->id_));
 			// this->done_create_collector = true;
 		      }
 		  });
@@ -129,7 +129,7 @@ TdCollector::collect_msg (const TgMsg &msg, size_t c_count)
   td_api::object_ptr<td_api::Function> send_message_request
     = td_api::make_object<td_api::sendMessage> (
       // this->collector_id, //
-      tf_data.get_tgfid (), //
+      tgf_data.get_tgfid (), //
       0, nullptr, nullptr, nullptr,
       td_api::make_object<td_api::inputMessageText> (std::move (message_text),
 						     nullptr, true));
@@ -152,7 +152,7 @@ TdCollector::collect_msg (const TgMsg &msg, size_t c_count)
 	    || error->message_.find ("Chat not found") != std::string::npos)
 	  {
 	    this->tried_create_tgfchat = false;
-	    tf_data.set_tgfid (-1);
+	    tgf_data.set_tgfid (-1);
 	  }
       }
   });
@@ -419,11 +419,11 @@ TdCollector::on_authorization_state_update ()
 	std::string inbuf;
 
 	auto request = td_api::make_object<td_api::setTdlibParameters> ();
-	request->database_directory_ = tf_data.path_tddata ();
+	request->database_directory_ = tgf_data.path_tddata ();
 	request->use_message_database_ = true;
 	request->use_secret_chats_ = true;
-	request->api_id_ = tf_data.get_api_id_as_int32 ();
-	request->api_hash_ = tf_data.get_api_hash (); //
+	request->api_id_ = tgf_data.get_api_id_as_int32 ();
+	request->api_hash_ = tgf_data.get_api_hash (); //
 	request->system_language_code_ = "en";
 	request->device_model_ = TF_DEV;
 	request->application_version_ = TF_VER;

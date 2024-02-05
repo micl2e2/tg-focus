@@ -63,19 +63,19 @@ main (int argc, char *argv[])
   else
     lvlog (LogLv::WARNING, tgf::HOST_LANG);
 
-  while (!tf_data.get_auth_hint ())
+  while (!tgf_data.get_auth_hint ())
     {
       lvlog (LogLv::INFO, "Waiting for authorization");
       std::this_thread::sleep_for (std::chrono::seconds (3));
     }
 
-  if (!tf_data.get_auth_hint ())
+  if (!tgf_data.get_auth_hint ())
     {
       lvlog (LogLv::INFO, "Not authorized");
       return 1;
     }
 
-  // tf_data.init()
+  // tgf_data.init()
 
   collector.init ();
 

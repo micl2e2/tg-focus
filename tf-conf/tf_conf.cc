@@ -55,7 +55,7 @@ Available Commands:
 int
 handle_version ()
 {
-  tgf::PREFER_LANG = tf_data.get_pref_lang ();
+  tgf::PREFER_LANG = tgf_data.get_pref_lang ();
 
   if (!tgf::try_ensure_locale ())
     lvlog (LogLv::WARNING, "Available utf8 locales not found");
@@ -91,10 +91,10 @@ handle_auth_reset ()
   std::error_code ec;
 
   // first
-  tf_data.set_auth_hint (false);
+  tgf_data.set_auth_hint (false);
 
   // second
-  auto del_res = std::filesystem::remove_all (tf_data.path_tddata (), ec);
+  auto del_res = std::filesystem::remove_all (tgf_data.path_tddata (), ec);
   if (del_res == static_cast<std::uintmax_t> (-1))
     return 1;
 
@@ -106,10 +106,10 @@ handle_auth_reset ()
 int
 handle_filters ()
 {
-  if (!tf_data.prepare_filters_tmp ())
+  if (!tgf_data.prepare_filters_tmp ())
     return 2;
 
-  auto fpath = tf_data.path_filters_tmp ();
+  auto fpath = tgf_data.path_filters_tmp ();
   auto fpath_cstr = fpath.c_str ();
 
   std::string runcmd = "nano ";
@@ -138,7 +138,7 @@ handle_filters ()
       if (FocusFilterList::is_valid (reader.read_to_string ().value_or ("-")))
 	{
 	  lvlog (LogLv::INFO, "Saving filters...");
-	  tf_data.set_filters (tf_data.get_filters_tmp ());
+	  tgf_data.set_filters (tgf_data.get_filters_tmp ());
 	}
       else
 	lvlog (LogLv::ERROR, "ERROR: Invalid filters");
@@ -160,7 +160,7 @@ int
 handle_lang (const char *lang_code)
 {
   tgf::Lang l = tgf::lang_from_cstr (lang_code);
-  tf_data.set_pref_lang (l);
+  tgf_data.set_pref_lang (l);
   tgf::PREFER_LANG = l;
   tgf::try_ensure_locale ();
   bool is_good = tgf::HOST_LANG == l;

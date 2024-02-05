@@ -37,7 +37,7 @@ add_executable(
   ${PROJECT_SOURCE_DIR}/tf-conf/tf_conf.cc
   ${PROJECT_SOURCE_DIR}/tf-conf/state.cc
   ${PROJECT_SOURCE_DIR}/tf-conf/auth.cc
-  ${PROJECT_SOURCE_DIR}/shared/tf_data.cc
+  ${PROJECT_SOURCE_DIR}/shared/tgf_data.cc
   ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
   ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc
   ${PROJECT_SOURCE_DIR}/shared/lv_log.cc
@@ -67,7 +67,7 @@ add_executable(
   ${PROJECT_SOURCE_DIR}/tf-focusd/state.cc
   ${PROJECT_SOURCE_DIR}/tf-focusd/worker.cc
   ${PROJECT_SOURCE_DIR}/tf-focusd/collector.cc
-  ${PROJECT_SOURCE_DIR}/shared/tf_data.cc
+  ${PROJECT_SOURCE_DIR}/shared/tgf_data.cc
   ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
   ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc
   ${PROJECT_SOURCE_DIR}/shared/tf_msg.cc

@@ -12,7 +12,7 @@
 
 #include "common.hh"
 
-#include "tf_data.hh"
+#include "tgf_data.hh"
 
 namespace fs = std::filesystem;
 
