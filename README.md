@@ -194,7 +194,7 @@ API HASH, your phone number(in international format), and a login
 code, the first two can be obtained in https://my.telegram.org:
 
 ```sh
-docker exec -it CONTAINER-NAME tf-conf auth
+docker exec -it CONTAINER-NAME tgf-conf auth
 ```
 
 3. If logined successfullly, a new chat named *TG-FOCUS* will be
@@ -207,7 +207,7 @@ docker exec -it CONTAINER-NAME tf-conf auth
    to receive on that chat. See [examples](#filter-examples).
 
 ```sh
-docker exec -it CONTAINER-NAME tf-conf filters
+docker exec -it CONTAINER-NAME tgf-conf filters
 ```
 
 (NOTE: This will open the embeded [GNU
@@ -237,17 +237,17 @@ your phone number(in international format) and a login code, the first two
 can be obtained in https://my.telegram.org:
 
 ```sh
-/path/to/tf-conf auth
+/path/to/tgf-conf auth
 ```
 
 3. Launch tg-focus daemon:
 
 ```sh
 # run in foreground
-/path/to/tf-focusd
+/path/to/tgf-focusd
 
 # or run in background
-nohup /path/to/tf-focusd &
+nohup /path/to/tgf-focusd &
 ```
 
 4. If logined successfullly, a new chat named `TG-FOCUS` will be
@@ -261,7 +261,7 @@ nohup /path/to/tf-focusd &
    to receive on that chat. See [examples](#filter-examples).
 
 ```sh
-/path/to/tf-conf filters
+/path/to/tgf-conf filters
 ```
 
 (NOTE: This will open the [GNU nano](https://www.nano-editor.org/)
