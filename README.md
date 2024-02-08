@@ -21,7 +21,7 @@
 - [Q & A](#qa)
   - [Can I trust tg-focus?](#can-i-trust-tg-focus)
   - [What makes tg-focus a gentle User Bot?](#what-makes-tg-focus-a-gentle-user-bot)
-  - [Too many TG-FOCUS chats created, what should I do?](#too-many-tg-focus-chats-created-what-should-i-do)
+hould-i-do)
 - [Development](#development)
   - [Dependencies](#dependencies)
   - [Buidling](#building)
@@ -457,29 +457,6 @@ there is **no** reason for tg-focus users to worry about whether any
 existing or new features will be harmful or not. By the time of
 updates, tg-focus will remain **gentle**.
 
-
-## Too many TG-FOCUS chats created, what should I do?
-
-tg-focus creates a TG-FOCUS chat whenever tg-focus starts or restarts,
-it is not a bug or defeat, but an **intended** behavior. If there are
-many TG-FOCUS chats created, it is probably a misuse case and all you can
-do is delete them manually. Here are some reasons justifying that:
-
-1. tg-focus was originally developed as a
-   long-running server-side application, restarting shall not be
-   performed frequently.
-
-2. Each tg-focus instance has its own filter configuration, hence one
-   chat for one instance. Each of them is independent so that no one
-   could possibly interfere with another.
-
-3. Being a [gentle](#what-makes-tg-focus-a-gentle-user-bot) User Bot
-   results in such behavior. 
-   
-
-
-
-
 # Development
 
 **Note** that currently the development is documented only for Linux 
@@ -509,10 +486,10 @@ bash dev/install-deps.bash
 cmake -DCMAKE_BUILD_TYPE=Release -B build
 
 # Build
-cmake --build build
+cd build && make
 
 # Test
-cd build && ctest
+cd build && TZ=UTC make test
 ```
 
 # Contributing
