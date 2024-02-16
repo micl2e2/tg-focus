@@ -82,7 +82,7 @@ try_ensure_locale ()
   // FIXME: use constant instead
   vector<tuple<const char *, Lang>> lclist = {
     // {"C.UTF-8", unknown}, // we dont need this
-    {STRNAME_en_HK, en_HK}, {STRNAME_en_US, en_US}, {STRNAME_en_ZW, en_ZW},
+    {STRNAME_en_US, en_US}, {STRNAME_en_HK, en_HK}, {STRNAME_en_ZW, en_ZW},
     {STRNAME_zh_CN, zh_CN}, {STRNAME_zh_HK, zh_HK},
   };
 
