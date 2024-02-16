@@ -16,13 +16,13 @@ tg-focus can be confirmed by command =tgf-conf version=).
 
 Placeholders are:
 
-| Placeholder      | Meaning                             |
-|------------------+-------------------------------------|
-| FWDED_HDR_CHAT   | The header name for "Chat" field    |
-| FWDED_HDR_Sender | The header name for "Sender" field  |
-| FWDED_HDR_MSG    | The header name for "Content" field |
-| FWDED_HDR_DATE   | The header name for "Date" field    |
-| FWDED_HDR_ID     | The header name for "ID" field      |
+| Placeholder      | Meaning                     |
+|------------------+-----------------------------|
+| FWDED_HDR_CHAT   | The name of "Chat" field    |
+| FWDED_HDR_Sender | The name of "Sender" field  |
+| FWDED_HDR_MSG    | The name of "Content" field |
+| FWDED_HDR_DATE   | The name of "Date" field    |
+| FWDED_HDR_ID     | The name of "ID" field      |
 
 The placeholder-text mapping is listed in =dev/i18n.csv=.
 
@@ -47,8 +47,8 @@ This will reassemble a new message as the following:
 Therefore, if you want to add another new language support, you can:
 
 1. Find the corresponding code for your language in =dev/i18n.csv=.
-2. Fill the empty columns("-") using your language.
-3. Submit your contribution by openning a pull request.
+2. Fill the empty columns(filled with =-=) using your language.
+3. Submit your translation (via a pull request or an issue).
 4. Done.
 
 
