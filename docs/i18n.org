@@ -10,7 +10,7 @@ All messages collected by tg-focus will reassemble, in such form:
 [ <FWDED_HDR_ID> ] EEEEEE
 #+end_src
 
-The placeholders =<...>= will all be replaced by specific text
+All placeholders =<...>= will be replaced eventually by specific text
 depending on the language used by tg-focus(the language used by
 tg-focus can be confirmed by command =tgf-conf version=).
 
@@ -43,5 +43,13 @@ This will reassemble a new message as the following:
 [ DATE ] DDDDDD
 [ ID ] EEEEEE
 #+end_src
+
+Therefore, if you want to add another new language support, you can:
+
+1. Find the corresponding code for your language in =dev/i18n.csv=.
+2. Fill the empty columns("-") using your language.
+3. Submit your contribution by openning a pull request.
+4. Done.
+
 
 

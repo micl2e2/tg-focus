@@ -160,7 +160,7 @@ to the list by opening an issue or a pull request.
 |                          |                                           |
 
 **Note:** More languages can be supported! Follow the internationalization
-instructions(`docs/internationalization.org`) to add your language.
+instructions(`docs/i18n.org`) to add your language.
 
 # How To Use
 
