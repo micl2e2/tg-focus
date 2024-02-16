@@ -13,7 +13,7 @@ enum Lang HOST_LANG = Lang::unknown;
 enum Lang PREFER_LANG = Lang::unknown;
 
 //
-// Currently supported languages: en_HK, en_US, zh_CN, zh_HK
+// Currently supported languages:  en_US, en_HK, en_ZW, zh_CN, zh_HK
 //
 const char *STRNAME_unknown = "?-?";
 const char *STRNAME_en_HK = "en-HK";
@@ -49,21 +49,16 @@ lang_to_cstr (Lang l)
     {
     case Lang::en_HK:
       return STRNAME_en_HK;
-      break;
     case Lang::en_US:
       return STRNAME_en_US;
-      break;
     case Lang::en_ZW:
       return STRNAME_en_ZW;
     case Lang::zh_CN:
       return STRNAME_zh_CN;
-      break;
     case Lang::zh_HK:
       return STRNAME_zh_HK;
-      break;
     default:
       return STRNAME_unknown;
-      break;
     }
 }
 

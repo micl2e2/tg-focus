@@ -250,18 +250,24 @@ main ()
     {
       test_should_decorate_en_us ();
     }
+  else
+    assert (false);
 
   tgf::PREFER_LANG = tgf::Lang::zh_HK;
   if (tgf::try_ensure_locale () && tgf::HOST_LANG == tgf::PREFER_LANG)
     {
       test_should_decorate_zh_hk ();
     }
+  else
+    assert (false);
 
   tgf::PREFER_LANG = tgf::Lang::zh_CN;
   if (tgf::try_ensure_locale () && tgf::HOST_LANG == tgf::PREFER_LANG)
     {
       test_should_decorate_zh_cn ();
     }
+  else
+    assert (false);
 
   return 0;
 }

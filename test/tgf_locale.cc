@@ -6,12 +6,15 @@
 
 using namespace std;
 
+// locales that must have during test
 void
 locales_must_have ()
 {
   if (setlocale (LC_ALL, "en_HK.UTF-8") == nullptr
       || setlocale (LC_ALL, "en_US.UTF-8") == nullptr
-      || setlocale (LC_ALL, "en_ZW.UTF-8") == nullptr)
+      || setlocale (LC_ALL, "en_ZW.UTF-8") == nullptr
+      || setlocale (LC_ALL, "zh_CN.UTF-8") == nullptr
+      || setlocale (LC_ALL, "zh_HK.UTF-8") == nullptr)
     assert (false);
 
   if (setlocale (LC_ALL, "C") == nullptr)
@@ -51,6 +54,14 @@ main ()
   // init: en_ZW
   init_and_prefer ("en_ZW.UTF-8", tgf::Lang::en_US, tgf::Lang::en_HK);
   init_and_prefer ("en_ZW.UTF-8", tgf::Lang::en_HK, tgf::Lang::en_US);
+
+  // init: zh_CN
+  init_and_prefer ("zh_CN.UTF-8", tgf::Lang::en_US, tgf::Lang::zh_HK);
+  init_and_prefer ("zh_CN.UTF-8", tgf::Lang::zh_HK, tgf::Lang::en_US);
+
+  // init: zh_HK
+  init_and_prefer ("zh_HK.UTF-8", tgf::Lang::en_US, tgf::Lang::zh_CN);
+  init_and_prefer ("zh_HK.UTF-8", tgf::Lang::zh_CN, tgf::Lang::en_US);
 
   return 0;
 }

@@ -45,8 +45,11 @@ Available Commands:
 
                     Currently supported languages:
                     - <LANG-CODE>: <LANGUAGE> (<REGION>)
-                    - en_US: English (United States)
-                    - en_GB: English (United Kingdom)
+                    - en-HK: English (Hong Kong)
+                    - en-US: English (United States)
+                    - en-ZW: English (Zimbabwe)
+                    - zh-CN: Chinese (Mainland China)
+                    - zh-HK: Chinese (Hong Kong)
 )",
 	  argv[0]);
   return 0;
