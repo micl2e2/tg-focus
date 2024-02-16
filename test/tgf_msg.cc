@@ -16,7 +16,7 @@ test_not_decorate ()
 [ SENDER ] michael2 | TG-Focusing
 [ CONTENT ] XXXXXXXXX
 [ DATE ] 2024-01-20 08:52:04 +0000 UTC
-[ ID ] -1
+[ ID ] 0
 )";
     cout << msg_lcstr << endl;
     assert (msg_lcstr == expected);
@@ -42,7 +42,7 @@ test_should_decorate_en_us ()
 [ SENDER ] michael2 | TG-Focusing
 [ CONTENT ] 好好好好好好好好好好好好好好好。
 [ DATE ] 2024-01-20 08:52:04 +0000 UTC
-[ ID ] -1
+[ ID ] 0
 )";
     cout << msg_lcstr << endl;
     assert (msg_lcstr == expected);
@@ -68,7 +68,7 @@ test_should_decorate_en_us ()
 [ SENDER ] michael2 | TG-Focusing
 [ CONTENT ] ののののののののAA...
 [ DATE ] 2024-01-20 08:52:04 +0000 UTC
-[ ID ] -1
+[ ID ] 0
 )";
     cout << msg_lcstr << endl;
     assert (msg_lcstr == expected);
@@ -94,7 +94,7 @@ test_should_decorate_en_us ()
 [ SENDER ] michael2 | TG-Focusing
 [ CONTENT ] 🤣🤣🤣🤣🤣🤣🤣🤣AA...
 [ DATE ] 2024-01-20 08:52:04 +0000 UTC
-[ ID ] -1
+[ ID ] 0
 )";
     cout << msg_lcstr << endl;
     assert (msg_lcstr == expected);
@@ -129,7 +129,7 @@ test_should_decorate_en_us ()
 [ SENDER ] michael2🐰🐭🐹🐻🐶🐱🌼🏵️💮🌸🪷🌺 | TG-Focusing
 [ CONTENT ] 🤣🤣🤣🤣🤣のののののAAAAA好好好好好
 [ DATE ] 2024-01-20 08:52:04 +0000 UTC
-[ ID ] -1
+[ ID ] 0
 )";
     cout << msg_lcstr << endl;
     assert (msg_lcstr == expected);
@@ -156,7 +156,7 @@ test_should_decorate_en_us ()
 [ SENDER ] michael2 | TG-Focusing
 [ CONTENT ] aaa😮‍💨😮‍💨😮‍💨aaa
 [ DATE ] 2024-01-20 08:52:04 +0000 UTC
-[ ID ] -1
+[ ID ] 0
 )";
     cout << msg_lcstr << endl;
     assert (msg_lcstr == expected);
@@ -188,7 +188,7 @@ test_should_decorate_zh_cn ()
 [ 用户 ] michael2
 [ 信息 ] 好好好。
 [ 时间 ] 2024-01-20 08:52:04 +0000 UTC
-[ 标识 ] -1
+[ 标识 ] 0
 )";
     cout << msg_lcstr << endl;
     assert (msg_lcstr == expected);
@@ -218,7 +218,7 @@ test_should_decorate_zh_hk ()
 [ 用戶 ] michael2
 [ 訊息 ] 好好好。
 [ 時間 ] 2024-01-20 08:52:04 +0000 UTC
-[ 標識 ] -1
+[ 標識 ] 0
 )";
     cout << msg_lcstr << endl;
     assert (msg_lcstr == expected);

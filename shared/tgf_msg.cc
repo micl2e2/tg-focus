@@ -21,6 +21,7 @@ TgMsg::TgMsg (std::string &&chat_title, std::string &&sender,
   this->sender_ = std::move (sender);
   this->txt_ = std::move (text_content);
   this->tstamp_ = make_timestamp_readable (tstamp);
+  this->id_ = 0;
 }
 
 TgMsg::TgMsg (std::string &chat_title, std::string &sender,
@@ -30,6 +31,7 @@ TgMsg::TgMsg (std::string &chat_title, std::string &sender,
   this->sender_ = (sender);
   this->txt_ = (text_content);
   this->tstamp_ = make_timestamp_readable (tstamp);
+  this->id_ = 0;
 }
 
 std::string
@@ -54,7 +56,7 @@ TgMsg::to_locale_string () const
 	ret += this->tstamp_;
 	ret += "\n";
 	ret += "[ 標識 ] ";
-	ret += "-1";
+	ret += std::to_string (this->id_);
 	ret += "\n";
 
 	// R"([ 群组 ] {}
@@ -80,7 +82,7 @@ TgMsg::to_locale_string () const
 	ret += this->tstamp_;
 	ret += "\n";
 	ret += "[ 标识 ] ";
-	ret += "-1";
+	ret += std::to_string (this->id_);
 	ret += "\n";
 
 	// R"([ 群组 ] {}
@@ -106,7 +108,7 @@ TgMsg::to_locale_string () const
 	ret += this->tstamp_;
 	ret += "\n";
 	ret += "[ ID ] ";
-	ret += "-1";
+	ret += std::to_string (this->id_);
 	ret += "\n";
 
 	// R"([ CHAT ] {}
@@ -129,7 +131,8 @@ operator<< (std::ostream &os, const TgMsg &msg)
      << "<title," << msg.title_ << ">"
      << "<sender," << msg.sender_ << ">"
      << "<txt," << msg.txt_ << ">"
-     << "<tstamp," << msg.tstamp_ << ">";
+     << "<tstamp," << msg.tstamp_ << ">"
+     << "<id," << msg.id_ << ">";
   return os;
 }
 

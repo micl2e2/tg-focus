@@ -35,6 +35,8 @@ public:
 
   inline const std::string &get_timestamp () const { return this->tstamp_; }
 
+  inline void set_id (uint32_t n) { this->id_ = n; }
+
   std::string to_locale_string () const;
 
   std::string to_string () const
@@ -65,6 +67,7 @@ private:
   std::string sender_;
   std::string txt_;
   std::string tstamp_;
+  std::uint32_t id_;
 };
 
 // Check host environment supports decoration.

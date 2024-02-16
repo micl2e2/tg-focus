@@ -116,7 +116,7 @@ decorate_msg (const std::string &msg)
 }
 
 void
-TdCollector::collect_msg (const TgMsg &msg, size_t c_count)
+TdCollector::collect_msg (const TgMsg &msg)
 {
   std::string tfmsg_str = msg.to_locale_string ();
 

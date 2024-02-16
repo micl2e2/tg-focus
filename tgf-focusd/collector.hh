@@ -38,7 +38,7 @@ public:
   void try_create_tgfchat ();
   //
   // send message to collector chat
-  void collect_msg (const TgMsg &msg, size_t c_count);
+  void collect_msg (const TgMsg &msg);
 
   //
   // signal td client to fetch updates
