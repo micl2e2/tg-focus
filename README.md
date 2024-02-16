@@ -143,23 +143,24 @@ the message that sent from the users we don't want.
 | Void Linux          | ✅              |
 |                     |                 |
 
-NOTE: this is not an exhaustive list, missing platforms can be added
+**Note**: this is not an exhaustive list, missing platforms can be added
 to the list by opening an issue or a pull request.
 
 
 # Supported Languages
 
-| Language                 | Status                                             |
-|--------------------------|----------------------------------------------------|
-| English (Hong Kong)      | ✅                                                 |
-| English (United States)  | ✅                                                 |
-| English (Zimbabwe)       | ✅                                                 |
-| Chinese (Mainland China) | ✅                                                 |
-| Chinese (Hong Kong)      | ✅                                                 |
-| Others                   | [Add Support](https://github.com/micl2e2/tg-focus) |
-|                          |                                                    |
+| Language                 | Status                                    |
+|--------------------------|-------------------------------------------|
+| English (Hong Kong)      | ✅                                        |
+| English (United States)  | ✅                                        |
+| English (Zimbabwe)       | ✅                                        |
+| Chinese (Mainland China) | ✅                                        |
+| Chinese (Hong Kong)      | ✅                                        |
+| Others                   | [Add Your Language](#supported-languages) |
+|                          |                                           |
 
-
+**Note:** More languages can be supported! Follow the internationalization
+instructions(`docs/internationalization.org`) to add your language.
 
 # How To Use
 

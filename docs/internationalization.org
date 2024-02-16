@@ -1,0 +1,47 @@
+* Message Format
+
+All messages collected by tg-focus will reassemble, in such form:
+
+#+begin_src raw
+[ <FWDED_HDR_CHAT> ] AAAAAA
+[ <FWDED_HDR_SENDER> ] BBBBBB
+[ <FWDED_HDR_MSG> ] CCCCCC
+[ <FWDED_HDR_DATE> ] DDDDDD
+[ <FWDED_HDR_ID> ] EEEEEE
+#+end_src
+
+The placeholders =<...>= will all be replaced by specific text
+depending on the language used by tg-focus(the language used by
+tg-focus can be confirmed by command =tgf-conf version=).
+
+Placeholders are:
+
+| Placeholder      | Meaning                             |
+|------------------+-------------------------------------|
+| FWDED_HDR_CHAT   | The header name for "Chat" field    |
+| FWDED_HDR_Sender | The header name for "Sender" field  |
+| FWDED_HDR_MSG    | The header name for "Content" field |
+| FWDED_HDR_DATE   | The header name for "Date" field    |
+| FWDED_HDR_ID     | The header name for "ID" field      |
+
+The placeholder-text mapping is listed in =dev/i18n.csv=.
+
+For example, for language "English (United States)", the corresponding
+language code is "en_US", which has corresponding row in
+=dev/i18n.csv=:
+
+| TGF_LANG | FWDED_HDR_CHAT | FWDED_HDR_SENDER | FWDED_HDR_MSG | FWDED_HDR_DATE | FWDED_HDR_ID | - |
+|----------+----------------+------------------+---------------+----------------+--------------+---|
+| en_US    | CHAT           | SENDER           | CONTENT       | DATE           | ID           | - |
+
+This will reassemble a new message as the following:
+
+#+begin_src raw
+[ CHAT ] AAAAAA
+[ SENDER ] BBBBBB
+[ CONTENT ] CCCCCC
+[ DATE ] DDDDDD
+[ ID ] EEEEEE
+#+end_src
+
+
