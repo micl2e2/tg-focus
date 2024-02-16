@@ -77,7 +77,7 @@ focusd_consumer ()
 		    // FIXME: too many disk io incurred by need_collect
 		    if (need_collect (curr_msg))
 		      {
-			curr_msg.set_id (consume_cnt);
+			curr_msg.set_id (consume_cnt + 1);
 			collector.collect_msg (std::move (curr_msg));
 			consume_cnt++;
 		      }
