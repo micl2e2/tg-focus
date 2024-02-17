@@ -101,6 +101,9 @@ handle_auth_reset ()
   if (del_res == static_cast<std::uintmax_t> (-1))
     return 1;
 
+  // third
+  // FIXME: tgfid cleanup
+
   lvlog (LogLv::INFO, "Reset successfully");
 
   return 0;
