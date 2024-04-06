@@ -1,0 +1,52 @@
+* Artwork Collection
+
+Hello everyone! 👋
+
+I’m looking to add some beautiful artworks to enhance the project’s
+visual appeal. However, I’m not a painter or artist myself, so I’m
+reaching out to you guys for help.
+
+** What I Need 
+
+/Icon/Logo/: I’m specifically looking for an icon or logo that
+represents the essence of tg-focus. It should be memorable, simple, 
+and reflect the main goal of the project: **focus**. 
+
+/Configuration Demonstrations/: Apart from the icon, I’d like series of
+screenshots that capture the steps for configuring tg-focus to get it
+worked, just like the ones already emebbed in README's "A Simple Demo"
+section, which are demonstrations in English. I need more languages,
+but there should be no more than 15 pics for each language.
+
+** How You Can Contribute
+
+*** Create Art
+
+If you’re an artist, designer, or just someone with a
+flair for creativity, I invite you to contribute your artwork! Whether
+it’s a hand-drawn sketch, a digital masterpiece, or anything in
+between, your work will be appreciated. 
+
+*** Submit Your Art
+
+To contribute, simply create an issue in this
+repository and upload your artwork files. Feel free to provide a brief
+description of your inspiration or the story behind your creation. 
+
+*** License
+
+By contributing, you agree to release your artwork under an
+open source license (such as MIT, CC BY, or similar). This ensures
+that others can freely use and modify your work while giving you
+proper credit. 
+
+** Recognition and Rewards
+
+Credits: In the project description, I’ll prominently credit all
+artists whose work is included. Your name (or GitHub account) will be
+featured alongside the respective artwork. 
+
+Rewards: As a token of appreciation, I’m open to offering
+rewards.
+
+
