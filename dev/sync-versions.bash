@@ -38,7 +38,7 @@ then
     if [[ $? -eq 0 ]]
     then
 	echo 'sync: tdlib linkage version'
-	cp dev/pick-ver-tdlib{,.prev}
+	# cp dev/pick-ver-tdlib{,.prev}
     fi
 fi
 
@@ -59,7 +59,7 @@ then
     if [[ $? -eq 0 ]]
     then
 	echo 'sync: tdlib readme source'
-	cp dev/pick-src-tdlib{,.prev}
+	# cp dev/pick-src-tdlib{,.prev}
     fi
 fi
 
@@ -73,7 +73,7 @@ then
     if [[ $? -eq 0 ]]
     then
 	echo 'sync: tdlib source'
-	cp dev/pick-ver-tgfocus{,.prev}
+	# cp dev/pick-ver-tgfocus{,.prev}
     fi
 fi
 
