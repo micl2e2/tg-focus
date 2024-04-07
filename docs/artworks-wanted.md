@@ -1,27 +1,27 @@
 
 # Table of Contents
 
-1.  [Artwork Collection](#org46ebac6)
-    1.  [What I Need](#orgd3d6aa6)
-    2.  [How You Can Contribute](#org49ab7cc)
-        1.  [Create Art](#org114e046)
-        2.  [Submit Your Art](#org619863c)
-        3.  [License](#org585d62a)
-    3.  [Recognition and Rewards](#orgd475eb8)
-        1.  [Credits](#org0b7a434)
-        2.  [Rewards](#org3f9e61c)
+1.  [Artworks Wanted](#orgcf3c252)
+    1.  [What I Need](#orgfa7341e)
+    2.  [How You Can Contribute](#org3ac082f)
+        1.  [Create Art](#org71cb7fc)
+        2.  [Submit Your Art](#org7cafcdc)
+        3.  [License](#org1b77629)
+    3.  [Recognition and Rewards](#orgdbc2c9e)
+        1.  [Credits](#org4d70f89)
+        2.  [Rewards](#org2b5deef)
 
 
-<a id="org46ebac6"></a>
+<a id="orgcf3c252"></a>
 
-# Artwork Collection
+# Artworks Wanted
 
 Hello everyone! 👋 tg-focus's appearance now needs to be more
 distinguishable. So I am looking for some beautiful artworks to
 enhance the project’s appearance.
 
 
-<a id="orgd3d6aa6"></a>
+<a id="orgfa7341e"></a>
 
 ## What I Need
 
@@ -33,16 +33,16 @@ reflect the main goal of the project: **focus**.
 *Configuration Demonstrations*: Apart from the icon, I’d like series of
 screenshots that capture the steps of process configuring tg-focus to
 get it worked, just like the ones already emebbed in README's "A Simple Demo"
-section, which are demonstrations in English. I need more languages,
-but there should be no more than 15 pics for each language.
+section, which are demonstrations in English.
+I need ****more other languages**** (no more than 15 pics per language). 
 
 
-<a id="org49ab7cc"></a>
+<a id="org3ac082f"></a>
 
 ## How You Can Contribute
 
 
-<a id="org114e046"></a>
+<a id="org71cb7fc"></a>
 
 ### Create Art
 
@@ -52,16 +52,16 @@ it’s a hand-drawn sketch, a digital masterpiece, or anything in
 between, your work will be appreciated. 
 
 
-<a id="org619863c"></a>
+<a id="org7cafcdc"></a>
 
 ### Submit Your Art
 
-To contribute, simply create an issue in this
+To contribute, you can simply create an issue in this
 repository and upload your artwork files. Feel free to provide a brief
 description of your inspiration or the story behind your creation. 
 
 
-<a id="org585d62a"></a>
+<a id="org1b77629"></a>
 
 ### License
 
@@ -71,24 +71,28 @@ that others can freely use and modify your work while giving you
 proper credit. 
 
 
-<a id="orgd475eb8"></a>
+<a id="orgdbc2c9e"></a>
 
 ## Recognition and Rewards
 
+The project maintainer will pick the most appropriate one among all
+candidates for each topic. Such process will be as *objective* as
+possible. And there will be credits and rewards for those authors.
 
-<a id="org0b7a434"></a>
+
+<a id="org4d70f89"></a>
 
 ### Credits
 
-In the project description, I’ll prominently credit all artists whose
-work is included. Your name (or GitHub account) will be featured
-alongside the respective artwork.
+I’ll prominently credit all artists whose work is included, in a
+dedicated list. Your name (or GitHub account) will be featured
+alongside the respective artwork .
 
 
-<a id="org3f9e61c"></a>
+<a id="org2b5deef"></a>
 
 ### Rewards
 
-As a token of appreciation, I’m open to offering rewards. A **3-month
-Telegram Premium** gift will be at least. 
+As a token of appreciation. A **3-month Telegram Premium** gift⭐⭐⭐
+will be at least.
 
