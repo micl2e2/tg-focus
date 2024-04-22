@@ -199,7 +199,7 @@ whether your [platform](#supported-platforms) is supported or not.
 **Step 2:**
 
 Login your Telegram account first, it needs API ID, API HASH,
-your phone number(in international format) and a login code, the first two
+your phone number(in international format, cannot contain spaces, e.g., `+1234567`) and a login code, the first two
 can be obtained in https://my.telegram.org:
 
 ```sh
