@@ -6,29 +6,29 @@
 
 
 
-# Table of Contents
+# 目录
 
-- [About](#about)
-- [A Simple Demo](#a-simple-demo)
-- [Supported Platforms](#supported-platforms)
-- [Supported Languages](#supported-languages)
-- [How To Use](#how-to-use)
-  - [Hardware Requirement](#hardware-requirement)
-  - [Deployment](#deployment)
-	- [Using Prebuilt Binaries](#using-prebuilt-binaries)
-	- [Using Docker Image](#using-docker-image)
-- [Filtering Rules](#filtering-rules)
-  - [Filter Examples](#filter-examples)
-- [Q & A](#qa)
-  - [Can I trust tg-focus?](#can-i-trust-tg-focus)
-  - [What makes tg-focus a gentle User Bot?](#what-makes-tg-focus-a-gentle-user-bot)
-- [Development](#development)
-- [Contributing](#contributing)
-- [License](#license)
+- [关于](#关于)
+- [一个简单的演示](#一个简单的演示)
+- [支持的平台](#支持的平台)
+- [支持的语言](#支持的语言)
+- [如何使用](#如何使用)
+  - [硬件要求](#硬件要求)
+  - [部署](#部署)
+    - [使用预编译二进制文件](#使用预编译二进制文件)
+    - [使用 Docker 镜像](#使用-docker-镜像)
+- [过滤规则](#过滤规则)
+  - [过滤器示例](#过滤器示例)
+- [Q\&A](#qa)
+  - [我能相信 tg-focus 吗？](#我能相信-tg-focus-吗)
+  - [什么使得 tg-focus 成为一个温和的 User Bot？](#什么使得-tg-focus-成为一个温和的-user-bot)
+- [开发](#开发)
+- [贡献](#贡献)
+- [许可证](#许可证)
   
 
 
-# About
+# 关于
 
 tg-focus is a comprehensive **T**ele**g**ram message filter that helps
 you **focus**. A gentle User Bot for message forwarding.
@@ -66,7 +66,7 @@ Notable features:
 -   **Ready to deploy**: Releases are made in three forms: source,
     Docker image and prebuilt binary.
 
-# A Simple Demo
+# 一个简单的演示
 
 Below is a simple 9-step demonstration of a common use case:
 forwarding the messages that contains the keywords we want, ignoring
@@ -105,7 +105,7 @@ the message that sent from the users we don't want.
 [Back to start](#a-simple-demo)
 
 
-# Supported Platforms
+# 支持的平台
 
 | Operating System    | Support(x86_64) |
 |---------------------|-----------------|
@@ -147,7 +147,7 @@ the message that sent from the users we don't want.
 to the list by opening an issue or a pull request.
 
 
-# Supported Languages
+# 支持的语言
 
 | Language                 | Status                                    |
 |--------------------------|-------------------------------------------|
@@ -162,7 +162,7 @@ to the list by opening an issue or a pull request.
 **Note:** More languages can be supported! Follow the internationalization
 instructions(`docs/i18n.org`) to add your language.
 
-# How To Use
+# 如何使用
 
 Before anything make sure you have:
 
@@ -170,7 +170,7 @@ Before anything make sure you have:
 2. A Telegram API ID and the corresponding API HASH, they can be
    obtained at https://my.telegram.org. 
 
-## Hardware Requirement
+## 硬件要求
 
 There is no rigorous restriction on hardware, here is a memory usage
 overview in 7 days:
@@ -184,11 +184,11 @@ with about 30 public chats, most of which have over 1000 members and
 500 messages produced per day)
 
 
-## Deployment
+## 部署
 
 There are two different way to deploy:
 
-### Using Prebuilt Binaries
+### 使用预编译二进制文件
 
 **Step 1:**
 
@@ -264,7 +264,7 @@ filters...")
 Done.
 
 
-### Using Docker Image
+### 使用 Docker 镜像
 
 Make sure have [Docker](https://docs.docker.com/engine/) or
 [Podman](https://podman.io/) installed on your machine:
@@ -344,7 +344,7 @@ docker rm --force CONTAINER-NAME
 ```
 
 
-# Filtering Rules
+# 过滤规则
 
 A *Focus Filter* is a filter used by tg-focus to match against the
 message's text content(text, emoji, or media caption). They are:
@@ -388,7 +388,7 @@ the second two rules can be regarded as **weak blacklist**, the third
 one can be regarded as **strong blacklist**) 
 
 
-## Filter Examples
+## 过滤器示例
 
 Say we want to forward all messages in a chat named
 "👍AnAwesomeChat👍": 
@@ -477,7 +477,7 @@ these will NOT be forwarded:
 
 # Q&A
 
-## Can I trust tg-focus?
+## 我能相信 tg-focus 吗？
 
 Absolutely yes!
 
@@ -502,7 +502,7 @@ circumstances** would tg-focus save user's phone number or any
 other credentials.
 
 
-## What makes tg-focus a gentle User Bot?
+## 什么使得 tg-focus 成为一个温和的 User Bot？
 
 TDLib states that it is _a library for building Telegram
 clients_. By embedding TDLib, tg-focus, like any other User
@@ -528,11 +528,11 @@ there is **no** reason for tg-focus users to worry about whether any
 existing or new features will be harmful or not. By the time of
 updates, tg-focus will remain **gentle**.
 
-# Development
+# 开发
 
 See `docs/development.org`.
 
-# Contributing
+# 贡献
 
 tg-focus is still far from perfect, any form of contribution is
 welcomed! 
@@ -546,7 +546,7 @@ welcomed!
 
 
 
-# License
+# 许可证
 
 tg-focus is licensed under [GNU General Public License Version
 3.0](https://github.com/micl2e2/tg-focus/blob/master/LICENSE-GPL). 
