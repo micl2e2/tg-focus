@@ -30,41 +30,26 @@
 
 # 关于
 
-tg-focus is a comprehensive **T**ele**g**ram message filter that helps
-you **focus**. A gentle User Bot for message forwarding.
+tg-focus 是一个全面的帮助您集中注意力的 **T**ele**g**ram 消息过滤器。一个用于消息转发的温和的 User Bot。
 
-Several forms of text messages are supported:
+支持多种形式的文本消息：
 
-1. Chat Message(Raw/Reply/Forward/Quoted)
-2. Media Caption
-3. Emoji
-4. Channel Update
+1. 聊天消息（原始/回复/转发/引用）
+2. 媒体标题
+3. Emoji 表情符号
+4. 频道更新
 
-By customizing *Focus Filters*, tg-focus can forward any specific
-message from any chat to a dedicated chat named *TG-FOCUS*, that way
-users have full control of the messages they see.
+通过定制 *Focus 过滤器*，tg-focus 可以将任何特定的消息从任何聊天转发到一个名为 *TG-FOCUS*  的专用聊天中，这样用户就可以完全控制他们看到的消息。
 
-Telegram is famous for its openness. While users are free to make a
-speech in any public chat, they should be equally free to choose what
-they see. Telegram's official client apps already have excellent
-support for the former need, tg-focus and other counterparts are
-trying to fill the blank in the latter one. 
+Telegram 以其开放性而闻名。虽然用户可以在任何公共聊天中自由发言，但他们同样应该有权选择他们想看到的内容。Telegram 的官方客户端已经很好地支持了前者，tg-focus 和其他类似工具则试图填补后者的空白。
 
-Notable features:
+显著特点：
 
--   **Reliable & Consistent**: Built directly on top of official
-    C++ interfaces([TDLib](https://core.telegram.org/tdlib/)). All
-    communications towards Telegram servers are completely handled by
-    TDLib.
+-   **可靠性和一致性**：直接构建在官方 C++ 接口（[TDLib](https://core.telegram.org/tdlib/)）之上。所有与 Telegram 服务器的通信完全由 TDLib 处理。
 
--   **Easy to customize**: Users can customize *Focus Filter* any
-    time they like. The filter accepts both simple text and [regular 
-    expressions](https://en.wikipedia.org/wiki/Regular_expression). The
-    configuration file is in human-readable 
-    [TOML](https://toml.io/en/) format.
+-   **易于定制**：用户可以随时自定义 *Focus Filter* 。该过滤器接受简单文本和[正则表达式](https://en.wikipedia.org/wiki/Regular_expression)。配置文件采用人类可读的 [TOML](https://toml.io/en/) 格式。
 
--   **Ready to deploy**: Releases are made in three forms: source,
-    Docker image and prebuilt binary.
+-   **随时部署**：以三种形式发布：源代码、Docker 镜像和预编译的二进制文件。
 
 # 一个简单的演示
 
