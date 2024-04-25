@@ -152,172 +152,150 @@ Telegram 以其开放性而闻名。虽然用户可以在任何公共聊天中�
 
 ## 硬件要求
 
-There is no rigorous restriction on hardware, here is a memory usage
-overview in 7 days:
+硬件上没有严格的限制，这里是 7 天内的内存使用情况概览：
 
-| day1 | day2 | day3 | day4 | day5  | day6  | day7  |
+| 第 1 天 | 第 2 天 | 第 3 天 | 第 4 天 | 第 5 天  | 第 6 天  | 第 7 天  |
 |------|------|------|------|-------|-------|-------|
 | 76MB | 84MB | 90MB | 96MB | 103MB | 108MB | 115MB |
 
-(NOTE: this table is just for reference, it is recorded by an account
-with about 30 public chats, most of which have over 1000 members and
-500 messages produced per day)
+（注意：此表仅供参考，它是由一个拥有约 30 个公共聊天室的账号记录的，其中大多数聊天室都有超过 1000 名成员，并且每天产生 500 条消息）
 
 
 ## 部署
 
-There are two different way to deploy:
+有两种不同的部署方式：
 
 ### 使用预编译二进制文件
 
-**Step 1:**
+**步骤 1：**
 
-Download the binaries at GitHub releases
-[page](https://github.com/micl2e2/tg-focus/releases). Please check
-whether your [platform](#supported-platforms) is supported or not.
+请在 [GitHub 发布页面](https://github.com/micl2e2/tg-focus/releases) 下载二进制文件。请检查您的平台是否受支持。支持的平台列表请参见 [支持的平台](#支持的平台) 部分。
 
-**Step 2:**
+**步骤 2：**
 
-Login your Telegram account first, it needs API ID, API HASH,
-your phone number (in international format, cannot contain spaces, e.g., input `+1234567` if your country code is `+1` and phone number is `234567`) and a login code, the first two
-can be obtained in https://my.telegram.org:
+请先登录您的 Telegram 帐户，需要 API ID、API HASH、您的电话号码（国际格式，不能包含空格，例如：如果您的国家代码是 `+1` 且电话号码是 `234567` ，则输入 `+1234567` ），以及一个登陆验证码。前两者可以在 https://my.telegram.org 中获取。
 
 ```sh
 /path/to/tgf-conf auth
 ```
-If you've logged in successfully, the last three lines will be:
+
+如果您成功登录，控制台最后输出的三行将是：
+
 ```
 [tgf INFO] Log in successfully!
 [tgf INFO] Closing...
 [tgf INFO] Closed
 ```
 
-**Step 3: (Optional)**
+**步骤 3：（可选）**
 
- Using different language other than default(English) by:
+ 使用默认语言（英语）以外的其他语言：
 
 ```sh
 /path/to/tgf-conf lang XX-YY
 ```
-Note: XX is the language code, YY is the region code, e.g. "en-US" represents
-"English (United States)", "en-GB" represents "English (United Kingdom)", etc. 
-All valid codes can be found at 
+
+注意：XX 为语言代码，YY 为地区代码，例如：“en-US”代表
+“英语（美国）”、“en-GB”代表“英语（英国）”等。
+所有有效代码均可在以下位置找到：
+
 http://www.lingoes.net/en/translator/langcode.htm 
 
-**Step 4:**
+**步骤 4：**
 
-Launch tg-focus daemon:
+启动 tg-focus 守护进程：
 
 ```sh
-# run in foreground
+# 在前台运行
 /path/to/tgf-focusd
 
-# or run in background
+# 或在后台运行
 nohup /path/to/tgf-focusd &
 ```
 
-**Step 5:**
+**步骤 5：**
 
-If logined successfullly, a new chat named `TG-FOCUS` will be
-created, the subsequent messages will be filtered and forwarded to
-this chat.
+如果您成功登录，tg-focus 将会创建一个名为 `TG-FOCUS` 的新聊天室，随后的消息将被过滤并转发到该聊天室中。
 
-**Step 6:**
+**步骤 6：**
 
-Note that by default, tg-focus will forward **all** messages
-you receive. You can change the *Focus Filter*s(the filter
-configuration) any time you like, to custom the messages you'd like
-to receive on that chat. See [examples](#filter-examples).
+请注意，默认情况下，tg-focus 将转发您收到的**所有**消息。您可以随时更改 *Focus 过滤器*（过滤器配置），以定制您想要在该聊天中接收的消息。请参阅 [示例](#过滤器示例)。
 
 ```sh
 /path/to/tgf-conf filters
 ```
 
-(NOTE: This will open the [GNU nano](https://www.nano-editor.org/)
-editor for configuration modification. After modification, press
-**Ctrl-O**, **Enter**, **Ctrl-X** to finish the work. As long as the
-configuration is valid, the last line of output shall be "Saving
-filters...") 
+（注意：该操作将会打开 [GNU nano](https://www.nano-editor.org/) 编辑器进行配置修改。修改完成后，按 **Ctrl-O**、**Enter**、**Ctrl-X** 保存。只要配置有效，控制台输出的最后一行应为“Saving filters...”）
 
-**Step 7:**
+**步骤 7：**
 
-Done.
+完成。
 
 
 ### 使用 Docker 镜像
 
-Make sure have [Docker](https://docs.docker.com/engine/) or
-[Podman](https://podman.io/) installed on your machine:
+请确保您的计算机上已安装 [Docker](https://docs.docker.com/engine/) 或 [Podman](https://podman.io/) 。
 
-**Step 1:**
+**步骤 1：**
 
-Pull the image and run it in the background, assuming the newly
-created container's name is CONTAINER-NAME: 
+拉取镜像并在后台运行，假设新创建的容器名称为 CONTAINER-NAME：
 
 ```sh
 docker pull docker.io/micl2e2/tg-focus:latest
 docker run -d docker.io/micl2e2/tg-focus
 ```
 
-**Step 2:**
+**步骤 2：**
 
-Login your telegram account first, here you should provide API ID,
-API HASH, your phone number(in international format), and a login
-code, the first two can be obtained in https://my.telegram.org:
+请先登录您的 Telegram 帐户，需要 API ID、API HASH、您的电话号码（国际格式，不能包含空格，例如：如果您的国家代码是 `+1` 且电话号码是 `234567` ，则输入 `+1234567` ），以及一个登陆验证码。前两者可以在 https://my.telegram.org 中获取。
 
 ```sh
 docker exec -it CONTAINER-NAME tgf-conf auth
 ```
-If you've logged in successfully, the last three lines will be:
+
+如果您成功登录，控制台最后输出的三行将是：
+
 ```
 [tgf INFO] Log in successfully!
 [tgf INFO] Closing...
 [tgf INFO] Closed
 ```
 
-**Step 3: (Optional)**
+**步骤 3：（可选）**
 
-Using different language other than default(English) by:
+ 使用默认语言（英语）以外的其他语言：
 
 ```sh
 docker exec -it CONTAINER-NAME tgf-conf lang XX-YY
 ```
-Note: XX is the language code, YY is the region code, e.g. "en-US" represents
-"English (United States)", "en-GB" represents "English (United Kingdom)", etc. 
-All valid codes can be found at 
+
+注意：XX 为语言代码，YY 为地区代码，例如：“en-US”代表
+“英语（美国）”、“en-GB”代表“英语（英国）”等。
+所有有效代码均可在以下位置找到：
+
 http://www.lingoes.net/en/translator/langcode.htm 
 
-**Step 4:**
+**步骤 4：**
 
-If logined successfullly, a new chat named *TG-FOCUS* will be
-created, the subsequent messages will be filtered and forwarded to
-this chat.
+如果您成功登录，tg-focus 将会创建一个名为 `TG-FOCUS` 的新聊天室，随后的消息将被过滤并转发到该聊天室中。
 
-**Step 5:**
+**步骤 5：**
 
-Note that by default, tg-focus will forward **all** messages
-you receive. You can change the *Focus Filter*s(the filter
-configuration) any time you like, to custom the messages you'd like
-to receive on that chat. See [examples](#filter-examples).
+请注意，默认情况下，tg-focus 将转发您收到的**所有**消息。您可以随时更改 *Focus 过滤器*（过滤器配置），以定制您想要在该聊天中接收的消息。请参阅 [示例](#过滤器示例)。
 
 ```sh
 docker exec -it CONTAINER-NAME tgf-conf filters
 ```
 
-(NOTE: This will open the embeded [GNU
-nano](https://www.nano-editor.org/) editor for configuration
-modification. After modification, press **Ctrl-O**, **Enter**, **Ctrl-X**
-to finish the work. If the modified one is valid, the last line of
-output shall be "Saving filters...")
+（注意：该操作将会打开 [GNU nano](https://www.nano-editor.org/) 编辑器进行配置修改。修改完成后，按 **Ctrl-O**、**Enter**、**Ctrl-X** 保存。只要配置有效，控制台输出的最后一行应为“Saving filters...”）
 
-**Step 6:**
+**步骤 6：**
 
-Done.
+完成。
 
-**Step 7: (Optional)**
+**步骤 7：（可选）**
 
-Use following command if you want to destroy the
-instance and its Telegram-related credentials and resource:
+如果您要销毁容器实例及其与 Telegram 相关的凭据和资源，请使用以下命令：
 
 ```sh
 docker rm --force CONTAINER-NAME
