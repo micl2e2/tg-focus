@@ -45,11 +45,11 @@ Telegram 以其开放性而闻名。虽然用户可以在任何公共聊天室�
 
 显著特点：
 
--   **可靠性和一致性**：直接构建在官方 C++ 接口（[TDLib](https://core.telegram.org/tdlib/)）之上。所有与 Telegram 服务器的通信完全由 TDLib 处理。
+-   **可靠性和一致性**：tg-focus 直接构建在官方 C++ 接口（[TDLib](https://core.telegram.org/tdlib/)）之上。所有与 Telegram 服务器的通信完全由 TDLib 处理。
 
--   **易于定制**：用户可以随时自定义 *Focus Filter* 。该过滤器接受简单文本和[正则表达式](https://en.wikipedia.org/wiki/Regular_expression)。配置文件采用人类可读的 [TOML](https://toml.io/en/) 格式。
+-   **易于定制**：用户可以随时自定义 *Focus Filter* 。该过滤器接受简单文本和 [正则表达式](https://en.wikipedia.org/wiki/Regular_expression) 。配置文件采用人类可读的 [TOML](https://toml.io/en/) 格式。
 
--   **随时部署**：以三种形式发布：源代码、Docker 镜像和预编译的二进制文件。
+-   **随时部署**：tg-focus 以三种形式发布：源代码、Docker 镜像和预编译的二进制文件。
 
 # 一个简单的演示
 
