@@ -90,7 +90,7 @@ Telegram 以其开放性而闻名。虽然用户可以在任何公共聊天中�
 
 # 支持的平台
 
-| Operating System    | Support(x86_64) |
+| 操作系统    | 是否支持(x86_64) |
 |---------------------|-----------------|
 | Windows             | ❌              |
 | Windows with WSL 1  | ✅              |
@@ -126,32 +126,29 @@ Telegram 以其开放性而闻名。虽然用户可以在任何公共聊天中�
 | Void Linux          | ✅              |
 |                     |                 |
 
-**Note**: this is not an exhaustive list, missing platforms can be added
-to the list by opening an issue or a pull request.
+**注意**：这不是一个详尽的列表，您可以通过发起 issue 或 pull request 来添加缺失的平台。
 
 
 # 支持的语言
 
-| Language                 | Status                                    |
+| 语言                 | 状态                                    |
 |--------------------------|-------------------------------------------|
-| English (Hong Kong)      | ✅                                        |
-| English (United States)  | ✅                                        |
-| English (Zimbabwe)       | ✅                                        |
-| Chinese (Mainland China) | ✅                                        |
-| Chinese (Hong Kong)      | ✅                                        |
-| Others                   | [Add Your Language](#supported-languages) |
+| 英文（香港）     | ✅                                        |
+| 英文（美国）  | ✅                                        |
+| 英文（津巴布韦）       | ✅                                        |
+| 中文（大陆） | ✅                                        |
+| 中文（香港） | ✅                                        |
+| 其他                   | [添加您的语言](#支持的语言) |
 |                          |                                           |
 
-**Note:** More languages can be supported! Follow the internationalization
-instructions(`docs/i18n.org`) to add your language.
+**注意**：可支持更多语言！请根据国际化指示文档（ `docs/i18n.org` ）来添加您的语言。
 
 # 如何使用
 
-Before anything make sure you have:
+在您做任何事情之前，请确保您有：
 
-1. A Telegram account
-2. A Telegram API ID and the corresponding API HASH, they can be
-   obtained at https://my.telegram.org. 
+1. 一个 Telegram 账号
+2. 一个 Telegram API ID 和 the 相应的 API HASH，可从 https://my.telegram.org 获取。 
 
 ## 硬件要求
 
