@@ -304,8 +304,7 @@ docker rm --force CONTAINER-NAME
 
 # 过滤规则
 
-A *Focus Filter* is a filter used by tg-focus to match against the
-message's text content(text, emoji, or media caption). They are:
+一个 *Focus 过滤器*  是由 tg-focus 使用的过滤器，用于匹配消息的文本内容（文本、表情符号或媒体标题）。它们包括：
 - `title`
 - `keywords`
 - `no-keywords`
@@ -313,123 +312,111 @@ message's text content(text, emoji, or media caption). They are:
 - `no-senders`
 - `rej-senders`
 
-Users can add as many filters as they like, they accept **simple
-text** or **regular expression**. 
+用户可以添加任意多的过滤器，它们能使用**简单文本**或**正则表达式**进行匹配。
 
-When a message comes, they are tried one by one, if there is any
-filter than can *match* the message and not *skip* the message , it
-will be forwarded.
+当收到一条消息时，它们将逐个尝试，如果有任何过滤器可以*匹配*该消息而不是*跳过*该消息，则会被转发。
 
-Currently *Focus Filter* can *match*:
+当前 *Focus 过滤器* 可*匹配*：
 
-- Chat title(`title`)
-- Keywords(`keywords`)
-- Senders(`senders`)
+- 聊天人/聊天室/频道标题（`title`）
+- 关键字（`keywords`）
+- 发送者（`senders`）
 
-can *skip*:
+可*跳过*：
 
-- Keywords(`no-keywords`)
-- Senders(`no-senders`)
+- 关键字（`no-keywords`）
+- 发送者（`no-senders`）
 
-can *reject*:
+可*拒绝*：
 
-- Senders(`rej-senders`)
+- 发送者（`rej-senders`）
 
-A message is forwarded **if and only if**:
+一条消息**如果且只有**触发以下条件时，才会被转发：
 
-- it is *matched* by a *Focus Filter*, **and**
-- it is *not skipped* by that *Focus Filter*, **and**
-- it is *not rejected* by any previous *Focus Filter*.
+- 它被一条 *Focus 过滤器*  匹配，**并且**
+- 它没有被该 *Focus 过滤器*  跳过，**并且**
+- 它没有被任何先前的 *Focus 过滤器*  拒绝。
 
-(Note that the first three rules can be regarded as **whitelist**,
-the second two rules can be regarded as **weak blacklist**, the third
-one can be regarded as **strong blacklist**) 
+（请注意，前三条规则可以被视为**白名单**，后两条规则可以被视为**弱黑名单**，最后一条规则可以被视为**强黑名单**。）
 
 
 ## 过滤器示例
 
-Say we want to forward all messages in a chat named
-"👍AnAwesomeChat👍": 
+我们想要转发“👍很棒的聊天👍”聊天室中的所有消息。
 
-works, the chat title is fully matched: 
-
-```toml
-[[focus-filter]]
-title = "👍AnAwesomeChat👍"
-```
-
-works, the chat title is partly matched:
+有效，聊天标题完全匹配：
 
 ```toml
 [[focus-filter]]
-title = "AnAwesomeChat"
+title = "👍很棒的聊天室👍"
 ```
 
-works, the chat title is partly matched: 
+有效，聊天标题部分匹配：
 
 ```toml
 [[focus-filter]]
-title = "Awesome"
+title = "很棒的聊天室"
 ```
 
-works, the chat title is partly matched:
+有效，聊天标题部分匹配： 
+
+```toml
+[[focus-filter]]
+title = "很棒"
+```
+
+有效，聊天标题部分匹配：
 
 ```toml
 [[focus-filter]]
 title = "👍"
 ```
 
-works, the regular expression matches the chat title:
+有效，正则表达式与聊天标题匹配：
 
 ```toml
 [[focus-filter]]
-title = ".*Awesome.*"
+title = ".*很棒.*"
 ```
 
-Say we want to forward the messages that contain "football", but not
-"basketball", from a chat named "Sports User Group". We can write our filters as
+我们想要转发包含“足球”但不包含“篮球”的消息，来自名为“体育交流群”的聊天。我们可以将过滤器写成
 
 ```toml
 [[focus-filter]]
-title = "Sports User Group"
-keywords = ["football", "soccer"]
-no-keywords = ["basketball"]
+title = "体育交流群"
+keywords = ["足球", "⚽"]
+no-keywords = ["篮球"]
 ```
 
-Say we want the messages containing "football", or any other
-messages except the ones containing "basketball", and the ones sent by
-the user whose full name is "Basketball Lover", or the ones sent by the
-user whose user ID is "alice_love_basketball", from a chat named
-"SportsUserGroup". We can write the filter as:
+我们想要包含“足球”或任何其他消息，但不包括包含“篮球”的消息，以及由全名为“篮球爱好者”的用户发送的消息，或由用户ID为“alice_love_basketball”的用户发送的消息，在名为“体育交流群”的聊天中。我们可以将过滤器写成：
 
 ```toml
-# 1st
+# 第一条过滤器
 [[focus-filter]]
-title = "Sports User Group"
-keywords = ["football", "soccer"]
+title = "体育交流群"
+keywords = ["足球", "⚽"]
 
-# 2nd
+# 第二条过滤器
 [[focus-filter]]
-title = "Sports User Group"
-no-keywords = ["basketball"]
-no-senders = ["Basketball Love", "@alice_love_basketball"]
+title = "体育交流群"
+no-keywords = ["篮球"]
+no-senders = ["篮球爱好者", "@alice_love_basketball"]
 ```
 
-So these message will be forwarded:
+这些消息将被转发：
 
-- `Alice: I love football!` (matching the 1st)
-- `Bob: I play soccer.` (matching the 1st)
-- `Alice: I am good at swimming.` (matching the 2nd)
-- `Bob: Sometime I also play badminton.` (matching the 2nd)
-- `Alice: I play football and basketball.` (matching the 1st, skip the 2nd)
+- `Alice: 我爱足球！` （被第一条过滤器匹配）
+- `Bob: 我踢⚽。` （被第一条过滤器匹配）
+- `Alice: 我擅长游泳。` （被第二条过滤器匹配）
+- `Bob: 我有时候打羽毛球。` （被第二条过滤器匹配）
+- `Alice: 我踢足球和打羽毛球。` （被第一条过滤器匹配，跳过第二条过滤器）
 
-these will NOT be forwarded:
+这些消息将不会被转发：
 
-- `Alice: I play badminton and basketball.` (matching the 2nd's
-  "no-keywords" means a *reject*)
-- `Basketball Lover: Hellop everyone!` (a *reject* by the 2nd)
-- `Alice @alice_love_basketball: Hi, I am Alice, I love sports.`
-  (a *reject* by the 2nd)
+- `Alice: 我打篮球和羽毛球。` （被第二条过滤器“no-keywords”匹配，相当于*拒绝*）
+- `篮球爱好者: Hellop everyone!` （被第二条过滤器*拒绝*）
+- `Alice @alice_love_basketball: 你们好，我是 Alice ，我热爱体育。`
+  （被第二条过滤器*拒绝*）
 
 
 
