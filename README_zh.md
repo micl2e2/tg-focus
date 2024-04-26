@@ -446,24 +446,22 @@ TDLib 声称它是 _一个用于构建 Telegram 客户端的库_。通过嵌入 
 
 # 开发
 
-See `docs/development.org`.
+见 `docs/development.org`。
 
 # 贡献
 
-tg-focus is still far from perfect, any form of contribution is
-welcomed! 
+tg-focus 仍有改进空间，我们欢迎任何形式的贡献！
 
-- Ask question (open an issue with label [![](https://img.shields.io/static/v1?label=&message=question&color=purple)](https://github.com/micl2e2/tg-focus/issues/new))
-- Bug Report (open an issue with label [![](https://img.shields.io/static/v1?label=&message=bug&color=red)](https://github.com/micl2e2/tg-focus/issues/new))
-- Feature Request (open an issue with label
-  [![](https://img.shields.io/static/v1?label=&message=enhancement&color=lightblue)](https://github.com/micl2e2/tg-focus/issues/new))
-- Documentation Improvement
-- Code Contribution (tg-focus follows [GCC](https://gcc.gnu.org/) code style)
+- 询问问题（使用标签 [![](https://img.shields.io/static/v1?label=&message=question&color=purple)](https://github.com/micl2e2/tg-focus/issues/new) 发起 issue ）
+- 报告错误（使用标签 [![](https://img.shields.io/static/v1?label=&message=bug&color=red)](https://github.com/micl2e2/tg-focus/issues/new) 发起 issue ）
+- 请求功能（使用标签
+  [![](https://img.shields.io/static/v1?label=&message=enhancement&color=lightblue)](https://github.com/micl2e2/tg-focus/issues/new) 发起 issue ）
+- 完善文档
+- 贡献代码（ tg-focus 遵循 [GCC](https://gcc.gnu.org/) 代码风格）
 
 
 
 # 许可证
 
-tg-focus is licensed under [GNU General Public License Version
-3.0](https://github.com/micl2e2/tg-focus/blob/master/LICENSE-GPL). 
+tg-focus 是根据 [GNU通用公共许可证第3版](https://github.com/micl2e2/tg-focus/blob/master/LICENSE-GPL) 授权许可的。
 
