@@ -6,6 +6,8 @@
 
 [**English**](README.md)&nbsp;&nbsp;&nbsp;[**简体中文**](README_zh-CN.md)
 
+**注意：本文档翻译可能未跟进到最新版本。有关最新文档，请参阅英文版 [README.md](README.md) 。**
+
 # 目录
 
 - [关于](#关于)
