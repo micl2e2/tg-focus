@@ -55,35 +55,35 @@ Telegram 以其开放性而闻名。虽然用户可以在任何公共聊天室�
 
 以下是一个常见用例的简单 9 步演示：转发包含我们想要的关键词的消息，忽略来自我们不想要的用户发送的消息。
 
-<img src="demo/zh/1.png" width="800px"/>
+<img src="demo/zh/1.jpg" width="500px"/>
 
-<img src="demo/zh/2.png" width="800px"/>
+<img src="demo/zh/2.jpg" width="500px"/>
 
-<img src="demo/zh/3.png" width="800px"/>
-
-[回到开始](#一个简单的演示)
-
-<img src="demo/zh/4.png" width="800px"/>
+<img src="demo/zh/3.jpg" width="500px"/>
 
 [回到开始](#一个简单的演示)
 
-<img src="demo/zh/5.png" width="800px"/>
+<img src="demo/zh/4.jpg" width="500px"/>
 
 [回到开始](#一个简单的演示)
 
-<img src="demo/zh/6.png" width="800px"/>
+<img src="demo/zh/5.jpg" width="500px"/>
 
 [回到开始](#一个简单的演示)
 
-<img src="demo/zh/7.png" width="800px"/>
+<img src="demo/zh/6.jpg" width="500px"/>
 
 [回到开始](#一个简单的演示)
 
-<img src="demo/zh/8.png" width="800px"/>
+<img src="demo/zh/7.jpg" width="500px"/>
 
 [回到开始](#一个简单的演示)
 
-<img src="demo/zh/9.png" width="800px"/>
+<img src="demo/zh/8.jpg" width="500px"/>
+
+[回到开始](#一个简单的演示)
+
+<img src="demo/zh/9.jpg" width="500px"/>
 
 [回到开始](#一个简单的演示)
 
