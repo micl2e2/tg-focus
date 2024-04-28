@@ -55,35 +55,35 @@ Telegram 以其开放性而闻名。虽然用户可以在任何公共聊天室�
 
 以下是一个常见用例的简单 9 步演示：转发包含我们想要的关键词的消息，忽略来自我们不想要的用户发送的消息。
 
-<img src="demo/zh/1.jpg" width="500px"/>
+<img src="demo/zh-CN/1.jpg" width="500px"/>
 
-<img src="demo/zh/2.jpg" width="500px"/>
+<img src="demo/zh-CN/2.jpg" width="500px"/>
 
-<img src="demo/zh/3.jpg" width="500px"/>
-
-[回到开始](#一个简单的演示)
-
-<img src="demo/zh/4.jpg" width="500px"/>
+<img src="demo/zh-CN/3.jpg" width="500px"/>
 
 [回到开始](#一个简单的演示)
 
-<img src="demo/zh/5.jpg" width="500px"/>
+<img src="demo/zh-CN/4.jpg" width="500px"/>
 
 [回到开始](#一个简单的演示)
 
-<img src="demo/zh/6.jpg" width="500px"/>
+<img src="demo/zh-CN/5.jpg" width="500px"/>
 
 [回到开始](#一个简单的演示)
 
-<img src="demo/zh/7.jpg" width="500px"/>
+<img src="demo/zh-CN/6.jpg" width="500px"/>
 
 [回到开始](#一个简单的演示)
 
-<img src="demo/zh/8.jpg" width="500px"/>
+<img src="demo/zh-CN/7.jpg" width="500px"/>
 
 [回到开始](#一个简单的演示)
 
-<img src="demo/zh/9.jpg" width="500px"/>
+<img src="demo/zh-CN/8.jpg" width="500px"/>
+
+[回到开始](#一个简单的演示)
+
+<img src="demo/zh-CN/9.jpg" width="500px"/>
 
 [回到开始](#一个简单的演示)
 
@@ -426,7 +426,7 @@ no-senders = ["篮球爱好者", "@alice_love_basketball"]
 
 绝对可以！
 
-首先，考虑到 tg-focus 是一款遵循 GPL 许可证的[自由软件](https://www.gnu.org/philosophy/free-sw.zh-cn.html)。
+首先，考虑到 tg-focus 是一款遵循 GPL 许可证的[自由软件](https://www.gnu.org/philosophy/free-sw.zh-CN-cn.html)。
 
 tg-focus 继承了 TDLib 的开放性，其源代码以及依赖项的源代码都是完全开放的。此外，所有二进制文件和 OCI 镜像将**不会**由任何个人构建，而是由托管在 Github 上的机器构建。所有构建细节可以在专用存储库 [tg-focus-cicd](https://github.com/micl2e2/tg-focus-cicd) 中找到。
 
