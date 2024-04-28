@@ -4,7 +4,7 @@
 ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/micl2e2/tg-focus/latest?logo=docker&logoColor=white&color=lightgreen&link=https%3A%2F%2Fhub.docker.com%2Fr%2Fmicl2e2%2Ftg-focus)
 ![GitHub commits difference between two branches/tags/commits](https://img.shields.io/github/commits-difference/tdlib/td?base=cd25b29452644856b7472dd0cd69391b2226d3c3&head=master&logo=gitextensions&label=pending%20TDLib%20updates&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd)
 
-[**English**](README.md)&nbsp;&nbsp;&nbsp;[**简体中文**](README_zh.md)
+[**English**](README.md)&nbsp;&nbsp;&nbsp;[**简体中文**](README_zh-CN.md)
 
 # 目录
 
