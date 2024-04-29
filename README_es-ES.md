@@ -68,9 +68,7 @@ Notable features:
 
 # A Simple Demo
 
-Below is a simple 9-step demonstration of a common use case:
-forwarding the messages that contains the keywords we want, ignoring
-the message that sent from the users we don't want.
+A continuación se muestra una demostración simple de 9 pasos de un caso de uso común: reenviar los mensajes que contienen las palabras clave que deseamos, ignorando el mensaje enviado por los usuarios que no queremos.
 
 <img src="demo/es-ES/1.jpg" width="500px"/>
 
@@ -78,31 +76,31 @@ the message that sent from the users we don't want.
 
 <img src="demo/es-ES/3.jpg" width="500px"/>
 
-[Back to start](#a-simple-demo)
+[De regreso al comienzo](#a-simple-demo)
 
 <img src="demo/es-ES/4.jpg" width="500px"/>
 
-[Back to start](#a-simple-demo)
+[De regreso al comienzo](#a-simple-demo)
 
 <img src="demo/es-ES/5.jpg" width="500px"/>
 
-[Back to start](#a-simple-demo)
+[De regreso al comienzo](#a-simple-demo)
 
 <img src="demo/es-ES/6.jpg" width="500px"/>
 
-[Back to start](#a-simple-demo)
+[De regreso al comienzo](#a-simple-demo)
 
 <img src="demo/es-ES/7.jpg" width="500px"/>
 
-[Back to start](#a-simple-demo)
+[De regreso al comienzo](#a-simple-demo)
 
 <img src="demo/es-ES/8.jpg" width="500px"/>
 
-[Back to start](#a-simple-demo)
+[De regreso al comienzo](#a-simple-demo)
 
 <img src="demo/es-ES/9.jpg" width="500px"/>
 
-[Back to start](#a-simple-demo)
+[De regreso al comienzo](#a-simple-demo)
 
 
 # Supported Platforms
