@@ -196,9 +196,9 @@ docker run -d micl2e2/tg-focus
 
 **Step 2:**
 
-Login your telegram account first, here you should provide API ID,
-API HASH, your phone number(in international format), and a login
-code, the first two can be obtained in https://my.telegram.org:
+Login your Telegram account first, it needs API ID, API HASH,
+your phone number (in international format, e.g., `+1234567` if your phone number is `234567` with country code `+1`) 
+and a login code, the first two can be obtained in https://my.telegram.org:
 
 ```sh
 docker exec -it CONTAINER-NAME tgf-conf auth
@@ -269,8 +269,8 @@ whether your [platform](#supported-platforms) is supported or not.
 **Step 2:**
 
 Login your Telegram account first, it needs API ID, API HASH,
-your phone number (in international format, cannot contain spaces, e.g., input `+1234567` if your country code is `+1` and phone number is `234567`) and a login code, the first two
-can be obtained in https://my.telegram.org:
+your phone number (in international format, e.g., `+1234567` if your phone number is `234567` with country code `+1`) 
+and a login code, the first two can be obtained in https://my.telegram.org:
 
 ```sh
 /path/to/tgf-conf auth
