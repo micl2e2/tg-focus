@@ -13,9 +13,14 @@
 
 constexpr auto TF_DEV = "TG-FOCUS";
 constexpr auto TF_VER = "1.7";
-constexpr auto TF_COLL_CHAT_TITLE = "TG-FOCUS";
-constexpr auto TDLIB_VER = "1.8.26";
-constexpr auto TDLIB_SRC = "cd25b29452644856b7472dd0cd69391b2226d3c3";
+constexpr auto TF_COLL_CHAT_TITLE =
+#ifdef NDEBUG
+  "TG-FOCUS";
+#else
+  "TG-FOCUS_DEV";
+#endif
+constexpr auto TDLIB_VER = "1.8.31";
+constexpr auto TDLIB_SRC = "e2b2918d2778bf88a64d5ed99aecba32cdeb1e06";
 
 class FileReader
 {

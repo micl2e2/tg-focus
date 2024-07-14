@@ -69,25 +69,55 @@ TdCollector::try_create_tgfchat () // FIXME: is try
 {
   if (this->is_authorized && !tgf_data.is_tgfid_valid ()
       && !this->tried_create_tgfchat)
-    // if (this->is_authorized && !this->tried_create_tgfchat
-    // && !this->done_create_collector)
     {
       this->tried_create_tgfchat = true;
-      send_query (td_api::make_object<td_api::createNewBasicGroupChat> (
-		    std::vector<td::td_api::int53> (0), TF_COLL_CHAT_TITLE, 0),
-		  [this] (Object object) {
-		    if (object->get_id () == td_api::chat::ID)
-		      {
-			auto chat
-			  = td::move_tl_object_as<td_api::chat> (object);
-			lvlog (LogLv::INFO, " group created",
-			       " chat id:", chat->id_,
-			       " chat title:", chat->title_);
-			// this->collector_id = chat->id_;
-			tgf_data.set_tgfid (static_cast<int64_t> (chat->id_));
-			// this->done_create_collector = true;
-		      }
-		  });
+
+      if (tgf_data.is_super_tgfid ())
+	{
+	  send_query (
+	    td_api::make_object<td_api::createNewSupergroupChat> (
+	      TF_COLL_CHAT_TITLE, false, false, "TG-FOCUS helps you focus!",
+	      nullptr, 0, false),
+	    [this] (Object object) {
+	      if (object->get_id () == td_api::chat::ID)
+		{
+		  auto chat = td::move_tl_object_as<td_api::chat> (object);
+		  lvlog (LogLv::INFO, "group created", " chat id:", chat->id_);
+		  tgf_data.set_tgfid (static_cast<int64_t> (chat->id_));
+		}
+	      else if (object->get_id () == td_api::error::ID)
+		{
+		  auto error = td::move_tl_object_as<td_api::error> (object);
+		  lvlog (LogLv::ERROR, " error code:", error->code_,
+			 " error message:", error->message_);
+		}
+	      else
+		{
+		  lvlog (LogLv::ERROR, "unexpected tlobj:", object->get_id ());
+		}
+	    });
+	}
+      else
+	{
+	  send_query (
+	    td_api::make_object<td_api::createNewBasicGroupChat> (
+	      std::vector<td::td_api::int53> (0), TF_COLL_CHAT_TITLE, 0),
+	    [this] (Object object) {
+	      if (object->get_id () == td_api::createdBasicGroupChat::ID)
+		{
+		  auto chat
+		    = td::move_tl_object_as<td_api::createdBasicGroupChat> (
+		      object);
+		  lvlog (LogLv::INFO, "group created",
+			 " chat id:", chat->chat_id_);
+		  tgf_data.set_tgfid (static_cast<int64_t> (chat->chat_id_));
+		}
+	      else
+		{
+		  lvlog (LogLv::ERROR, "unexpected tlobj:", object->get_id ());
+		}
+	    });
+	}
     }
 }
 
