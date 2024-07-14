@@ -28,8 +28,8 @@ endif()
 
 # TDLib versions
 # note: sync with tg-focus-cicd
-execute_process(COMMAND bash ${PROJECT_SOURCE_DIR}/dev/before-compile.bash)
-find_package(Td 1.8.26 REQUIRED)
+execute_process(COMMAND bash ${PROJECT_SOURCE_DIR}/dev/sync-versions.bash)
+find_package(Td 1.8.31 REQUIRED)
 
 # tgf-conf
 add_executable(

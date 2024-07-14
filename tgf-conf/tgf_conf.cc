@@ -1,6 +1,7 @@
 #include <atomic>
 #include <chrono>
 #include <cstdint>
+#include <cstring>
 #include <exception>
 #include <functional>
 #include <iostream>
@@ -176,6 +177,16 @@ handle_lang (const char *lang_code)
 }
 
 int
+handle_super_tgfid (const char *tgfid_type)
+{
+  if (strcmp (tgfid_type, "channel") == 0)
+    tgf_data.set_super_tgfid ();
+  if (strcmp (tgfid_type, "default") == 0)
+    tgf_data.set_basic_tgfid ();
+  return 0;
+}
+
+int
 main (int argc, char *argv[])
 {
   if (!tgf::try_ensure_locale ())
@@ -208,8 +219,17 @@ main (int argc, char *argv[])
 	  print_usage (argv);
 	  return 0;
 	}
-
       return handle_lang (argv[2]);
+    }
+
+  if (subcmd == "set-tgfid-type")
+    {
+      if (argc != 3)
+	{
+	  print_usage (argv);
+	  return 0;
+	}
+      return handle_super_tgfid (argv[2]);
     }
 
   return print_usage (argv);

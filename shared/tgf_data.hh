@@ -74,6 +74,14 @@ public:
 
   void set_pref_lang (tgf::Lang) const;
 
+  bool is_basic_tgfid () const;
+
+  bool is_super_tgfid () const;
+
+  void set_basic_tgfid () const;
+
+  void set_super_tgfid () const;
+
 private:
   FILE *lck_droot{nullptr};
   FILE *lck_filters{nullptr};
