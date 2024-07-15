@@ -65,7 +65,7 @@ TgFocusData::~TgFocusData ()
 }
 
 void
-init_tgfid_type_fs (std::filesystem::path droot);
+init_tgfid_type (std::filesystem::path droot);
 
 TgFocusData::TgFocusData (std::optional<std::filesystem::path> &&may_pred_home,
 			  bool reset)
@@ -183,7 +183,7 @@ title = ".*"
     }
 
   // tgfid_type
-  init_tgfid_type_fs (droot_dir);
+  init_tgfid_type (droot_dir);
 
   // pref_lang
   namespace fs = std::filesystem;
@@ -511,6 +511,7 @@ TgFocusData::set_pref_lang (tgf::Lang l) const
 
 //  -  tgfid type  -  //
 
+namespace impl_fs {
 static constexpr auto FILENAME_TGFID_TYPE_PREF = "tgfid_t";
 
 std::filesystem::path
@@ -520,7 +521,7 @@ path_tgfid_type_pref (const std::filesystem::path &droot)
 }
 
 void
-set_tgfid_type_fs (const std::filesystem::path &droot, uint8_t t)
+set_tgfid_type (const std::filesystem::path &droot, uint8_t t)
 {
   auto path = path_tgfid_type_pref (droot);
   auto filename = path.c_str ();
@@ -531,14 +532,14 @@ set_tgfid_type_fs (const std::filesystem::path &droot, uint8_t t)
 }
 
 void
-init_tgfid_type_fs (const std::filesystem::path &droot)
+init_tgfid_type (const std::filesystem::path &droot)
 {
   if (!std::filesystem::exists (droot / FILENAME_TGFID_TYPE_PREF))
-    set_tgfid_type_fs (droot, 2);
+    set_tgfid_type (droot, 2);
 }
 
 uint8_t
-get_tgfid_type_fs (const std::filesystem::path &droot)
+get_tgfid_type (const std::filesystem::path &droot)
 {
   auto path = path_tgfid_type_pref (droot);
   auto filename = path.c_str ();
@@ -548,27 +549,28 @@ get_tgfid_type_fs (const std::filesystem::path &droot)
   fclose (f);
   return ret;
 }
+} // namespace impl_fs
 
 void
 TgFocusData::set_basic_tgfid () const
 {
-  set_tgfid_type_fs (this->data_root, 2);
+  impl_fs::set_tgfid_type (this->data_root, 2);
 }
 
 void
 TgFocusData::set_super_tgfid () const
 {
-  set_tgfid_type_fs (this->data_root, 3);
+  impl_fs::set_tgfid_type (this->data_root, 3);
 }
 
 bool
 TgFocusData::is_basic_tgfid () const
 {
-  return get_tgfid_type_fs (this->data_root) == 2;
+  return impl_fs::get_tgfid_type (this->data_root) == 2;
 }
 
 bool
 TgFocusData::is_super_tgfid () const
 {
-  return get_tgfid_type_fs (this->data_root) == 2;
+  return impl_fs::get_tgfid_type (this->data_root) == 2;
 }
