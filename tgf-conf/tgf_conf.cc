@@ -33,6 +33,8 @@ Available Commands:
   auth              Log in Telegram
   auth-reset        Log out Telegram
   filters           Customize focus filter(s)
+  use-chat          Initialize TG-FOCUS chat as a basic group (default)
+  use-channel       Initialize TG-FOCUS chat as a super group
   version           Print TG-Focus version
   help              Print this message
   lang <LANG_CODE>  Program-wide language preference. tg-focus will try to
@@ -177,11 +179,11 @@ handle_lang (const char *lang_code)
 }
 
 int
-handle_super_tgfid (const char *tgfid_type)
+handle_super_tgfid (uint8_t t)
 {
-  if (strcmp (tgfid_type, "channel") == 0)
+  if (t == 2)
     tgf_data.set_super_tgfid ();
-  if (strcmp (tgfid_type, "default") == 0)
+  if (t == 1)
     tgf_data.set_basic_tgfid ();
   return 0;
 }
@@ -222,14 +224,14 @@ main (int argc, char *argv[])
       return handle_lang (argv[2]);
     }
 
-  if (subcmd == "set-tgfid-type")
+  if (subcmd == "use-chat")
     {
-      if (argc != 3)
-	{
-	  print_usage (argv);
-	  return 0;
-	}
-      return handle_super_tgfid (argv[2]);
+      return handle_super_tgfid (1);
+    }
+
+  if (subcmd == "use-channel")
+    {
+      return handle_super_tgfid (2);
     }
 
   return print_usage (argv);
