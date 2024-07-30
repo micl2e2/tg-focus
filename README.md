@@ -4,7 +4,7 @@
 <a href="https://hub.docker.com/r/micl2e2/tg-focus">![Docker Image Size](https://img.shields.io/docker/image-size/micl2e2/tg-focus?logo=docker&logoColor=white&color=lightgreen&link=hub.docker.com%2Fr%2Fmicl2e2%2Ftg-focus)</a>
 <a href="https://github.com/tdlib/td">![GitHub commits difference between two branches/tags/commits](https://img.shields.io/github/commits-difference/tdlib/td?base=e2b2918d2778bf88a64d5ed99aecba32cdeb1e06&head=master&logo=gitextensions&label=pending%20TDLib%20updates&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd)</a>
 
-
+[**English**](README.md)&nbsp;&nbsp;&nbsp;[**简体中文**](README_zh-CN.md)
 
 # Table of Contents
 
