@@ -48,6 +48,46 @@ unlock_stream (FILE *strm)
   return true;
 }
 
+namespace impl_fs {
+static constexpr auto FILENAME_TGFID_TYPE_PREF = "tgfid_t";
+
+std::filesystem::path
+path_tgfid_type_pref (const std::filesystem::path &droot)
+{
+  return droot / FILENAME_TGFID_TYPE_PREF;
+}
+
+void
+set_tgfid_type (const std::filesystem::path &droot, uint8_t t)
+{
+  auto path = path_tgfid_type_pref (droot);
+  auto filename = path.c_str ();
+  FILE *f = fopen (filename, "w");
+  uint8_t b = t;
+  fwrite (&b, 1, 1, f);
+  fclose (f);
+}
+
+void
+init_tgfid_type (const std::filesystem::path &droot)
+{
+  if (!std::filesystem::exists (droot / FILENAME_TGFID_TYPE_PREF))
+    set_tgfid_type (droot, 2);
+}
+
+uint8_t
+get_tgfid_type (const std::filesystem::path &droot)
+{
+  auto path = path_tgfid_type_pref (droot);
+  auto filename = path.c_str ();
+  FILE *f = fopen (filename, "r");
+  uint8_t ret = 0;
+  fread (&ret, 1, 1, f);
+  fclose (f);
+  return ret;
+}
+} // namespace impl_fs
+
 TgFocusData::~TgFocusData ()
 {
   if (this->lck_droot != nullptr)
@@ -63,9 +103,6 @@ TgFocusData::~TgFocusData ()
       fclose (this->lck_filters);
     }
 }
-
-void
-init_tgfid_type (std::filesystem::path droot);
 
 TgFocusData::TgFocusData (std::optional<std::filesystem::path> &&may_pred_home,
 			  bool reset)
@@ -183,7 +220,7 @@ title = ".*"
     }
 
   // tgfid_type
-  init_tgfid_type (droot_dir);
+  impl_fs::init_tgfid_type (droot_dir);
 
   // pref_lang
   namespace fs = std::filesystem;
@@ -510,46 +547,6 @@ TgFocusData::set_pref_lang (tgf::Lang l) const
 }
 
 //  -  tgfid type  -  //
-
-namespace impl_fs {
-static constexpr auto FILENAME_TGFID_TYPE_PREF = "tgfid_t";
-
-std::filesystem::path
-path_tgfid_type_pref (const std::filesystem::path &droot)
-{
-  return droot / FILENAME_TGFID_TYPE_PREF;
-}
-
-void
-set_tgfid_type (const std::filesystem::path &droot, uint8_t t)
-{
-  auto path = path_tgfid_type_pref (droot);
-  auto filename = path.c_str ();
-  FILE *f = fopen (filename, "w");
-  uint8_t b = t;
-  fwrite (&b, 1, 1, f);
-  fclose (f);
-}
-
-void
-init_tgfid_type (const std::filesystem::path &droot)
-{
-  if (!std::filesystem::exists (droot / FILENAME_TGFID_TYPE_PREF))
-    set_tgfid_type (droot, 2);
-}
-
-uint8_t
-get_tgfid_type (const std::filesystem::path &droot)
-{
-  auto path = path_tgfid_type_pref (droot);
-  auto filename = path.c_str ();
-  FILE *f = fopen (filename, "r");
-  uint8_t ret = 0;
-  fread (&ret, 1, 1, f);
-  fclose (f);
-  return ret;
-}
-} // namespace impl_fs
 
 void
 TgFocusData::set_basic_tgfid () const
