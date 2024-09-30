@@ -88,7 +88,7 @@ TdCollector::try_create_tgfchat () // FIXME: is try
 	      else if (object->get_id () == td_api::error::ID)
 		{
 		  auto error = td::move_tl_object_as<td_api::error> (object);
-		  lvlog (LogLv::ERROR, " error code:", error->code_,
+		  lvlog (LogLv::ERROR, "error code:", error->code_,
 			 " error message:", error->message_);
 		}
 	      else
@@ -175,7 +175,7 @@ TdCollector::collect_msg (const TgMsg &msg)
     else if (object->get_id () == td_api::error::ID)
       {
 	auto error = td::move_tl_object_as<td_api::error> (object);
-	lvlog (LogLv::ERROR, " msg not collected", " error code:", error->code_,
+	lvlog (LogLv::ERROR, "msg not collected", " error code:", error->code_,
 	       " error message:", error->message_);
 	if (error->message_.find ("Have no write access to the chat")
 	      != std::string::npos
@@ -462,8 +462,21 @@ TdCollector::on_authorization_state_update ()
       }
 
       default: {
-	std::cerr << "ignored auth state with id "
-		  << this->auth_state_->get_id () << std::endl;
+	int32_t authState = this->auth_state_->get_id ();
+	if (authState == td_api::authorizationStateWaitPhoneNumber::ID)
+	  {
+	    lvlog (
+	      LogLv::ERROR,
+	      "Logged in information is "
+	      "corrupted. Run commands one by one: "
+	      "`auth-reset`, `auth`, to resolve the issue. Please report the "
+	      "issue if this message still exists.");
+	    std::exit (2);
+	  }
+	else
+	  {
+	    lvlog (LogLv::ERROR, "ignored auth state with id ", authState);
+	  }
 	break;
       }
     }

@@ -30,7 +30,7 @@ need_collect (const TgMsg &msg)
 {
   auto tomlstr = tgf_data.get_filters ();
   lvlog (LogLv::INFO,
-	 " consumer_iter:", it_cnt_consumer.load (std::memory_order_relaxed),
+	 "consumer_iter:", it_cnt_consumer.load (std::memory_order_relaxed),
 	 " filters reloaded");
 
   auto fcf_list = FocusFilterList (tomlstr);
@@ -48,10 +48,11 @@ focusd_consumer ()
   while (1)
     {
       // std::this_thread::sleep_for (std::chrono::seconds (1));
-
       is_csm_mq.wait (false, std::memory_order_acquire);
 
-      if (!tgf_data.is_tgfid_valid () && !collector.tried_create_tgfchat)
+      bool isValid = tgf_data.is_tgfid_valid ();
+      bool isTriedCreate = collector.tried_create_tgfchat;
+      if (!isValid && !isTriedCreate)
 	{
 	  collector.try_create_tgfchat ();
 	  continue;
@@ -61,7 +62,6 @@ focusd_consumer ()
       {
 	std::lock_guard<std::mutex> mq_guard (mq_lock);
 
-	// if (mq.size () > 0 && collector.done_create_collector)
 	if (mq.size () > 0 && tgf_data.is_tgfid_valid ())
 	  {
 	    lvlog (LogLv::DEBUG, "consumer_iter:",
