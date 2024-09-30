@@ -11,7 +11,12 @@
 #include <string>
 #include <vector>
 
-constexpr auto TF_DEV = "TG-FOCUS";
+constexpr auto TF_DEV =
+#ifdef NDEBUG
+  "TG-FOCUS";
+#else
+  "TG-FOCUS_DEV";
+#endif
 constexpr auto TF_VER = "1.7";
 constexpr auto TF_COLL_CHAT_TITLE =
 #ifdef NDEBUG
