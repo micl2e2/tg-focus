@@ -569,5 +569,5 @@ TgFocusData::is_basic_tgfid () const
 bool
 TgFocusData::is_super_tgfid () const
 {
-  return impl_fs::get_tgfid_type (this->data_root) == 2;
+  return impl_fs::get_tgfid_type (this->data_root) == 3;
 }
