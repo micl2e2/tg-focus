@@ -452,7 +452,7 @@ TdCollector::on_authorization_state_update ()
 	request->database_directory_ = tgf_data.path_tddata ();
 	request->use_message_database_ = true;
 	request->use_secret_chats_ = true;
-	request->api_id_ = tgf_data.get_api_id_as_int32 ();
+	request->api_id_ = tgf_data.get_api_id ();
 	request->api_hash_ = tgf_data.get_api_hash (); //
 	request->system_language_code_ = "en";
 	request->device_model_ = TF_DEV;

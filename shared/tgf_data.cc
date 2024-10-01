@@ -325,21 +325,21 @@ TgFocusData::prepare_filters_tmp () const
   return true;
 }
 
-std::string
+int32_t
 TgFocusData::get_api_id () const
 {
-  FileReader freader{this->path_api_id ().c_str ()};
-  auto strdata = freader.read_to_string ().value_or ("-");
-  trim (strdata);
-  return strdata;
-}
-
-std::int32_t
-TgFocusData::get_api_id_as_int32 () const
-{
-  auto strdata = this->get_api_id ();
-
-  return std::atoi (strdata.c_str ());
+  auto path = this->path_api_id ();
+  auto filename = path.c_str ();
+  FILE *f = fopen (filename, "r");
+  int32_t ret = 0;
+  for (int i = 0; i < 4; i++)
+    {
+      uint8_t b = 0;
+      fread (&b, 1, 1, f);
+      ret = ((static_cast<int32_t> (b) << (8 * i)) | ret);
+    }
+  fclose (f);
+  return ret;
 }
 
 std::string
@@ -385,24 +385,19 @@ TgFocusData::get_filters_tmp () const
 // setter
 
 void
-TgFocusData::set_api_id (std::string &&in) const
+TgFocusData::set_api_id (int32_t ipt) const
 {
-  if (in.length () == 0)
-    return;
-  // check convert to int
-  long as_num = std::strtol (in.c_str (), nullptr, 10);
-  if (as_num < INT_MIN || as_num > INT_MAX)
-    return;
-
-  if (std::to_string (as_num) != in)
-    return;
-
   auto path = this->path_api_id ();
   auto filename = path.c_str ();
-  FILE *f = std::fopen (filename, "w+");
-  if (f == nullptr)
-    return;
-  fwrite (in.c_str (), 1, in.length (), f);
+  FILE *f = std::fopen (filename, "wb");
+  int32_t tmp = ipt;
+  for (int i = 0; i < 4; i++)
+    {
+      if (i > 0)
+	tmp = tmp >> 8;
+      char curr = static_cast<char> (tmp & 0xff);
+      fwrite (&curr, 1, 1, f);
+    }
   fclose (f);
 }
 

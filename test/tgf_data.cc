@@ -64,52 +64,29 @@ tst_files_content ()
   // api_id ------------------------
 
   {
-    auto strdata = tfdata.get_api_id ();
-    assert (strdata == "");
+    int32_t strdata = tfdata.get_api_id ();
+    assert (strdata == 0);
   }
 
   // set api_id
   {
-    tfdata.set_api_id (std::string ("1122334455"));
-    auto strdata = tfdata.get_api_id ();
-    assert (strdata == "1122334455");
+    tfdata.set_api_id (1122334455);
+    int32_t strdata = tfdata.get_api_id ();
+    assert (strdata == 1122334455);
   }
 
   // change api_id
   {
-    tfdata.set_api_id ("2147483647");
-    auto strdata = tfdata.get_api_id ();
-    assert (strdata == "2147483647");
+    tfdata.set_api_id (2147483647);
+    int32_t strdata = tfdata.get_api_id ();
+    assert (strdata == 2147483647);
   }
 
   // change api_id
   {
-    tfdata.set_api_id ("2147483648");
-    auto strdata = tfdata.get_api_id ();
-    assert (strdata == "2147483647");
-  }
-
-  // change api_id (invalid num1)
-  {
-    tfdata.set_api_id ("5+5");
-    auto strdata = tfdata.get_api_id ();
-    cerr << strdata << endl;
-    assert (strdata == "2147483647");
-  }
-
-  // change api_id (invalid num2)
-  {
-    tfdata.set_api_id ("a");
-    auto strdata = tfdata.get_api_id ();
-    assert (strdata == "2147483647");
-  }
-
-  // change api_id (invalid num3)
-  {
-    tfdata.set_api_id ("1111111111111111111111111111111111");
-    auto strdata = tfdata.get_api_id ();
-    cerr << strdata << endl;
-    assert (strdata == "2147483647");
+    tfdata.set_api_id (2147483648);
+    int32_t strdata = tfdata.get_api_id ();
+    assert (strdata == -2147483648);
   }
 
   // api_hash ------------------------

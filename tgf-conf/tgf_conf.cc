@@ -32,6 +32,7 @@ Usage: %s [command]
 Available Commands:
   auth              Log in Telegram
   auth-reset        Log out Telegram
+  auth-cust-api     Log in Telegram (with API ID and API HASH customization)
   filters           Customize focus filter(s)
   use-chat          Initialize TG-FOCUS chat as a basic group (default)
   use-channel       Initialize TG-FOCUS chat as a super group
@@ -206,6 +207,9 @@ main (int argc, char *argv[])
     return handle_auth_reset ();
 
   if (subcmd == "auth")
+    return handle_auth ();
+
+  if (subcmd == "auth-cust-api")
     return handle_auth ();
 
   if (subcmd == "filters")

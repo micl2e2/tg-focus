@@ -41,9 +41,7 @@ public:
 
   bool prepare_filters_tmp () const;
 
-  std::string get_api_id () const;
-
-  std::int32_t get_api_id_as_int32 () const;
+  std::int32_t get_api_id () const;
 
   std::string get_api_hash () const;
 
@@ -61,7 +59,7 @@ public:
 
   // setter
 
-  void set_api_id (std::string &&in) const;
+  void set_api_id (int32_t ipt) const;
 
   void set_api_hash (std::string &&in) const;
 

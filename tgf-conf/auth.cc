@@ -180,12 +180,12 @@ TdAuth::on_authorization_state_update ()
   switch (this->auth_state_->get_id ())
     {
       case td_api::authorizationStateReady::ID: {
-	// this means: api id/hash correct, phone and vcode correct
+	// api id/hash correct, phone and vcode correct
 
 	this->is_authorized = true;
 
-	// persistant
-	tgf_data.set_api_id (std::to_string (this->api_id_));
+	// persistent
+	tgf_data.set_api_id (this->api_id_);
 	tgf_data.set_api_hash (std::move (this->api_hash_));
 	tgf_data.set_auth_hint (true);
 
@@ -242,7 +242,7 @@ TdAuth::on_authorization_state_update ()
 	break;
       }
 
-      // always first event
+      // assuming always the first event
       case td_api::authorizationStateWaitTdlibParameters::ID: {
 	std::int32_t api_id;
 	std::string may_api_id;
@@ -250,7 +250,7 @@ TdAuth::on_authorization_state_update ()
 
 	if (tgf_data.get_auth_hint ())
 	  {
-	    api_id = tgf_data.get_api_id_as_int32 ();
+	    api_id = tgf_data.get_api_id ();
 	    api_hash = tgf_data.get_api_hash ();
 	  }
 	else
