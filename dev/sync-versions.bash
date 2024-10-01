@@ -72,7 +72,7 @@ then
 	shared/common.hh
     if [[ $? -eq 0 ]]
     then
-	echo 'sync: tdlib source'
+	echo 'sync: tgf version'
 	# cp dev/pick-ver-tgfocus{,.prev}
     fi
 fi
