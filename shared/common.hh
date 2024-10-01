@@ -18,6 +18,7 @@ constexpr auto TF_DEV =
   "TG-FOCUS_DEV";
 #endif
 constexpr auto TF_VER = "1.7";
+constexpr auto TF_VER_MAJOR = "1";
 constexpr auto TF_COLL_CHAT_TITLE =
 #ifdef NDEBUG
   "TG-FOCUS";

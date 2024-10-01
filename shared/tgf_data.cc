@@ -123,9 +123,11 @@ TgFocusData::TgFocusData (std::optional<std::filesystem::path> &&may_pred_home,
   // data root
   auto droot_dir = home_dir / DIR_DATAROOT;
 
-  if (reset)
+  if (reset) // rarely used
     std::filesystem::remove_all (droot_dir);
 
+  std::filesystem::create_directory (droot_dir);
+  droot_dir /= TF_VER_MAJOR;
   std::filesystem::create_directory (droot_dir);
 
   this->data_root = droot_dir;

@@ -46,6 +46,7 @@ tst_files_existence ()
   expected += "/";
   expected += tfdata.name_droot ();
   expected += "/";
+  expected += TF_VER_MAJOR;
   expected += "/abc";
 
   cerr << "expected: " << expected << endl;
