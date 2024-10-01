@@ -130,9 +130,9 @@ TgFocusData::TgFocusData (std::optional<std::filesystem::path> &&may_pred_home,
   droot_dir /= TF_VER_MAJOR;
   std::filesystem::create_directory (droot_dir);
 
-  this->data_root = droot_dir;
+  this->data_root_majv = droot_dir;
 
-  // droot lock
+  // droot loc, majv-specific
   auto p = droot_dir / FILE_LOCK_DROOT;
   {
     FILE *fstrm = fopen (p.c_str (), "w");
@@ -253,69 +253,69 @@ TgFocusData::name_droot ()
 std::filesystem::path
 TgFocusData::abspath_of (const char *subname) const
 {
-  auto tmp = this->data_root;
+  auto tmp = this->data_root_majv;
   return tmp.append (subname);
 }
 
 std::filesystem::path
 TgFocusData::path_droot () const
 {
-  return this->data_root;
+  return this->data_root_majv;
 }
 
 std::filesystem::path
 TgFocusData::path_tddata () const
 {
-  auto tmp = this->data_root;
+  auto tmp = this->data_root_majv;
   return tmp.append (DIR_TDDATA);
 }
 
 std::filesystem::path
 TgFocusData::path_api_id () const
 {
-  auto tmp = this->data_root;
+  auto tmp = this->data_root_majv;
   return tmp.append (FILE_APIID);
 }
 
 std::filesystem::path
 TgFocusData::path_api_hash () const
 {
-  auto tmp = this->data_root;
+  auto tmp = this->data_root_majv;
   return tmp.append (FILE_APIHASH);
 }
 
 std::filesystem::path
 TgFocusData::path_auth_hint () const
 {
-  auto tmp = this->data_root;
+  auto tmp = this->data_root_majv;
   return tmp.append (FILE_AUTH_HINT);
 }
 
 std::filesystem::path
 TgFocusData::path_filters () const
 {
-  auto tmp = this->data_root;
+  auto tmp = this->data_root_majv;
   return tmp.append (FILE_FILTERS);
 }
 
 std::filesystem::path
 TgFocusData::path_filters_tmp () const
 {
-  auto tmp = this->data_root;
+  auto tmp = this->data_root_majv;
   return tmp.append (FILE_FILTERS_TMP);
 }
 
 std::filesystem::path
 TgFocusData::path_tgfid () const
 {
-  auto tmp = this->data_root;
+  auto tmp = this->data_root_majv;
   return tmp.append (FILE_TGFID);
 }
 
 std::filesystem::path
 TgFocusData::path_pref_lang () const
 {
-  fs::path tmp = this->data_root;
+  fs::path tmp = this->data_root_majv;
   return tmp.append (FILE_PREF_LANG);
 }
 
@@ -548,23 +548,23 @@ TgFocusData::set_pref_lang (tgf::Lang l) const
 void
 TgFocusData::set_basic_tgfid () const
 {
-  impl_fs::set_tgfid_type (this->data_root, 2);
+  impl_fs::set_tgfid_type (this->data_root_majv, 2);
 }
 
 void
 TgFocusData::set_super_tgfid () const
 {
-  impl_fs::set_tgfid_type (this->data_root, 3);
+  impl_fs::set_tgfid_type (this->data_root_majv, 3);
 }
 
 bool
 TgFocusData::is_basic_tgfid () const
 {
-  return impl_fs::get_tgfid_type (this->data_root) == 2;
+  return impl_fs::get_tgfid_type (this->data_root_majv) == 2;
 }
 
 bool
 TgFocusData::is_super_tgfid () const
 {
-  return impl_fs::get_tgfid_type (this->data_root) == 3;
+  return impl_fs::get_tgfid_type (this->data_root_majv) == 3;
 }

@@ -84,7 +84,7 @@ public:
 private:
   FILE *lck_droot{nullptr};
   FILE *lck_filters{nullptr};
-  std::filesystem::path data_root;
+  std::filesystem::path data_root_majv;
   static constexpr auto DIR_DATAROOT = ".tgfocus";
   static constexpr auto DIR_TDDATA = "tdlib";
   static constexpr auto FILE_APIID = "api_id";
