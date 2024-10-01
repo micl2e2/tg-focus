@@ -20,7 +20,7 @@ TdAuth::~TdAuth ()
 {
   send_query (td_api::make_object<td_api::close> (), [] (Object obj) {
     if (obj->get_id () == td_api::ok::ID)
-      lvlog (LogLv::INFO, "Closing...");
+      lvlog (LogLv::DEBUG, "Closing...");
   });
 
   while (!is_tdlib_closed.load (std::memory_order_acquire))
@@ -44,7 +44,7 @@ TdAuth::loop ()
 	  process_response (std::move (response));
 	}
     }
-  lvlog (LogLv::INFO, "Log in successfully!");
+  lvlog (LogLv::INFO, "Logged in!");
 }
 
 void
@@ -207,7 +207,7 @@ TdAuth::on_authorization_state_update ()
       }
 
       case td_api::authorizationStateClosed::ID: {
-	lvlog (LogLv::INFO, "Closed");
+	lvlog (LogLv::DEBUG, "Closed");
 	this->is_authorized = false;
 	is_tdlib_closed.store (true, std::memory_order_release);
 	break;

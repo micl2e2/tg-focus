@@ -439,12 +439,12 @@ TdCollector::on_authorization_state_update ()
     {
       case td_api::authorizationStateReady::ID: {
 	this->is_authorized = true;
-	lvlog (LogLv::INFO, "Authorization is completed");
+	lvlog (LogLv::DEBUG, "Authorization is completed");
 	break;
       }
 
       case td_api::authorizationStateWaitTdlibParameters::ID: {
-	lvlog (LogLv::INFO, "wait tdlib para... ");
+	lvlog (LogLv::DEBUG, "wait tdlib para... ");
 
 	std::string inbuf;
 
