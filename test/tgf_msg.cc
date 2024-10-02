@@ -12,13 +12,12 @@ test_not_decorate ()
     TgMsg msg (("michael2 | TG-Focusing"), ("michael2 | TG-Focusing"),
 	       ("XXXXXXXXX"), (1705740724));
     string msg_lcstr = msg.to_locale_string ();
-    string expected = R"([ CHAT ] michael2 | TG-Focusing
-[ SENDER ] michael2 | TG-Focusing
-[ CONTENT ] XXXXXXXXX
-[ DATE ] 2024-01-20 08:52:04 +0000 UTC
-[ ID ] 0
-)";
+    string expected
+      = "\xf0\x9f\x92\xa1 | michael2 | TG-Focusing\n\xe2\x9c\x89 | michael2 | "
+	"TG-Focusing\n\xf0\x9f\x92\xac | XXXXXXXXX\n\xf0\x9f\x95\x94 | "
+	"2024-01-20 08:52:04 +0000 UTC\n\xe2\x99\xbe | 0\n";
     cout << msg_lcstr << endl;
+    cout << expected << endl;
     assert (msg_lcstr == expected);
 
     vector<tuple<int, int>> pos_info = get_decor_pos (expected);
@@ -38,25 +37,17 @@ test_should_decorate_en_us ()
     TgMsg msg (("michael2 | TG-Focusing"), ("michael2 | TG-Focusing"),
 	       ("好好好好好好好好好好好好好好好。"), (1705740724));
     string msg_lcstr = msg.to_locale_string ();
-    string expected = R"([ CHAT ] michael2 | TG-Focusing
-[ SENDER ] michael2 | TG-Focusing
-[ CONTENT ] 好好好好好好好好好好好好好好好。
-[ DATE ] 2024-01-20 08:52:04 +0000 UTC
-[ ID ] 0
-)";
+    string expected = "\xf0\x9f\x92\xa1 | michael2 | TG-Focusing\n\xe2\x9c\x89 "
+		      "| michael2 | TG-Focusing\n\xf0\x9f\x92\xac | "
+		      "好好好好好好好好好好好好好好好。\n\xf0\x9f\x95\x94 | "
+		      "2024-01-20 08:52:04 +0000 UTC\n\xe2\x99\xbe | 0\n";
     cout << msg_lcstr << endl;
     assert (msg_lcstr == expected);
 
     vector<tuple<int, int>> pos_info = get_decor_pos (msg_lcstr);
 
     cout << pos_info.size () << endl;
-    assert (pos_info.size () == 5);
-
-    assert ((pos_info[0] == make_tuple<int, int> (0, 8)));
-    assert ((pos_info[1] == make_tuple<int, int> (32, 10)));
-    assert ((pos_info[2] == make_tuple<int, int> (66, 11)));
-    assert ((pos_info[3] == make_tuple<int, int> (95, 8)));
-    assert ((pos_info[4] == make_tuple<int, int> (134, 6)));
+    assert (pos_info.size () == 0);
   }
 
   // ascii + nonascii
@@ -64,25 +55,17 @@ test_should_decorate_en_us ()
     TgMsg msg (("michael2 | TG-Focusing"), ("michael2 | TG-Focusing"),
 	       ("ののののののののAA..."), (1705740724));
     string msg_lcstr = msg.to_locale_string ();
-    string expected = R"([ CHAT ] michael2 | TG-Focusing
-[ SENDER ] michael2 | TG-Focusing
-[ CONTENT ] ののののののののAA...
-[ DATE ] 2024-01-20 08:52:04 +0000 UTC
-[ ID ] 0
-)";
+    string expected = "\xf0\x9f\x92\xa1 | michael2 | TG-Focusing\n\xe2\x9c\x89 "
+		      "| michael2 | TG-Focusing\n\xf0\x9f\x92\xac | "
+		      "ののののののののAA...\n\xf0\x9f\x95\x94 | 2024-01-20 "
+		      "08:52:04 +0000 UTC\n\xe2\x99\xbe | 0\n";
     cout << msg_lcstr << endl;
     assert (msg_lcstr == expected);
 
     vector<tuple<int, int>> pos_info = get_decor_pos (msg_lcstr);
 
     cout << pos_info.size () << endl;
-    assert (pos_info.size () == 5);
-
-    assert ((pos_info[0] == make_tuple<int, int> (0, 8)));
-    assert ((pos_info[1] == make_tuple<int, int> (32, 10)));
-    assert ((pos_info[2] == make_tuple<int, int> (66, 11)));
-    assert ((pos_info[3] == make_tuple<int, int> (92, 8)));
-    assert ((pos_info[4] == make_tuple<int, int> (131, 6)));
+    assert (pos_info.size () == 0);
   }
 
   // ascii + emoji
@@ -90,26 +73,17 @@ test_should_decorate_en_us ()
     TgMsg msg (("michael2 | TG-Focusing"), ("michael2 | TG-Focusing"),
 	       ("🤣🤣🤣🤣🤣🤣🤣🤣AA..."), (1705740724));
     string msg_lcstr = msg.to_locale_string ();
-    string expected = R"([ CHAT ] michael2 | TG-Focusing
-[ SENDER ] michael2 | TG-Focusing
-[ CONTENT ] 🤣🤣🤣🤣🤣🤣🤣🤣AA...
-[ DATE ] 2024-01-20 08:52:04 +0000 UTC
-[ ID ] 0
-)";
+    string expected = "\xf0\x9f\x92\xa1 | michael2 | TG-Focusing\n\xe2\x9c\x89 "
+		      "| michael2 | TG-Focusing\n\xf0\x9f\x92\xac | "
+		      "🤣🤣🤣🤣🤣🤣🤣🤣AA...\n\xf0\x9f\x95\x94 "
+		      "| 2024-01-20 08:52:04 +0000 UTC\n\xe2\x99\xbe | 0\n";
     cout << msg_lcstr << endl;
     assert (msg_lcstr == expected);
 
     vector<tuple<int, int>> pos_info = get_decor_pos (msg_lcstr);
 
     cout << pos_info.size () << endl;
-    assert (pos_info.size () == 5);
-
-    // <0,8>,<32,10>,<66,11>,<100,8>,<139,6>
-    assert ((pos_info[0] == make_tuple<int, int> (0, 8)));
-    assert ((pos_info[1] == make_tuple<int, int> (32, 10)));
-    assert ((pos_info[2] == make_tuple<int, int> (66, 11)));
-    assert ((pos_info[3] == make_tuple<int, int> (100, 8)));
-    assert ((pos_info[4] == make_tuple<int, int> (139, 6)));
+    assert (pos_info.size () == 0);
   }
 
   // ascii + nonascii + emoji
@@ -125,26 +99,25 @@ test_should_decorate_en_us ()
 	       (1705740724));
     string msg_lcstr = msg.to_locale_string ();
     string expected
-      = R"([ CHAT ] michael2🐰🐭🐹🐻🐶🐱🌼🏵️💮🌸🪷🌺 | TG-Focusing
-[ SENDER ] michael2🐰🐭🐹🐻🐶🐱🌼🏵️💮🌸🪷🌺 | TG-Focusing
-[ CONTENT ] 🤣🤣🤣🤣🤣のののののAAAAA好好好好好
-[ DATE ] 2024-01-20 08:52:04 +0000 UTC
-[ ID ] 0
-)";
+      = "\xf0\x9f\x92\xa1 | "
+	"michael2🐰🐭🐹🐻🐶🐱🌼🏵️💮🌸🪷🌺 "
+	"| "
+	"TG-Focusing\n\xe2\x9c\x89 | "
+	"michael2🐰🐭🐹🐻🐶🐱🌼🏵️💮🌸🪷🌺 "
+	"| "
+	"TG-Focusing\n\xf0\x9f\x92\xac | "
+	"🤣🤣🤣🤣🤣のののののAAAAA好好好好好\n\xf0\x9f\x95"
+	"\x94"
+	" "
+	"| "
+	"2024-01-20 08:52:04 +0000 UTC\n\xe2\x99\xbe | 0\n";
     cout << msg_lcstr << endl;
     assert (msg_lcstr == expected);
 
     vector<tuple<int, int>> pos_info = get_decor_pos (msg_lcstr);
 
     cout << pos_info.size () << endl;
-    assert (pos_info.size () == 5);
-
-    // <0,8>,<57,10>,<116,11>,<154,8>,<193,6>
-    assert ((pos_info[0] == make_tuple<int, int> (0, 8)));
-    assert ((pos_info[1] == make_tuple<int, int> (57, 10)));
-    assert ((pos_info[2] == make_tuple<int, int> (116, 11)));
-    assert ((pos_info[3] == make_tuple<int, int> (154, 8)));
-    assert ((pos_info[4] == make_tuple<int, int> (193, 6)));
+    assert (pos_info.size () == 0);
   }
 
   // ascii + emoji(sometimes rendered as 1 emoji, sometimes 2)
@@ -152,26 +125,19 @@ test_should_decorate_en_us ()
     TgMsg msg (("michael2 | TG-Focusing"), ("michael2 | TG-Focusing"),
 	       ("aaa😮‍💨😮‍💨😮‍💨aaa"), (1705740724));
     string msg_lcstr = msg.to_locale_string ();
-    string expected = R"([ CHAT ] michael2 | TG-Focusing
-[ SENDER ] michael2 | TG-Focusing
-[ CONTENT ] aaa😮‍💨😮‍💨😮‍💨aaa
-[ DATE ] 2024-01-20 08:52:04 +0000 UTC
-[ ID ] 0
-)";
+    string expected
+      = "\xf0\x9f\x92\xa1 | michael2 | TG-Focusing\n\xe2\x9c\x89 "
+	"| michael2 | TG-Focusing\n\xf0\x9f\x92\xac | "
+	"aaa😮‍💨😮‍💨😮‍💨aaa\n\xf0\x9f\x95\x94 | "
+	"2024-01-20 "
+	"08:52:04 +0000 UTC\n\xe2\x99\xbe | 0\n";
     cout << msg_lcstr << endl;
     assert (msg_lcstr == expected);
 
     vector<tuple<int, int>> pos_info = get_decor_pos (msg_lcstr);
 
     cout << pos_info.size () << endl;
-    assert (pos_info.size () == 5);
-
-    // :<0,8>,<32,10>,<66,11>,<100,8>,<139,6>,
-    assert ((pos_info[0] == make_tuple<int, int> (0, 8)));
-    assert ((pos_info[1] == make_tuple<int, int> (32, 10)));
-    assert ((pos_info[2] == make_tuple<int, int> (66, 11)));
-    assert ((pos_info[3] == make_tuple<int, int> (100, 8)));
-    assert ((pos_info[4] == make_tuple<int, int> (139, 6)));
+    assert (pos_info.size () == 0);
   }
 }
 
