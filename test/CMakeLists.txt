@@ -1,5 +1,9 @@
 include(CTest)
 
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+  add_compile_options(-Wno-unused-variable)
+endif()
+
 # add a test
 set(CurrTestName posix_regex)
 add_executable(${CurrTestName} ${CurrTestName}.cc
