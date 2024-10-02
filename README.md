@@ -29,7 +29,7 @@
 tg-focus is a comprehensive **T**ele**g**ram message filter that helps
 you **focus**. A gentle User Bot for message forwarding.
 
-Most of messages are supported:
+Most of the message types are supported:
 
 1. Chat Message
 2. Channel Update
