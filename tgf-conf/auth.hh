@@ -26,7 +26,7 @@ namespace td_api = td::td_api;
 class TdAuth
 {
 public:
-  TdAuth ();
+  TdAuth (bool useProvidedApiPass);
 
   ~TdAuth ();
 
@@ -49,6 +49,7 @@ private:
 
   std::int32_t api_id_;
   std::string api_hash_;
+  bool useProvidedApiPass_;
 
   void send_query (td_api::object_ptr<td_api::Function> f,
 		   std::function<void (Object)> handler);

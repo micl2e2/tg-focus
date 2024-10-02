@@ -3,7 +3,7 @@
 #include "common.hh"
 #include <td/telegram/td_api.h>
 
-TdAuth::TdAuth ()
+TdAuth::TdAuth (bool useProvidedApiPass)
 {
   td::ClientManager::execute (
     td_api::make_object<td_api::setLogVerbosityLevel> (1));
@@ -14,6 +14,7 @@ TdAuth::TdAuth ()
 		"use_storage_optimizer",
 		td_api::make_object<td_api::optionValueBoolean> (true)),
 	      {});
+  useProvidedApiPass_ = useProvidedApiPass;
 }
 
 TdAuth::~TdAuth ()
@@ -252,6 +253,16 @@ TdAuth::on_authorization_state_update ()
 	  {
 	    api_id = tgf_data.get_api_id ();
 	    api_hash = tgf_data.get_api_hash ();
+	  }
+	else if (this->useProvidedApiPass_)
+	  {
+	    api_id
+	      = (0x1 << 0x8 | ((0b1 << 0x6) + ((0x1 << 0x3) - 1)))
+		  << (0b1 << (0b1 << 0x2))
+		| (0x1 << 0x8 | (((0x1 << 0x3) + 0b1) * ((0b1 << 0x3) + 0x1)));
+	    api_hash = "\x66\x32\x33\x39\x66\x38\x36\x64\x31\x66\x65\x35\x64"
+		       "\x30\x65\x63\x38\x63\x37\x66\x32\x61\x35\x63\x65\x30"
+		       "\x65\x37\x30\x63\x32\x30";
 	  }
 	else
 	  {

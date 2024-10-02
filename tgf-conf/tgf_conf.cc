@@ -85,9 +85,9 @@ There is NO WARRANTY, to the extent permitted by law.
 }
 
 int
-handle_auth ()
+handle_auth (bool useProvidedApiPass)
 {
-  TdAuth td_auth;
+  TdAuth td_auth{useProvidedApiPass};
   td_auth.loop ();
   return 0;
 }
@@ -207,10 +207,10 @@ main (int argc, char *argv[])
     return handle_auth_reset ();
 
   if (subcmd == "auth")
-    return handle_auth ();
+    return handle_auth (true);
 
   if (subcmd == "auth-cust-api")
-    return handle_auth ();
+    return handle_auth (false);
 
   if (subcmd == "filters")
     return handle_filters ();
