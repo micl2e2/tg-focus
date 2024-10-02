@@ -217,9 +217,11 @@ TdAuth::on_authorization_state_update ()
       case td_api::authorizationStateWaitPhoneNumber::ID: {
 	std::cout << ("Enter phone number: ") << std::flush;
 	std::string phone_number;
-	std::cin >> phone_number;
+	std::getline (std::cin, phone_number);
+	std::string phone_number_fotmatted = rmspc (std::move (phone_number));
+
 	send_query (td_api::make_object<td_api::setAuthenticationPhoneNumber> (
-		      phone_number, nullptr),
+		      phone_number_fotmatted, nullptr),
 		    auth_query_callback ());
 	break;
       }

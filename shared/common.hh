@@ -150,4 +150,16 @@ sstr_to_int32 (const std::string &in)
   return static_cast<int32_t> (strtol (in.c_str (), nullptr, 10));
 }
 
+inline std::string
+rmspc (std::string &&ostr)
+{
+  std::string nstr = "";
+  for (char &ch : ostr)
+    {
+      if (ch != 0x20)
+	nstr += ch;
+    }
+  return nstr;
+}
+
 #endif
