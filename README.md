@@ -8,11 +8,11 @@
 
 # Table of Contents
 
-- [About](#about)
-- [A Simple Demo](#a-simple-demo)
-- [Supported Platforms/Languages](#supported-platformslanguages)
+- [Overview](#overview)
+- [Quick Start](#quick-start)
+- [Supported Platforms](#supported-platforms)
 - [How To Use](#how-to-use)
-  - [Docker Image(Recommended)](#docker-imagerecommended)
+  - [Docker/Podman](#dockerpodman)
   - [Executable Binary](#executable-binary)
 - [Filtering Rules](#filtering-rules)
   - [Filter Examples](#filter-examples)
@@ -24,17 +24,16 @@
   
 
 
-# About
+# Overview
 
 tg-focus is a comprehensive **T**ele**g**ram message filter that helps
 you **focus**. A gentle User Bot for message forwarding.
 
-Several forms of text messages are supported:
+Most of messages are supported:
 
-1. Chat Message(Raw/Reply/Forward/Quoted)
-2. Media Caption
-3. Emoji
-4. Channel Update
+1. Chat Message
+2. Channel Update
+3. ...and more
 
 By customizing *Focus Filters*, tg-focus can forward any specific
 message from any chat to a dedicated chat named *TG-FOCUS*, that way
@@ -59,10 +58,10 @@ Notable features:
     configuration file is in human-readable 
     [TOML](https://toml.io/en/) format.
 
--   **Ready to deploy**: Releases are made in three forms: source,
-    Docker image and prebuilt binary.
+-   **Ready to deploy**: Releases in three forms: source, OCI image
+    and prebuilt binary. 
 
-# A Simple Demo
+# Quick Start
 
 Below is a simple 9-step demonstration of a common use case:
 forwarding the messages that contains the keywords we want, ignoring
@@ -101,15 +100,12 @@ the message that sent from the users we don't want.
 [Back to start](#a-simple-demo)
 
 
-# Supported Platforms/Languages
+# Supported Platforms
 
 ## Platforms
 
-Currently Supported(✅)
+Never(❌). Maybe In Future(❓). Currently Supported(✅).
 
-In Future Releases(❓)
-
-Never(❌)
 
 | Operating System    | Support(x86_64) |
 |---------------------|-----------------|
@@ -173,13 +169,11 @@ instructions(`docs/i18n.org`) to add your language.
 Before anything make sure you have:
 
 1. A Telegram account
-2. A Telegram API ID and the corresponding API HASH, they can be
-   obtained at https://my.telegram.org. 
 
-There are two different ways to deploy tg-focus, through [Docker Image](#docker-imagerecommended),
-or [Executable Binary](#executable-binary):
+There are two different ways to deploy tg-focus, through
+Docker/Podman, or using prebuilt binary: 
 
-### Docker Image(Recommended)
+### Docker/Podman
 
 Make sure have [Docker](https://docs.docker.com/engine/) or
 [Podman](https://podman.io/) installed on your machine:
@@ -196,18 +190,16 @@ docker run -d micl2e2/tg-focus
 
 **Step 2:**
 
-Login your Telegram account first, it needs API ID, API HASH,
-your phone number (in international format, e.g., `+1234567` if your phone number is `234567` with country code `+1`) 
-and a login code, the first two can be obtained in https://my.telegram.org:
-
+Login your Telegram account firstly, it needs your phone number (in
+international format, e.g. `+1 234567` if your phone number is
+`234567` with region code `+1`) and a login code:
 ```sh
 docker exec -it CONTAINER-NAME tgf-conf auth
 ```
-If you've logged in successfully, the last three lines will be:
+
+If you've logged in successfully, the last line should be:
 ```
-[tgf INFO] Log in successfully!
-[tgf INFO] Closing...
-[tgf INFO] Closed
+[tgf INFO] Logged in!
 ```
 
 **Step 3: (Optional)**
@@ -268,18 +260,16 @@ whether your [platform](#supported-platforms) is supported or not.
 
 **Step 2:**
 
-Login your Telegram account first, it needs API ID, API HASH,
-your phone number (in international format, e.g., `+1234567` if your phone number is `234567` with country code `+1`) 
-and a login code, the first two can be obtained in https://my.telegram.org:
-
+Login your Telegram account firstly, it needs your phone number (in
+international format, e.g. `+1 234567` if your phone number is
+`234567` with region code `+1`) and a login code:
 ```sh
 /path/to/tgf-conf auth
 ```
-If you've logged in successfully, the last three lines will be:
+
+If you've logged in successfully, the last line should be:
 ```
-[tgf INFO] Log in successfully!
-[tgf INFO] Closing...
-[tgf INFO] Closed
+[tgf INFO] Logged in!
 ```
 
 **Step 3: (Optional)**
