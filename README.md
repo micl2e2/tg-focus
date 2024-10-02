@@ -1,4 +1,4 @@
-# TG-Focus
+# TG-Focus💡
 
 <a href="https://github.com/micl2e2/tg-focus/blob/master/LICENSE-GPL">![GitHub License](https://img.shields.io/github/license/micl2e2/tg-focus?logo=gnu&color=blue&link=https%3A%2F%2Fgithub.com%2Fmicl2e2%2Ftg-focus%2Fblob%2Fmaster%2FLICENSE-GPL)</a>
 <a href="https://hub.docker.com/r/micl2e2/tg-focus">![Docker Image Size](https://img.shields.io/docker/image-size/micl2e2/tg-focus?logo=docker&logoColor=white&color=lightgreen&link=hub.docker.com%2Fr%2Fmicl2e2%2Ftg-focus)</a>
@@ -73,31 +73,31 @@ the message that sent from the users we don't want.
 
 <img src="demo/3.jpg" width="500px"/>
 
-[Back to start](#a-simple-demo)
+[Back to start](#quick-start)
 
 <img src="demo/4.jpg" width="500px"/>
 
-[Back to start](#a-simple-demo)
+[Back to start](#quick-start)
 
 <img src="demo/5.jpg" width="500px"/>
 
-[Back to start](#a-simple-demo)
+[Back to start](#quick-start)
 
 <img src="demo/6.jpg" width="500px"/>
 
-[Back to start](#a-simple-demo)
+[Back to start](#quick-start)
 
 <img src="demo/7.jpg" width="500px"/>
 
-[Back to start](#a-simple-demo)
+[Back to start](#quick-start)
 
 <img src="demo/8.jpg" width="500px"/>
 
-[Back to start](#a-simple-demo)
+[Back to start](#quick-start)
 
 <img src="demo/9.jpg" width="500px"/>
 
-[Back to start](#a-simple-demo)
+[Back to start](#quick-start)
 
 
 # Supported Platforms
