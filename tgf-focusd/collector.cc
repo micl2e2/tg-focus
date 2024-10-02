@@ -124,7 +124,7 @@ TdCollector::try_create_tgfchat () // FIXME: is try
 td_api::array<td_api::object_ptr<td_api::textEntity>>
 decorate_msg (const std::string &msg)
 {
-  // return td_api::array<td_api::object_ptr<td_api::textEntity>>{};
+  return td_api::array<td_api::object_ptr<td_api::textEntity>>{};
 
   auto pos_info = get_decor_pos (msg);
 
