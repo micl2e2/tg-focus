@@ -1,8 +1,11 @@
 # TG-Focus💡
 
-<a href="https://github.com/micl2e2/tg-focus/blob/master/LICENSE-GPL">![GitHub License](https://img.shields.io/github/license/micl2e2/tg-focus?logo=gnu&color=blue&link=https%3A%2F%2Fgithub.com%2Fmicl2e2%2Ftg-focus%2Fblob%2Fmaster%2FLICENSE-GPL)</a>
+<a href="https://core.telegram.org/tdlib">![Static Badge](https://img.shields.io/badge/TDLib-1.8.35-%2332a9de)</a>
 <a href="https://hub.docker.com/r/micl2e2/tg-focus">![Docker Image Size](https://img.shields.io/docker/image-size/micl2e2/tg-focus?logo=docker&logoColor=white&color=lightgreen&link=hub.docker.com%2Fr%2Fmicl2e2%2Ftg-focus)</a>
-<a href="https://github.com/tdlib/td">![GitHub commits difference between two branches/tags/commits](https://img.shields.io/github/commits-difference/tdlib/td?base=983b09578ee90cac504767c7f46b4ec915a56beb&head=master&logo=gitextensions&label=pending%20TDLib%20updates&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd)</a>
+<a href="https://github.com/tdlib/td">![GitHub commits difference between two branches/tags/commits](https://img.shields.io/github/commits-difference/tdlib/td?base=983b09578ee90cac504767c7f46b4ec915a56beb&head=master&logo=gitextensions&label=Pending&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd)</a>
+<a href="https://github.com/micl2e2/tg-focus/blob/master/LICENSE-GPL">![GitHub License](https://img.shields.io/github/license/micl2e2/tg-focus?logo=gnu&color=blue&link=https%3A%2F%2Fgithub.com%2Fmicl2e2%2Ftg-focus%2Fblob%2Fmaster%2FLICENSE-GPL)</a>
+
+
 
 
 
