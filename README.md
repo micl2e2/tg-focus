@@ -1,9 +1,8 @@
 # TG-Focus💡
 
-<a href="https://core.telegram.org/tdlib">![Static Badge](https://img.shields.io/badge/tdlib-1.8.36-%2332a9de)</a>
-<a href="https://hub.docker.com/r/micl2e2/tg-focus">![Docker Image Size](https://img.shields.io/docker/image-size/micl2e2/tg-focus?logo=docker&logoColor=white&color=lightgreen&link=hub.docker.com%2Fr%2Fmicl2e2%2Ftg-focus)</a>
-<a href="https://github.com/tdlib/td">![GitHub commits difference between two branches/tags/commits](https://img.shields.io/github/commits-difference/tdlib/td?base=15b86a17dc51caf5a3ba0b0acdb671cf8a27c80c&head=master&logo=gitextensions&label=pending&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd)</a>
 <a href="https://github.com/micl2e2/tg-focus/blob/master/LICENSE-GPL">![GitHub License](https://img.shields.io/github/license/micl2e2/tg-focus?logo=gnu&color=blue&link=https%3A%2F%2Fgithub.com%2Fmicl2e2%2Ftg-focus%2Fblob%2Fmaster%2FLICENSE-GPL)</a>
+<a href="https://core.telegram.org/tdlib">![Static Badge](https://img.shields.io/badge/tdlib-1.8.36-%2332a9de)</a>
+<a href="https://github.com/tdlib/td">![GitHub commits difference between two branches/tags/commits](https://img.shields.io/github/commits-difference/tdlib/td?base=15b86a17dc51caf5a3ba0b0acdb671cf8a27c80c&head=master&logo=gitextensions&label=pending&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd)</a>
 
 
 
@@ -15,8 +14,8 @@
 - [Quick Start](#quick-start)
 - [Supported Platforms](#supported-platforms)
 - [How To Use](#how-to-use)
+  - [Binaries](#binaries)
   - [Docker/Podman](#dockerpodman)
-  - [Executable Binary](#executable-binary)
 - [Filtering Rules](#filtering-rules)
   - [Filter Examples](#filter-examples)
 - [Troubleshooting](#troubleshooting)
@@ -176,6 +175,79 @@ Before anything make sure you have:
 There are two different ways to deploy tg-focus, through
 Docker/Podman, or using prebuilt binary: 
 
+### Binaries
+
+**Step 1:**
+
+Download the binaries at GitHub releases
+[page](https://github.com/micl2e2/tg-focus/releases). Please check
+whether your [platform](#supported-platforms) is supported or not.
+
+**Step 2:**
+
+Login your Telegram account firstly, it needs your phone number (in
+international format, e.g. `+1234567` if your phone number is
+`234567` with region code `+1`) and a login code:
+```sh
+/path/to/tgf-conf auth
+```
+
+If you've logged in successfully, the last line should be:
+```
+[tgf INFO] Logged in!
+```
+
+**Step 3: (Optional)**
+
+ Using different language other than default(English) by:
+
+```sh
+/path/to/tgf-conf lang XX-YY
+```
+Note: XX is the language code, YY is the region code, e.g. "en-US" represents
+"English (United States)", "en-GB" represents "English (United Kingdom)", etc. 
+All valid codes can be found at 
+http://www.lingoes.net/en/translator/langcode.htm 
+
+**Step 4:**
+
+Launch tg-focus daemon:
+
+```sh
+# run in foreground
+/path/to/tgf-focusd
+
+# or run in background
+nohup /path/to/tgf-focusd &
+```
+
+**Step 5:**
+
+If logined successfullly, a new chat `TG-FOCUS` will be
+created, the subsequent messages will be filtered and forwarded to
+that chat.
+
+**Step 6:**
+
+Note that by default, tg-focus will forward **all** messages
+you receive. You can change the *Focus Filter*s(the filter
+configuration) any time you like, to custom the messages you'd like
+to receive on that chat. See [examples](#filter-examples).
+
+```sh
+/path/to/tgf-conf filters
+```
+
+(NOTE: This will open the [GNU nano](https://www.nano-editor.org/)
+editor for configuration modification. After modification, press
+**Ctrl-O**, **Enter**, **Ctrl-X** to finish the work. As long as the
+configuration is valid, the last line of output shall be "Saving
+filters...") 
+
+**Step 7:**
+
+Done.
+
 ### Docker/Podman
 
 Make sure have [Docker](https://docs.docker.com/engine/) or
@@ -252,79 +324,6 @@ instance and its Telegram-related credentials and resource:
 ```sh
 docker rm --force CONTAINER-NAME
 ```
-
-### Executable Binary
-
-**Step 1:**
-
-Download the binaries at GitHub releases
-[page](https://github.com/micl2e2/tg-focus/releases). Please check
-whether your [platform](#supported-platforms) is supported or not.
-
-**Step 2:**
-
-Login your Telegram account firstly, it needs your phone number (in
-international format, e.g. `+1 234567` if your phone number is
-`234567` with region code `+1`) and a login code:
-```sh
-/path/to/tgf-conf auth
-```
-
-If you've logged in successfully, the last line should be:
-```
-[tgf INFO] Logged in!
-```
-
-**Step 3: (Optional)**
-
- Using different language other than default(English) by:
-
-```sh
-/path/to/tgf-conf lang XX-YY
-```
-Note: XX is the language code, YY is the region code, e.g. "en-US" represents
-"English (United States)", "en-GB" represents "English (United Kingdom)", etc. 
-All valid codes can be found at 
-http://www.lingoes.net/en/translator/langcode.htm 
-
-**Step 4:**
-
-Launch tg-focus daemon:
-
-```sh
-# run in foreground
-/path/to/tgf-focusd
-
-# or run in background
-nohup /path/to/tgf-focusd &
-```
-
-**Step 5:**
-
-If logined successfullly, a new chat `TG-FOCUS` will be
-created, the subsequent messages will be filtered and forwarded to
-that chat.
-
-**Step 6:**
-
-Note that by default, tg-focus will forward **all** messages
-you receive. You can change the *Focus Filter*s(the filter
-configuration) any time you like, to custom the messages you'd like
-to receive on that chat. See [examples](#filter-examples).
-
-```sh
-/path/to/tgf-conf filters
-```
-
-(NOTE: This will open the [GNU nano](https://www.nano-editor.org/)
-editor for configuration modification. After modification, press
-**Ctrl-O**, **Enter**, **Ctrl-X** to finish the work. As long as the
-configuration is valid, the last line of output shall be "Saving
-filters...") 
-
-**Step 7:**
-
-Done.
 
 
 # Filtering Rules
