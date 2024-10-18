@@ -25,8 +25,8 @@ constexpr auto TF_COLL_CHAT_TITLE =
 #else
   "TG-FOCUS_DEV";
 #endif
-constexpr auto TDLIB_VER = "1.8.35";
-constexpr auto TDLIB_SRC = "983b09578ee90cac504767c7f46b4ec915a56beb";
+constexpr auto TDLIB_VER = "1.8.36";
+constexpr auto TDLIB_SRC = "15b86a17dc51caf5a3ba0b0acdb671cf8a27c80c";
 
 class FileReader
 {
