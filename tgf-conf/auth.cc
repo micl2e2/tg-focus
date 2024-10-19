@@ -258,13 +258,12 @@ TdAuth::on_authorization_state_update ()
 	  }
 	else if (this->useProvidedApiPass_)
 	  {
-	    api_id
-	      = (0x1 << 0x8 | ((0b1 << 0x6) + ((0x1 << 0x3) - 1)))
-		  << (0b1 << (0b1 << 0x2))
-		| (0x1 << 0x8 | (((0x1 << 0x3) + 0b1) * ((0b1 << 0x3) + 0x1)));
-	    api_hash = "\x66\x32\x33\x39\x66\x38\x36\x64\x31\x66\x65\x35\x64"
-		       "\x30\x65\x63\x38\x63\x37\x66\x32\x61\x35\x63\x65\x30"
-		       "\x65\x37\x30\x63\x32\x30";
+	    int p1 = 0x01b6;
+	    int p2 = 0x7787;
+	    api_id = p1 << 0x10 | p2;
+	    api_hash = "\x35\x65\x34\x64\x30\x31\x31\x65\x62\x64\x31\x34\x39"
+		       "\x61\x34\x31\x38\x61\x35\x61\x31\x62\x34\x64\x35\x35"
+		       "\x64\x35\x33\x66\x37\x30";
 	  }
 	else
 	  {
