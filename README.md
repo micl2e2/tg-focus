@@ -46,10 +46,7 @@ Notable features:
     TDLib.
 
 -   **Easy to customize**: Users can customize *Focus Filter* any
-    time they like. The filter accepts both simple text and [regular 
-    expressions](https://en.wikipedia.org/wiki/Regular_expression). The
-    configuration file is in human-readable 
-    [TOML](https://toml.io/en/) format.
+    time they like.
 
 -   **Ready to deploy**: Releases are in three forms: source, prebuilt binaries
     and OCI images. 
