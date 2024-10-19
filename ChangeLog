@@ -1,10 +1,10 @@
-2024-10-02  Michael Lee  <micl2e2@proton.me>
+2024-10-19  Michael Lee  <micl2e2@proton.me>
 
 	* RELEASE: 2.0
 
 	Changes:
 
-	- TDLib 1.8.35
+	- TDLib 1.8.36
 	- New look for collected messages
 	- Two options for TG-Focus type: basic group(default), super group
 	- Major version serves as configuration ABI
