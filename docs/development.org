@@ -46,13 +46,13 @@ https://tdlib.github.io/td/build.html
 
 #+begin_src bash
 
-  # Download third party dependencies. Network connection required.
-  bash dev/install-deps-oci-only.bash
-
   # Setup a debug build.
   Td_DIR=/path/to/tdlib-install-dir cmake -B build
   # or a release build.
   Td_DIR=/path/to/tdlib-install-dir cmake -DCMAKE_BUILD_TYPE=Release -B build
+
+  # sync with predefined version/commit
+  bash dev/sync-versions.bash
 
   # Build.
   cmake --build build -j$(nproc)
