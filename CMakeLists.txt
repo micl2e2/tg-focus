@@ -4,19 +4,13 @@ cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
 project(tg-focus)
 
-
-###
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-###
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
-###
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   add_compile_options(-Wall -Wextra)
 else()
-
 endif()
 
 # santinize, linked by all targets
@@ -25,12 +19,14 @@ if (DEFINED ENV{WITH_SANITIZERS})
   link_libraries(asan ubsan)
 endif()
 
+# ----------------------------- tdlib -----------------------------
+
 # TDLib versions
 # note: sync with tg-focus-cicd
-execute_process(COMMAND bash ${PROJECT_SOURCE_DIR}/dev/sync-versions.bash)
 find_package(Td 1.8.44 REQUIRED)
 
-# tgf-conf
+# ------------------------------ conf ------------------------------
+
 add_executable(
   tgf-conf
   ${PROJECT_SOURCE_DIR}/tgf-conf/tgf_conf.cc
@@ -58,8 +54,8 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   )
 endif()
 
+# ----------------------------- focusd -----------------------------
 
-# tgf-focusd
 add_executable(
   tgf-focusd
   ${PROJECT_SOURCE_DIR}/tgf-focusd/tgf_focusd.cc
@@ -73,15 +69,18 @@ add_executable(
   ${PROJECT_SOURCE_DIR}/shared/lv_log.cc
   ${PROJECT_SOURCE_DIR}/shared/tgf_locale.cc  
 )
+
 target_include_directories(
   tgf-focusd
   PRIVATE ${PROJECT_SOURCE_DIR}/shared
   PRIVATE ${PROJECT_SOURCE_DIR}/3rd/toml11
 )
+
 target_link_libraries(
   tgf-focusd
   PRIVATE Td::TdStatic
 )
+
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   target_link_libraries(
     tgf-focusd
@@ -89,6 +88,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   )
 endif()
 
-# tests
+# ----------------------------- tests -----------------------------
+
 enable_testing()
 add_subdirectory(test)
