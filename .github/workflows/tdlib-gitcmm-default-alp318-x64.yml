@@ -1,0 +1,40 @@
+name: build-tdlib-gitcmm-default-alp318-x64
+run-name: Build tdlib-gitcmm-default-alp318-x64
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  job1:
+    if: contains(github.event.head_commit.message, 'build-tdlib-gitcmm-default-alp318-x64') == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: master
+      - name: Set env
+        run: echo "CURR_DATE=$(date +'%Y%m%d')" >> "$GITHUB_ENV"
+      - name: Set env
+        run: echo "PICK_TAG=$(cat tdlib-gitcmm)-default-alp318-x64" >> "$GITHUB_ENV"
+      - name: Set env
+        run: echo "OCIIMG_NAME=tg-focus-cicd-tdlib" >> "$GITHUB_ENV"
+      - name: Install Deps
+        run: sudo apt-get update && sudo apt-get install podman buildah -y
+      - run: df -h
+      - name: Build
+        run: bash tdlib-gitcmm-default-alp318-x64.bash
+      - run: buildah ps
+      - run: df -h
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.OCIIMG_NAME }}-${{ env.PICK_TAG }}.tar
+          path: ${{ env.OCIIMG_NAME }}-${{ env.PICK_TAG }}.tar
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.OCIIMG_NAME }}-${{ env.PICK_TAG }}.json
+          path: ${{ env.OCIIMG_NAME }}-${{ env.PICK_TAG }}.json
+      - uses: actions/upload-artifact@v3
+        with:
+          name: CHECKSUMS
+          path: CHECKSUMS
