@@ -21,7 +21,7 @@ jobs:
           ref: master
       - run: df -h
       - name: Build
-        run: bash toolc-${{ env.PICK_TAG }}.bash
+        run: bash ci/toolc-${{ env.PICK_TAG }}.bash
       - run: buildah ps
       - run: df -h
       - uses: actions/upload-artifact@v4
