@@ -1,5 +1,5 @@
-name: build-toolc-gcc12-deb10-x64
-run-name: Build toolc-gcc12-deb10-x64
+name: build-toolc-gcc12-deb11-x64
+run-name: Build toolc-gcc12-deb11-x64
 on:
   push:
     branches:
@@ -7,20 +7,18 @@ on:
 
 jobs:
   job1:
-    if: contains(github.event.head_commit.message, 'build-toolc-gcc12-deb10-x64') == true
+    if: contains(github.event.head_commit.message, 'build-toolc-gcc12-deb11-x64') == true
     runs-on: ubuntu-latest
     steps:
       - name: Set env
         run: echo "CURR_DATE=$(date +'%Y%m%d')" >> "$GITHUB_ENV"
       - name: Set env
-        run: echo "PICK_TAG=gcc12-deb10-x64" >> "$GITHUB_ENV"
+        run: echo "PICK_TAG=gcc12-deb11-x64" >> "$GITHUB_ENV"
       - name: Set env
         run: echo "OCIIMG_NAME=tg-focus-cicd-toolc" >> "$GITHUB_ENV"
       - uses: actions/checkout@v3
         with:
           ref: master
-      - name: Install Deps
-        run: sudo apt-get update && sudo apt-get install podman buildah -y
       - run: df -h
       - name: Build
         run: bash toolc-${{ env.PICK_TAG }}.bash
