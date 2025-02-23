@@ -1,4 +1,10 @@
-source vars-x64-linux-gnu.bash 
+cwd=$(pwd)
+bname=$(basename $cwd)
+[[ $bname == tg-focus ]] || exit 255
+
+cd ci
+source vars-x64-linux-gnu.bash
+
 ###
 
 sudo apt-get install -y --quiet buildah podman 
