@@ -17,7 +17,7 @@ buildah from --name $CTN_BUILD_TOOLC $PICK_BASEIMG
 test $? -eq 0 || exit 2
 
 USE_APT_MIRROR="deb.debian.org"
-test -n $PICK_APT_MIRROR && USE_APT_MIRROR=$PICK_APT_MIRROR
+[[ -n $PICK_APT_MIRROR ]] && USE_APT_MIRROR=$PICK_APT_MIRROR
 buildah run $CTN_BUILD_TOOLC -- \
 	sed -i "s/deb.debian.org/${USE_APT_MIRROR}/" /etc/apt/sources.list
 test $? -eq 0 || exit 3
@@ -31,7 +31,7 @@ buildah run $CTN_BUILD_TOOLC -- \
 test $? -eq 0 || exit 5
 
 USE_GNU_MIRROR="ftp.gnu.org"
-test -n $PICK_GNU_MIRROR && USE_GNU_MIRROR=$PICK_GNU_MIRROR
+[[ -n $PICK_GNU_MIRROR ]] && USE_GNU_MIRROR=$PICK_GNU_MIRROR
 $PXY_FRONTEND buildah run $CTN_BUILD_TOOLC -- \
 	bash -c "wget http://${USE_GNU_MIRROR}/gnu/gcc/gcc-${PICK_GCC_REL}/gcc-${PICK_GCC_REL}.tar.gz"
 test $? -eq 0 || exit 6
