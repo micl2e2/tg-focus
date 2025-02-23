@@ -1,6 +1,8 @@
 source vars-x64-linux-gnu.bash 
 ###
 
+sudo apt-get install -y --quiet buildah podman 
+
 # skip building if already built
 buildah ps | grep $CTN_PACK_TOOLC
 test $? -eq 0 && exit 1
@@ -8,14 +10,11 @@ test $? -eq 0 && exit 1
 buildah from --name $CTN_BUILD_TOOLC $PICK_BASEIMG
 test $? -eq 0 || exit 2
 
-if [[ -n $APT_COUNTRY_CODE ]]
-then
-    buildah run $CTN_BUILD_TOOLC -- \
-	    sed -i \
-	    "s/deb\.debian\.org/ftp\.$APT_COUNTRY_CODE\.debian\.org/" \
-	    /etc/apt/sources.list
-    test $? -eq 0 || exit 3
-fi
+USE_APT_MIRROR="deb.debian.org"
+test -n $PICK_APT_MIRROR && USE_APT_MIRROR=$PICK_APT_MIRROR
+buildah run $CTN_BUILD_TOOLC -- \
+	sed -i "s/deb.debian.org/${USE_APT_MIRROR}/" /etc/apt/sources.list
+test $? -eq 0 || exit 3
 
 buildah run $CTN_BUILD_TOOLC -- \
 	apt-get -o Acquire::ForceIPv4=true update
@@ -25,8 +24,10 @@ buildah run $CTN_BUILD_TOOLC -- \
 	apt-get -o Acquire::ForceIPv4=true install g++ make wget curl bzip2 autogen dejagnu -y --quiet
 test $? -eq 0 || exit 5
 
+USE_GNU_MIRROR="ftp.gnu.org"
+test -n $PICK_GNU_MIRROR && USE_GNU_MIRROR=$PICK_GNU_MIRROR
 $PXY_FRONTEND buildah run $CTN_BUILD_TOOLC -- \
-	bash -c "wget http://ftp.gnu.org/gnu/gcc/gcc-${PICK_GCC_REL}/gcc-${PICK_GCC_REL}.tar.gz"
+	bash -c "wget http://${USE_GNU_MIRROR}/gnu/gcc/gcc-${PICK_GCC_REL}/gcc-${PICK_GCC_REL}.tar.gz"
 test $? -eq 0 || exit 6
 
 buildah run $CTN_BUILD_TOOLC -- \
@@ -62,6 +63,11 @@ buildah from --name $CTN_PACK_TOOLC $PICK_BASEIMG
 test $? -eq 0 || exit 13
 buildah copy --from $CTN_BUILD_TOOLC $CTN_PACK_TOOLC '/usr/local' '/usr/local'
 test $? -eq 0 || exit 14
+
+alt_ver_str=$(buildah run $CTN_BUILD_TOOLC -- bash -c "alt-gcc --version | head -1")
+test $? -eq 0 || exit 141
+[[ $alt_ver_str =~ $PICK_GCC_REL ]] || exit 141
+
 buildah commit $CTN_PACK_TOOLC $PICK_TOOLC_IMGFULLNAME
 test $? -eq 0 || exit 15
 
