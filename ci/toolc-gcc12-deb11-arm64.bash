@@ -8,7 +8,7 @@ cd ci
 
 [[ $? -eq 0 ]] || exit 101
 
-source vars-x64-linux-gnu.bash
+source vars-arm64-linux-gnu.bash
 
 [[ $? -eq 0 ]] || exit 102
 
