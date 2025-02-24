@@ -111,6 +111,14 @@ target `x64-linux-musl`:
 `docker.io/micl2e2/tg-focus:2.0-x64-linux-musl`
 - artifacts: https://github.com/micl2e2/tg-focus-cicd/actions/runs/11418348226
 
+`docker.io/micl2e2/tg-focus-cicd-toolc:gcc12-deb11-x64`
+- artifacts: https://github.com/micl2e2/tg-focus/actions/runs/13490163240
+- digest: sha256:1e371d447729cadd53a295d33369b02205b369c6319b96dc2926be9bdc3996a6
+
+`docker.io/micl2e2/tg-focus-cicd-toolc:gcc12-deb11-arm64`
+- artifacts: https://github.com/micl2e2/tg-focus/actions/runs/13490163245
+- digest: sha256:3c9354b439fdcb9adbe47ba4917f07bfb059af1fa735d755e04c1feb38dd6ed7
+
 
 # Trigger An Action
 
