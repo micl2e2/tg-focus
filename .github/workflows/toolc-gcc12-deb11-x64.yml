@@ -24,15 +24,17 @@ jobs:
         run: bash ci/toolc-${{ env.PICK_TAG }}.bash
       - run: buildah ps
       - run: df -h
+      - run: ls -l
+      - run: ls -l ci
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ env.OCIIMG_NAME }}-${{ env.PICK_TAG }}.tar
-          path: ${{ env.OCIIMG_NAME }}-${{ env.PICK_TAG }}.tar
+          path: ci/${{ env.OCIIMG_NAME }}-${{ env.PICK_TAG }}.tar
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ env.OCIIMG_NAME }}-${{ env.PICK_TAG }}.json
-          path: ${{ env.OCIIMG_NAME }}-${{ env.PICK_TAG }}.json
+          path: ci/${{ env.OCIIMG_NAME }}-${{ env.PICK_TAG }}.json
       - uses: actions/upload-artifact@v4
         with:
           name: CHECKSUMS
-          path: CHECKSUMS
+          path: ci/CHECKSUMS
