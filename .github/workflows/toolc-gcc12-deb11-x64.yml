@@ -8,7 +8,7 @@ on:
 jobs:
   job1:
     if: contains(github.event.head_commit.message, 'build-toolc-gcc12-deb11-x64') == true
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Set env
         run: echo "CURR_DATE=$(date +'%Y%m%d')" >> "$GITHUB_ENV"
