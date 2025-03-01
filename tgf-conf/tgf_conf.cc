@@ -122,7 +122,7 @@ handle_filters ()
   auto fpath = tgf_data.path_filters_tmp ();
   auto fpath_cstr = fpath.c_str ();
 
-  std::string runcmd = "nano ";
+  std::string runcmd = "$EDITOR ";
   runcmd += fpath_cstr;
   std::system (runcmd.c_str ());
 
