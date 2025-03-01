@@ -18,6 +18,17 @@ enum FocusDecision
 template <typename T>
 concept HasFilterFields = std::same_as<T, toml::value> || false;
 
+template <typename V>
+  requires HasFilterFields<V>
+class TgfFilter;
+
+template <typename F, typename V>
+concept CanFilterRecogValue = std::derived_from<F, TgfFilter<V>>;
+
+template <typename V, typename F>
+  requires CanFilterRecogValue<F, V>
+class TgfFilterGroup;
+
 // --------------------------- TgfFilter ---------------------------
 
 template <typename V>
@@ -31,7 +42,7 @@ public:
 
   TgfFilter &operator= (TgfFilter &&other);
 
-  explicit TgfFilter (const V &v);
+  // explicit TgfFilter (const V &v);
   // FIXME: is_xyz_match family should be private
 
   bool is_title_match (const std::string &input);
@@ -59,14 +70,18 @@ protected:
   // true(i.e. all xyz filters match and all no-xyz filters cannot match the
   // input).
   FocusDecision is_tgmsg_match (const TgMsg &input);
+
+  friend class TgfFilterGroup<V, TgfFilter<V>>;
+  // friend bool TgfFilterGroup<V, TgfFilter<V>>::is_tgmsg_match (const TgMsg
+  // &);
 };
 
 class TgfFilterToml : public TgfFilter<toml::value>
 {
+public:
+  explicit TgfFilterToml (const toml::value &v);
+  friend class TgfFilterGroupToml;
 };
-
-template <typename F, typename V>
-concept CanFilterRecogValue = std::derived_from<F, TgfFilter<V>>;
 
 // ------------------------- TgfFilterGroup -------------------------
 
@@ -78,7 +93,7 @@ public:
   // TgfFilterGroup () = delete;
 
   // TgfFilterGroup (const toml::value &v);
-  explicit TgfFilterGroup (const toml::value &v);
+  // explicit TgfFilterGroup (const V &v);
 
   // TgfFilterGroup (const char *v);
 
@@ -104,6 +119,7 @@ class TgfFilterGroupToml : public TgfFilterGroup<toml::value, TgfFilterToml>
 {
 public:
   TgfFilterGroupToml () = delete;
+  explicit TgfFilterGroupToml (const toml::value &v);
 };
 
 // ---------------------- TgfFilter<> Impl ----------------------

@@ -2,7 +2,7 @@
 
 // ------------------------- TgfFilterToml -------------------------
 
-template <> TgfFilter<toml::value>::TgfFilter (const toml::value &v)
+TgfFilterToml::TgfFilterToml (const toml::value &v)
 {
   using std::string, std::vector;
 
@@ -42,22 +42,19 @@ template <> TgfFilter<toml::value>::TgfFilter (const toml::value &v)
     }
 }
 
-template <>
-TgfFilterGroup<toml::value, TgfFilter<toml::value>>::TgfFilterGroup (
-  const toml::value &v)
+TgfFilterGroupToml::TgfFilterGroupToml (const toml::value &v)
 {
-  std::vector<TgfFilter<toml::value>> filters;
+  std::vector<TgfFilterToml> filters;
 
   try
     {
-      filters
-	= toml::find<std::vector<TgfFilter<toml::value>>> (v, "focus-filter");
+      filters = toml::find<std::vector<TgfFilterToml>> (v, "focus-filter");
     }
   catch (std::exception &ex)
     {
       using namespace toml::literals::toml_literals;
-      filters = toml::find<std::vector<TgfFilter<toml::value>>> (
-	"[[focus-filter]]"_toml, "focus-filter");
+      filters = toml::find<std::vector<TgfFilterToml>> ("[[focus-filter]]"_toml,
+							"focus-filter");
     }
 
   this->filters = std::move (filters);
