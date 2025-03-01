@@ -1,6 +1,112 @@
-#include "tgf_filter.hh"
+#ifndef _TGF_FILTER_H
+#define _TGF_FILTER_H 1
 
-// ---------------------------- TgfFiler ----------------------------
+#include <concepts>
+#include <string>
+#include <vector>
+#include "toml.hpp"
+#include "posix_regex.hh"
+#include "tgf_msg.hh"
+
+enum FocusDecision
+{
+  Accept,
+  Skip,
+  Reject
+};
+
+template <typename T>
+concept HasFilterFields = std::same_as<T, toml::value> || false;
+
+// --------------------------- TgfFilter ---------------------------
+
+template <typename V>
+  requires HasFilterFields<V>
+class TgfFilter
+{
+public:
+  TgfFilter () = default;
+
+  TgfFilter (TgfFilter &&other);
+
+  TgfFilter &operator= (TgfFilter &&other);
+
+  explicit TgfFilter (const V &v);
+  // FIXME: is_xyz_match family should be private
+
+  bool is_title_match (const std::string &input);
+
+  bool is_sender_match (const std::string &input);
+
+  bool is_no_sender_match (const std::string &input);
+
+  bool is_rej_sender_match (const std::string &input);
+
+  bool is_keyword_match (const std::string &input);
+
+  bool is_no_keyword_match (const std::string &input);
+
+protected:
+  PosixExtRegex chat_title;
+  std::vector<PosixExtRegex> senders;
+  std::vector<PosixExtRegex> no_senders;
+  std::vector<PosixExtRegex> rej_senders;
+  std::vector<PosixExtRegex> keywords;
+  std::vector<PosixExtRegex> no_keywords;
+
+  // Check whether this "Focus Filter" can match the input. If any xyz filter
+  // not matched, or any no-xyz filter matched, then is false, otherwise
+  // true(i.e. all xyz filters match and all no-xyz filters cannot match the
+  // input).
+  FocusDecision is_tgmsg_match (const TgMsg &input);
+};
+
+class TgfFilterToml : public TgfFilter<toml::value>
+{
+};
+
+template <typename F, typename V>
+concept CanFilterRecogValue = std::derived_from<F, TgfFilter<V>>;
+
+// ------------------------- TgfFilterGroup -------------------------
+
+template <typename V, typename F>
+  requires CanFilterRecogValue<F, V>
+class TgfFilterGroup
+{
+public:
+  // TgfFilterGroup () = delete;
+
+  // TgfFilterGroup (const toml::value &v);
+  explicit TgfFilterGroup (const toml::value &v);
+
+  // TgfFilterGroup (const char *v);
+
+  // TgfFilterGroup (const std::string &v);
+
+  // static bool is_valid (const std::string &v);
+
+  inline size_t n_filter () { return this->filters.size (); }
+  inline size_t i_prev_matched () { return this->i_prev_matched_; }
+
+  // Check whether this "Focus Filter List" can match the input. If any
+  // enclosing filter matches input(i.e. "is_tgmsg_match" returns true), the
+  // result is true, otherwise false. Note that this differs largly from
+  // sub-field matching mechanism.
+  bool is_tgmsg_match (const TgMsg &in);
+
+protected:
+  size_t i_prev_matched_;
+  std::vector<F> filters;
+};
+
+class TgfFilterGroupToml : public TgfFilterGroup<toml::value, TgfFilterToml>
+{
+public:
+  TgfFilterGroupToml () = delete;
+};
+
+// ---------------------- TgfFilter<> Impl ----------------------
 
 template <typename V>
   requires HasFilterFields<V>
@@ -169,51 +275,12 @@ TgfFilter<V>::is_tgmsg_match (const TgMsg &in)
   return FocusDecision::Accept;
 }
 
-// ------------------------- TgfFilterToml -------------------------
+// --------------------- TgfFilterGroup<> Impl ---------------------
 
-TgfFilterToml::TgfFilterToml (const toml::value &v)
-{
-  using std::string, std::vector;
-
-  // title
-  std::string sval = toml::find_or<string> (v, "title", ".*");
-  this->chat_title = PosixExtRegex (sval);
-
-  // sender
-  vector<string> sender_list
-    = toml::find_or<vector<string>> (v, "senders", vector<string> (0));
-  for (string &strval : sender_list)
-    this->senders.emplace_back (PosixExtRegex (strval));
-
-  // no sender
-  vector<string> no_sender_list
-    = toml::find_or<vector<string>> (v, "no-senders", vector<string> (0));
-  for (string &strval : no_sender_list)
-    this->no_senders.emplace_back (PosixExtRegex (strval));
-
-  // rej sender
-  vector<string> rej_sender_list
-    = toml::find_or<vector<string>> (v, "rej-senders", vector<string> (0));
-  for (string &strval : rej_sender_list)
-    this->rej_senders.emplace_back (PosixExtRegex (strval));
-
-  // keyword
-  vector<string> keyword_list
-    = toml::find_or<vector<string>> (v, "keywords", vector<string> (0));
-  for (string &strval : keyword_list)
-    this->keywords.emplace_back (PosixExtRegex (strval));
-  // no keyword
-  vector<string> no_keyword_list
-    = toml::find_or<vector<string>> (v, "no-keywords", vector<string> (0));
-  for (string &strval : no_keyword_list)
-    {
-      this->no_keywords.emplace_back (PosixExtRegex (strval));
-    }
-}
-
-template <typename F>
+template <typename V, typename F>
+  requires CanFilterRecogValue<F, V>
 bool
-TgfFilterGroup<F>::is_tgmsg_match (const TgMsg &in)
+TgfFilterGroup<V, F>::is_tgmsg_match (const TgMsg &in)
 {
   this->i_prev_matched_ = 0;
 
@@ -234,20 +301,4 @@ TgfFilterGroup<F>::is_tgmsg_match (const TgMsg &in)
   return false;
 }
 
-TgfFilterGroupToml::TgfFilterGroupToml (const toml::value &v)
-{
-  std::vector<TgfFilterToml> filters;
-
-  try
-    {
-      filters = toml::find<std::vector<TgfFilterToml>> (v, "focus-filter");
-    }
-  catch (std::exception &ex)
-    {
-      using namespace toml::literals::toml_literals;
-      filters = toml::find<std::vector<TgfFilterToml>> ("[[focus-filter]]"_toml,
-							"focus-filter");
-    }
-
-  this->filters = std::move (filters);
-}
+#endif // _H
