@@ -2,7 +2,7 @@
 #define _TGF_MSG_H
 
 #include <iostream>
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 #include <time.h>
 #include <tuple>
