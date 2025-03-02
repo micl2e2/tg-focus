@@ -67,10 +67,6 @@ protected:
   std::vector<PosixExtRegex> keywords;
   std::vector<PosixExtRegex> no_keywords;
 
-  // Check whether this "Focus Filter" can match the input. If any xyz filter
-  // not matched, or any no-xyz filter matched, then is false, otherwise
-  // true(i.e. all xyz filters match and all no-xyz filters cannot match the
-  // input).
   FocusDecision is_tgmsg_match (const TgMsg &input);
 
   template <typename _V, typename _F>
@@ -91,24 +87,9 @@ template <typename V, typename F>
 class TgfFilterGroup
 {
 public:
-  // TgfFilterGroup () = delete;
-
-  // TgfFilterGroup (const toml::value &v);
-  // explicit TgfFilterGroup (const V &v);
-
-  // TgfFilterGroup (const char *v);
-
-  // TgfFilterGroup (const std::string &v);
-
-  // static bool is_valid (const std::string &v);
-
   inline size_t n_filter () { return this->filters.size (); }
   inline size_t i_prev_matched () { return this->i_prev_matched_; }
 
-  // Check whether this "Focus Filter List" can match the input. If any
-  // enclosing filter matches input(i.e. "is_tgmsg_match" returns true), the
-  // result is true, otherwise false. Note that this differs largly from
-  // sub-field matching mechanism.
   bool is_tgmsg_match (const TgMsg &in);
 
 protected:
