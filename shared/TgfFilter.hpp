@@ -15,6 +15,8 @@ enum FocusDecision
   Reject
 };
 
+// -------------------------- forward decl --------------------------
+
 template <typename T>
 concept HasFilterFields = std::same_as<T, toml::value> || false;
 
@@ -71,16 +73,15 @@ protected:
   // input).
   FocusDecision is_tgmsg_match (const TgMsg &input);
 
-  friend class TgfFilterGroup<V, TgfFilter<V>>;
-  // friend bool TgfFilterGroup<V, TgfFilter<V>>::is_tgmsg_match (const TgMsg
-  // &);
+  template <typename _V, typename _F>
+    requires CanFilterRecogValue<_F, _V>
+  friend class TgfFilterGroup;
 };
 
 class TgfFilterToml : public TgfFilter<toml::value>
 {
 public:
   explicit TgfFilterToml (const toml::value &v);
-  friend class TgfFilterGroupToml;
 };
 
 // ------------------------- TgfFilterGroup -------------------------

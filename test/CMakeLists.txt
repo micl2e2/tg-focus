@@ -40,7 +40,7 @@ add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 
 # add a test
 set(CurrTestName TgfFilter)
-add_executable(${CurrTestName} ${CurrTestName}.cpp
+add_executable(${CurrTestName} t${CurrTestName}.cpp
    ${PROJECT_SOURCE_DIR}/shared/${CurrTestName}.cpp
    ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
    ${PROJECT_SOURCE_DIR}/shared/tgf_msg.cc
