@@ -8,6 +8,6 @@
 
 extern std::atomic<bool> is_login;
 extern std::atomic<bool> is_tdlib_closed;
-extern TgFocusData tgf_data;
+extern TgfData tgf_data;
 
 #endif

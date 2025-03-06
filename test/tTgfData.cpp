@@ -18,7 +18,7 @@ tst_files_existence ()
 {
   const string PRED_HOME = "/tmp/dummy_home1";
 
-  TgFocusData tfdata{make_optional (PRED_HOME), RESET_ALL_DUMMPY_HOME};
+  TgfData tfdata{make_optional (PRED_HOME), RESET_ALL_DUMMPY_HOME};
 
   assert (fs::exists (PRED_HOME));
 
@@ -58,7 +58,7 @@ tst_files_content ()
 {
   const string PRED_HOME = "/tmp/dummy_home2";
 
-  TgFocusData tfdata{make_optional (PRED_HOME), RESET_ALL_DUMMPY_HOME};
+  TgfData tfdata{make_optional (PRED_HOME), RESET_ALL_DUMMPY_HOME};
 
   // return;
 

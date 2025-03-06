@@ -88,7 +88,7 @@ get_tgfid_type (const std::filesystem::path &droot)
 }
 } // namespace impl_fs
 
-TgFocusData::~TgFocusData ()
+TgfData::~TgfData ()
 {
   if (this->lck_droot != nullptr)
     {
@@ -104,7 +104,7 @@ TgFocusData::~TgFocusData ()
     }
 }
 
-TgFocusData::TgFocusData (std::optional<std::filesystem::path> &&may_pred_home,
+TgfData::TgfData (std::optional<std::filesystem::path> &&may_pred_home,
 			  bool reset)
 {
   std::filesystem::path home_dir;
@@ -245,82 +245,82 @@ title = ".*"
 }
 
 std::string
-TgFocusData::name_droot ()
+TgfData::name_droot ()
 {
   return this->DIR_DATAROOT;
 }
 
 std::filesystem::path
-TgFocusData::abspath_of (const char *subname) const
+TgfData::abspath_of (const char *subname) const
 {
   auto tmp = this->data_root_majv;
   return tmp.append (subname);
 }
 
 std::filesystem::path
-TgFocusData::path_droot () const
+TgfData::path_droot () const
 {
   return this->data_root_majv;
 }
 
 std::filesystem::path
-TgFocusData::path_tddata () const
+TgfData::path_tddata () const
 {
   auto tmp = this->data_root_majv;
   return tmp.append (DIR_TDDATA);
 }
 
 std::filesystem::path
-TgFocusData::path_api_id () const
+TgfData::path_api_id () const
 {
   auto tmp = this->data_root_majv;
   return tmp.append (FILE_APIID);
 }
 
 std::filesystem::path
-TgFocusData::path_api_hash () const
+TgfData::path_api_hash () const
 {
   auto tmp = this->data_root_majv;
   return tmp.append (FILE_APIHASH);
 }
 
 std::filesystem::path
-TgFocusData::path_auth_hint () const
+TgfData::path_auth_hint () const
 {
   auto tmp = this->data_root_majv;
   return tmp.append (FILE_AUTH_HINT);
 }
 
 std::filesystem::path
-TgFocusData::path_filters () const
+TgfData::path_filters () const
 {
   auto tmp = this->data_root_majv;
   return tmp.append (FILE_FILTERS);
 }
 
 std::filesystem::path
-TgFocusData::path_filters_tmp () const
+TgfData::path_filters_tmp () const
 {
   auto tmp = this->data_root_majv;
   return tmp.append (FILE_FILTERS_TMP);
 }
 
 std::filesystem::path
-TgFocusData::path_tgfid () const
+TgfData::path_tgfid () const
 {
   auto tmp = this->data_root_majv;
   return tmp.append (FILE_TGFID);
 }
 
 std::filesystem::path
-TgFocusData::path_pref_lang () const
+TgfData::path_pref_lang () const
 {
   fs::path tmp = this->data_root_majv;
   return tmp.append (FILE_PREF_LANG);
 }
 
 bool
-TgFocusData::prepare_filters_tmp () const
+TgfData::prepare_filters_tmp () const
 {
   std::filesystem::copy (this->path_filters (), this->path_filters_tmp (),
 			 std::filesystem::copy_options::overwrite_existing);
@@ -328,7 +328,7 @@ TgFocusData::prepare_filters_tmp () const
 }
 
 int32_t
-TgFocusData::get_api_id () const
+TgfData::get_api_id () const
 {
   auto path = this->path_api_id ();
   auto filename = path.c_str ();
@@ -345,7 +345,7 @@ TgFocusData::get_api_id () const
 }
 
 std::string
-TgFocusData::get_api_hash () const
+TgfData::get_api_hash () const
 {
   FileReader freader{this->path_api_hash ().c_str ()};
   auto strdata = freader.read_to_string ().value_or ("-");
@@ -354,7 +354,7 @@ TgFocusData::get_api_hash () const
 }
 
 bool
-TgFocusData::get_auth_hint () const
+TgfData::get_auth_hint () const
 {
   FileReader freader{this->path_auth_hint ().c_str ()};
   auto strdata = freader.read_to_string ().value_or ("-");
@@ -367,7 +367,7 @@ TgFocusData::get_auth_hint () const
 }
 
 std::string
-TgFocusData::get_filters () const
+TgfData::get_filters () const
 {
   FileReader freader{this->path_filters ().c_str ()};
   auto strdata = freader.read_to_string ().value_or ("-");
@@ -376,7 +376,7 @@ TgFocusData::get_filters () const
 }
 
 std::string
-TgFocusData::get_filters_tmp () const
+TgfData::get_filters_tmp () const
 {
   FileReader freader{this->path_filters_tmp ().c_str ()};
   auto strdata = freader.read_to_string ().value_or ("-");
@@ -387,7 +387,7 @@ TgFocusData::get_filters_tmp () const
 // setter
 
 void
-TgFocusData::set_api_id (int32_t ipt) const
+TgfData::set_api_id (int32_t ipt) const
 {
   auto path = this->path_api_id ();
   auto filename = path.c_str ();
@@ -404,7 +404,7 @@ TgFocusData::set_api_id (int32_t ipt) const
 }
 
 void
-TgFocusData::set_api_hash (std::string &&in) const
+TgfData::set_api_hash (std::string &&in) const
 {
   if (in.length () == 0)
     return;
@@ -420,7 +420,7 @@ TgFocusData::set_api_hash (std::string &&in) const
 
 // this flag will critically affect authorization process
 void
-TgFocusData::set_auth_hint (bool flag)
+TgfData::set_auth_hint (bool flag)
 {
   auto path = this->path_auth_hint ();
   auto filename = path.c_str ();
@@ -436,7 +436,7 @@ TgFocusData::set_auth_hint (bool flag)
 }
 
 void
-TgFocusData::set_filters (std::string &&in) const
+TgfData::set_filters (std::string &&in) const
 {
   if (in.length () == 0)
     return;
@@ -459,7 +459,7 @@ TgFocusData::set_filters (std::string &&in) const
 }
 
 void
-TgFocusData::set_tgfid (int64_t in) const
+TgfData::set_tgfid (int64_t in) const
 {
   auto path = this->path_tgfid ();
   auto filename = path.c_str ();
@@ -478,7 +478,7 @@ TgFocusData::set_tgfid (int64_t in) const
 }
 
 int64_t
-TgFocusData::get_tgfid () const
+TgfData::get_tgfid () const
 {
   auto path = this->path_tgfid ();
   auto filename = path.c_str ();
@@ -498,7 +498,7 @@ TgFocusData::get_tgfid () const
 }
 
 bool
-TgFocusData::is_tgfid_valid () const
+TgfData::is_tgfid_valid () const
 {
   auto path = this->path_tgfid ();
   auto filename = path.c_str ();
@@ -518,7 +518,7 @@ TgFocusData::is_tgfid_valid () const
 }
 
 tgf::Lang
-TgFocusData::get_pref_lang () const
+TgfData::get_pref_lang () const
 {
   auto path = this->path_pref_lang ();
   auto filename = path.c_str ();
@@ -532,7 +532,7 @@ TgFocusData::get_pref_lang () const
 }
 
 void
-TgFocusData::set_pref_lang (tgf::Lang l) const
+TgfData::set_pref_lang (tgf::Lang l) const
 {
   auto path = this->path_pref_lang ();
   auto filename = path.c_str ();
@@ -546,25 +546,25 @@ TgFocusData::set_pref_lang (tgf::Lang l) const
 //  -  tgfid type  -  //
 
 void
-TgFocusData::set_basic_tgfid () const
+TgfData::set_basic_tgfid () const
 {
   impl_fs::set_tgfid_type (this->data_root_majv, 2);
 }
 
 void
-TgFocusData::set_super_tgfid () const
+TgfData::set_super_tgfid () const
 {
   impl_fs::set_tgfid_type (this->data_root_majv, 3);
 }
 
 bool
-TgFocusData::is_basic_tgfid () const
+TgfData::is_basic_tgfid () const
 {
   return impl_fs::get_tgfid_type (this->data_root_majv) == 2;
 }
 
 bool
-TgFocusData::is_super_tgfid () const
+TgfData::is_super_tgfid () const
 {
   return impl_fs::get_tgfid_type (this->data_root_majv) == 3;
 }

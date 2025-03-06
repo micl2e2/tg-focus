@@ -23,7 +23,7 @@
 extern std::vector<TgfMsg> mq;
 extern std::mutex mq_lock;
 extern std::atomic<bool> is_csm_mq;
-extern TgFocusData tgf_data;
+extern TgfData tgf_data;
 extern std::atomic<std::uint32_t> it_cnt_producer;
 extern std::atomic<std::uint32_t> it_cnt_consumer;
 

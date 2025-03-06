@@ -20,7 +20,7 @@ extern std::atomic<bool> is_csm_mq;
 extern std::atomic<bool> is_tdlib_auth;
 extern std::atomic<bool> need_phone;
 extern TdCollector collector;
-extern TgFocusData tgf_data;
+extern TgfData tgf_data;
 extern std::atomic<int> producer_hang_period;
 
 #endif // _TGFOCUS_STATE_H

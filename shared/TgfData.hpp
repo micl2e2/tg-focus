@@ -8,14 +8,14 @@
 #include "common.hh"
 #include "TgfLocale.hpp"
 
-class TgFocusData
+class TgfData
 {
 public:
-  TgFocusData () = delete;
+  TgfData () = delete;
 
-  ~TgFocusData ();
+  ~TgfData ();
 
-  TgFocusData (std::optional<std::filesystem::path> &&may_pred_home,
+  TgfData (std::optional<std::filesystem::path> &&may_pred_home,
 	       bool reset = false);
 
   std::string name_droot ();
