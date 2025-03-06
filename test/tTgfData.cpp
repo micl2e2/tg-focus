@@ -6,7 +6,7 @@
 
 namespace fs = std::filesystem;
 
-#include "tgf_data.hh"
+#include "TgfData.hpp"
 
 using namespace std;
 

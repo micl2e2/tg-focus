@@ -4,7 +4,7 @@
 #include <atomic>
 #include <string_view>
 #include <iostream>
-#include "tgf_data.hh"
+#include "TgfData.hpp"
 
 extern std::atomic<bool> is_login;
 extern std::atomic<bool> is_tdlib_closed;

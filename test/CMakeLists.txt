@@ -27,9 +27,9 @@ target_include_directories(${CurrTestName} PRIVATE
 add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 
 # add a test
-set(CurrTestName tgf_data)
-add_executable(${CurrTestName} ${CurrTestName}.cc
-   ${PROJECT_SOURCE_DIR}/shared/tgf_data.cc
+set(CurrTestName TgfData)
+add_executable(${CurrTestName} t${CurrTestName}.cpp
+   ${PROJECT_SOURCE_DIR}/shared/TgfData.cpp
    ${PROJECT_SOURCE_DIR}/shared/TgfLocale.cpp
 )
 target_include_directories(${CurrTestName} PRIVATE

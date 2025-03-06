@@ -32,7 +32,7 @@ add_executable(
   ${PROJECT_SOURCE_DIR}/tgf-conf/tgf_conf.cc
   ${PROJECT_SOURCE_DIR}/tgf-conf/state.cc
   ${PROJECT_SOURCE_DIR}/tgf-conf/auth.cc
-  ${PROJECT_SOURCE_DIR}/shared/tgf_data.cc
+  ${PROJECT_SOURCE_DIR}/shared/TgfData.cpp
   ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
   ${PROJECT_SOURCE_DIR}/shared/lv_log.cc
   ${PROJECT_SOURCE_DIR}/shared/TgfLocale.cpp
@@ -62,7 +62,7 @@ add_executable(
   ${PROJECT_SOURCE_DIR}/tgf-focusd/state.cc
   ${PROJECT_SOURCE_DIR}/tgf-focusd/worker.cc
   ${PROJECT_SOURCE_DIR}/tgf-focusd/collector.cc
-  ${PROJECT_SOURCE_DIR}/shared/tgf_data.cc
+  ${PROJECT_SOURCE_DIR}/shared/TgfData.cpp
   ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
   ${PROJECT_SOURCE_DIR}/shared/TgfFilter.cpp
   ${PROJECT_SOURCE_DIR}/shared/TgfMsg.cpp

@@ -18,7 +18,6 @@
 
 #include "common.hh"
 #include "lv_log.hh"
-#include "tgf_data.hh"
 #include "collector.hh"
 
 extern std::vector<TgfMsg> mq;
