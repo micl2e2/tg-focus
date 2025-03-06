@@ -16,9 +16,9 @@
 #include <td/telegram/td_api.h>
 #include <td/telegram/td_api.hpp>
 
-#include "common.hh"
+#include "Common.hpp"
 #include "LvLog.hpp"
-#include "collector.hh"
+#include "Collector.hpp"
 
 extern std::vector<TgfMsg> mq;
 extern std::mutex mq_lock;

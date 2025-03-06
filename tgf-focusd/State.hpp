@@ -6,7 +6,7 @@
 #include <mutex>
 #include <atomic>
 
-#include "collector.hh"
+#include "Collector.hpp"
 #include "TgfData.hpp"
 #include "TgfMsg.hpp"
 

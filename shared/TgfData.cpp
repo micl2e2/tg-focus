@@ -10,7 +10,7 @@
 #include <iostream>
 #include <sys/file.h>
 
-#include "common.hh"
+#include "Common.hpp"
 
 #include "TgfData.hpp"
 

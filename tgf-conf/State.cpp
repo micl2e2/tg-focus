@@ -1,4 +1,4 @@
-#include "state.hh"
+#include "State.hpp"
 
 std::atomic<bool> is_login{false};
 std::atomic<bool> is_tdlib_closed{false};

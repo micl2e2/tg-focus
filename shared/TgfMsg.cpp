@@ -1,6 +1,6 @@
 #include "TgfMsg.hpp"
 #include "TgfLocale.hpp"
-#include "common.hh"
+#include "Common.hpp"
 
 std::string
 make_timestamp_readable (uint32_t tstamp)

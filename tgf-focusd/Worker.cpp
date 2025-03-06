@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "LvLog.hpp"
-#include "state.hh"
+#include "State.hpp"
 #include "TgfFilter.hpp"
 #include "TgfMsg.hpp"
 

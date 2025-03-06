@@ -5,7 +5,7 @@
 #include <string>
 #include <filesystem>
 #include <stdio.h>
-#include "common.hh"
+#include "Common.hpp"
 #include "TgfLocale.hpp"
 
 class TgfData

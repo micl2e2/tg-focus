@@ -1,6 +1,6 @@
 #include "LvLog.hpp"
-#include "auth.hh"
-#include "common.hh"
+#include "Auth.hpp"
+#include "Common.hpp"
 #include <td/telegram/td_api.h>
 
 TdAuth::TdAuth (bool useProvidedApiPass)

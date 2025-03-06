@@ -9,7 +9,7 @@
 #include <uchar.h>
 #include <vector>
 
-#include "common.hh"
+#include "Common.hpp"
 
 class TgfMsg
 {

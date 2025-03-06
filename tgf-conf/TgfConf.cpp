@@ -16,9 +16,9 @@
 #include <vector>
 
 #include "toml.hpp"
-#include "common.hh"
-#include "state.hh"
-#include "auth.hh"
+#include "Common.hpp"
+#include "State.hpp"
+#include "Auth.hpp"
 #include "TgfFilter.hpp"
 #include "TgfLocale.hpp"
 #include "LvLog.hpp"

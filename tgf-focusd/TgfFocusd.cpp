@@ -3,8 +3,8 @@
 #include <string.h>
 
 #include "LvLog.hpp"
-#include "state.hh"
-#include "worker.hh"
+#include "State.hpp"
+#include "Worker.hpp"
 #include "TgfLocale.hpp"
 
 void
