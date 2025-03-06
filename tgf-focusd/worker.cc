@@ -5,7 +5,7 @@
 
 #include "lv_log.hh"
 #include "state.hh"
-#include "focus_filter.hh"
+#include "TgfFilter.hpp"
 #include "tgf_msg.hh"
 
 void
@@ -33,8 +33,8 @@ need_collect (const TgMsg &msg)
 	 "consumer_iter:", it_cnt_consumer.load (std::memory_order_relaxed),
 	 " filters reloaded");
 
-  auto fcf_list = FocusFilterList (tomlstr);
-  if (fcf_list.is_tgmsg_match (msg))
+  auto filterg = TgfFilterGroupToml (tomlstr);
+  if (filterg.isMatchTgfMsg (msg))
     return true;
 
   return false;
