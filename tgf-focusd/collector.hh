@@ -16,7 +16,7 @@
 #include <td/telegram/td_api.h>
 #include <td/telegram/td_api.hpp>
 
-#include "tgf_msg.hh"
+#include "TgfMsg.hpp"
 #include "tgf_data.hh"
 
 namespace td_api = td::td_api;
@@ -38,7 +38,7 @@ public:
   void try_create_tgfchat ();
   //
   // send message to collector chat
-  void collect_msg (const TgMsg &msg);
+  void collect_msg (const TgfMsg &msg);
 
   //
   // signal td client to fetch updates

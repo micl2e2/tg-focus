@@ -6,7 +6,7 @@
 #include <vector>
 #include "toml.hpp"
 #include "posix_regex.hh"
-#include "tgf_msg.hh"
+#include "TgfMsg.hpp"
 
 enum FocusDecision
 {
@@ -64,7 +64,7 @@ protected:
   std::vector<PosixExtRegex> keywords;
   std::vector<PosixExtRegex> no_keywords;
 
-  FocusDecision isMatchTgfMsg (const TgMsg &input);
+  FocusDecision isMatchTgfMsg (const TgfMsg &input);
 
   template <typename _V, typename _F>
     requires CanFilterRecogValue<_F, _V>
@@ -87,7 +87,7 @@ public:
   inline size_t n_filter () { return this->filters.size (); }
   inline size_t i_prev_matched () { return this->i_prev_matched_; }
 
-  bool isMatchTgfMsg (const TgMsg &in);
+  bool isMatchTgfMsg (const TgfMsg &in);
 
 protected:
   size_t i_prev_matched_;
@@ -251,7 +251,7 @@ TgfFilter<V>::isRejSendersMatch (const std::string &input)
 template <typename V>
   requires HasFilterFields<V>
 FocusDecision
-TgfFilter<V>::isMatchTgfMsg (const TgMsg &in)
+TgfFilter<V>::isMatchTgfMsg (const TgfMsg &in)
 {
   if (!this->isMatchTitle (in.get_chat_title ()))
     return FocusDecision::Skip;
@@ -279,7 +279,7 @@ TgfFilter<V>::isMatchTgfMsg (const TgMsg &in)
 template <typename V, typename F>
   requires CanFilterRecogValue<F, V>
 bool
-TgfFilterGroup<V, F>::isMatchTgfMsg (const TgMsg &in)
+TgfFilterGroup<V, F>::isMatchTgfMsg (const TgfMsg &in)
 {
   this->i_prev_matched_ = 0;
 

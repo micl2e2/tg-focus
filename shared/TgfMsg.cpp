@@ -1,5 +1,5 @@
 #include "tgf_locale.hh"
-#include "tgf_msg.hh"
+#include "TgfMsg.hpp"
 #include "common.hh"
 
 std::string
@@ -14,7 +14,7 @@ make_timestamp_readable (uint32_t tstamp)
   return std::string ("unknown timestamp");
 }
 
-TgMsg::TgMsg (std::string &&chat_title, std::string &&sender,
+TgfMsg::TgfMsg (std::string &&chat_title, std::string &&sender,
 	      std::string &&text_content, int32_t tstamp)
 {
   this->title_ = std::move (chat_title);
@@ -24,7 +24,7 @@ TgMsg::TgMsg (std::string &&chat_title, std::string &&sender,
   this->id_ = 0;
 }
 
-TgMsg::TgMsg (std::string &chat_title, std::string &sender,
+TgfMsg::TgfMsg (std::string &chat_title, std::string &sender,
 	      std::string &text_content, int32_t tstamp)
 {
   this->title_ = (chat_title);
@@ -35,7 +35,7 @@ TgMsg::TgMsg (std::string &chat_title, std::string &sender,
 }
 
 std::string
-TgMsg::to_locale_string () const
+TgfMsg::to_locale_string () const
 {
   std::string ret;
 
@@ -126,7 +126,7 @@ TgMsg::to_locale_string () const
 }
 
 std::ostream &
-operator<< (std::ostream &os, const TgMsg &msg)
+operator<< (std::ostream &os, const TgfMsg &msg)
 {
   os << "Telegram Message-"
      << "<title," << msg.title_ << ">"

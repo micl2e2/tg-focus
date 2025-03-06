@@ -8,13 +8,13 @@
 
 #include "collector.hh"
 #include "tgf_data.hh"
-#include "tgf_msg.hh"
+#include "TgfMsg.hpp"
 
 extern std::atomic<std::uint32_t> it_cnt_switcher;
 extern std::atomic<std::uint32_t> it_cnt_producer;
 extern std::atomic<std::uint32_t> it_cnt_consumer;
 
-extern std::vector<TgMsg> mq;
+extern std::vector<TgfMsg> mq;
 extern std::mutex mq_lock;
 extern std::atomic<bool> is_csm_mq;
 extern std::atomic<bool> is_tdlib_auth;

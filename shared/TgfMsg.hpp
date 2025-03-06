@@ -11,15 +11,15 @@
 
 #include "common.hh"
 
-class TgMsg
+class TgfMsg
 {
 public:
-  TgMsg () = default;
+  TgfMsg () = default;
 
-  TgMsg (std::string &chat_title, std::string &sender,
+  TgfMsg (std::string &chat_title, std::string &sender,
 	 std::string &text_content, int32_t tstamp = 0);
 
-  TgMsg (std::string &&chat_title, std::string &&sender,
+  TgfMsg (std::string &&chat_title, std::string &&sender,
 	 std::string &&text_content, int32_t tstamp = 0);
 
   inline const std::string &get_chat_title () const { return this->title_; }
@@ -60,7 +60,7 @@ public:
     return ret;
   }
 
-  friend std::ostream &operator<< (std::ostream &os, const TgMsg &msg);
+  friend std::ostream &operator<< (std::ostream &os, const TgfMsg &msg);
 
 private:
   std::string title_;

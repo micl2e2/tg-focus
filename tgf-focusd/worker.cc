@@ -6,7 +6,7 @@
 #include "lv_log.hh"
 #include "state.hh"
 #include "TgfFilter.hpp"
-#include "tgf_msg.hh"
+#include "TgfMsg.hpp"
 
 void
 focusd_producer ()
@@ -26,7 +26,7 @@ focusd_producer ()
 }
 
 bool
-need_collect (const TgMsg &msg)
+need_collect (const TgfMsg &msg)
 {
   auto tomlstr = tgf_data.get_filters ();
   lvlog (LogLv::INFO,

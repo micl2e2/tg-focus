@@ -192,7 +192,7 @@ test_focus_filter_list1 ()
   using namespace toml::literals::toml_literals;
   using namespace std;
 
-  TgMsg msg ("chatxxx"s, "senderxxx"s, "txtxxx"s);
+  TgfMsg msg ("chatxxx"s, "senderxxx"s, "txtxxx"s);
 
   { // title matched
     auto tomldata = R"(
@@ -439,7 +439,7 @@ test_focus_filter_list2 ()
   using namespace toml::literals::toml_literals;
   using namespace std;
 
-  TgMsg msg ("-"s, "😺🐶😺🐶"s, "😺😺😺🐶🐶🐶"s);
+  TgfMsg msg ("-"s, "😺🐶😺🐶"s, "😺😺😺🐶🐶🐶"s);
 
   { // more complicated
     auto tomldata = R"(
@@ -547,7 +547,7 @@ test_focus_filter_list3 ()
   using namespace toml::literals::toml_literals;
   using namespace std;
 
-  TgMsg msg ("-"s, "xxx"s, "linux is good"s);
+  TgfMsg msg ("-"s, "xxx"s, "linux is good"s);
 
   { // toml literal
     auto tomldata = R"(
@@ -567,7 +567,7 @@ test_focus_filter_list4 ()
 {
   using namespace std;
 
-  TgMsg msg ("-"s, "xxx"s, "linux is good"s);
+  TgfMsg msg ("-"s, "xxx"s, "linux is good"s);
 
   { // cstr
     auto tomldata = R"(
@@ -614,7 +614,7 @@ keywords = ["kw1","kw2"]
   assert (fcf_list.n_filter () == 1);
 
   {
-    TgMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
+    TgfMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
     assert (!fcf_list.isMatchTgfMsg (msg));
   }
 }
@@ -654,7 +654,7 @@ keywords = ["kw1","kw2"]
   assert (fcf_list.n_filter () == 2);
 
   {
-    TgMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
+    TgfMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
     assert (fcf_list.isMatchTgfMsg (msg));
   }
 }
@@ -691,7 +691,7 @@ keywords = ["kw1","kw2"]
   assert (fcf_list.n_filter () == 1);
 
   {
-    TgMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
+    TgfMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
     assert (!fcf_list.isMatchTgfMsg (msg));
   }
 }
@@ -731,7 +731,7 @@ keywords = ["kw1","kw2"]
   assert (fcf_list.n_filter () == 2);
 
   {
-    TgMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
+    TgfMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
     assert (!fcf_list.isMatchTgfMsg (msg));
   }
 }

@@ -21,7 +21,7 @@
 #include "tgf_data.hh"
 #include "collector.hh"
 
-extern std::vector<TgMsg> mq;
+extern std::vector<TgfMsg> mq;
 extern std::mutex mq_lock;
 extern std::atomic<bool> is_csm_mq;
 extern TgFocusData tgf_data;
@@ -146,7 +146,7 @@ decorate_msg (const std::string &msg)
 }
 
 void
-TdCollector::collect_msg (const TgMsg &msg)
+TdCollector::collect_msg (const TgfMsg &msg)
 {
   std::string tfmsg_str = msg.to_locale_string ();
 
@@ -396,7 +396,7 @@ TdCollector::process_update (td_api::object_ptr<td_api::Object> update)
 	// ---
 	std::lock_guard<std::mutex> mq_guard (mq_lock);
 
-	TgMsg msg (chat_title_[chat_id], sender_name, text, tstamp);
+	TgfMsg msg (chat_title_[chat_id], sender_name, text, tstamp);
 
 	if (!msg.is_from_tgfocus ())
 	  mq.insert (mq.begin (), std::move (msg));
