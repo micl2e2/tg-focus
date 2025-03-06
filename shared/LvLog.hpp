@@ -14,7 +14,7 @@ enum LogLv
 std::ostream &
 operator<< (std::ostream &os, LogLv lv);
 
-extern LogLv g_log_lv;
+extern LogLv gLogLv;
 
 template <class T>
 void
@@ -35,7 +35,7 @@ template <class... Args>
 void
 lvlog (LogLv lv, const Args &...args)
 {
-  if (g_log_lv >= lv)
+  if (gLogLv >= lv)
     {
       std::cout << "[tgf ";
       std::cout << lv;

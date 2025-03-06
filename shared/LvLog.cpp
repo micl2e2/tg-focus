@@ -1,7 +1,7 @@
 #include <iostream>
 #include "LvLog.hpp"
 
-LogLv g_log_lv = LogLv::INFO;
+LogLv gLogLv = LogLv::INFO;
 
 std::ostream &
 operator<< (std::ostream &os, LogLv lv)

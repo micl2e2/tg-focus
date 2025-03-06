@@ -165,7 +165,7 @@ handle_loglv (int argc, char *argv[])
   if (argc > 2)
     for (int i = 1; i < argc; i++)
       if (strcmp (argv[i], "--verbose") == 0)
-	g_log_lv = LogLv::DEBUG;
+	gLogLv = LogLv::DEBUG;
 }
 
 int

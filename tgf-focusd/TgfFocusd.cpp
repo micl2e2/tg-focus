@@ -31,7 +31,7 @@ handle_opts (int argc, char *argv[])
 	{
 	  if (strcmp (argv[i], "--verbose") == 0)
 	    {
-	      g_log_lv = LogLv::DEBUG;
+	      gLogLv = LogLv::DEBUG;
 	    }
 	  else if (strcmp (argv[i], "--help") == 0)
 	    {
