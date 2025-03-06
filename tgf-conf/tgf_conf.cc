@@ -19,7 +19,7 @@
 #include "common.hh"
 #include "state.hh"
 #include "auth.hh"
-#include "focus_filter.hh"
+#include "TgfFilter.hpp"
 #include "tgf_locale.hh"
 
 int
@@ -145,7 +145,8 @@ handle_filters ()
   else
     {
       FileReader reader{fpath_cstr};
-      if (FocusFilterList::is_valid (reader.read_to_string ().value_or ("-")))
+      auto filterg = TgfFilterGroupToml(reader.read_to_string ().value_or ("-"));
+      if (filterg.isEffective())
 	{
 	  lvlog (LogLv::INFO, "Saving filters...");
 	  tgf_data.set_filters (tgf_data.get_filters_tmp ());

@@ -42,20 +42,37 @@ TgfFilterToml::TgfFilterToml (const toml::value &v)
     }
 }
 
-TgfFilterGroupToml::TgfFilterGroupToml (const toml::value &v)
+TgfFilterGroupToml::TgfFilterGroupToml (const toml::value &v) noexcept
 {
-  std::vector<TgfFilterToml> filters;
-
+  std::vector<TgfFilterToml> fs;
   try
     {
-      filters = toml::find<std::vector<TgfFilterToml>> (v, "focus-filter");
+      fs = toml::find<std::vector<TgfFilterToml>> (v, "focus-filter");
     }
   catch (std::exception &ex)
     {
       using namespace toml::literals::toml_literals;
-      filters = toml::find<std::vector<TgfFilterToml>> ("[[focus-filter]]"_toml,
-							"focus-filter");
+      fs = toml::find<std::vector<TgfFilterToml>> ("[[focus-filter]]"_toml,
+						   "focus-filter");
     }
+  this->filters = std::move (fs);
+}
 
-  this->filters = std::move (filters);
+TgfFilterGroupToml::TgfFilterGroupToml (std::string &v) noexcept
+{
+  std::vector<TgfFilterToml> fs;
+  try
+    {
+      auto iss = std::istringstream (v);
+      auto is = std::istream (iss.rdbuf ());
+      auto tomldata = toml::parse (is);
+      fs = toml::find<std::vector<TgfFilterToml>> (tomldata, "focus-filter");
+    }
+  catch (std::exception &ex)
+    {
+      using namespace toml::literals::toml_literals;
+      fs = toml::find<std::vector<TgfFilterToml>> ("[[focus-filter]]"_toml,
+						   "focus-filter");
+    }
+  this->filters = std::move (fs);
 }

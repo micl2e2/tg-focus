@@ -98,7 +98,11 @@ class TgfFilterGroupToml : public TgfFilterGroup<toml::value, TgfFilterToml>
 {
 public:
   TgfFilterGroupToml () = delete;
-  explicit TgfFilterGroupToml (const toml::value &v);
+  explicit TgfFilterGroupToml (const toml::value &v) noexcept;
+  // no const bc both are basic_value
+  explicit TgfFilterGroupToml (std::string &v) noexcept;
+  // Has at least one filter
+  bool isEffective () noexcept { return this->filters.size () > 0; }
 };
 
 // ---------------------- TgfFilter<> Impl ----------------------
