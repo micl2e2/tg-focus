@@ -3,7 +3,7 @@
 #include <thread>
 #include <iostream>
 
-#include "lv_log.hh"
+#include "LvLog.hpp"
 #include "state.hh"
 #include "TgfFilter.hpp"
 #include "TgfMsg.hpp"

@@ -1,4 +1,4 @@
-#include "lv_log.hh"
+#include "LvLog.hpp"
 #include "auth.hh"
 #include "common.hh"
 #include <td/telegram/td_api.h>

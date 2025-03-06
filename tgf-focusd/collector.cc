@@ -17,7 +17,7 @@
 #include <td/telegram/td_api.hpp>
 
 #include "common.hh"
-#include "lv_log.hh"
+#include "LvLog.hpp"
 #include "collector.hh"
 
 extern std::vector<TgfMsg> mq;

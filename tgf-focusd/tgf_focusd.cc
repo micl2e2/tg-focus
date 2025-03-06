@@ -2,7 +2,7 @@
 #include <thread>
 #include <string.h>
 
-#include "lv_log.hh"
+#include "LvLog.hpp"
 #include "state.hh"
 #include "worker.hh"
 #include "TgfLocale.hpp"

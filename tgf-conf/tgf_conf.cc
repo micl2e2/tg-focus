@@ -21,6 +21,7 @@
 #include "auth.hh"
 #include "TgfFilter.hpp"
 #include "TgfLocale.hpp"
+#include "LvLog.hpp"
 
 int
 print_usage (char *argv[])

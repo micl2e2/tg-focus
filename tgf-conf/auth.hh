@@ -15,7 +15,6 @@
 #include <atomic>
 #include <chrono>
 #include <iostream>
-#include "lv_log.hh"
 
 #include <td/telegram/Client.h>
 #include <td/telegram/td_api.h>

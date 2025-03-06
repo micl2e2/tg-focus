@@ -1,5 +1,5 @@
 #include <iostream>
-#include "lv_log.hh"
+#include "LvLog.hpp"
 
 LogLv g_log_lv = LogLv::INFO;
 
