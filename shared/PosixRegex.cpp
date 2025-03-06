@@ -4,7 +4,7 @@
 #include <optional>
 #include <regex.h>
 
-#include "posix_regex.hh"
+#include "PosixRegex.hpp"
 
 PosixExtRegex::PosixExtRegex () : stat_comp (INT_MAX), re (nullptr) {}
 

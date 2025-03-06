@@ -5,9 +5,9 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang
 endif()
 
 # add a test
-set(CurrTestName posix_regex)
-add_executable(${CurrTestName} ${CurrTestName}.cc
-   ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
+set(CurrTestName PosixRegex)
+add_executable(${CurrTestName} t${CurrTestName}.cpp
+   ${PROJECT_SOURCE_DIR}/shared/PosixRegex.cpp
 )
 target_include_directories(${CurrTestName} PRIVATE ${PROJECT_SOURCE_DIR}/shared)
 add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
@@ -17,7 +17,7 @@ add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 set(CurrTestName TgfFilter)
 add_executable(${CurrTestName} t${CurrTestName}.cpp
    ${PROJECT_SOURCE_DIR}/shared/${CurrTestName}.cpp
-   ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
+   ${PROJECT_SOURCE_DIR}/shared/PosixRegex.cpp
    ${PROJECT_SOURCE_DIR}/shared/TgfMsg.cpp
    ${PROJECT_SOURCE_DIR}/shared/TgfLocale.cpp
 )

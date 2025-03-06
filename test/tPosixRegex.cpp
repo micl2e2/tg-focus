@@ -1,7 +1,7 @@
 #include <cassert>
 #include <iostream>
 
-#include "posix_regex.hh"
+#include "PosixRegex.hpp"
 
 using namespace std;
 

@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include "toml.hpp"
-#include "posix_regex.hh"
+#include "PosixRegex.hpp"
 #include "TgfMsg.hpp"
 
 enum FocusDecision
