@@ -5,7 +5,7 @@
 #include <string.h>
 #include <iostream>
 
-#include "tgf_locale.hh"
+#include "TgfLocale.hpp"
 
 namespace tgf {
 

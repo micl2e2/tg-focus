@@ -1,5 +1,5 @@
 #include "TgfMsg.hpp"
-#include "tgf_locale.hh"
+#include "TgfLocale.hpp"
 #include <assert.h>
 #include <iostream>
 

@@ -2,7 +2,7 @@
 #include <iostream>
 #include <locale.h>
 
-#include "tgf_locale.hh"
+#include "TgfLocale.hpp"
 
 using namespace std;
 

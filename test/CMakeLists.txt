@@ -19,7 +19,7 @@ add_executable(${CurrTestName} t${CurrTestName}.cpp
    ${PROJECT_SOURCE_DIR}/shared/${CurrTestName}.cpp
    ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
    ${PROJECT_SOURCE_DIR}/shared/TgfMsg.cpp
-   ${PROJECT_SOURCE_DIR}/shared/tgf_locale.cc
+   ${PROJECT_SOURCE_DIR}/shared/TgfLocale.cpp
 )
 target_include_directories(${CurrTestName} PRIVATE
   ${PROJECT_SOURCE_DIR}/shared
@@ -30,7 +30,7 @@ add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 set(CurrTestName tgf_data)
 add_executable(${CurrTestName} ${CurrTestName}.cc
    ${PROJECT_SOURCE_DIR}/shared/tgf_data.cc
-   ${PROJECT_SOURCE_DIR}/shared/tgf_locale.cc
+   ${PROJECT_SOURCE_DIR}/shared/TgfLocale.cpp
 )
 target_include_directories(${CurrTestName} PRIVATE
   ${PROJECT_SOURCE_DIR}/shared)
@@ -40,16 +40,16 @@ add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 set(CurrTestName TgfMsg)
 add_executable(${CurrTestName} t${CurrTestName}.cpp
   ${PROJECT_SOURCE_DIR}/shared/TgfMsg.cpp
-  ${PROJECT_SOURCE_DIR}/shared/tgf_locale.cc
+  ${PROJECT_SOURCE_DIR}/shared/TgfLocale.cpp
 )
 target_include_directories(${CurrTestName} PRIVATE ${PROJECT_SOURCE_DIR}/shared)
 add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 
 
 # add a test
-set(CurrTestName tgf_locale)
-add_executable(${CurrTestName} ${CurrTestName}.cc
-  ${PROJECT_SOURCE_DIR}/shared/tgf_locale.cc
+set(CurrTestName TgfLocale)
+add_executable(${CurrTestName} t${CurrTestName}.cpp
+  ${PROJECT_SOURCE_DIR}/shared/TgfLocale.cpp
 )
 target_include_directories(${CurrTestName} PRIVATE ${PROJECT_SOURCE_DIR}/shared)
 add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})

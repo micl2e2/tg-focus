@@ -20,7 +20,7 @@
 #include "state.hh"
 #include "auth.hh"
 #include "TgfFilter.hpp"
-#include "tgf_locale.hh"
+#include "TgfLocale.hpp"
 
 int
 print_usage (char *argv[])

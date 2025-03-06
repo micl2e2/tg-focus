@@ -6,7 +6,7 @@
 #include <filesystem>
 #include <stdio.h>
 #include "common.hh"
-#include "tgf_locale.hh"
+#include "TgfLocale.hpp"
 
 class TgFocusData
 {

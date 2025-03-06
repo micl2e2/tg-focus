@@ -1,5 +1,5 @@
-#include "tgf_locale.hh"
 #include "TgfMsg.hpp"
+#include "TgfLocale.hpp"
 #include "common.hh"
 
 std::string

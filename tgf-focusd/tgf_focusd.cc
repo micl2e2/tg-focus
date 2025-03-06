@@ -5,7 +5,7 @@
 #include "lv_log.hh"
 #include "state.hh"
 #include "worker.hh"
-#include "tgf_locale.hh"
+#include "TgfLocale.hpp"
 
 void
 print_usage (char *argv[])
