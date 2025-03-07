@@ -32,14 +32,6 @@ then
 	echo 'sync: tdlib version'
     fi
 
-    sed -i -E \
-	"s/Td ${TDLIB_VER_PREV} REQUIRED/Td ${TDLIB_VER_CURR} REQUIRED/" \
-	CMakeLists.txt
-    if [[ $? -eq 0 ]]
-    then
-	echo 'sync: tdlib linkage version'
-	# cp dev/pick-ver-tdlib{,.prev}
-    fi
 fi
 
 # tdlib src

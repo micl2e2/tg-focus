@@ -9,7 +9,8 @@ Cargo.lock
 *tmp*
 build
 
-3rd
+3rd/*
+!3rd/*.bash
 
 .cache
 
