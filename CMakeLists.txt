@@ -1,17 +1,6 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
-# set(CMAKE_CXX_COMPILER /usr/bin/clang++) # must precede project()
-
 project(tg-focus)
-
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
-
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-  add_compile_options(-Wall -Wextra)
-else()
-endif()
 
 # santinize, linked by all targets
 if (DEFINED ENV{WITH_SANITIZERS})
@@ -21,9 +10,22 @@ endif()
 
 # ----------------------------- tdlib -----------------------------
 
-# TDLib versions
-# note: sync with tg-focus-cicd
-find_package(Td 1.8.44 REQUIRED)
+set(ZLIB_USE_STATIC_LIBS ON)
+# might need to build from source in most distros
+set(OPENSSL_USE_STATIC_LIBS TRUE) 
+add_subdirectory(3rd/tdlib)
+
+# ------------------------------ OURxs ------------------------------
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+  # add_compile_options(-Wall -Wextra)
+  add_compile_options(-flto)
+  add_link_options(-Wl,-s)
+endif()
 
 # ------------------------------ conf ------------------------------
 
@@ -50,7 +52,7 @@ target_link_libraries(
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   target_link_libraries(
     tgf-conf
-    PRIVATE -static-libgcc -static-libstdc++
+    PRIVATE -static -no-pie
   )
 endif()
 
@@ -81,12 +83,10 @@ target_link_libraries(
   PRIVATE Td::TdStatic
 )
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-  target_link_libraries(
-    tgf-focusd
-    PRIVATE -static-libgcc -static-libstdc++
-  )
-endif()
+target_link_libraries(
+  tgf-focusd
+  PRIVATE -static -no-pie
+)
 
 # ----------------------------- tests -----------------------------
 
