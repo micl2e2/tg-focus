@@ -37,6 +37,7 @@ add_executable(
   ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc
   ${PROJECT_SOURCE_DIR}/shared/lv_log.cc
   ${PROJECT_SOURCE_DIR}/shared/tgf_locale.cc
+  ${PROJECT_SOURCE_DIR}/shared/TgfFilter.cpp
 )
 target_include_directories(
   tgf-conf

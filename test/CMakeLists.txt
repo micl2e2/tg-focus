@@ -39,6 +39,19 @@ target_include_directories(${CurrTestName} PRIVATE
 add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 
 # add a test
+set(CurrTestName TgfFilter)
+add_executable(${CurrTestName} t${CurrTestName}.cpp
+   ${PROJECT_SOURCE_DIR}/shared/${CurrTestName}.cpp
+   ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
+   ${PROJECT_SOURCE_DIR}/shared/tgf_msg.cc
+   ${PROJECT_SOURCE_DIR}/shared/tgf_locale.cc
+)
+target_include_directories(${CurrTestName} PRIVATE
+  ${PROJECT_SOURCE_DIR}/shared
+  ${PROJECT_SOURCE_DIR}/3rd/toml11)
+add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
+
+# add a test
 set(CurrTestName tgf_data)
 add_executable(${CurrTestName} ${CurrTestName}.cc
    ${PROJECT_SOURCE_DIR}/shared/tgf_data.cc
