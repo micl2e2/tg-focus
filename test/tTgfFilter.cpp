@@ -46,51 +46,51 @@ no-keywords = ["kw6","kw7"]
   assert (filters.size () == 6);
 
   // [0]
-  assert (filters[0].is_title_match ("abcde"));
-  assert (!filters[0].is_title_match ("cd"));
+  assert (filters[0].isMatchTitle ("abcde"));
+  assert (!filters[0].isMatchTitle ("cd"));
   // if absent, then match anything
-  assert (filters[0].is_keyword_match (""));
+  assert (filters[0].isKeywordsMatch (""));
   // if absent, then not match anything
-  assert (!filters[0].is_no_keyword_match (""));
-  assert (filters[0].is_sender_match (""));
-  assert (!filters[0].is_no_sender_match (""));
+  assert (!filters[0].isNoKeywordsMatch (""));
+  assert (filters[0].isMatchSender (""));
+  assert (!filters[0].isNoSendersMatch (""));
 
   // [1]
-  assert (filters[1].is_sender_match ("usr1"));
-  assert (filters[1].is_sender_match ("usr2"));
-  assert (!filters[1].is_sender_match ("usr"));
+  assert (filters[1].isMatchSender ("usr1"));
+  assert (filters[1].isMatchSender ("usr2"));
+  assert (!filters[1].isMatchSender ("usr"));
 
   // [2]
-  assert (filters[2].is_no_sender_match ("usr3"));
-  assert (filters[2].is_no_sender_match ("usr4"));
-  assert (!filters[2].is_no_sender_match ("usr"));
+  assert (filters[2].isNoSendersMatch ("usr3"));
+  assert (filters[2].isNoSendersMatch ("usr4"));
+  assert (!filters[2].isNoSendersMatch ("usr"));
 
   // [3]
-  assert (filters[3].is_title_match ("AABB"));
-  assert (filters[3].is_title_match ("AAABBB"));
-  assert (!filters[3].is_title_match ("AB"));
-  assert (filters[3].is_keyword_match ("kw1"));
-  assert (filters[3].is_keyword_match ("kw2"));
-  assert (!filters[3].is_keyword_match ("kw3"));
+  assert (filters[3].isMatchTitle ("AABB"));
+  assert (filters[3].isMatchTitle ("AAABBB"));
+  assert (!filters[3].isMatchTitle ("AB"));
+  assert (filters[3].isKeywordsMatch ("kw1"));
+  assert (filters[3].isKeywordsMatch ("kw2"));
+  assert (!filters[3].isKeywordsMatch ("kw3"));
 
   // [4]
   // if title absent, match anything
-  assert (filters[4].is_title_match (""));
-  assert (filters[4].is_title_match (" "));
-  assert (filters[4].is_title_match ("123abcABC😺"));
-  assert (filters[4].is_keyword_match ("kw3"));
-  assert (filters[4].is_keyword_match ("kw4"));
-  assert (!filters[4].is_keyword_match ("kw1"));
-  assert (!filters[4].is_keyword_match ("😺"));
-  assert (!filters[4].is_keyword_match ("😺😺"));
-  assert (filters[4].is_keyword_match ("😺😺😺"));
-  assert (filters[4].is_keyword_match ("😺😺😺😺"));
+  assert (filters[4].isMatchTitle (""));
+  assert (filters[4].isMatchTitle (" "));
+  assert (filters[4].isMatchTitle ("123abcABC😺"));
+  assert (filters[4].isKeywordsMatch ("kw3"));
+  assert (filters[4].isKeywordsMatch ("kw4"));
+  assert (!filters[4].isKeywordsMatch ("kw1"));
+  assert (!filters[4].isKeywordsMatch ("😺"));
+  assert (!filters[4].isKeywordsMatch ("😺😺"));
+  assert (filters[4].isKeywordsMatch ("😺😺😺"));
+  assert (filters[4].isKeywordsMatch ("😺😺😺😺"));
 
   // [5]
-  assert (filters[5].is_keyword_match ("kw5"));
-  assert (filters[5].is_no_keyword_match ("kw6"));
-  assert (filters[5].is_no_keyword_match ("kw7"));
-  assert (!filters[5].is_no_keyword_match ("kw8"));
+  assert (filters[5].isKeywordsMatch ("kw5"));
+  assert (filters[5].isNoKeywordsMatch ("kw6"));
+  assert (filters[5].isNoKeywordsMatch ("kw7"));
+  assert (!filters[5].isNoKeywordsMatch ("kw8"));
 }
 
 //
@@ -139,51 +139,51 @@ no-keywords = ["kw6","kw7"]
   assert (filters.size () == 6);
 
   // [0]
-  assert (filters[0].is_title_match ("abcde"));
-  assert (!filters[0].is_title_match ("cd"));
+  assert (filters[0].isMatchTitle ("abcde"));
+  assert (!filters[0].isMatchTitle ("cd"));
   // if absent, then match anything
-  assert (filters[0].is_keyword_match (""));
+  assert (filters[0].isKeywordsMatch (""));
   // if absent, then not match anything
-  assert (!filters[0].is_no_keyword_match (""));
-  assert (filters[0].is_sender_match (""));
-  assert (!filters[0].is_no_sender_match (""));
+  assert (!filters[0].isNoKeywordsMatch (""));
+  assert (filters[0].isMatchSender (""));
+  assert (!filters[0].isNoSendersMatch (""));
 
   // [1]
-  assert (filters[1].is_sender_match ("usr1"));
-  assert (filters[1].is_sender_match ("usr2"));
-  assert (!filters[1].is_sender_match ("usr"));
+  assert (filters[1].isMatchSender ("usr1"));
+  assert (filters[1].isMatchSender ("usr2"));
+  assert (!filters[1].isMatchSender ("usr"));
 
   // [2]
-  assert (filters[2].is_no_sender_match ("usr3"));
-  assert (filters[2].is_no_sender_match ("usr4"));
-  assert (!filters[2].is_no_sender_match ("usr"));
+  assert (filters[2].isNoSendersMatch ("usr3"));
+  assert (filters[2].isNoSendersMatch ("usr4"));
+  assert (!filters[2].isNoSendersMatch ("usr"));
 
   // [3]
-  assert (filters[3].is_title_match ("AABB"));
-  assert (filters[3].is_title_match ("AAABBB"));
-  assert (!filters[3].is_title_match ("AB"));
-  assert (filters[3].is_keyword_match ("kw1"));
-  assert (filters[3].is_keyword_match ("kw2"));
-  assert (!filters[3].is_keyword_match ("kw3"));
+  assert (filters[3].isMatchTitle ("AABB"));
+  assert (filters[3].isMatchTitle ("AAABBB"));
+  assert (!filters[3].isMatchTitle ("AB"));
+  assert (filters[3].isKeywordsMatch ("kw1"));
+  assert (filters[3].isKeywordsMatch ("kw2"));
+  assert (!filters[3].isKeywordsMatch ("kw3"));
 
   // [4]
   // if title absent, match anything
-  assert (filters[4].is_title_match (""));
-  assert (filters[4].is_title_match (" "));
-  assert (filters[4].is_title_match ("123abcABC😺"));
-  assert (filters[4].is_keyword_match ("kw3"));
-  assert (filters[4].is_keyword_match ("kw4"));
-  assert (!filters[4].is_keyword_match ("kw1"));
-  assert (!filters[4].is_keyword_match ("😺"));
-  assert (!filters[4].is_keyword_match ("😺😺"));
-  assert (filters[4].is_keyword_match ("😺😺😺"));
-  assert (filters[4].is_keyword_match ("😺😺😺😺"));
+  assert (filters[4].isMatchTitle (""));
+  assert (filters[4].isMatchTitle (" "));
+  assert (filters[4].isMatchTitle ("123abcABC😺"));
+  assert (filters[4].isKeywordsMatch ("kw3"));
+  assert (filters[4].isKeywordsMatch ("kw4"));
+  assert (!filters[4].isKeywordsMatch ("kw1"));
+  assert (!filters[4].isKeywordsMatch ("😺"));
+  assert (!filters[4].isKeywordsMatch ("😺😺"));
+  assert (filters[4].isKeywordsMatch ("😺😺😺"));
+  assert (filters[4].isKeywordsMatch ("😺😺😺😺"));
 
   // [5]
-  assert (filters[5].is_keyword_match ("kw5"));
-  assert (filters[5].is_no_keyword_match ("kw6"));
-  assert (filters[5].is_no_keyword_match ("kw7"));
-  assert (!filters[5].is_no_keyword_match ("kw8"));
+  assert (filters[5].isKeywordsMatch ("kw5"));
+  assert (filters[5].isNoKeywordsMatch ("kw6"));
+  assert (filters[5].isNoKeywordsMatch ("kw7"));
+  assert (!filters[5].isNoKeywordsMatch ("kw8"));
 }
 
 void
@@ -192,7 +192,7 @@ test_focus_filter_list1 ()
   using namespace toml::literals::toml_literals;
   using namespace std;
 
-  TgMsg msg ("chatxxx"s, "senderxxx"s, "txtxxx"s);
+  TgfMsg msg ("chatxxx"s, "senderxxx"s, "txtxxx"s);
 
   { // title matched
     auto tomldata = R"(
@@ -200,7 +200,7 @@ test_focus_filter_list1 ()
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 1);
-    assert (fcf_list.is_tgmsg_match (msg));
+    assert (fcf_list.isMatchTgfMsg (msg));
 
     // note: an implicit title=".*" inserted
   }
@@ -211,7 +211,7 @@ test_focus_filter_list1 ()
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 1);
-    assert (fcf_list.is_tgmsg_match (msg));
+    assert (fcf_list.isMatchTgfMsg (msg));
   }
 
   { // title matched
@@ -221,7 +221,7 @@ title = ["xxx"]
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 1);
-    assert (fcf_list.is_tgmsg_match (msg));
+    assert (fcf_list.isMatchTgfMsg (msg));
   }
 
   { // senders matched
@@ -231,7 +231,7 @@ senders = ["xxx"]
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 1);
-    assert (fcf_list.is_tgmsg_match (msg));
+    assert (fcf_list.isMatchTgfMsg (msg));
   }
 
   { // keywords matched
@@ -241,7 +241,7 @@ keywords = ["xxx"]
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 1);
-    assert (fcf_list.is_tgmsg_match (msg));
+    assert (fcf_list.isMatchTgfMsg (msg));
   }
 
   { // no-keywords matched
@@ -251,7 +251,7 @@ no-keywords = ["xxx"]
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 1);
-    assert (!fcf_list.is_tgmsg_match (msg));
+    assert (!fcf_list.isMatchTgfMsg (msg));
   }
 
   { // no-keywords not matched
@@ -261,7 +261,7 @@ no-keywords = ["yyy"]
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 1);
-    assert (fcf_list.is_tgmsg_match (msg));
+    assert (fcf_list.isMatchTgfMsg (msg));
   }
 
   { // no-senders not matched
@@ -271,7 +271,7 @@ no-senders = ["yyy"]
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 1);
-    assert (fcf_list.is_tgmsg_match (msg));
+    assert (fcf_list.isMatchTgfMsg (msg));
   }
 
   { // senders vs. no-senders
@@ -282,7 +282,7 @@ no-senders = ["xxx"]
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 1);
-    assert (!fcf_list.is_tgmsg_match (msg));
+    assert (!fcf_list.isMatchTgfMsg (msg));
   }
 
   { // senders and keywords matched
@@ -293,7 +293,7 @@ keywords = ["xxx"]
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 1);
-    assert (fcf_list.is_tgmsg_match (msg));
+    assert (fcf_list.isMatchTgfMsg (msg));
   }
 
   { // senders matched, keywords not
@@ -304,7 +304,7 @@ keywords = ["yyy"]
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 1);
-    assert (!fcf_list.is_tgmsg_match (msg));
+    assert (!fcf_list.isMatchTgfMsg (msg));
   }
 
   { // senders not, keywords matched
@@ -315,7 +315,7 @@ keywords = ["xxx"]
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 1);
-    assert (!fcf_list.is_tgmsg_match (msg));
+    assert (!fcf_list.isMatchTgfMsg (msg));
   }
 
   { // all last matched
@@ -326,7 +326,7 @@ keywords = ["a","b","c","d","x+"]
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 1);
-    assert (fcf_list.is_tgmsg_match (msg));
+    assert (fcf_list.isMatchTgfMsg (msg));
   }
 
   { // 2nd filter matched
@@ -339,7 +339,7 @@ keywords = ["x{3}"]
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 2);
-    assert (fcf_list.is_tgmsg_match (msg));
+    assert (fcf_list.isMatchTgfMsg (msg));
     assert (fcf_list.i_prev_matched () == 1);
   }
 
@@ -353,7 +353,7 @@ keywords = ["x{3}"]
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 2);
-    assert (fcf_list.is_tgmsg_match (msg));
+    assert (fcf_list.isMatchTgfMsg (msg));
     assert (fcf_list.i_prev_matched () == 0);
   }
 
@@ -367,7 +367,7 @@ no-senders = ["xxx"]
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 2);
-    assert (fcf_list.is_tgmsg_match (msg));
+    assert (fcf_list.isMatchTgfMsg (msg));
     assert (fcf_list.i_prev_matched () == 1);
   }
 
@@ -386,7 +386,7 @@ keywords = "[a-z]+"
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 3);
-    assert (fcf_list.is_tgmsg_match (msg));
+    assert (fcf_list.isMatchTgfMsg (msg));
     assert (fcf_list.i_prev_matched () == 2);
   }
 
@@ -406,7 +406,7 @@ keywords = "[:alpha:]{3}"
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 4);
-    assert (fcf_list.is_tgmsg_match (msg));
+    assert (fcf_list.isMatchTgfMsg (msg));
     assert (fcf_list.i_prev_matched () == 3);
   }
 
@@ -426,7 +426,7 @@ keywords = "[:alpha:]{3}"
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 4);
-    assert (fcf_list.is_tgmsg_match (msg));
+    assert (fcf_list.isMatchTgfMsg (msg));
     assert (fcf_list.i_prev_matched () == 1);
     // note: here the default title=".*" matched, since the 2nd no-keywords is
     //       parsed as 0-length vector
@@ -439,7 +439,7 @@ test_focus_filter_list2 ()
   using namespace toml::literals::toml_literals;
   using namespace std;
 
-  TgMsg msg ("-"s, "😺🐶😺🐶"s, "😺😺😺🐶🐶🐶"s);
+  TgfMsg msg ("-"s, "😺🐶😺🐶"s, "😺😺😺🐶🐶🐶"s);
 
   { // more complicated
     auto tomldata = R"(
@@ -448,7 +448,7 @@ senders = ["😺🐶"]
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 1);
-    assert (fcf_list.is_tgmsg_match (msg));
+    assert (fcf_list.isMatchTgfMsg (msg));
     assert (fcf_list.i_prev_matched () == 0);
   }
 
@@ -471,7 +471,7 @@ no-keywords = ["(🐶){2}(🐶){2}"]   # <--
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 5);
-    assert (fcf_list.is_tgmsg_match (msg));
+    assert (fcf_list.isMatchTgfMsg (msg));
     assert (fcf_list.i_prev_matched () == 4);
   }
 
@@ -488,7 +488,7 @@ senders = ["🐶"]
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 3);
-    assert (fcf_list.is_tgmsg_match (msg));
+    assert (fcf_list.isMatchTgfMsg (msg));
     assert (fcf_list.i_prev_matched () == 1);
   }
 
@@ -510,7 +510,7 @@ keywords = ["😺😺😺"]  # <--
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 4);
-    assert (fcf_list.is_tgmsg_match (msg));
+    assert (fcf_list.isMatchTgfMsg (msg));
     assert (fcf_list.i_prev_matched () == 3);
     // note: [1] and [2] is skipped bc both filters' <no-keywords> reject the
     //       input, even though both filters's <senders> accept it.
@@ -534,7 +534,7 @@ keywords = ["😺😺😺"]  # <--
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 4);
-    assert (fcf_list.is_tgmsg_match (msg));
+    assert (fcf_list.isMatchTgfMsg (msg));
     assert (fcf_list.i_prev_matched () == 1);
     // note: [1] and [2] is skipped bc both filters' <no-keywords> reject the
     //       input, even though both filters's <senders> accept it.
@@ -547,7 +547,7 @@ test_focus_filter_list3 ()
   using namespace toml::literals::toml_literals;
   using namespace std;
 
-  TgMsg msg ("-"s, "xxx"s, "linux is good"s);
+  TgfMsg msg ("-"s, "xxx"s, "linux is good"s);
 
   { // toml literal
     auto tomldata = R"(
@@ -557,7 +557,7 @@ no-keywords = ["macos"]
 )"_toml;
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 1);
-    assert (fcf_list.is_tgmsg_match (msg));
+    assert (fcf_list.isMatchTgfMsg (msg));
     assert (fcf_list.i_prev_matched () == 0);
   }
 }
@@ -567,7 +567,7 @@ test_focus_filter_list4 ()
 {
   using namespace std;
 
-  TgMsg msg ("-"s, "xxx"s, "linux is good"s);
+  TgfMsg msg ("-"s, "xxx"s, "linux is good"s);
 
   { // cstr
     auto tomldata = R"(
@@ -577,7 +577,7 @@ no-keywords = ["macos"]
 )";
     auto fcf_list = TgfFilterGroupToml (tomldata);
     assert (fcf_list.n_filter () == 1);
-    assert (fcf_list.is_tgmsg_match (msg));
+    assert (fcf_list.isMatchTgfMsg (msg));
     assert (fcf_list.i_prev_matched () == 0);
   }
 }
@@ -605,17 +605,17 @@ keywords = ["kw1","kw2"]
   assert (filters.size () == 1);
 
   // [0]
-  assert (filters[0].is_no_sender_match ("sd1"));
-  assert (filters[0].is_no_sender_match ("sd2"));
-  assert (filters[0].is_keyword_match ("kw1"));
-  assert (filters[0].is_keyword_match ("kw2"));
+  assert (filters[0].isNoSendersMatch ("sd1"));
+  assert (filters[0].isNoSendersMatch ("sd2"));
+  assert (filters[0].isKeywordsMatch ("kw1"));
+  assert (filters[0].isKeywordsMatch ("kw2"));
 
   auto fcf_list = TgfFilterGroupToml (dataxxx);
   assert (fcf_list.n_filter () == 1);
 
   {
-    TgMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
-    assert (!fcf_list.is_tgmsg_match (msg));
+    TgfMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
+    assert (!fcf_list.isMatchTgfMsg (msg));
   }
 }
 
@@ -645,17 +645,17 @@ keywords = ["kw1","kw2"]
   assert (filters.size () == 2);
 
   // [0]
-  assert (filters[0].is_no_sender_match ("sd1"));
-  assert (filters[0].is_no_sender_match ("sd2"));
-  assert (filters[0].is_keyword_match ("kw1"));
-  assert (filters[0].is_keyword_match ("kw2"));
+  assert (filters[0].isNoSendersMatch ("sd1"));
+  assert (filters[0].isNoSendersMatch ("sd2"));
+  assert (filters[0].isKeywordsMatch ("kw1"));
+  assert (filters[0].isKeywordsMatch ("kw2"));
 
   auto fcf_list = TgfFilterGroupToml (dataxxx);
   assert (fcf_list.n_filter () == 2);
 
   {
-    TgMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
-    assert (fcf_list.is_tgmsg_match (msg));
+    TgfMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
+    assert (fcf_list.isMatchTgfMsg (msg));
   }
 }
 
@@ -682,17 +682,17 @@ keywords = ["kw1","kw2"]
   assert (filters.size () == 1);
 
   // [0]
-  assert (filters[0].is_rej_sender_match ("sd1"));
-  assert (filters[0].is_rej_sender_match ("sd2"));
-  assert (filters[0].is_keyword_match ("kw1"));
-  assert (filters[0].is_keyword_match ("kw2"));
+  assert (filters[0].isRejSendersMatch ("sd1"));
+  assert (filters[0].isRejSendersMatch ("sd2"));
+  assert (filters[0].isKeywordsMatch ("kw1"));
+  assert (filters[0].isKeywordsMatch ("kw2"));
 
   auto fcf_list = TgfFilterGroupToml (dataxxx);
   assert (fcf_list.n_filter () == 1);
 
   {
-    TgMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
-    assert (!fcf_list.is_tgmsg_match (msg));
+    TgfMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
+    assert (!fcf_list.isMatchTgfMsg (msg));
   }
 }
 
@@ -722,17 +722,17 @@ keywords = ["kw1","kw2"]
   assert (filters.size () == 2);
 
   // [0]
-  assert (filters[0].is_rej_sender_match ("sd1"));
-  assert (filters[0].is_rej_sender_match ("sd2"));
-  assert (filters[0].is_keyword_match ("kw1"));
-  assert (filters[0].is_keyword_match ("kw2"));
+  assert (filters[0].isRejSendersMatch ("sd1"));
+  assert (filters[0].isRejSendersMatch ("sd2"));
+  assert (filters[0].isKeywordsMatch ("kw1"));
+  assert (filters[0].isKeywordsMatch ("kw2"));
 
   auto fcf_list = TgfFilterGroupToml (dataxxx);
   assert (fcf_list.n_filter () == 2);
 
   {
-    TgMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
-    assert (!fcf_list.is_tgmsg_match (msg));
+    TgfMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
+    assert (!fcf_list.isMatchTgfMsg (msg));
   }
 }
 

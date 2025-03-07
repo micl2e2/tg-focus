@@ -5,46 +5,21 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang
 endif()
 
 # add a test
-set(CurrTestName posix_regex)
-add_executable(${CurrTestName} ${CurrTestName}.cc
-   ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
+set(CurrTestName PosixRegex)
+add_executable(${CurrTestName} t${CurrTestName}.cpp
+   ${PROJECT_SOURCE_DIR}/shared/PosixRegex.cpp
 )
 target_include_directories(${CurrTestName} PRIVATE ${PROJECT_SOURCE_DIR}/shared)
 add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 
-# add a test
-set(CurrTestName focus_filter_config)
-add_executable(${CurrTestName} ${CurrTestName}.cc
-   ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc
-   ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
-   ${PROJECT_SOURCE_DIR}/shared/tgf_msg.cc
-   ${PROJECT_SOURCE_DIR}/shared/tgf_locale.cc
-)
-target_include_directories(${CurrTestName} PRIVATE
-  ${PROJECT_SOURCE_DIR}/shared
-  ${PROJECT_SOURCE_DIR}/3rd/toml11)
-add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
+# --------------------------- Add A Test ---------------------------
 
-# add a test
-set(CurrTestName focus_filter)
-add_executable(${CurrTestName} ${CurrTestName}.cc
-   ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc
-   ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
-   ${PROJECT_SOURCE_DIR}/shared/tgf_msg.cc
-   ${PROJECT_SOURCE_DIR}/shared/tgf_locale.cc
-)
-target_include_directories(${CurrTestName} PRIVATE
-  ${PROJECT_SOURCE_DIR}/shared
-  ${PROJECT_SOURCE_DIR}/3rd/toml11)
-add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
-
-# add a test
 set(CurrTestName TgfFilter)
 add_executable(${CurrTestName} t${CurrTestName}.cpp
    ${PROJECT_SOURCE_DIR}/shared/${CurrTestName}.cpp
-   ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
-   ${PROJECT_SOURCE_DIR}/shared/tgf_msg.cc
-   ${PROJECT_SOURCE_DIR}/shared/tgf_locale.cc
+   ${PROJECT_SOURCE_DIR}/shared/PosixRegex.cpp
+   ${PROJECT_SOURCE_DIR}/shared/TgfMsg.cpp
+   ${PROJECT_SOURCE_DIR}/shared/TgfLocale.cpp
 )
 target_include_directories(${CurrTestName} PRIVATE
   ${PROJECT_SOURCE_DIR}/shared
@@ -52,29 +27,29 @@ target_include_directories(${CurrTestName} PRIVATE
 add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 
 # add a test
-set(CurrTestName tgf_data)
-add_executable(${CurrTestName} ${CurrTestName}.cc
-   ${PROJECT_SOURCE_DIR}/shared/tgf_data.cc
-   ${PROJECT_SOURCE_DIR}/shared/tgf_locale.cc
+set(CurrTestName TgfData)
+add_executable(${CurrTestName} t${CurrTestName}.cpp
+   ${PROJECT_SOURCE_DIR}/shared/TgfData.cpp
+   ${PROJECT_SOURCE_DIR}/shared/TgfLocale.cpp
 )
 target_include_directories(${CurrTestName} PRIVATE
   ${PROJECT_SOURCE_DIR}/shared)
 add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 
 # add a test
-set(CurrTestName tgf_msg)
-add_executable(${CurrTestName} ${CurrTestName}.cc
-  ${PROJECT_SOURCE_DIR}/shared/tgf_msg.cc
-  ${PROJECT_SOURCE_DIR}/shared/tgf_locale.cc
+set(CurrTestName TgfMsg)
+add_executable(${CurrTestName} t${CurrTestName}.cpp
+  ${PROJECT_SOURCE_DIR}/shared/TgfMsg.cpp
+  ${PROJECT_SOURCE_DIR}/shared/TgfLocale.cpp
 )
 target_include_directories(${CurrTestName} PRIVATE ${PROJECT_SOURCE_DIR}/shared)
 add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 
 
 # add a test
-set(CurrTestName tgf_locale)
-add_executable(${CurrTestName} ${CurrTestName}.cc
-  ${PROJECT_SOURCE_DIR}/shared/tgf_locale.cc
+set(CurrTestName TgfLocale)
+add_executable(${CurrTestName} t${CurrTestName}.cpp
+  ${PROJECT_SOURCE_DIR}/shared/TgfLocale.cpp
 )
 target_include_directories(${CurrTestName} PRIVATE ${PROJECT_SOURCE_DIR}/shared)
 add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})

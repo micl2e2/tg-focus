@@ -29,14 +29,13 @@ find_package(Td 1.8.44 REQUIRED)
 
 add_executable(
   tgf-conf
-  ${PROJECT_SOURCE_DIR}/tgf-conf/tgf_conf.cc
-  ${PROJECT_SOURCE_DIR}/tgf-conf/state.cc
-  ${PROJECT_SOURCE_DIR}/tgf-conf/auth.cc
-  ${PROJECT_SOURCE_DIR}/shared/tgf_data.cc
-  ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
-  ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc
-  ${PROJECT_SOURCE_DIR}/shared/lv_log.cc
-  ${PROJECT_SOURCE_DIR}/shared/tgf_locale.cc
+  ${PROJECT_SOURCE_DIR}/tgf-conf/TgfConf.cpp
+  ${PROJECT_SOURCE_DIR}/tgf-conf/State.cpp
+  ${PROJECT_SOURCE_DIR}/tgf-conf/Auth.cpp
+  ${PROJECT_SOURCE_DIR}/shared/TgfData.cpp
+  ${PROJECT_SOURCE_DIR}/shared/PosixRegex.cpp
+  ${PROJECT_SOURCE_DIR}/shared/LvLog.cpp
+  ${PROJECT_SOURCE_DIR}/shared/TgfLocale.cpp
   ${PROJECT_SOURCE_DIR}/shared/TgfFilter.cpp
 )
 target_include_directories(
@@ -59,16 +58,16 @@ endif()
 
 add_executable(
   tgf-focusd
-  ${PROJECT_SOURCE_DIR}/tgf-focusd/tgf_focusd.cc
-  ${PROJECT_SOURCE_DIR}/tgf-focusd/state.cc
-  ${PROJECT_SOURCE_DIR}/tgf-focusd/worker.cc
-  ${PROJECT_SOURCE_DIR}/tgf-focusd/collector.cc
-  ${PROJECT_SOURCE_DIR}/shared/tgf_data.cc
-  ${PROJECT_SOURCE_DIR}/shared/posix_regex.cc
-  ${PROJECT_SOURCE_DIR}/shared/focus_filter.cc
-  ${PROJECT_SOURCE_DIR}/shared/tgf_msg.cc
-  ${PROJECT_SOURCE_DIR}/shared/lv_log.cc
-  ${PROJECT_SOURCE_DIR}/shared/tgf_locale.cc  
+  ${PROJECT_SOURCE_DIR}/tgf-focusd/TgfFocusd.cpp
+  ${PROJECT_SOURCE_DIR}/tgf-focusd/State.cpp
+  ${PROJECT_SOURCE_DIR}/tgf-focusd/Worker.cpp
+  ${PROJECT_SOURCE_DIR}/tgf-focusd/Collector.cpp
+  ${PROJECT_SOURCE_DIR}/shared/TgfData.cpp
+  ${PROJECT_SOURCE_DIR}/shared/PosixRegex.cpp
+  ${PROJECT_SOURCE_DIR}/shared/TgfFilter.cpp
+  ${PROJECT_SOURCE_DIR}/shared/TgfMsg.cpp
+  ${PROJECT_SOURCE_DIR}/shared/LvLog.cpp
+  ${PROJECT_SOURCE_DIR}/shared/TgfLocale.cpp  
 )
 
 target_include_directories(
