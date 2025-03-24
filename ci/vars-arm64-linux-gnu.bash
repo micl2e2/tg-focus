@@ -1,1 +1,0 @@
-PICK_ARCH=arm64
