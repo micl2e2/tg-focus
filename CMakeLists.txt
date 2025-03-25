@@ -2,6 +2,15 @@ cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
 project(tg-focus)
 
+option(IS_ALPINE "")
+
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+  file(READ "/etc/os-release" OS_RELEASE_CONTENT)
+  if(OS_RELEASE_CONTENT MATCHES "ID=alpine")
+    set(IS_ALPINE TRUE)
+  endif()
+endif()
+
 # santinize, linked by all targets
 if (DEFINED ENV{WITH_SANITIZERS})
   add_compile_options(-fsanitize=address -fsanitize=undefined -fno-sanitize=vptr -fsanitize=leak)
@@ -9,13 +18,13 @@ if (DEFINED ENV{WITH_SANITIZERS})
 endif()
 
 # ----------------------------- tdlib -----------------------------
-option(BUILD_TESTING OFF)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
   set(ZLIB_USE_STATIC_LIBS ON)
   # might need to build from source in many distros
   set(OPENSSL_USE_STATIC_LIBS ON)
 else()
+  option(BUILD_TESTING OFF)
   option(TD_BUILD_BENCHMARK OFF)
 endif()
 
@@ -29,16 +38,17 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
   # add_compile_options(-Wall -Wextra)
-  # add_compile_options(-flto)
-  add_link_options(-Wl,-s)
+  if(IS_ALPINE)
+    add_compile_options(-flto)
+  endif()
+  add_link_options(-Wl,-s) # always strip
 else()
   add_compile_options(-g)
 endif()
 
 # ------------------------------ tgfocus ------------------------------
 
-add_executable(
-  tgfocus
+add_executable(tgfocus
   ${PROJECT_SOURCE_DIR}/src/log.cc
   ${PROJECT_SOURCE_DIR}/src/stat.cc
   ${PROJECT_SOURCE_DIR}/src/worker/conn_listener.cc
@@ -61,21 +71,22 @@ add_executable(
   ${PROJECT_SOURCE_DIR}/src/posix_regex.cc
   ${PROJECT_SOURCE_DIR}/src/locale_conf.cc
   ${PROJECT_SOURCE_DIR}/src/filter.cc
-  ${PROJECT_SOURCE_DIR}/src/chatcmd.cc
-)
-target_include_directories(
-  tgfocus
+  ${PROJECT_SOURCE_DIR}/src/chatcmd.cc)
+
+target_include_directories(tgfocus
   PRIVATE ${PROJECT_SOURCE_DIR}/src
-  PRIVATE ${PROJECT_SOURCE_DIR}/3rd/toml11
-)
-target_link_libraries(
-  tgfocus
-  PRIVATE Td::TdStatic
-)
-target_link_libraries(
-  tgfocus PRIVATE
-  -static-libgcc -static-libstdc++
-)
+  PRIVATE ${PROJECT_SOURCE_DIR}/3rd/toml11)
+
+target_link_libraries(tgfocus
+  PRIVATE Td::TdStatic)
+
+if(IS_ALPINE)
+  target_link_libraries(tgfocus
+    PRIVATE -static)
+else()
+  target_link_libraries(tgfocus
+    PRIVATE -static-libgcc -static-libstdc++)
+endif()
 
 
 # ----------------------------- tests -----------------------------
