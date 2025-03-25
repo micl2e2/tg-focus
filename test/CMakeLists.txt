@@ -37,6 +37,10 @@ add_executable(${CurrTestName} t_${CurrTestName}.cc
 )
 target_include_directories(${CurrTestName} PRIVATE
   ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(
+  ${CurrTestName}
+  PRIVATE Td::TdStatic
+)
 add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 
 # --------------------------- Add A Test ---------------------------
