@@ -234,15 +234,15 @@ Filter<V>::isNoKeywordsMatch (const std::string &input)
 }
 
 inline string
-eles (const vector<PosixExtRegex> &list)
+readable_eles (const vector<PosixExtRegex> &list)
 {
   ostringstream oss;
   for (int i = 0; i < list.size (); i++)
     {
       const PosixExtRegex &el = list[i];
-      oss << el.ptn ();
+      oss << "(" << el.ptn () << ")";
       if (i < list.size () - 1)
-	oss << ", ";
+	oss << "  "; // double spc
       else
 	oss << endl;
     }
@@ -263,24 +263,14 @@ string
 Filter<V>::as_readable () const
 {
   ostringstream oss;
-  oss << "chat -------------------------------" << endl;
-  oss << chat_title.ptn () << endl;
-  oss << "------------------------------------" << endl << endl;
-  oss << "senders ____________________________" << endl;
-  oss << eles (senders);
-  oss << "------------------------------------" << endl << endl;
-  oss << "no-senders -------------------------" << endl;
-  oss << eles (no_senders);
-  oss << "------------------------------------" << endl << endl;
-  oss << "rej-senders ------------------------" << endl;
-  oss << eles (rej_senders);
-  oss << "------------------------------------" << endl << endl;
-  oss << "keywords ___________________________" << endl;
-  oss << eles (keywords);
-  oss << "____________________________________" << endl << endl;
-  oss << "no_keywords ------------------------" << endl;
-  oss << eles (no_senders);
-  oss << "------------------------------------" << endl << endl;
+  oss << "🞄 Accept Title 🞄" << endl
+      << "(" << chat_title.ptn () << ")" << endl
+      << endl;
+  oss << "🞄 Accept Words 🞄" << endl << readable_eles (keywords) << endl;
+  oss << "🞄 No Words 🞄" << endl << readable_eles (no_keywords) << endl;
+  oss << "🞄 Accept Senders 🞄" << endl << readable_eles (senders) << endl;
+  oss << "🞄 Reject Senders 🞄" << endl << readable_eles (rej_senders) << endl;
+  oss << "🞄 No Senders 🞄" << endl << readable_eles (no_senders);
   // if no candidates, not match anything
 
   return oss.str ();
@@ -407,8 +397,7 @@ FilterGroup<V, F>::as_readable () const
   for (int i = 0; i < filters.size (); i++)
     {
       const F &el = filters[i];
-      oss << "===============" << " Filter " << (i + 1) << " "
-	  << "===============" << endl;
+      oss << "🞋 🞋 🞋 " << "FILTER " << (i + 1) << " 🞋 🞋 🞋" << endl << endl;
       oss << el.as_readable () << endl;
     }
 

@@ -19,11 +19,13 @@ endif()
 
 # ----------------------------- tdlib -----------------------------
 
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
+if(CMAKE_BUILD_TYPE STREQUAL "Release" OR IS_ALPINE)
   set(ZLIB_USE_STATIC_LIBS ON)
   # might need to build from source in many distros
   set(OPENSSL_USE_STATIC_LIBS ON)
-else()
+endif()
+  
+if(NOT (CMAKE_BUILD_TYPE STREQUAL "Release"))
   option(BUILD_TESTING OFF)
   option(TD_BUILD_BENCHMARK OFF)
 endif()
