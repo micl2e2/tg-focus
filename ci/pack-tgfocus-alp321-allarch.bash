@@ -24,4 +24,7 @@ tar --gzip --create --file ${PACK_DIRNAME}.tgz ${PACK_DIRNAME}
 sha512sum ${PACK_DIRNAME}.tgz > CHECKSUM-${PACK_DIRNAME}.tgz 
 [[ $? -eq 0 ]] || exit 255
 
+zip artifacts.zip ${PACK_DIRNAME}.tgz CHECKSUM-${PACK_DIRNAME}.tgz 
+[[ $? -eq 0 ]] || exit 255
+
 
