@@ -416,6 +416,48 @@ keywords = ["xxx"]
 }
 
 void
+tst_readblefilters ()
+{
+  string curr_filters = R"(
+[[focus-filter]]
+title = ".*"
+keywords = ["xxx","yyy"]
+no-keywords = ["zzz","asda ..."]
+)";
+  string curr_filters_cp = curr_filters;
+  tfdata.set_filters (move (curr_filters));
+
+  string usript = "  filters";
+  tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdFilters, usript, tfdata);
+  // cerr << res.succ_data ();
+  // cerr << res.did_what ().value ();
+  cerr << res.aux_msg ();
+  assert (res.done ());
+  assert (res.aux_msg () == string (CHATCMD_RPLY_PREFIX) + R"(
+🞋 🞋 🞋 FILTER 1 🞋 🞋 🞋
+
+🞄 Accept Title 🞄
+(.*)
+
+🞄 Accept Words 🞄
+(xxx)  (yyy)
+
+🞄 No Words 🞄
+(zzz)  (asda ...)
+
+🞄 Accept Senders 🞄
+
+🞄 Reject Senders 🞄
+
+🞄 No Senders 🞄
+
+)");
+  assert (res.did_what ().has_value ());
+  assert (res.did_what ().value () == "filters"); // will trim spc
+  assert (res.succ_data ().has_value ());
+}
+
+void
 tst_rm_filter_succ ()
 {
   string usript = " rmf 1";
@@ -538,7 +580,9 @@ main ()
 
   tst_pause ();
   tst_resume ();
+
   tst_rawfilters ();
+  tst_readblefilters();
 
   tst_rm_filter_succ ();
   tst_rm_filter_fail ();

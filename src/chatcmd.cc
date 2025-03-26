@@ -68,13 +68,13 @@ handle_filters (string cmdipt, tgf::UserData &p_userdata)
   ostringstream auxmsg;
   tuple<optional<string>, optional<string>, string> ret{nullopt, nullopt, "-"};
 
-  string s = tgfstat::userdata.get_filters ();
+  string s = p_userdata.get_filters ();
   // TODO: dont use move ctor unless it has been implemented
   tgf::FilterGroupToml fg = tgf::FilterGroupToml (s);
 
   succdata << "";
   didwhat << cmdipt;
-  auxmsg << fg.as_readable ();
+  auxmsg << endl << fg.as_readable ();
 
   ret = {succdata.str (), didwhat.str (), auxmsg.str ()};
 
