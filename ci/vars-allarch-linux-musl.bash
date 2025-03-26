@@ -2,7 +2,7 @@
 
 [[ -n $PICK_ARCH ]] || exit 201
 
-PICK_PLATFORM="$PICK_ARCH-linux-musl"
+PICK_PLATFORM="linux-musl-$PICK_ARCH"
 CURR_DATE=$(date +'%Y%m%d')
 
 # --------------------------- toolchain ---------------------------

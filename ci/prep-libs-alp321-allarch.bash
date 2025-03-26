@@ -2,7 +2,7 @@ set -x
 
 # ----------------------------- tdlib -----------------------------
 
-sudo apk add gperf cmake g++ git zlib-dev zlib-static openssl-libs-static linux-headers wget ccache --quiet
+sudo apk add gperf make cmake g++ git zlib-dev zlib-static openssl-dev openssl-libs-static linux-headers wget ccache --quiet
 [[ $? -eq 0 ]] || exit 255
 
 [[ -d ../3rd/tdlib/.git ]] || $PXY_FRONTEND git clone --depth=1000 https://github.com/tdlib/td ../3rd/tdlib
