@@ -112,7 +112,7 @@ decorate_msg (const string &msg)
 		 " decorating u8str:", msg,
 		 " pos_info:", tgf::decor_pos_to_str (pos_info));
 
-  TdArray deco_list = TdArray<TdUniPtr<TdTxtEnt>> ();
+  TdArray<TdUniPtr<TdTxtEnt>> deco_list;
 
   for (auto pos : pos_info)
     {
@@ -258,7 +258,7 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
   string aux_msg = string (CHATCMD_RPLY_PREFIX) + "not supported";
   string did_what = incom_txt;
   u32 len_did_what = did_what.length ();
-  TdArray deco_list = TdArray<TdUniPtr<TdTxtEnt>> ();
+  TdArray<TdUniPtr<TdTxtEnt>> deco_list;
   TdUniPtr<TdFmtTxt> message_text
     = td_mkobj<TdFmtTxt> (did_what + aux_msg, move (deco_list));
 
