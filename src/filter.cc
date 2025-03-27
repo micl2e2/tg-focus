@@ -10,8 +10,10 @@ tgf::FilterToml::FilterToml (const toml::value &v)
   using std::string, std::vector;
 
   // title
-  std::string sval = toml::find_or<string> (v, "title", ".*");
-  this->chat_title = PosixExtRegex (sval);
+  vector<string> title_list
+    = toml::find_or<vector<string>> (v, "titles", vector<string> (0));
+  for (string &strval : title_list)
+    this->__titles.emplace_back (PosixExtRegex (strval));
 
   // sender
   vector<string> sender_list
@@ -93,8 +95,16 @@ tgf::FilterGroupToml::as_fsdata () noexcept
       const tgf::FilterToml &el = filters[i];
       oss << endl << "[[focus-filter]]" << endl;
 
-      oss << "title = " << "\"" << el.chat_title.ptn () << "\"" << endl;
-
+      oss << "titles = [";
+      for (int ii = 0; ii < el.__titles.size (); ii++)
+	{
+	  const PosixExtRegex &elel = el.__titles[ii];
+	  oss << "\"" << elel.ptn () << "\"";
+	  if (ii < el.__titles.size () - 1)
+	    oss << ", ";
+	}
+      oss << "]" << endl;
+      
       oss << "keywords = [";
       for (int ii = 0; ii < el.keywords.size (); ii++)
 	{

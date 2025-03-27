@@ -11,8 +11,12 @@ void
 test_default_filter ()
 {
   tgf::FilterToml f;
-  string ptn = f.getptn_title ();
-  tgf::ass (ptn == ".*");
+  tgfass (f.isMatchTitle (""s));
+  tgfass (f.isKeywordsMatch (""s));
+  tgfass (f.isMatchSender (""s));
+  tgfass (!f.isRejSendersMatch (""s));
+  tgfass (!f.isNoSendersMatch (""s));
+  tgfass (!f.isNoKeywordsMatch (""s));
 }
 
 void
@@ -25,25 +29,25 @@ test_sub_match1 ()
 # this line will be ignored by parser
 
 [[focus-filter]]
-title = "bcd"
+titles = ["bcd"]
 
 [[focus-filter]]
-title = "xxx"
+titles = ["xxx"]
 senders = ["usr1","usr2"]
 
 [[focus-filter]]
-title = "xxx"
+titles = ["xxx"]
 no-senders = ["usr3","usr4",]
 
 [[focus-filter]]
-title = "A{2,}B{2,}"
+titles = ["A{2,}B{2,}"]
 keywords = ["kw1", "kw2", ]
 
 [[focus-filter]]
 keywords = [ "kw3", "kw4", "(😺){3}" ]
 
 [[focus-filter]]
-title = "xxx"
+titles = ["xxx"]
 keywords = ["kw5"]
 no-keywords = ["kw6","kw7"]
 
@@ -52,54 +56,54 @@ no-keywords = ["kw6","kw7"]
   vector<tgf::FilterToml> filters
     = toml::find<vector<tgf::FilterToml>> (dataxxx, "focus-filter");
 
-  tgf::ass (filters.size () == 6);
+  tgfass (filters.size () == 6);
 
   // [0]
-  tgf::ass (filters[0].isMatchTitle ("abcde"));
-  tgf::ass (!filters[0].isMatchTitle ("cd"));
+  tgfass (filters[0].isMatchTitle ("abcde"));
+  tgfass (!filters[0].isMatchTitle ("cd"));
   // if absent, then match anything
-  tgf::ass (filters[0].isKeywordsMatch (""));
+  tgfass (filters[0].isKeywordsMatch (""));
   // if absent, then not match anything
-  tgf::ass (!filters[0].isNoKeywordsMatch (""));
-  tgf::ass (filters[0].isMatchSender (""));
-  tgf::ass (!filters[0].isNoSendersMatch (""));
+  tgfass (!filters[0].isNoKeywordsMatch (""));
+  tgfass (filters[0].isMatchSender (""));
+  tgfass (!filters[0].isNoSendersMatch (""));
 
   // [1]
-  tgf::ass (filters[1].isMatchSender ("usr1"));
-  tgf::ass (filters[1].isMatchSender ("usr2"));
-  tgf::ass (!filters[1].isMatchSender ("usr"));
+  tgfass (filters[1].isMatchSender ("usr1"));
+  tgfass (filters[1].isMatchSender ("usr2"));
+  tgfass (!filters[1].isMatchSender ("usr"));
 
   // [2]
-  tgf::ass (filters[2].isNoSendersMatch ("usr3"));
-  tgf::ass (filters[2].isNoSendersMatch ("usr4"));
-  tgf::ass (!filters[2].isNoSendersMatch ("usr"));
+  tgfass (filters[2].isNoSendersMatch ("usr3"));
+  tgfass (filters[2].isNoSendersMatch ("usr4"));
+  tgfass (!filters[2].isNoSendersMatch ("usr"));
 
   // [3]
-  tgf::ass (filters[3].isMatchTitle ("AABB"));
-  tgf::ass (filters[3].isMatchTitle ("AAABBB"));
-  tgf::ass (!filters[3].isMatchTitle ("AB"));
-  tgf::ass (filters[3].isKeywordsMatch ("kw1"));
-  tgf::ass (filters[3].isKeywordsMatch ("kw2"));
-  tgf::ass (!filters[3].isKeywordsMatch ("kw3"));
+  tgfass (filters[3].isMatchTitle ("AABB"));
+  tgfass (filters[3].isMatchTitle ("AAABBB"));
+  tgfass (!filters[3].isMatchTitle ("AB"));
+  tgfass (filters[3].isKeywordsMatch ("kw1"));
+  tgfass (filters[3].isKeywordsMatch ("kw2"));
+  tgfass (!filters[3].isKeywordsMatch ("kw3"));
 
   // [4]
   // if title absent, match anything
-  tgf::ass (filters[4].isMatchTitle (""));
-  tgf::ass (filters[4].isMatchTitle (" "));
-  tgf::ass (filters[4].isMatchTitle ("123abcABC😺"));
-  tgf::ass (filters[4].isKeywordsMatch ("kw3"));
-  tgf::ass (filters[4].isKeywordsMatch ("kw4"));
-  tgf::ass (!filters[4].isKeywordsMatch ("kw1"));
-  tgf::ass (!filters[4].isKeywordsMatch ("😺"));
-  tgf::ass (!filters[4].isKeywordsMatch ("😺😺"));
-  tgf::ass (filters[4].isKeywordsMatch ("😺😺😺"));
-  tgf::ass (filters[4].isKeywordsMatch ("😺😺😺😺"));
+  tgfass (filters[4].isMatchTitle (""));
+  tgfass (filters[4].isMatchTitle (" "));
+  tgfass (filters[4].isMatchTitle ("123abcABC😺"));
+  tgfass (filters[4].isKeywordsMatch ("kw3"));
+  tgfass (filters[4].isKeywordsMatch ("kw4"));
+  tgfass (!filters[4].isKeywordsMatch ("kw1"));
+  tgfass (!filters[4].isKeywordsMatch ("😺"));
+  tgfass (!filters[4].isKeywordsMatch ("😺😺"));
+  tgfass (filters[4].isKeywordsMatch ("😺😺😺"));
+  tgfass (filters[4].isKeywordsMatch ("😺😺😺😺"));
 
   // [5]
-  tgf::ass (filters[5].isKeywordsMatch ("kw5"));
-  tgf::ass (filters[5].isNoKeywordsMatch ("kw6"));
-  tgf::ass (filters[5].isNoKeywordsMatch ("kw7"));
-  tgf::ass (!filters[5].isNoKeywordsMatch ("kw8"));
+  tgfass (filters[5].isKeywordsMatch ("kw5"));
+  tgfass (filters[5].isNoKeywordsMatch ("kw6"));
+  tgfass (filters[5].isNoKeywordsMatch ("kw7"));
+  tgfass (!filters[5].isNoKeywordsMatch ("kw8"));
 }
 
 //
@@ -112,25 +116,25 @@ test_sub_match2 ()
 
   const char *tomlcstr = R"(
 [[focus-filter]]
-title = "bcd"
+titles = ["bcd"]
 
 [[focus-filter]]
-title = "xxx"
+titles = ["xxx"]
 senders = ["usr1","usr2"]
 
 [[focus-filter]]
-title = "xxx"
+titles = ["xxx"]
 no-senders = ["usr3","usr4",]
 
 [[focus-filter]]
-title = "A{2,}B{2,}"
+titles = ["A{2,}B{2,}"]
 keywords = ["kw1", "kw2", ]
 
 [[focus-filter]]
 keywords = [ "kw3", "kw4", "(😺){3}" ]
 
 [[focus-filter]]
-title = "xxx"
+titles = ["xxx"]
 keywords = ["kw5"]
 no-keywords = ["kw6","kw7"]
 
@@ -145,54 +149,54 @@ no-keywords = ["kw6","kw7"]
   vector<tgf::FilterToml> filters
     = toml::find<vector<tgf::FilterToml>> (tomldata, "focus-filter");
 
-  tgf::ass (filters.size () == 6);
+  tgfass (filters.size () == 6);
 
   // [0]
-  tgf::ass (filters[0].isMatchTitle ("abcde"));
-  tgf::ass (!filters[0].isMatchTitle ("cd"));
+  tgfass (filters[0].isMatchTitle ("abcde"));
+  tgfass (!filters[0].isMatchTitle ("cd"));
   // if absent, then match anything
-  tgf::ass (filters[0].isKeywordsMatch (""));
+  tgfass (filters[0].isKeywordsMatch (""));
   // if absent, then not match anything
-  tgf::ass (!filters[0].isNoKeywordsMatch (""));
-  tgf::ass (filters[0].isMatchSender (""));
-  tgf::ass (!filters[0].isNoSendersMatch (""));
+  tgfass (!filters[0].isNoKeywordsMatch (""));
+  tgfass (filters[0].isMatchSender (""));
+  tgfass (!filters[0].isNoSendersMatch (""));
 
   // [1]
-  tgf::ass (filters[1].isMatchSender ("usr1"));
-  tgf::ass (filters[1].isMatchSender ("usr2"));
-  tgf::ass (!filters[1].isMatchSender ("usr"));
+  tgfass (filters[1].isMatchSender ("usr1"));
+  tgfass (filters[1].isMatchSender ("usr2"));
+  tgfass (!filters[1].isMatchSender ("usr"));
 
   // [2]
-  tgf::ass (filters[2].isNoSendersMatch ("usr3"));
-  tgf::ass (filters[2].isNoSendersMatch ("usr4"));
-  tgf::ass (!filters[2].isNoSendersMatch ("usr"));
+  tgfass (filters[2].isNoSendersMatch ("usr3"));
+  tgfass (filters[2].isNoSendersMatch ("usr4"));
+  tgfass (!filters[2].isNoSendersMatch ("usr"));
 
   // [3]
-  tgf::ass (filters[3].isMatchTitle ("AABB"));
-  tgf::ass (filters[3].isMatchTitle ("AAABBB"));
-  tgf::ass (!filters[3].isMatchTitle ("AB"));
-  tgf::ass (filters[3].isKeywordsMatch ("kw1"));
-  tgf::ass (filters[3].isKeywordsMatch ("kw2"));
-  tgf::ass (!filters[3].isKeywordsMatch ("kw3"));
+  tgfass (filters[3].isMatchTitle ("AABB"));
+  tgfass (filters[3].isMatchTitle ("AAABBB"));
+  tgfass (!filters[3].isMatchTitle ("AB"));
+  tgfass (filters[3].isKeywordsMatch ("kw1"));
+  tgfass (filters[3].isKeywordsMatch ("kw2"));
+  tgfass (!filters[3].isKeywordsMatch ("kw3"));
 
   // [4]
   // if title absent, match anything
-  tgf::ass (filters[4].isMatchTitle (""));
-  tgf::ass (filters[4].isMatchTitle (" "));
-  tgf::ass (filters[4].isMatchTitle ("123abcABC😺"));
-  tgf::ass (filters[4].isKeywordsMatch ("kw3"));
-  tgf::ass (filters[4].isKeywordsMatch ("kw4"));
-  tgf::ass (!filters[4].isKeywordsMatch ("kw1"));
-  tgf::ass (!filters[4].isKeywordsMatch ("😺"));
-  tgf::ass (!filters[4].isKeywordsMatch ("😺😺"));
-  tgf::ass (filters[4].isKeywordsMatch ("😺😺😺"));
-  tgf::ass (filters[4].isKeywordsMatch ("😺😺😺😺"));
+  tgfass (filters[4].isMatchTitle (""));
+  tgfass (filters[4].isMatchTitle (" "));
+  tgfass (filters[4].isMatchTitle ("123abcABC😺"));
+  tgfass (filters[4].isKeywordsMatch ("kw3"));
+  tgfass (filters[4].isKeywordsMatch ("kw4"));
+  tgfass (!filters[4].isKeywordsMatch ("kw1"));
+  tgfass (!filters[4].isKeywordsMatch ("😺"));
+  tgfass (!filters[4].isKeywordsMatch ("😺😺"));
+  tgfass (filters[4].isKeywordsMatch ("😺😺😺"));
+  tgfass (filters[4].isKeywordsMatch ("😺😺😺😺"));
 
   // [5]
-  tgf::ass (filters[5].isKeywordsMatch ("kw5"));
-  tgf::ass (filters[5].isNoKeywordsMatch ("kw6"));
-  tgf::ass (filters[5].isNoKeywordsMatch ("kw7"));
-  tgf::ass (!filters[5].isNoKeywordsMatch ("kw8"));
+  tgfass (filters[5].isKeywordsMatch ("kw5"));
+  tgfass (filters[5].isNoKeywordsMatch ("kw6"));
+  tgfass (filters[5].isNoKeywordsMatch ("kw7"));
+  tgfass (!filters[5].isNoKeywordsMatch ("kw8"));
 }
 
 void
@@ -208,8 +212,8 @@ test_focus_filter_list1 ()
 
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 1);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.n_filter () == 1);
+    tgfass (fcf_list.isMatchTgMsg (msg));
 
     // note: an implicit title=".*" inserted
   }
@@ -219,18 +223,18 @@ test_focus_filter_list1 ()
 [[focus-filter]]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 1);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.n_filter () == 1);
+    tgfass (fcf_list.isMatchTgMsg (msg));
   }
 
   { // title matched
     auto tomldata = R"(
 [[focus-filter]]
-title = ["xxx"]
+titles = ["xxx"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 1);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.n_filter () == 1);
+    tgfass (fcf_list.isMatchTgMsg (msg));
   }
 
   { // senders matched
@@ -239,8 +243,8 @@ title = ["xxx"]
 senders = ["xxx"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 1);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.n_filter () == 1);
+    tgfass (fcf_list.isMatchTgMsg (msg));
   }
 
   { // keywords matched
@@ -249,8 +253,8 @@ senders = ["xxx"]
 keywords = ["xxx"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 1);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.n_filter () == 1);
+    tgfass (fcf_list.isMatchTgMsg (msg));
   }
 
   { // no-keywords matched
@@ -259,8 +263,8 @@ keywords = ["xxx"]
 no-keywords = ["xxx"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 1);
-    tgf::ass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.n_filter () == 1);
+    tgfass (!fcf_list.isMatchTgMsg (msg));
   }
 
   { // no-keywords not matched
@@ -269,8 +273,8 @@ no-keywords = ["xxx"]
 no-keywords = ["yyy"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 1);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.n_filter () == 1);
+    tgfass (fcf_list.isMatchTgMsg (msg));
   }
 
   { // no-senders not matched
@@ -279,8 +283,8 @@ no-keywords = ["yyy"]
 no-senders = ["yyy"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 1);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.n_filter () == 1);
+    tgfass (fcf_list.isMatchTgMsg (msg));
   }
 
   { // senders vs. no-senders
@@ -290,8 +294,8 @@ senders = ["x{2}"]
 no-senders = ["xxx"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 1);
-    tgf::ass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.n_filter () == 1);
+    tgfass (!fcf_list.isMatchTgMsg (msg));
   }
 
   { // senders and keywords matched
@@ -301,8 +305,8 @@ senders = ["xxx"]
 keywords = ["xxx"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 1);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.n_filter () == 1);
+    tgfass (fcf_list.isMatchTgMsg (msg));
   }
 
   { // senders matched, keywords not
@@ -312,8 +316,8 @@ senders = ["xxx"]
 keywords = ["yyy"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 1);
-    tgf::ass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.n_filter () == 1);
+    tgfass (!fcf_list.isMatchTgMsg (msg));
   }
 
   { // senders not, keywords matched
@@ -323,8 +327,8 @@ senders = ["yyy"]
 keywords = ["xxx"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 1);
-    tgf::ass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.n_filter () == 1);
+    tgfass (!fcf_list.isMatchTgMsg (msg));
   }
 
   { // all last matched
@@ -334,8 +338,8 @@ senders = ["a","b","c","d","x+"]
 keywords = ["a","b","c","d","x+"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 1);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.n_filter () == 1);
+    tgfass (fcf_list.isMatchTgMsg (msg));
   }
 
   { // 2nd filter matched
@@ -347,9 +351,9 @@ senders = ["yyy"]
 keywords = ["x{3}"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 2);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
-    tgf::ass (fcf_list.i_prev_matched () == 1);
+    tgfass (fcf_list.n_filter () == 2);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.i_prev_matched () == 1);
   }
 
   { // 1st filter matched
@@ -361,9 +365,9 @@ senders = ["x{2}"]
 keywords = ["x{3}"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 2);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
-    tgf::ass (fcf_list.i_prev_matched () == 0);
+    tgfass (fcf_list.n_filter () == 2);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.i_prev_matched () == 0);
   }
 
   { // more complicated
@@ -375,9 +379,9 @@ no-senders = ["xxx"]
 [[focus-filter]]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 2);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
-    tgf::ass (fcf_list.i_prev_matched () == 1);
+    tgfass (fcf_list.n_filter () == 2);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.i_prev_matched () == 1);
   }
 
   { // more complicated
@@ -394,9 +398,9 @@ no-keywords = ["xx"]
 keywords = "[a-z]+"
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 3);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
-    tgf::ass (fcf_list.i_prev_matched () == 2);
+    tgfass (fcf_list.n_filter () == 3);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.i_prev_matched () == 2);
   }
 
   { // more complicated
@@ -414,9 +418,9 @@ no-keywords = ["[a-z]+"]
 keywords = "[:alpha:]{3}"
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 4);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
-    tgf::ass (fcf_list.i_prev_matched () == 3);
+    tgfass (fcf_list.n_filter () == 4);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.i_prev_matched () == 3);
   }
 
   { // more complicated
@@ -434,9 +438,9 @@ no-keywords = ["[a-z]+"]
 keywords = "[:alpha:]{3}"
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 4);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
-    tgf::ass (fcf_list.i_prev_matched () == 1);
+    tgfass (fcf_list.n_filter () == 4);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.i_prev_matched () == 1);
     // note: here the default title=".*" matched, since the 2nd no-keywords is
     //       parsed as 0-length vector
   }
@@ -456,9 +460,9 @@ test_focus_filter_list2 ()
 senders = ["😺🐶"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 1);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
-    tgf::ass (fcf_list.i_prev_matched () == 0);
+    tgfass (fcf_list.n_filter () == 1);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.i_prev_matched () == 0);
   }
 
   { // more complicated
@@ -479,9 +483,9 @@ no-keywords = ["(🐶){3}"]
 no-keywords = ["(🐶){2}(🐶){2}"]   # <--
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 5);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
-    tgf::ass (fcf_list.i_prev_matched () == 4);
+    tgfass (fcf_list.n_filter () == 5);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.i_prev_matched () == 4);
   }
 
   { // more complicated
@@ -496,9 +500,9 @@ senders = ["😺"]  # <--
 senders = ["🐶"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 3);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
-    tgf::ass (fcf_list.i_prev_matched () == 1);
+    tgfass (fcf_list.n_filter () == 3);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.i_prev_matched () == 1);
   }
 
   { // more complicated
@@ -518,9 +522,9 @@ no-keywords = ["😺"]
 keywords = ["😺😺😺"]  # <-- 
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 4);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
-    tgf::ass (fcf_list.i_prev_matched () == 3);
+    tgfass (fcf_list.n_filter () == 4);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.i_prev_matched () == 3);
     // note: [1] and [2] is skipped bc both filters' <no-keywords> reject the
     //       input, even though both filters's <senders> accept it.
   }
@@ -542,9 +546,9 @@ no-keywords = ["😺"]
 keywords = ["😺😺😺"]  # <-- 
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 4);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
-    tgf::ass (fcf_list.i_prev_matched () == 1);
+    tgfass (fcf_list.n_filter () == 4);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.i_prev_matched () == 1);
     // note: [1] and [2] is skipped bc both filters' <no-keywords> reject the
     //       input, even though both filters's <senders> accept it.
   }
@@ -565,9 +569,9 @@ keywords = ["linux", "gnu", "fsf"]
 no-keywords = ["macos"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 1);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
-    tgf::ass (fcf_list.i_prev_matched () == 0);
+    tgfass (fcf_list.n_filter () == 1);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.i_prev_matched () == 0);
   }
 }
 
@@ -585,9 +589,9 @@ keywords = ["linux", "gnu", "fsf"]
 no-keywords = ["macos"]
 )";
     auto fcf_list = tgf::FilterGroupToml (tomldata);
-    tgf::ass (fcf_list.n_filter () == 1);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
-    tgf::ass (fcf_list.i_prev_matched () == 0);
+    tgfass (fcf_list.n_filter () == 1);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.i_prev_matched () == 0);
   }
 }
 
@@ -611,20 +615,20 @@ keywords = ["kw1","kw2"]
   vector<tgf::FilterToml> filters
     = toml::find<vector<tgf::FilterToml>> (dataxxx, "focus-filter");
 
-  tgf::ass (filters.size () == 1);
+  tgfass (filters.size () == 1);
 
   // [0]
-  tgf::ass (filters[0].isNoSendersMatch ("sd1"));
-  tgf::ass (filters[0].isNoSendersMatch ("sd2"));
-  tgf::ass (filters[0].isKeywordsMatch ("kw1"));
-  tgf::ass (filters[0].isKeywordsMatch ("kw2"));
+  tgfass (filters[0].isNoSendersMatch ("sd1"));
+  tgfass (filters[0].isNoSendersMatch ("sd2"));
+  tgfass (filters[0].isKeywordsMatch ("kw1"));
+  tgfass (filters[0].isKeywordsMatch ("kw2"));
 
   auto fcf_list = tgf::FilterGroupToml (dataxxx);
-  tgf::ass (fcf_list.n_filter () == 1);
+  tgfass (fcf_list.n_filter () == 1);
 
   {
     tgf::TgMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
-    tgf::ass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.isMatchTgMsg (msg));
   }
 }
 
@@ -651,20 +655,20 @@ keywords = ["kw1","kw2"]
   vector<tgf::FilterToml> filters
     = toml::find<vector<tgf::FilterToml>> (dataxxx, "focus-filter");
 
-  tgf::ass (filters.size () == 2);
+  tgfass (filters.size () == 2);
 
   // [0]
-  tgf::ass (filters[0].isNoSendersMatch ("sd1"));
-  tgf::ass (filters[0].isNoSendersMatch ("sd2"));
-  tgf::ass (filters[0].isKeywordsMatch ("kw1"));
-  tgf::ass (filters[0].isKeywordsMatch ("kw2"));
+  tgfass (filters[0].isNoSendersMatch ("sd1"));
+  tgfass (filters[0].isNoSendersMatch ("sd2"));
+  tgfass (filters[0].isKeywordsMatch ("kw1"));
+  tgfass (filters[0].isKeywordsMatch ("kw2"));
 
   auto fcf_list = tgf::FilterGroupToml (dataxxx);
-  tgf::ass (fcf_list.n_filter () == 2);
+  tgfass (fcf_list.n_filter () == 2);
 
   {
     tgf::TgMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.isMatchTgMsg (msg));
   }
 }
 
@@ -688,20 +692,20 @@ keywords = ["kw1","kw2"]
   vector<tgf::FilterToml> filters
     = toml::find<vector<tgf::FilterToml>> (dataxxx, "focus-filter");
 
-  tgf::ass (filters.size () == 1);
+  tgfass (filters.size () == 1);
 
   // [0]
-  tgf::ass (filters[0].isRejSendersMatch ("sd1"));
-  tgf::ass (filters[0].isRejSendersMatch ("sd2"));
-  tgf::ass (filters[0].isKeywordsMatch ("kw1"));
-  tgf::ass (filters[0].isKeywordsMatch ("kw2"));
+  tgfass (filters[0].isRejSendersMatch ("sd1"));
+  tgfass (filters[0].isRejSendersMatch ("sd2"));
+  tgfass (filters[0].isKeywordsMatch ("kw1"));
+  tgfass (filters[0].isKeywordsMatch ("kw2"));
 
   auto fcf_list = tgf::FilterGroupToml (dataxxx);
-  tgf::ass (fcf_list.n_filter () == 1);
+  tgfass (fcf_list.n_filter () == 1);
 
   {
     tgf::TgMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
-    tgf::ass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.isMatchTgMsg (msg));
   }
 }
 
@@ -728,20 +732,20 @@ keywords = ["kw1","kw2"]
   vector<tgf::FilterToml> filters
     = toml::find<vector<tgf::FilterToml>> (dataxxx, "focus-filter");
 
-  tgf::ass (filters.size () == 2);
+  tgfass (filters.size () == 2);
 
   // [0]
-  tgf::ass (filters[0].isRejSendersMatch ("sd1"));
-  tgf::ass (filters[0].isRejSendersMatch ("sd2"));
-  tgf::ass (filters[0].isKeywordsMatch ("kw1"));
-  tgf::ass (filters[0].isKeywordsMatch ("kw2"));
+  tgfass (filters[0].isRejSendersMatch ("sd1"));
+  tgfass (filters[0].isRejSendersMatch ("sd2"));
+  tgfass (filters[0].isKeywordsMatch ("kw1"));
+  tgfass (filters[0].isKeywordsMatch ("kw2"));
 
   auto fcf_list = tgf::FilterGroupToml (dataxxx);
-  tgf::ass (fcf_list.n_filter () == 2);
+  tgfass (fcf_list.n_filter () == 2);
 
   {
     tgf::TgMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
-    tgf::ass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.isMatchTgMsg (msg));
   }
 }
 
@@ -757,30 +761,30 @@ test_nokw_not_much_inituitive ()
   auto dataxxx = R"(
 
 [[focus-filter]]
-title = "aaa"
+titles = ["aaa"]
 no-keywords = [".*"]
 
 [[focus-filter]]
-title = [".*"]
+titles = [".*"]
 
 )"_toml;
 
   vector<tgf::FilterToml> filters
     = toml::find<vector<tgf::FilterToml>> (dataxxx, "focus-filter");
 
-  tgf::ass (filters.size () == 2);
+  tgfass (filters.size () == 2);
 
   auto fcf_list = tgf::FilterGroupToml (dataxxx);
-  tgf::ass (fcf_list.n_filter () == 2);
+  tgfass (fcf_list.n_filter () == 2);
 
   {
     tgf::TgMsg msg ("title_bbb"s, "sd_bbb"s, "kw_bbb"s);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.isMatchTgMsg (msg));
   }
 
   {
     tgf::TgMsg msg ("title_aaa"s, "sd_bbb"s, "kw_bbb"s);
-    tgf::ass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.isMatchTgMsg (msg));
   }
 }
 

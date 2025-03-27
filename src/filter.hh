@@ -24,22 +24,17 @@ enum FocusDecision
 template <typename T>
 concept HasFilterFields = std::same_as<T, toml::value> || false;
 
-template <typename V>
-  requires HasFilterFields<V>
-class Filter;
+template <typename V> requires HasFilterFields<V> class Filter;
 
 template <typename F, typename V>
 concept CanFilterRecogValue = std::derived_from<F, Filter<V>>;
 
 template <typename V, typename F>
-  requires CanFilterRecogValue<F, V>
-class FilterGroup;
+requires CanFilterRecogValue<F, V> class FilterGroup;
 
 // --------------------------- Filter ---------------------------
 
-template <typename V>
-  requires HasFilterFields<V>
-class Filter
+template <typename V> requires HasFilterFields<V> class Filter
 {
 public:
   Filter ();
@@ -65,7 +60,7 @@ public:
   string getptn_title () const;
 
 protected:
-  PosixExtRegex chat_title;
+  std::vector<PosixExtRegex> __titles;
   std::vector<PosixExtRegex> senders;
   std::vector<PosixExtRegex> no_senders;
   std::vector<PosixExtRegex> rej_senders;
@@ -75,8 +70,7 @@ protected:
   FocusDecision isMatchTgMsg (const TgMsg &input);
 
   template <typename _V, typename _F>
-    requires CanFilterRecogValue<_F, _V>
-  friend class FilterGroup;
+  requires CanFilterRecogValue<_F, _V> friend class FilterGroup;
   friend class FilterGroupToml;
 };
 
@@ -100,8 +94,7 @@ typedef enum
 } FilterProperty;
 
 template <typename V, typename F>
-  requires CanFilterRecogValue<F, V>
-class FilterGroup
+requires CanFilterRecogValue<F, V> class FilterGroup
 {
 public:
   inline size_t n_filter () { return this->filters.size (); }
@@ -145,18 +138,15 @@ public:
 // ---------------------- Filter<> Impl ----------------------
 
 template <typename V>
-  requires HasFilterFields<V>
+requires HasFilterFields<V>
 Filter<V>::Filter ()
-{
-  PosixExtRegex re (".*");
-  chat_title = move (re);
-}
+{}
 
 template <typename V>
-  requires HasFilterFields<V>
+requires HasFilterFields<V>
 Filter<V>::Filter (Filter<V> &&move_ctor_from)
 {
-  this->chat_title = std::move (move_ctor_from.chat_title);
+  this->__titles = std::move (move_ctor_from.__titles);
   this->senders = std::move (move_ctor_from.senders);
   this->no_senders = std::move (move_ctor_from.no_senders);
   this->rej_senders = std::move (move_ctor_from.rej_senders);
@@ -165,11 +155,10 @@ Filter<V>::Filter (Filter<V> &&move_ctor_from)
 }
 
 template <typename V>
-  requires HasFilterFields<V>
-Filter<V> &
+requires HasFilterFields<V> Filter<V> &
 Filter<V>::operator= (Filter<V> &&move_assign_from)
 {
-  this->chat_title = std::move (move_assign_from.chat_title);
+  this->__titles = std::move (move_assign_from.__titles);
   this->senders = std::move (move_assign_from.senders);
   this->no_senders = std::move (move_assign_from.no_senders);
   this->keywords = std::move (move_assign_from.keywords);
@@ -178,22 +167,27 @@ Filter<V>::operator= (Filter<V> &&move_assign_from)
 }
 
 template <typename V>
-  requires HasFilterFields<V>
-bool
+requires HasFilterFields<V> bool
 Filter<V>::isMatchTitle (const std::string &input)
 {
-  if (auto flag = this->chat_title.is_match (input))
+  // if no candidates, match anything
+  if (this->__titles.size () == 0)
+    return true;
+
+  for (PosixExtRegex &re : this->__titles)
     {
-      if (*flag)
-	return true;
+      if (auto flag = re.is_match (input))
+	{
+	  if (*flag)
+	    return true;
+	}
     }
 
   return false;
 }
 
 template <typename V>
-  requires HasFilterFields<V>
-bool
+requires HasFilterFields<V> bool
 Filter<V>::isKeywordsMatch (const std::string &input)
 {
   // if no candidates, match anything
@@ -213,8 +207,7 @@ Filter<V>::isKeywordsMatch (const std::string &input)
 }
 
 template <typename V>
-  requires HasFilterFields<V>
-bool
+requires HasFilterFields<V> bool
 Filter<V>::isNoKeywordsMatch (const std::string &input)
 {
   // if no candidates, not match anything
@@ -250,26 +243,16 @@ readable_eles (const vector<PosixExtRegex> &list)
 }
 
 template <typename V>
-  requires HasFilterFields<V>
-string
-Filter<V>::getptn_title () const
-{
-  return chat_title.ptn ();
-}
-
-template <typename V>
-  requires HasFilterFields<V>
-string
+requires HasFilterFields<V> string
 Filter<V>::as_readable () const
 {
   ostringstream oss;
-  oss << "🞄 Accept Title 🞄" << endl
-      << "(" << chat_title.ptn () << ")" << endl
-      << endl;
+  oss << "🞄 Accept Titles 🞄" << endl << readable_eles (__titles) << endl;
   oss << "🞄 Accept Words 🞄" << endl << readable_eles (keywords) << endl;
   oss << "🞄 No Words 🞄" << endl << readable_eles (no_keywords) << endl;
   oss << "🞄 Accept Senders 🞄" << endl << readable_eles (senders) << endl;
-  oss << "🞄 Reject Senders 🞄" << endl << readable_eles (rej_senders) << endl;
+  oss << "🞄 Reject Senders 🞄" << endl
+      << readable_eles (rej_senders) << endl;
   oss << "🞄 No Senders 🞄" << endl << readable_eles (no_senders);
   // if no candidates, not match anything
 
@@ -277,8 +260,7 @@ Filter<V>::as_readable () const
 }
 
 template <typename V>
-  requires HasFilterFields<V>
-bool
+requires HasFilterFields<V> bool
 Filter<V>::isMatchSender (const std::string &input)
 {
   if (this->senders.size () == 0)
@@ -297,8 +279,7 @@ Filter<V>::isMatchSender (const std::string &input)
 }
 
 template <typename V>
-  requires HasFilterFields<V>
-bool
+requires HasFilterFields<V> bool
 Filter<V>::isNoSendersMatch (const std::string &input)
 {
   // if (this->no_senders.size () == 0)
@@ -317,8 +298,7 @@ Filter<V>::isNoSendersMatch (const std::string &input)
 }
 
 template <typename V>
-  requires HasFilterFields<V>
-bool
+requires HasFilterFields<V> bool
 Filter<V>::isRejSendersMatch (const std::string &input)
 {
   // if (this->no_senders.size () == 0)
@@ -337,8 +317,7 @@ Filter<V>::isRejSendersMatch (const std::string &input)
 }
 
 template <typename V>
-  requires HasFilterFields<V>
-FocusDecision
+requires HasFilterFields<V> FocusDecision
 Filter<V>::isMatchTgMsg (const TgMsg &in)
 {
   if (!this->isMatchTitle (in.get_chat_title ()))
@@ -365,8 +344,7 @@ Filter<V>::isMatchTgMsg (const TgMsg &in)
 // --------------------- FilterGroup<> Impl ---------------------
 
 template <typename V, typename F>
-  requires CanFilterRecogValue<F, V>
-bool
+requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::isMatchTgMsg (const TgMsg &in)
 {
   this->i_prev_matched_ = 0;
@@ -389,15 +367,16 @@ FilterGroup<V, F>::isMatchTgMsg (const TgMsg &in)
 }
 
 template <typename V, typename F>
-  requires CanFilterRecogValue<F, V>
-string
+requires CanFilterRecogValue<F, V> string
 FilterGroup<V, F>::as_readable () const
 {
   ostringstream oss;
   for (int i = 0; i < filters.size (); i++)
     {
       const F &el = filters[i];
-      oss << "🞋 🞋 🞋 " << "FILTER " << (i + 1) << " 🞋 🞋 🞋" << endl << endl;
+      oss << "🞋 🞋 🞋 "
+	  << "FILTER " << (i + 1) << " 🞋 🞋 🞋" << endl
+	  << endl;
       oss << el.as_readable () << endl;
     }
 
@@ -405,8 +384,7 @@ FilterGroup<V, F>::as_readable () const
 }
 
 template <typename V, typename F>
-  requires CanFilterRecogValue<F, V>
-bool
+requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::rm_filter (const u32 &which_filter) noexcept
 {
   u32 idx = which_filter - 1;
@@ -423,8 +401,7 @@ FilterGroup<V, F>::rm_filter (const u32 &which_filter) noexcept
 }
 
 template <typename V, typename F>
-  requires CanFilterRecogValue<F, V>
-bool
+requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::add_one (u32 &which_filter, const FilterProperty p,
 			    const string &value)
 {
@@ -444,7 +421,7 @@ FilterGroup<V, F>::add_one (u32 &which_filter, const FilterProperty p,
   switch (p)
     {
     case FilterPropertyTitle:
-      filters[idx].chat_title = move (may_re);
+      filters[idx].__titles.emplace_back (move (may_re));
       break;
     case FilterPropertyKeywords:
       filters[idx].keywords.emplace_back (move (may_re));
@@ -466,8 +443,7 @@ FilterGroup<V, F>::add_one (u32 &which_filter, const FilterProperty p,
 }
 
 template <typename V, typename F>
-  requires CanFilterRecogValue<F, V>
-bool
+requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::del_one (u32 &which_filter, const FilterProperty p,
 			    const string &value)
 {
@@ -483,154 +459,147 @@ FilterGroup<V, F>::del_one (u32 &which_filter, const FilterProperty p,
   if (!may_re.is_pattern_accept ())
     return false;
 
-  if (p == FilterPropertyTitle)
+  vector<PosixExtRegex> &list_titles = filters[idx].__titles;
+  vector<PosixExtRegex> &list_keywords = filters[idx].keywords;
+  vector<PosixExtRegex> &list_no_keywords = filters[idx].no_keywords;
+  vector<PosixExtRegex> &list_senders = filters[idx].senders;
+  vector<PosixExtRegex> &list_no_senders = filters[idx].no_senders;
+  vector<PosixExtRegex> &list_rej_senders = filters[idx].rej_senders;
+  using it_type = vector<PosixExtRegex>::iterator;
+  it_type begit = list_keywords.begin ();
+  it_type endit = list_keywords.end ();
+  switch (p)
     {
-      if (filters[idx].chat_title.ptn () == value)
-	filters[idx].chat_title = PosixExtRegex (".*");
-    }
-  else
-    {
-      vector<PosixExtRegex> &list_keywords = filters[idx].keywords;
-      vector<PosixExtRegex> &list_no_keywords = filters[idx].no_keywords;
-      vector<PosixExtRegex> &list_senders = filters[idx].senders;
-      vector<PosixExtRegex> &list_no_senders = filters[idx].no_senders;
-      vector<PosixExtRegex> &list_rej_senders = filters[idx].rej_senders;
-      using it_type = vector<PosixExtRegex>::iterator;
-      it_type begit = list_keywords.begin ();
-      it_type endit = list_keywords.end ();
-      switch (p)
-	{
-	case FilterPropertyKeywords:
-	  begit = list_keywords.begin ();
-	  endit = list_keywords.end ();
-	  for (it_type it = begit; it != endit; it++)
-	    if (it->ptn () == value)
-	      {
-		it = list_keywords.erase (it);
-		break;
-	      }
-	  break;
-	case FilterPropertyNoKeywords:
-	  begit = list_no_keywords.begin ();
-	  endit = list_no_keywords.end ();
-	  for (it_type it = begit; it != endit; it++)
-	    if (it->ptn () == value)
-	      {
-		it = list_no_keywords.erase (it);
-		break;
-	      }
-	  break;
-	case FilterPropertySenders:
-	  begit = list_senders.begin ();
-	  endit = list_senders.end ();
-	  for (it_type it = begit; it != endit; it++)
-	    if (it->ptn () == value)
-	      {
-		it = list_senders.erase (it);
-		break;
-	      }
-	  break;
-	case FilterPropertyNoSenders:
-	  begit = list_no_senders.begin ();
-	  endit = list_no_senders.end ();
-	  for (it_type it = begit; it != endit; it++)
-	    if (it->ptn () == value)
-	      {
-		it = list_no_senders.erase (it);
-		break;
-	      }
-	  break;
-	case FilterPropertyRejSenders:
-	  begit = list_rej_senders.begin ();
-	  endit = list_rej_senders.end ();
-	  for (it_type it = begit; it != endit; it++)
-	    if (it->ptn () == value)
-	      {
-		it = list_rej_senders.erase (it);
-		break;
-	      }
-	  break;
-	}
+    case FilterPropertyTitle:
+      begit = list_titles.begin ();
+      endit = list_titles.end ();
+      for (it_type it = begit; it != endit; it++)
+	if (it->ptn () == value)
+	  {
+	    it = list_titles.erase (it);
+	    break;
+	  }
+      break;
+    case FilterPropertyKeywords:
+      begit = list_keywords.begin ();
+      endit = list_keywords.end ();
+      for (it_type it = begit; it != endit; it++)
+	if (it->ptn () == value)
+	  {
+	    it = list_keywords.erase (it);
+	    break;
+	  }
+      break;
+    case FilterPropertyNoKeywords:
+      begit = list_no_keywords.begin ();
+      endit = list_no_keywords.end ();
+      for (it_type it = begit; it != endit; it++)
+	if (it->ptn () == value)
+	  {
+	    it = list_no_keywords.erase (it);
+	    break;
+	  }
+      break;
+    case FilterPropertySenders:
+      begit = list_senders.begin ();
+      endit = list_senders.end ();
+      for (it_type it = begit; it != endit; it++)
+	if (it->ptn () == value)
+	  {
+	    it = list_senders.erase (it);
+	    break;
+	  }
+      break;
+    case FilterPropertyNoSenders:
+      begit = list_no_senders.begin ();
+      endit = list_no_senders.end ();
+      for (it_type it = begit; it != endit; it++)
+	if (it->ptn () == value)
+	  {
+	    it = list_no_senders.erase (it);
+	    break;
+	  }
+      break;
+    case FilterPropertyRejSenders:
+      begit = list_rej_senders.begin ();
+      endit = list_rej_senders.end ();
+      for (it_type it = begit; it != endit; it++)
+	if (it->ptn () == value)
+	  {
+	    it = list_rej_senders.erase (it);
+	    break;
+	  }
+      break;
     }
 
   return true;
 }
 
 template <typename V, typename F>
-  requires CanFilterRecogValue<F, V>
-bool
+requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::add_keywords (u32 &which_filter, const string &value)
 {
   return add_one (which_filter, FilterPropertyKeywords, value);
 }
 
 template <typename V, typename F>
-  requires CanFilterRecogValue<F, V>
-bool
+requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::del_keywords (u32 &which_filter, const string &value)
 {
   return del_one (which_filter, FilterPropertyKeywords, value);
 }
 
 template <typename V, typename F>
-  requires CanFilterRecogValue<F, V>
-bool
+requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::add_no_keywords (u32 &which_filter, const string &value)
 {
   return add_one (which_filter, FilterPropertyNoKeywords, value);
 }
 
 template <typename V, typename F>
-  requires CanFilterRecogValue<F, V>
-bool
+requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::del_no_keywords (u32 &which_filter, const string &value)
 {
   return del_one (which_filter, FilterPropertyNoKeywords, value);
 }
 
 template <typename V, typename F>
-  requires CanFilterRecogValue<F, V>
-bool
+requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::add_senders (u32 &which_filter, const string &value)
 {
   return add_one (which_filter, FilterPropertySenders, value);
 }
 
 template <typename V, typename F>
-  requires CanFilterRecogValue<F, V>
-bool
+requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::del_senders (u32 &which_filter, const string &value)
 {
   return del_one (which_filter, FilterPropertySenders, value);
 }
 
 template <typename V, typename F>
-  requires CanFilterRecogValue<F, V>
-bool
+requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::add_no_senders (u32 &which_filter, const string &value)
 {
   return add_one (which_filter, FilterPropertyNoSenders, value);
 }
 
 template <typename V, typename F>
-  requires CanFilterRecogValue<F, V>
-bool
+requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::del_no_senders (u32 &which_filter, const string &value)
 {
   return del_one (which_filter, FilterPropertyNoSenders, value);
 }
 
 template <typename V, typename F>
-  requires CanFilterRecogValue<F, V>
-bool
+requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::add_rej_senders (u32 &which_filter, const string &value)
 {
   return add_one (which_filter, FilterPropertyRejSenders, value);
 }
 
 template <typename V, typename F>
-  requires CanFilterRecogValue<F, V>
-bool
+requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::del_rej_senders (u32 &which_filter, const string &value)
 {
   return del_one (which_filter, FilterPropertyRejSenders, value);

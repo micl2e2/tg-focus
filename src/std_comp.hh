@@ -90,12 +90,13 @@ exitMain (u8 ec)
   exit (1);
 }
 
-inline void
-ass (bool f)
-{
-  if (!f)
-    exit (1);
-}
+#define tgfass(flag)                                                           \
+  if (!flag)                                                                   \
+    {                                                                          \
+      std::cerr << "assert"                                                    \
+		<< "(" << __FILE__ << "," << __LINE__ << ")" << std::endl;     \
+      abort ();                                                                \
+    }
 
 } // namespace tgf
 

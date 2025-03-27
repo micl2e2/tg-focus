@@ -1,3 +1,5 @@
+#define __TU__ "chatcmd"
+
 #include "chatcmd.hh"
 #include "stat.hh"
 #include "posix_regex.hh"
