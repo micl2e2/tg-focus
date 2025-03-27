@@ -320,23 +320,27 @@ template <typename V>
 requires HasFilterFields<V> FocusDecision
 Filter<V>::isMatchTgMsg (const TgMsg &in)
 {
+  // ACCEPT
+
   if (!this->isMatchTitle (in.get_chat_title ()))
     return FocusDecision::Skip;
 
   if (!this->isMatchSender (in.get_sender ()))
     return FocusDecision::Skip;
 
-  if (this->isNoSendersMatch (in.get_sender ()))
-    return FocusDecision::Skip;
-
-  if (this->isRejSendersMatch (in.get_sender ()))
-    return FocusDecision::Reject;
-
   if (!this->isKeywordsMatch (in.get_text_content ()))
     return FocusDecision::Skip;
 
+  // REJECT
+
+  if (this->isNoSendersMatch (in.get_sender ()))
+    return FocusDecision::Reject;
+
   if (this->isNoKeywordsMatch (in.get_text_content ()))
-    return FocusDecision::Skip;
+    return FocusDecision::Reject;
+
+  if (this->isRejSendersMatch (in.get_sender ()))
+    return FocusDecision::Reject;
 
   return FocusDecision::Accept;
 }
@@ -360,7 +364,7 @@ FilterGroup<V, F>::isMatchTgMsg (const TgMsg &in)
 	  return false;
 	}
 
-      this->i_prev_matched_++;
+      this->i_prev_matched_++; // prev skipped?
     }
 
   return false;
