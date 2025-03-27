@@ -14,7 +14,6 @@ test_default_filter ()
   tgfass (f.isMatchTitle (""s));
   tgfass (f.isKeywordsMatch (""s));
   tgfass (f.isMatchSender (""s));
-  tgfass (!f.isRejSendersMatch (""s));
   tgfass (!f.isNoSendersMatch (""s));
   tgfass (!f.isNoKeywordsMatch (""s));
 }
@@ -709,7 +708,7 @@ test_match_and_submatch1_ ()
   auto dataxxx = R"(
 
 [[focus-filter]]
-rej-senders = ["sd1","sd2"]
+no-senders = ["sd1","sd2"]
 keywords = ["kw1","kw2"]
 
 )"_toml;
@@ -720,8 +719,8 @@ keywords = ["kw1","kw2"]
   tgfass (filters.size () == 1);
 
   // [0]
-  tgfass (filters[0].isRejSendersMatch ("sd1"));
-  tgfass (filters[0].isRejSendersMatch ("sd2"));
+  tgfass (filters[0].isNoSendersMatch ("sd1"));
+  tgfass (filters[0].isNoSendersMatch ("sd2"));
   tgfass (filters[0].isKeywordsMatch ("kw1"));
   tgfass (filters[0].isKeywordsMatch ("kw2"));
 
@@ -746,7 +745,7 @@ test_match_and_submatch2_ ()
   auto dataxxx = R"(
 
 [[focus-filter]]
-rej-senders = ["sd1","sd2"]
+no-senders = ["sd1","sd2"]
 keywords = ["kw1","kw2"]
 
 [[focus-filter]]
@@ -760,8 +759,8 @@ keywords = ["kw1","kw2"]
   tgfass (filters.size () == 2);
 
   // [0]
-  tgfass (filters[0].isRejSendersMatch ("sd1"));
-  tgfass (filters[0].isRejSendersMatch ("sd2"));
+  tgfass (filters[0].isNoSendersMatch ("sd1"));
+  tgfass (filters[0].isNoSendersMatch ("sd2"));
   tgfass (filters[0].isKeywordsMatch ("kw1"));
   tgfass (filters[0].isKeywordsMatch ("kw2"));
 
@@ -859,9 +858,11 @@ test_how_to_no_keywords ()
   auto dataxxx = R"(
 
 [[focus-filter]]
-titles = []
-rej-senders = ["micl2e2"]
-acc-keywords = ["cheese"]
+senders = ["micl2e2"]
+keywords = ["cheese"]
+
+[[focus-filter]]
+no-senders = ["micl2e2"]
 
 )"_toml;
 
@@ -885,7 +886,48 @@ acc-keywords = ["cheese"]
 
   {
     tgf::TgMsg msg ("anytitle"s, "sd_micl2e2"s, "kw_cheese"s);
-    // tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.isMatchTgMsg (msg));
+  }
+}
+
+void
+test_how_to_no_keywords2 ()
+{
+  using namespace toml::literals::toml_literals;
+  using namespace std;
+
+  auto dataxxx = R"(
+
+[[focus-filter]]
+no-senders = ["micl2e2"]
+
+[[focus-filter]]
+senders = ["micl2e2"]
+keywords = ["cheese"]
+
+)"_toml;
+
+  vector<tgf::FilterToml> filters
+    = toml::find<vector<tgf::FilterToml>> (dataxxx, "focus-filter");
+
+  tgfass (filters.size () == 2);
+
+  auto fcf_list = tgf::FilterGroupToml (dataxxx);
+  tgfass (fcf_list.n_filter () == 2);
+
+  {
+    tgf::TgMsg msg ("anytitle"s, "sd_micl2e2"s, ""s);
+    tgfass (!fcf_list.isMatchTgMsg (msg));
+  }
+
+  {
+    tgf::TgMsg msg ("anytitle"s, "sd_micl2e2"s, "a"s);
+    tgfass (!fcf_list.isMatchTgMsg (msg));
+  }
+
+  {
+    tgf::TgMsg msg ("anytitle"s, "sd_micl2e2"s, "kw_cheese"s);
+    tgfass (!fcf_list.isMatchTgMsg (msg));
   }
 }
 
@@ -911,4 +953,5 @@ main ()
   test_nokw_not_much_inituitive ();
   test_nokw_not_much_inituitive2 ();
   test_how_to_no_keywords ();
+  test_how_to_no_keywords2 ();
 }

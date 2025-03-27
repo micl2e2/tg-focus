@@ -49,8 +49,6 @@ public:
 
   bool isNoSendersMatch (const std::string &input);
 
-  bool isRejSendersMatch (const std::string &input);
-
   bool isKeywordsMatch (const std::string &input);
 
   bool isNoKeywordsMatch (const std::string &input);
@@ -63,7 +61,6 @@ protected:
   std::vector<PosixExtRegex> __titles;
   std::vector<PosixExtRegex> senders;
   std::vector<PosixExtRegex> no_senders;
-  std::vector<PosixExtRegex> rej_senders;
   std::vector<PosixExtRegex> keywords;
   std::vector<PosixExtRegex> no_keywords;
 
@@ -90,7 +87,6 @@ typedef enum
   FilterPropertyNoKeywords,
   FilterPropertySenders,
   FilterPropertyNoSenders,
-  FilterPropertyRejSenders,
 } FilterProperty;
 
 template <typename V, typename F>
@@ -110,13 +106,10 @@ public:
   bool del_keywords (u32 &which_filter, const string &value);
   bool add_no_keywords (u32 &which_filter, const string &value);
   bool del_no_keywords (u32 &which_filter, const string &value);
-  // bool add_rej_keywords (u32 &which_filter, const string &value);
   bool add_senders (u32 &which_filter, const string &value);
   bool del_senders (u32 &which_filter, const string &value);
   bool add_no_senders (u32 &which_filter, const string &value);
   bool del_no_senders (u32 &which_filter, const string &value);
-  bool add_rej_senders (u32 &which_filter, const string &value);
-  bool del_rej_senders (u32 &which_filter, const string &value);
 
 protected:
   size_t i_prev_matched_;
@@ -149,7 +142,6 @@ Filter<V>::Filter (Filter<V> &&move_ctor_from)
   this->__titles = std::move (move_ctor_from.__titles);
   this->senders = std::move (move_ctor_from.senders);
   this->no_senders = std::move (move_ctor_from.no_senders);
-  this->rej_senders = std::move (move_ctor_from.rej_senders);
   this->keywords = std::move (move_ctor_from.keywords);
   this->no_keywords = std::move (move_ctor_from.no_keywords);
 }
@@ -251,8 +243,6 @@ Filter<V>::as_readable () const
   oss << "🞄 Accept Words 🞄" << endl << readable_eles (keywords) << endl;
   oss << "🞄 No Words 🞄" << endl << readable_eles (no_keywords) << endl;
   oss << "🞄 Accept Senders 🞄" << endl << readable_eles (senders) << endl;
-  oss << "🞄 Reject Senders 🞄" << endl
-      << readable_eles (rej_senders) << endl;
   oss << "🞄 No Senders 🞄" << endl << readable_eles (no_senders);
   // if no candidates, not match anything
 
@@ -298,25 +288,6 @@ Filter<V>::isNoSendersMatch (const std::string &input)
 }
 
 template <typename V>
-requires HasFilterFields<V> bool
-Filter<V>::isRejSendersMatch (const std::string &input)
-{
-  // if (this->no_senders.size () == 0)
-  //   return true;
-
-  for (PosixExtRegex &re : this->rej_senders)
-    {
-      if (auto flag = re.is_match (input))
-	{
-	  if (*flag)
-	    return true;
-	}
-    }
-
-  return false;
-}
-
-template <typename V>
 requires HasFilterFields<V> FocusDecision
 Filter<V>::isMatchTgMsg (const TgMsg &in)
 {
@@ -337,9 +308,6 @@ Filter<V>::isMatchTgMsg (const TgMsg &in)
     return FocusDecision::Reject;
 
   if (this->isNoKeywordsMatch (in.get_text_content ()))
-    return FocusDecision::Reject;
-
-  if (this->isRejSendersMatch (in.get_sender ()))
     return FocusDecision::Reject;
 
   return FocusDecision::Accept;
@@ -439,9 +407,6 @@ FilterGroup<V, F>::add_one (u32 &which_filter, const FilterProperty p,
     case FilterPropertyNoSenders:
       filters[idx].no_senders.emplace_back (move (may_re));
       break;
-    case FilterPropertyRejSenders:
-      filters[idx].rej_senders.emplace_back (move (may_re));
-      break;
     }
   return true;
 }
@@ -468,7 +433,6 @@ FilterGroup<V, F>::del_one (u32 &which_filter, const FilterProperty p,
   vector<PosixExtRegex> &list_no_keywords = filters[idx].no_keywords;
   vector<PosixExtRegex> &list_senders = filters[idx].senders;
   vector<PosixExtRegex> &list_no_senders = filters[idx].no_senders;
-  vector<PosixExtRegex> &list_rej_senders = filters[idx].rej_senders;
   using it_type = vector<PosixExtRegex>::iterator;
   it_type begit = list_keywords.begin ();
   it_type endit = list_keywords.end ();
@@ -521,16 +485,6 @@ FilterGroup<V, F>::del_one (u32 &which_filter, const FilterProperty p,
 	if (it->ptn () == value)
 	  {
 	    it = list_no_senders.erase (it);
-	    break;
-	  }
-      break;
-    case FilterPropertyRejSenders:
-      begit = list_rej_senders.begin ();
-      endit = list_rej_senders.end ();
-      for (it_type it = begit; it != endit; it++)
-	if (it->ptn () == value)
-	  {
-	    it = list_rej_senders.erase (it);
 	    break;
 	  }
       break;
@@ -593,20 +547,6 @@ requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::del_no_senders (u32 &which_filter, const string &value)
 {
   return del_one (which_filter, FilterPropertyNoSenders, value);
-}
-
-template <typename V, typename F>
-requires CanFilterRecogValue<F, V> bool
-FilterGroup<V, F>::add_rej_senders (u32 &which_filter, const string &value)
-{
-  return add_one (which_filter, FilterPropertyRejSenders, value);
-}
-
-template <typename V, typename F>
-requires CanFilterRecogValue<F, V> bool
-FilterGroup<V, F>::del_rej_senders (u32 &which_filter, const string &value)
-{
-  return del_one (which_filter, FilterPropertyRejSenders, value);
 }
 
 } // namespace tgf

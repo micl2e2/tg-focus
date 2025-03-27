@@ -27,12 +27,6 @@ tgf::FilterToml::FilterToml (const toml::value &v)
   for (string &strval : no_sender_list)
     this->no_senders.emplace_back (PosixExtRegex (strval));
 
-  // rej sender
-  vector<string> rej_sender_list
-    = toml::find_or<vector<string>> (v, "rej-senders", vector<string> (0));
-  for (string &strval : rej_sender_list)
-    this->rej_senders.emplace_back (PosixExtRegex (strval));
-
   // keyword
   vector<string> keyword_list
     = toml::find_or<vector<string>> (v, "keywords", vector<string> (0));
@@ -104,7 +98,7 @@ tgf::FilterGroupToml::as_fsdata () noexcept
 	    oss << ", ";
 	}
       oss << "]" << endl;
-      
+
       oss << "keywords = [";
       for (int ii = 0; ii < el.keywords.size (); ii++)
 	{
@@ -141,16 +135,6 @@ tgf::FilterGroupToml::as_fsdata () noexcept
 	  const PosixExtRegex &elel = el.no_senders[ii];
 	  oss << "\"" << elel.ptn () << "\"";
 	  if (ii < el.no_senders.size () - 1)
-	    oss << ", ";
-	}
-      oss << "]" << endl;
-
-      oss << "rej-senders = [";
-      for (int ii = 0; ii < el.rej_senders.size (); ii++)
-	{
-	  const PosixExtRegex &elel = el.rej_senders[ii];
-	  oss << "\"" << elel.ptn () << "\"";
-	  if (ii < el.rej_senders.size () - 1)
 	    oss << ", ";
 	}
       oss << "]" << endl;
