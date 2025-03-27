@@ -381,7 +381,7 @@ keywords = ["x{3}"]
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 2);
     tgfass (fcf_list.isMatchTgMsg (msg));
-    tgfass (fcf_list.i_prev_matched () == 1);
+    tgfass (fcf_list.i_prev_visited () == 1);
   }
 
   { // 1st filter matched
@@ -395,7 +395,7 @@ keywords = ["x{3}"]
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 2);
     tgfass (fcf_list.isMatchTgMsg (msg));
-    tgfass (fcf_list.i_prev_matched () == 0);
+    tgfass (fcf_list.i_prev_visited () == 0);
   }
 
   { // more complicated
@@ -409,7 +409,7 @@ no-senders = ["xxx"]
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 2);
     tgfass (!fcf_list.isMatchTgMsg (msg));
-    tgfass (fcf_list.i_prev_matched () == 0);
+    tgfass (fcf_list.i_prev_visited () == 0);
   }
 
   { // more complicated
@@ -428,7 +428,7 @@ keywords = "[a-z]+"
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 3);
     tgfass (!fcf_list.isMatchTgMsg (msg));
-    tgfass (fcf_list.i_prev_matched () == 0);
+    tgfass (fcf_list.i_prev_visited () == 0);
   }
 
   { // more complicated
@@ -448,7 +448,7 @@ keywords = "[:alpha:]{3}"
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 4);
     tgfass (fcf_list.isMatchTgMsg (msg));
-    tgfass (fcf_list.i_prev_matched () == 1);
+    tgfass (fcf_list.i_prev_visited () == 1);
   }
 
   { // more complicated
@@ -468,7 +468,7 @@ keywords = "[:alpha:]{3}"
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 4);
     tgfass (!fcf_list.isMatchTgMsg (msg));
-    tgfass (fcf_list.i_prev_matched () == 1);
+    tgfass (fcf_list.i_prev_visited () == 1);
   }
 }
 
@@ -488,7 +488,7 @@ senders = ["😺🐶"]
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 1);
     tgfass (fcf_list.isMatchTgMsg (msg));
-    tgfass (fcf_list.i_prev_matched () == 0);
+    tgfass (fcf_list.i_prev_visited () == 0);
   }
 
   { // more complicated
@@ -511,7 +511,7 @@ no-keywords = ["(🐶){2}(🐶){2}"]   # <--
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 5);
     tgfass (!fcf_list.isMatchTgMsg (msg));
-    tgfass (fcf_list.i_prev_matched () == 0);
+    tgfass (fcf_list.i_prev_visited () == 0);
   }
 
   { // more complicated
@@ -528,7 +528,7 @@ senders = ["🐶"]
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 3);
     tgfass (!fcf_list.isMatchTgMsg (msg));
-    tgfass (fcf_list.i_prev_matched () == 0);
+    tgfass (fcf_list.i_prev_visited () == 0);
   }
 
   { // more complicated
@@ -550,7 +550,7 @@ keywords = ["😺😺😺"]  # <--
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 4);
     tgfass (!fcf_list.isMatchTgMsg (msg));
-    tgfass (fcf_list.i_prev_matched () == 1);
+    tgfass (fcf_list.i_prev_visited () == 1);
   }
 
   { // more complicated
@@ -572,7 +572,7 @@ keywords = ["😺😺😺"]  # <--
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 4);
     tgfass (fcf_list.isMatchTgMsg (msg));
-    tgfass (fcf_list.i_prev_matched () == 0);
+    tgfass (fcf_list.i_prev_visited () == 0);
     // note: [1] and [2] is skipped bc both filters' <no-keywords> reject the
     //       input, even though both filters's <senders> accept it.
   }
@@ -595,7 +595,7 @@ no-keywords = ["macos"]
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 1);
     tgfass (fcf_list.isMatchTgMsg (msg));
-    tgfass (fcf_list.i_prev_matched () == 0);
+    tgfass (fcf_list.i_prev_visited () == 0);
   }
 }
 
@@ -615,7 +615,7 @@ no-keywords = ["macos"]
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 1);
     tgfass (fcf_list.isMatchTgMsg (msg));
-    tgfass (fcf_list.i_prev_matched () == 0);
+    tgfass (fcf_list.i_prev_visited () == 0);
   }
 }
 
@@ -801,13 +801,13 @@ titles = [".*"]
   {
     tgf::TgMsg msg ("title_bbb"s, "sd_bbb"s, "kw_bbb"s);
     tgfass (fcf_list.isMatchTgMsg (msg));
-    tgfass (fcf_list.i_prev_matched () == 1);
+    tgfass (fcf_list.i_prev_visited () == 1);
   }
 
   {
     tgf::TgMsg msg ("title_aaa"s, "sd_bbb"s, "kw_bbb"s);
     tgfass (!fcf_list.isMatchTgMsg (msg));
-    tgfass (fcf_list.i_prev_matched () == 0);
+    tgfass (fcf_list.i_prev_visited () == 0);
   }
 }
 
@@ -839,13 +839,13 @@ no-keywords = [".*"]
   {
     tgf::TgMsg msg ("title_bbb"s, "sd_bbb"s, "kw_bbb"s);
     tgfass (fcf_list.isMatchTgMsg (msg));
-    tgfass (fcf_list.i_prev_matched () == 0);
+    tgfass (fcf_list.i_prev_visited () == 0);
   }
 
   {
     tgf::TgMsg msg ("title_aaa"s, "sd_bbb"s, "kw_bbb"s);
     tgfass (fcf_list.isMatchTgMsg (msg));
-    tgfass (fcf_list.i_prev_matched () == 0);
+    tgfass (fcf_list.i_prev_visited () == 0);
   }
 }
 

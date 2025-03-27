@@ -91,7 +91,7 @@ exitMain (u8 ec)
 }
 
 #define tgfass(flag)                                                           \
-  if (!flag)                                                                   \
+  if (!(flag))                                                                 \
     {                                                                          \
       std::cerr << "assert"                                                    \
 		<< "(" << __FILE__ << "," << __LINE__ << ")" << std::endl;     \

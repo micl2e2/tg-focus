@@ -94,7 +94,7 @@ requires CanFilterRecogValue<F, V> class FilterGroup
 {
 public:
   inline size_t n_filter () { return this->filters.size (); }
-  inline size_t i_prev_matched () { return this->i_prev_matched_; }
+  inline size_t i_prev_visited () { return this->i_prev_visited_; }
 
   bool isMatchTgMsg (const TgMsg &in);
   string as_readable () const;
@@ -112,7 +112,7 @@ public:
   bool del_no_senders (u32 &which_filter, const string &value);
 
 protected:
-  size_t i_prev_matched_;
+  size_t i_prev_visited_;
   std::vector<F> filters;
 };
 
@@ -239,11 +239,16 @@ requires HasFilterFields<V> string
 Filter<V>::as_readable () const
 {
   ostringstream oss;
-  oss << "🞄 Accept Titles 🞄" << endl << readable_eles (__titles) << endl;
-  oss << "🞄 Accept Words 🞄" << endl << readable_eles (keywords) << endl;
-  oss << "🞄 No Words 🞄" << endl << readable_eles (no_keywords) << endl;
-  oss << "🞄 Accept Senders 🞄" << endl << readable_eles (senders) << endl;
-  oss << "🞄 No Senders 🞄" << endl << readable_eles (no_senders);
+  oss << "🞄 Titles (titles) 🞄" << endl
+      << readable_eles (__titles) << endl;
+  oss << "🞄 Senders (senders) 🞄" << endl
+      << readable_eles (senders) << endl;
+  oss << "🞄 No Senders (no-senders) 🞄" << endl
+      << readable_eles (no_senders) << endl;
+  oss << "🞄 Keywords (keywords) 🞄" << endl
+      << readable_eles (keywords) << endl;
+  oss << "🞄 No Keywords (no-keywords) 🞄" << endl
+      << readable_eles (no_keywords);
   // if no candidates, not match anything
 
   return oss.str ();
@@ -319,7 +324,7 @@ template <typename V, typename F>
 requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::isMatchTgMsg (const TgMsg &in)
 {
-  this->i_prev_matched_ = 0;
+  this->i_prev_visited_ = 0;
 
   for (auto &f : this->filters)
     {
@@ -332,7 +337,7 @@ FilterGroup<V, F>::isMatchTgMsg (const TgMsg &in)
 	  return false;
 	}
 
-      this->i_prev_matched_++; // prev skipped?
+      this->i_prev_visited_++; // prev skipped?
     }
 
   return false;

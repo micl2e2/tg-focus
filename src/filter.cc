@@ -99,26 +99,6 @@ tgf::FilterGroupToml::as_fsdata () noexcept
 	}
       oss << "]" << endl;
 
-      oss << "keywords = [";
-      for (int ii = 0; ii < el.keywords.size (); ii++)
-	{
-	  const PosixExtRegex &elel = el.keywords[ii];
-	  oss << "\"" << elel.ptn () << "\"";
-	  if (ii < el.keywords.size () - 1)
-	    oss << ", ";
-	}
-      oss << "]" << endl;
-
-      oss << "no-keywords = [";
-      for (int ii = 0; ii < el.no_keywords.size (); ii++)
-	{
-	  const PosixExtRegex &elel = el.no_keywords[ii];
-	  oss << "\"" << elel.ptn () << "\"";
-	  if (ii < el.no_keywords.size () - 1)
-	    oss << ", ";
-	}
-      oss << "]" << endl;
-
       oss << "senders = [";
       for (int ii = 0; ii < el.senders.size (); ii++)
 	{
@@ -135,6 +115,26 @@ tgf::FilterGroupToml::as_fsdata () noexcept
 	  const PosixExtRegex &elel = el.no_senders[ii];
 	  oss << "\"" << elel.ptn () << "\"";
 	  if (ii < el.no_senders.size () - 1)
+	    oss << ", ";
+	}
+      oss << "]" << endl;
+
+      oss << "keywords = [";
+      for (int ii = 0; ii < el.keywords.size (); ii++)
+	{
+	  const PosixExtRegex &elel = el.keywords[ii];
+	  oss << "\"" << elel.ptn () << "\"";
+	  if (ii < el.keywords.size () - 1)
+	    oss << ", ";
+	}
+      oss << "]" << endl;
+
+      oss << "no-keywords = [";
+      for (int ii = 0; ii < el.no_keywords.size (); ii++)
+	{
+	  const PosixExtRegex &elel = el.no_keywords[ii];
+	  oss << "\"" << elel.ptn () << "\"";
+	  if (ii < el.no_keywords.size () - 1)
 	    oss << ", ";
 	}
       oss << "]" << endl;
