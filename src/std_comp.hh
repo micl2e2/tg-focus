@@ -90,6 +90,13 @@ exitMain (u8 ec)
   exit (1);
 }
 
+inline void
+ass (bool f)
+{
+  if (!f)
+    exit (1);
+}
+
 } // namespace tgf
 
 #endif
