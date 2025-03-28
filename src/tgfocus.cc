@@ -36,35 +36,25 @@
 int
 print_usage (char *argv[])
 {
-  printf (R"(Configure TG-Focus
+  printf (R"(TG-Focus
 
 Usage: %s [command]
 
 Available Commands:
-  auth              Log in Telegram
-  auth-reset        Log out Telegram
-  auth-cust-api     Log in Telegram (with API ID and API HASH customization)
+  auth              Log in Telegram account
+  auth-reset        Log out Telegram account
+  startup           Start up the daemon
+  shutdown          Shutdown everyhing
+  focus-start       Start up the message collector
+  focus-stop        Stop the message collector
+  auth-cust-api     Log in Telegram (with provided API ID and API HASH)
   filters           Customize focus filter(s)
   use-chat          Initialize TG-FOCUS chat as a basic group (default)
   use-channel       Initialize TG-FOCUS chat as a super group
-  version           Print TG-Focus version
-  help              Print this message
   lang <LANG_CODE>  Program-wide language preference. tg-focus will try to
-                    use the language specified, as long as it is supported
-                    by system. The LANG_CODE conforms to "Language-Region"
-                    definition in RFC5646.
-
-                    For example, 'tf-conf lang en-US' indicates that 'English
-                    (United States)' is in use. 'tf-conf lang en-GB' indicates
-                    'English (United Kingdom)' is in use.
-
-                    Currently supported languages:
-                    - <LANG-CODE>: <LANGUAGE> (<REGION>)
-                    - en-HK: English (Hong Kong)
-                    - en-US: English (United States)
-                    - en-ZW: English (Zimbabwe)
-                    - zh-CN: Chinese (Mainland China)
-                    - zh-HK: Chinese (Hong Kong)
+                    use the language as long as supported by the host OS.
+  version           Print version information
+  help              Print this message
 )",
 	  argv[0]);
   return 0;
@@ -80,11 +70,14 @@ good_client_or_report (const tgf::IpcClient &client)
 	{
 	case tgf::EC::IPCCLIENT_SYSCALL_CONNECT:
 	case tgf::EC::IPCCLIENT_SYSCALL_CONNECT2:
-	  cout << "error: " << "initialization failed" << endl;
-	  cout << "(HINT: " << "run `tgfocus startup` to initialize)" << endl;
+	  cout << "error: "
+	       << "initialization failed" << endl;
+	  cout << "(HINT: "
+	       << "run `tgfocus startup` to initialize)" << endl;
 	  break;
 	default:
-	  cout << "error: " << "likely a bug, errcode:" << ec << endl;
+	  cout << "error: "
+	       << "likely a bug, errcode:" << ec << endl;
 	  break;
 	}
       return false;
@@ -142,7 +135,7 @@ handle_auth_reset ()
   // third
   // FIXME: tgfid cleanup
 
-  tgf::logi ("Reset successfully");
+  cout << ("Reset successfully") << endl;
 
   return 0;
 }
@@ -156,38 +149,77 @@ handle_filters ()
   auto fpath = tgfstat::userdata.path_filters_tmp ();
   auto fpath_cstr = fpath.c_str ();
 
-  std::string runcmd = "$EDITOR ";
-  runcmd += fpath_cstr;
-  std::system (runcmd.c_str ());
+  ostringstream runcmd;
+  // string runcmd = "";
+  const char *editor = getenv ("EDITOR");
+  if (editor != nullptr)
+    {
+      runcmd << editor << " " << fpath_cstr;
+    }
+  else
+    {
+      if (false)
+	;
+      else if (fs::exists ("/usr/bin/mg"))
+	{
+	  runcmd << "/usr/bin/mg"
+		 << " " << fpath_cstr;
+	}
+      else if (fs::exists ("/usr/bin/emacs"))
+	{
+	  runcmd << "/usr/bin/emacs"
+		 << " "
+		 << "-Q"
+		 << " " << fpath_cstr;
+	}
+      else if (fs::exists ("/usr/bin/nano"))
+	{
+	  runcmd << "/usr/bin/nano"
+		 << " " << fpath_cstr;
+	}
+      else if (fs::exists ("/usr/bin/vi"))
+	{
+	  runcmd << "/usr/bin/vi"
+		 << " " << fpath_cstr;
+	}
+    }
 
-  tgf::logi ("Verifying filters...");
+  if (runcmd.str ().length () < 10)
+    {
+      cerr << "error: no valid editors" << endl;
+      return 255;
+    }
 
-  bool is_invalid_toml = false;
+  std::system (runcmd.str ().c_str ());
+
+  cout << ("Verifying...");
+
   toml::value res;
 
   try
     {
       res = toml::parse (fpath_cstr);
+      cout << "good" << endl;
     }
   catch (const std::exception &ex)
     {
-      is_invalid_toml = true;
+      cout << "bad"
+	   << "(invalid data)" << endl;
+      return 255;
     }
 
-  if (is_invalid_toml)
-    tgf::loge ("ERROR: Invalid toml");
+  FileReader reader{fpath_cstr};
+  auto filterg = tgf::FilterGroupToml (reader.read_to_string ().value_or ("-"));
+  cout << ("Saving...");
+  if (filterg.isEffective ())
+    {
+      tgfstat::userdata.set_filters (tgfstat::userdata.get_filters_tmp ());
+      cout << ("good") << endl;
+    }
   else
     {
-      FileReader reader{fpath_cstr};
-      auto filterg
-	= tgf::FilterGroupToml (reader.read_to_string ().value_or ("-"));
-      if (filterg.isEffective ())
-	{
-	  tgf::logi ("Saving filters...");
-	  tgfstat::userdata.set_filters (tgfstat::userdata.get_filters_tmp ());
-	}
-      else
-	tgf::loge ("ERROR: Invalid filters");
+      cout << ("bad") << "(invalid filters)" << endl;
+      return 255;
     }
 
   return 0;
@@ -210,7 +242,7 @@ handle_lang (const char *lang_code)
   tgf::PREFER_LANG = l;
   tgf::try_ensure_locale ();
   bool is_good = tgf::HOST_LANG == l;
-  tgf::logi ("setting up language...", is_good ? "done" : "failed");
+  cout << ("setting up language...", is_good ? "done" : "failed") << endl;
 
   return is_good ? 0 : 1;
 }
@@ -423,41 +455,60 @@ main (int argc, char *argv[])
 
   if (argc < 2)
     return print_usage (argv);
-  handle_loglv (argc, argv);
 
-  std::string subcmd = argv[1]; // FIXME: use cstr
+  const char *subcmd = "";
 
-  if (subcmd == "startup")
+  // handle options
+  for (int i = 1; i < argc; i++)
+    {
+      if (argv[i][0] == '-')
+	{
+	  if (strcmp (argv[i], "--verbose") == 0)
+	    {
+	      tgf::g_loglv = tgf::LogLv::DEBUG;
+	    }
+	}
+      else
+	{
+	  subcmd = argv[i];
+	}
+    }
+
+  if (strlen (subcmd) < 1)
+    return print_usage (argv);
+
+  if (strcmp (subcmd, "startup") == 0)
     return handle_startup ();
 
-  if (subcmd == "shutdown")
+  if (strcmp (subcmd, "shutdown") == 0)
     return handle_shutipcsrv ();
 
-  if (subcmd == "focus-start")
+  if (strcmp (subcmd, "focus-start") == 0)
     return handle_upcoll ();
 
-  if (subcmd == "focus-stop")
+  if (strcmp (subcmd, "focus-stop") == 0)
     return handle_shutcoll ();
 
-  if (subcmd == "status")
+  if (strcmp (subcmd, "status") == 0)
     return handle_rstatus ();
 
-  if (subcmd == "auth-reset")
+  if (strcmp (subcmd, "auth-reset") == 0)
     return handle_auth_reset ();
 
-  if (subcmd == "auth")
+  if (strcmp (subcmd, "auth") == 0)
     return handle_auth (true);
 
-  if (subcmd == "auth-cust-api")
+  if (strcmp (subcmd, "auth-cust-api") == 0)
     return handle_auth (false);
 
-  if (subcmd == "filters")
+  if (strcmp (subcmd, "filters") == 0)
     return handle_filters ();
 
-  if (subcmd == "version" || subcmd == "--version" || subcmd == "-v")
+  if (strcmp (subcmd, "version") == 0 || strcmp (subcmd, "--version") == 0
+      || strcmp (subcmd, "-v") == 0)
     return handle_version ();
 
-  if (subcmd == "lang")
+  if (strcmp (subcmd, "lang") == 0)
     {
       if (argc != 3)
 	{
@@ -467,12 +518,12 @@ main (int argc, char *argv[])
       return handle_lang (argv[2]);
     }
 
-  if (subcmd == "use-chat")
+  if (strcmp (subcmd, "use-chat") == 0)
     {
       return handle_super_tgfid (1);
     }
 
-  if (subcmd == "use-channel")
+  if (strcmp (subcmd, "use-channel") == 0)
     {
       return handle_super_tgfid (2);
     }
