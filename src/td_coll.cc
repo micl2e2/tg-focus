@@ -143,7 +143,7 @@ TdCollector::collect_msg (const tgf::TgMsg &msg)
     if (object->get_id () == TdMsg::ID)
       {
 	// FIXME: do not use operator <<
-	tgf::logfi_cg (1, "consumer_cnt:",
+	tgf::logfd_cg (1, "consumer_cnt:",
 		       tgfstat::c::d::it_cnt_consumer.load (
 			 memory_order_relaxed),
 		       " msg collected:", msg.to_string ());

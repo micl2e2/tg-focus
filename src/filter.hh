@@ -520,6 +520,16 @@ FilterGroup<V, F>::del_one (u32 &which_filter, const FilterProperty p,
 	      break;
 	    }
 	break;
+      case FilterPropertyNoTitles:
+	begit = list_no_titles.begin ();
+	endit = list_no_titles.end ();
+	for (it_type it = begit; it != endit; it++)
+	  if (it->ptn () == value)
+	    {
+	      it = list_no_titles.erase (it);
+	      break;
+	    }
+	break;
       case FilterPropertyKeywords:
 	begit = list_keywords.begin ();
 	endit = list_keywords.end ();
