@@ -79,7 +79,7 @@ public:
 // FIXME: placed in some other tu?
 constexpr uintmax_t MAX_SZ_LARGE_FILE =
 #ifdef NDEBUG
-  (1024)
+  (1024 * 500) // lets be tolerant at early v3
 #else
   (1024 * 1024)
 #endif

@@ -283,7 +283,7 @@ upAllWorkersOneShot ()
 } // namespace childproc
 
 int
-handle_startup ()
+handle_startup_FORK ()
 {
   const string pubname = "startup: ";
   {
@@ -322,7 +322,7 @@ handle_startup ()
 
   if (pid == 0)
     {
-      // tulogfi ("awaiting workers...");
+      // !!!BLOCKING
       tulogfi (6661);
       tgfstat::c::tryshutwk::coll_initer_succ.wait (false, mo::relaxed);
       tulogfi (6662);
@@ -392,8 +392,8 @@ handle_quickstart ()
 {
   int ret = 1;
 
-  ret = handle_startup ();
-  if (ret == 0)
+  ret = handle_startup_FORK ();
+  if (!tgfstat::im_child.load (mo::relaxed) && ret == 0)
     {
       this_thread::sleep_for (chrono::seconds (1));
       ret = handle_upcoll ();
@@ -492,7 +492,7 @@ main (int argc, char *argv[])
     return print_usage (argv);
 
   if (strcmp (subcmd, "startup") == 0)
-    return handle_startup ();
+    return handle_startup_FORK ();
 
   if (strcmp (subcmd, "shutdown") == 0)
     return handle_shutipcsrv ();
