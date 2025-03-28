@@ -15,6 +15,12 @@ tgf::FilterToml::FilterToml (const toml::value &v)
   for (string &strval : title_list)
     this->__titles.emplace_back (PosixExtRegex (strval));
 
+  // no title
+  vector<string> no_title_list
+    = toml::find_or<vector<string>> (v, "no-titles", vector<string> (0));
+  for (string &strval : no_title_list)
+    this->__no_titles.emplace_back (PosixExtRegex (strval));
+
   // sender
   vector<string> sender_list
     = toml::find_or<vector<string>> (v, "senders", vector<string> (0));
@@ -95,6 +101,16 @@ tgf::FilterGroupToml::as_fsdata () noexcept
 	  const PosixExtRegex &elel = el.__titles[ii];
 	  oss << "\"" << elel.ptn () << "\"";
 	  if (ii < el.__titles.size () - 1)
+	    oss << ", ";
+	}
+      oss << "]" << endl;
+
+      oss << "no-titles = [";
+      for (int ii = 0; ii < el.__no_titles.size (); ii++)
+	{
+	  const PosixExtRegex &elel = el.__no_titles[ii];
+	  oss << "\"" << elel.ptn () << "\"";
+	  if (ii < el.__no_titles.size () - 1)
 	    oss << ", ";
 	}
       oss << "]" << endl;

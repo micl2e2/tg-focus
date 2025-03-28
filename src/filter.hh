@@ -45,6 +45,8 @@ public:
 
   bool isMatchTitle (const std::string &input);
 
+  bool isMatchNoTitle (const std::string &input);
+
   bool isMatchSender (const std::string &input);
 
   bool isNoSendersMatch (const std::string &input);
@@ -59,6 +61,7 @@ public:
 
 protected:
   std::vector<PosixExtRegex> __titles;
+  std::vector<PosixExtRegex> __no_titles;
   std::vector<PosixExtRegex> senders;
   std::vector<PosixExtRegex> no_senders;
   std::vector<PosixExtRegex> keywords;
@@ -83,6 +86,7 @@ public:
 typedef enum
 {
   FilterPropertyTitle,
+  FilterPropertyNoTitle,
   FilterPropertyKeywords,
   FilterPropertyNoKeywords,
   FilterPropertySenders,
@@ -140,6 +144,7 @@ requires HasFilterFields<V>
 Filter<V>::Filter (Filter<V> &&move_ctor_from)
 {
   this->__titles = std::move (move_ctor_from.__titles);
+  this->__no_titles = std::move (move_ctor_from.__no_titles);
   this->senders = std::move (move_ctor_from.senders);
   this->no_senders = std::move (move_ctor_from.no_senders);
   this->keywords = std::move (move_ctor_from.keywords);
@@ -151,6 +156,7 @@ requires HasFilterFields<V> Filter<V> &
 Filter<V>::operator= (Filter<V> &&move_assign_from)
 {
   this->__titles = std::move (move_assign_from.__titles);
+  this->__no_titles = std::move (move_assign_from.__no_titles);
   this->senders = std::move (move_assign_from.senders);
   this->no_senders = std::move (move_assign_from.no_senders);
   this->keywords = std::move (move_assign_from.keywords);
@@ -167,6 +173,26 @@ Filter<V>::isMatchTitle (const std::string &input)
     return true;
 
   for (PosixExtRegex &re : this->__titles)
+    {
+      if (auto flag = re.is_match (input))
+	{
+	  if (*flag)
+	    return true;
+	}
+    }
+
+  return false;
+}
+
+template <typename V>
+requires HasFilterFields<V> bool
+Filter<V>::isMatchNoTitle (const std::string &input)
+{
+  // if no candidates, match anything
+  // if (this->__no_titles.size () == 0)
+    // return true;
+
+  for (PosixExtRegex &re : this->__no_titles)
     {
       if (auto flag = re.is_match (input))
 	{
@@ -241,6 +267,8 @@ Filter<V>::as_readable () const
   ostringstream oss;
   oss << "🞄 Titles (titles) 🞄" << endl
       << readable_eles (__titles) << endl;
+  oss << "🞄 No Titles (no-titles) 🞄" << endl
+      << readable_eles (__no_titles) << endl;
   oss << "🞄 Senders (senders) 🞄" << endl
       << readable_eles (senders) << endl;
   oss << "🞄 No Senders (no-senders) 🞄" << endl
@@ -308,6 +336,9 @@ Filter<V>::isMatchTgMsg (const TgMsg &in)
     return FocusDecision::Skip;
 
   // REJECT
+
+  if (this->isMatchNoTitle (in.get_chat_title ()))
+    return FocusDecision::Reject;
 
   if (this->isNoSendersMatch (in.get_sender ()))
     return FocusDecision::Reject;
@@ -400,6 +431,9 @@ FilterGroup<V, F>::add_one (u32 &which_filter, const FilterProperty p,
     case FilterPropertyTitle:
       filters[idx].__titles.emplace_back (move (may_re));
       break;
+    case FilterPropertyNoTitle:
+      filters[idx].__no_titles.emplace_back (move (may_re));
+      break;
     case FilterPropertyKeywords:
       filters[idx].keywords.emplace_back (move (may_re));
       break;
@@ -434,6 +468,7 @@ FilterGroup<V, F>::del_one (u32 &which_filter, const FilterProperty p,
     return false;
 
   vector<PosixExtRegex> &list_titles = filters[idx].__titles;
+  vector<PosixExtRegex> &list_no_titles = filters[idx].__no_titles;
   vector<PosixExtRegex> &list_keywords = filters[idx].keywords;
   vector<PosixExtRegex> &list_no_keywords = filters[idx].no_keywords;
   vector<PosixExtRegex> &list_senders = filters[idx].senders;

@@ -181,6 +181,7 @@ titles = [".*"]
   tgfass (tfdata.get_filters () == R"(
 [[focus-filter]]
 titles = [".*"]
+no-titles = []
 senders = []
 no-senders = []
 keywords = ["xxx"]
@@ -209,6 +210,7 @@ no-senders = ["xxx","yyy","zzz"]
   tgfass (tfdata.get_filters () == R"(
 [[focus-filter]]
 titles = [".*"]
+no-titles = []
 senders = []
 no-senders = ["xxx", "zzz"]
 keywords = []
@@ -244,6 +246,7 @@ no-senders = ["xxx","yyy","zzz"]
     tgfass (tfdata.get_filters () == R"(
 [[focus-filter]]
 titles = [".*"]
+no-titles = []
 senders = []
 no-senders = ["xxx", "zzz"]
 keywords = []
@@ -265,6 +268,7 @@ no-keywords = []
     tgfass (tfdata.get_filters () == R"(
 [[focus-filter]]
 titles = [".*"]
+no-titles = []
 senders = []
 no-senders = ["xxx", "yyy", "zzz", "ppp"]
 keywords = []
@@ -296,6 +300,7 @@ keywords = ["xxx"]
   tgfass (tfdata.get_filters () == R"(
 [[focus-filter]]
 titles = [".*"]
+no-titles = []
 senders = []
 no-senders = []
 keywords = ["xxx"]
@@ -303,6 +308,7 @@ no-keywords = []
 
 [[focus-filter]]
 titles = []
+no-titles = []
 senders = []
 no-senders = []
 keywords = ["yyy"]
@@ -332,6 +338,7 @@ keywords = ["xxx"]
   tgfass (tfdata.get_filters () == R"(
 [[focus-filter]]
 titles = [".*"]
+no-titles = []
 senders = []
 no-senders = []
 keywords = ["xxx"]
@@ -339,6 +346,7 @@ no-keywords = []
 
 [[focus-filter]]
 titles = []
+no-titles = []
 senders = []
 no-senders = []
 keywords = ["yyy"]
@@ -431,6 +439,8 @@ no-keywords = ["zzz","asda ..."]
 🞄 Titles (titles) 🞄
 (.*)
 
+🞄 No Titles (no-titles) 🞄
+
 🞄 Senders (senders) 🞄
 
 🞄 No Senders (no-senders) 🞄
@@ -478,6 +488,7 @@ no-senders = []
   tgfass (tfdata.get_filters () == R"(
 [[focus-filter]]
 titles = [".*"]
+no-titles = []
 senders = []
 no-senders = []
 keywords = ["222"]
@@ -507,7 +518,7 @@ no-senders = []
 	  == ("〘 TGFCMD 〙failed"
 	      "\n\n" CHATCMD_RMF_USAGE));
   cerr << tfdata.get_filters () << endl;
-  // get filters wont parsed
+  // set/get filters are just raw IO operations
   tgfass (tfdata.get_filters () == R"(
 [[focus-filter]]
 titles = [".*"]
