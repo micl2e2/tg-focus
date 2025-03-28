@@ -270,17 +270,17 @@ requires HasFilterFields<V> string
 Filter<V>::as_readable () const
 {
   ostringstream oss;
-  oss << "🞄 Titles (titles) 🞄" << endl
-      << readable_eles (__titles) << endl;
-  oss << "🞄 No Titles (no-titles) 🞄" << endl
-      << readable_eles (__no_titles) << endl;
-  oss << "🞄 Senders (senders) 🞄" << endl
-      << readable_eles (senders) << endl;
-  oss << "🞄 No Senders (no-senders) 🞄" << endl
-      << readable_eles (no_senders) << endl;
-  oss << "🞄 Keywords (keywords) 🞄" << endl
-      << readable_eles (keywords) << endl;
-  oss << "🞄 No Keywords (no-keywords) 🞄" << endl
+  oss << endl << "🞄 Titles (titles) 🞄" << endl
+      << readable_eles (__titles);
+  oss << endl << "🞄 Senders (senders) 🞄" << endl
+      << readable_eles (senders);
+  oss << endl << "🞄 Keywords (keywords) 🞄" << endl
+      << readable_eles (keywords);
+  oss << endl << "🞄 No Titles (no-titles) 🞄" << endl
+      << readable_eles (__no_titles) ;
+  oss << endl << "🞄 No Senders (no-senders) 🞄" << endl
+      << readable_eles (no_senders) ;
+  oss << endl << "🞄 No Keywords (no-keywords) 🞄" << endl
       << readable_eles (no_keywords);
   // if no candidates, not match anything
 
@@ -389,7 +389,6 @@ FilterGroup<V, F>::as_readable () const
       const F &el = filters[i];
       oss << "🞋 🞋 🞋 🞋 🞋 "
 	  << "FILTER " << (i+1) << " 🞋 🞋 🞋 🞋 🞋"
-	  << endl
 	  << endl;
       oss << el.as_readable () << endl;
     }

@@ -543,7 +543,7 @@ no-keywords = ["zzz","asda ..."]
   tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdFilters, usript, tfdata);
   // cerr << res.succ_data ();
   // cerr << res.did_what ().value ();
-  // cerr << res.aux_msg ();
+  cerr << res.aux_msg ();
   tgfass (res.done ());
   tgfass (res.aux_msg () == string (CHATCMD_RPLY_PREFIX) + R"(
 
@@ -552,14 +552,14 @@ no-keywords = ["zzz","asda ..."]
 🞄 Titles (titles) 🞄
 (.*)
 
-🞄 No Titles (no-titles) 🞄
-
 🞄 Senders (senders) 🞄
-
-🞄 No Senders (no-senders) 🞄
 
 🞄 Keywords (keywords) 🞄
 (xxx)  (yyy)
+
+🞄 No Titles (no-titles) 🞄
+
+🞄 No Senders (no-senders) 🞄
 
 🞄 No Keywords (no-keywords) 🞄
 (zzz)  (asda ...)
@@ -571,7 +571,7 @@ no-keywords = ["zzz","asda ..."]
 }
 
 void
-tst_readblefilters_reverse_order ()
+tst_readblefilters_nonreverse_order ()
 {
   string curr_filters = R"(
 [[focus-filter]]
@@ -598,14 +598,14 @@ titles = []
 🞄 Titles (titles) 🞄
 (.*)
 
-🞄 No Titles (no-titles) 🞄
-
 🞄 Senders (senders) 🞄
-
-🞄 No Senders (no-senders) 🞄
 
 🞄 Keywords (keywords) 🞄
 (xxx)  (yyy)
+
+🞄 No Titles (no-titles) 🞄
+
+🞄 No Senders (no-senders) 🞄
 
 🞄 No Keywords (no-keywords) 🞄
 (zzz)  (asda ...)
@@ -614,13 +614,13 @@ titles = []
 
 🞄 Titles (titles) 🞄
 
-🞄 No Titles (no-titles) 🞄
-
 🞄 Senders (senders) 🞄
 
-🞄 No Senders (no-senders) 🞄
-
 🞄 Keywords (keywords) 🞄
+
+🞄 No Titles (no-titles) 🞄
+
+🞄 No Senders (no-senders) 🞄
 
 🞄 No Keywords (no-keywords) 🞄
 
@@ -756,7 +756,7 @@ main ()
   tst_rawfilters ();
   tst_rawfilters2 ();
   tst_readblefilters ();
-  tst_readblefilters_reverse_order ();
+  tst_readblefilters_nonreverse_order ();
 
   tst_rm_filter_succ ();
   tst_rm_filter_fail ();
