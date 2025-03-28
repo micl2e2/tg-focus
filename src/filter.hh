@@ -388,7 +388,7 @@ FilterGroup<V, F>::as_readable () const
     {
       const F &el = filters[i];
       oss << "🞋 🞋 🞋 🞋 🞋 "
-	  << "FILTER " << filters.size () - i << " 🞋 🞋 🞋 🞋 🞋"
+	  << "FILTER " << (i+1) << " 🞋 🞋 🞋 🞋 🞋"
 	  << endl
 	  << endl;
       oss << el.as_readable () << endl;
@@ -401,7 +401,7 @@ template <typename V, typename F>
 requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::rm_filter (const u32 &which_filter) noexcept
 {
-  std::reverse (filters.begin (), filters.end ());
+  // std::reverse (filters.begin (), filters.end ());
 
   {
     u32 idx = which_filter - 1;
@@ -417,11 +417,11 @@ FilterGroup<V, F>::rm_filter (const u32 &which_filter) noexcept
   }
 
 good_ret:
-  std::reverse (filters.begin (), filters.end ());
+  // std::reverse (filters.begin (), filters.end ());
   return true;
 
 bad_ret:
-  std::reverse (filters.begin (), filters.end ());
+  // std::reverse (filters.begin (), filters.end ());
   return false;
 }
 
@@ -430,7 +430,7 @@ requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::add_one (u32 &which_filter, const FilterProperty p,
 			    const string &value)
 {
-  std::reverse (filters.begin (), filters.end ());
+  // std::reverse (filters.begin (), filters.end ());
 
   if (which_filter < 1)
     goto bad_rtn;
@@ -470,11 +470,11 @@ FilterGroup<V, F>::add_one (u32 &which_filter, const FilterProperty p,
       }
   }
 
-  std::reverse (filters.begin (), filters.end ());
+  // std::reverse (filters.begin (), filters.end ());
   return true;
 
 bad_rtn:
-  std::reverse (filters.begin (), filters.end ());
+  // std::reverse (filters.begin (), filters.end ());
   return true;
 }
 
@@ -483,7 +483,7 @@ requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::del_one (u32 &which_filter, const FilterProperty p,
 			    const string &value)
 {
-  std::reverse (filters.begin (), filters.end ());
+  // std::reverse (filters.begin (), filters.end ());
 
   if (which_filter < 1)
     goto bad_rtn;
@@ -563,11 +563,11 @@ FilterGroup<V, F>::del_one (u32 &which_filter, const FilterProperty p,
       }
   }
 
-  std::reverse (filters.begin (), filters.end ());
+  // std::reverse (filters.begin (), filters.end ());
   return true;
 
 bad_rtn:
-  std::reverse (filters.begin (), filters.end ());
+  // std::reverse (filters.begin (), filters.end ());
   return false;
 }
 

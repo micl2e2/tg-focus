@@ -266,73 +266,55 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
     {
       tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdPause, incom_txt,
 			       tgfstat::userdata);
-      if (res.done ())
-	{
-	  // succ_data = move (res.succ_data ())
-	  aux_msg = move (res.aux_msg ());
-	  did_what = move (res.did_what ().value ());
-	  len_did_what = did_what.length ();
-	}
+      // succ_data = move (res.succ_data ())
+      aux_msg = move (res.aux_msg ());
+      did_what = move (res.did_what ().value ());
+      len_did_what = did_what.length ();
     }
   else if (incom_txt.find (CHATCMD_RESUME) != string::npos)
     {
       tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdResume, incom_txt,
 			       tgfstat::userdata);
-      if (res.done ())
-	{
-	  // succ_data = move (res.succ_data ())
-	  aux_msg = move (res.aux_msg ());
-	  did_what = move (res.did_what ().value ());
-	  len_did_what = did_what.length ();
-	}
+      // succ_data = move (res.succ_data ())
+      aux_msg = move (res.aux_msg ());
+      did_what = move (res.did_what ().value ());
+      len_did_what = did_what.length ();
     }
   else if (incom_txt.find (CHATCMD_FILTERS) != string::npos)
     {
       tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdFilters, incom_txt,
 			       tgfstat::userdata);
-      if (res.done ())
-	{
-	  // succ_data = move (res.succ_data ())
-	  aux_msg = move (res.aux_msg ());
-	  did_what = move (res.did_what ().value ());
-	  len_did_what = did_what.length ();
-	}
+      // succ_data = move (res.succ_data ())
+      aux_msg = move (res.aux_msg ());
+      did_what = move (res.did_what ().value ());
+      len_did_what = did_what.length ();
     }
   else if (incom_txt.find (CHATCMD_RAWFILTERS) != string::npos)
     {
       tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdRawFilters, incom_txt,
 			       tgfstat::userdata);
-      if (res.done ())
-	{
-	  // succ_data = move (res.succ_data ())
-	  aux_msg = move (res.aux_msg ());
-	  did_what = move (res.did_what ().value ());
-	  len_did_what = did_what.length ();
-	}
+      // succ_data = move (res.succ_data ())
+      aux_msg = move (res.aux_msg ());
+      did_what = move (res.did_what ().value ());
+      len_did_what = did_what.length ();
     }
   else if (incom_txt.find (CHATCMD_EDITF) != string::npos)
     {
       string curr_filters = tgfstat::userdata.get_filters ();
       tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdEditFilter, incom_txt,
 			       tgfstat::userdata);
-      if (res.done ())
-	{
-	  aux_msg = move (res.aux_msg ());
-	  did_what = move (res.did_what ().value ());
-	  len_did_what = did_what.length ();
-	}
+      aux_msg = move (res.aux_msg ());
+      did_what = move (res.did_what ().value ());
+      len_did_what = did_what.length ();
     }
   else if (incom_txt.find (CHATCMD_RMF) != string::npos)
     {
       string curr_filters = tgfstat::userdata.get_filters ();
       tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdRemoveFilter, incom_txt,
 			       tgfstat::userdata);
-      if (res.done ())
-	{
-	  aux_msg = move (res.aux_msg ());
-	  did_what = move (res.did_what ().value ());
-	  len_did_what = did_what.length ();
-	}
+      aux_msg = move (res.aux_msg ());
+      did_what = move (res.did_what ().value ());
+      len_did_what = did_what.length ();
     }
 
   // tulogfe_cg (111, len_did_what, (string ("") + did_what + aux_msg));

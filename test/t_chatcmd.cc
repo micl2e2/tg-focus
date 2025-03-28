@@ -299,19 +299,19 @@ keywords = ["xxx"]
   // cerr << tfdata.get_filters ();
   tgfass (tfdata.get_filters () == R"(
 [[focus-filter]]
-titles = []
-no-titles = []
-senders = []
-no-senders = []
-keywords = ["yyy"]
-no-keywords = []
-
-[[focus-filter]]
 titles = [".*"]
 no-titles = []
 senders = []
 no-senders = []
 keywords = ["xxx"]
+no-keywords = []
+
+[[focus-filter]]
+titles = []
+no-titles = []
+senders = []
+no-senders = []
+keywords = ["yyy"]
 no-keywords = []
 )");
 }
@@ -337,25 +337,25 @@ keywords = ["xxx"]
   tgfass (res.succ_data ().has_value ());
   tgfass (tfdata.get_filters () == R"(
 [[focus-filter]]
-titles = []
-no-titles = []
-senders = []
-no-senders = []
-keywords = ["yyy"]
-no-keywords = []
-
-[[focus-filter]]
 titles = [".*"]
 no-titles = []
 senders = []
 no-senders = []
 keywords = ["xxx"]
 no-keywords = []
+
+[[focus-filter]]
+titles = []
+no-titles = []
+senders = []
+no-senders = []
+keywords = ["yyy"]
+no-keywords = []
 )");
 }
 
 void
-tst_editf_2filter_succ_filters_pos_are_reversed ()
+tst_editf_2filter_succ_filters_pos_are_nonreversed ()
 {
   string usript = "editf 9 no-senders add \"zzz\"";
   string curr_filters = R"(
@@ -381,14 +381,6 @@ keywords = ["xxx"]
 titles = []
 no-titles = []
 senders = []
-no-senders = ["zzz"]
-keywords = []
-no-keywords = []
-
-[[focus-filter]]
-titles = []
-no-titles = []
-senders = []
 no-senders = []
 keywords = ["yyy"]
 no-keywords = []
@@ -399,6 +391,14 @@ no-titles = []
 senders = []
 no-senders = []
 keywords = ["xxx"]
+no-keywords = []
+
+[[focus-filter]]
+titles = []
+no-titles = []
+senders = []
+no-senders = ["zzz"]
+keywords = []
 no-keywords = []
 )");
 }
@@ -424,7 +424,7 @@ tst_editf_how_to_block_sometitle ()
   tgfass (tfdata.get_filters () == R"(
 [[focus-filter]]
 titles = []
-no-titles = ["aaa"]
+no-titles = []
 senders = []
 no-senders = []
 keywords = []
@@ -432,7 +432,7 @@ no-keywords = []
 
 [[focus-filter]]
 titles = []
-no-titles = []
+no-titles = ["aaa"]
 senders = []
 no-senders = []
 keywords = []
@@ -593,7 +593,7 @@ titles = []
   tgfass (res.done ());
   tgfass (res.aux_msg () == string (CHATCMD_RPLY_PREFIX) + R"(
 
-🞋 🞋 🞋 🞋 🞋 FILTER 2 🞋 🞋 🞋 🞋 🞋
+🞋 🞋 🞋 🞋 🞋 FILTER 1 🞋 🞋 🞋 🞋 🞋
 
 🞄 Titles (titles) 🞄
 (.*)
@@ -610,7 +610,7 @@ titles = []
 🞄 No Keywords (no-keywords) 🞄
 (zzz)  (asda ...)
 
-🞋 🞋 🞋 🞋 🞋 FILTER 1 🞋 🞋 🞋 🞋 🞋
+🞋 🞋 🞋 🞋 🞋 FILTER 2 🞋 🞋 🞋 🞋 🞋
 
 🞄 Titles (titles) 🞄
 
@@ -664,7 +664,7 @@ titles = [".*"]
 no-titles = []
 senders = []
 no-senders = []
-keywords = ["111"]
+keywords = ["222"]
 no-keywords = []
 )");
 }
@@ -747,7 +747,7 @@ main ()
   tst_editf_1filter_succmsg3 ();
   tst_editf_2filter_succmsg4 ();
   tst_editf_2filter_succmsg5 ();
-  tst_editf_2filter_succ_filters_pos_are_reversed();
+  tst_editf_2filter_succ_filters_pos_are_nonreversed();
   tst_editf_how_to_block_sometitle();
   
   tst_pause ();
