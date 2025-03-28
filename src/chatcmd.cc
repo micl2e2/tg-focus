@@ -35,7 +35,7 @@ handle_resume (string cmdipt)
   tuple<optional<string>, optional<string>, string> ret{nullopt, nullopt, "-"};
 
   tgfstat::c::d::pause_do_csm_mq.store (false, mo::relaxed);
-
+  
   succdata << "";
   didwhat << cmdipt;
   auxmsg << "success";

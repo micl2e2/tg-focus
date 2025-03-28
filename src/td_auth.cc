@@ -3,6 +3,7 @@
 #include "stat.hh"
 #include "log.hh"
 #include "td_auth.hh"
+#include "std_comp.hh"
 #include "common.hh"
 #include <td/telegram/td_api.h>
 
@@ -48,7 +49,7 @@ tgf::TdAuth::loop ()
 	  process_response (std::move (response));
 	}
     }
-  tgf::logi ( "Logged in!");
+  cout << ( "Logged in!") << endl;
 }
 
 void

@@ -276,7 +276,7 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
     }
   else if (incom_txt.find (CHATCMD_RESUME) != string::npos)
     {
-      tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdPause, incom_txt,
+      tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdResume, incom_txt,
 			       tgfstat::userdata);
       if (res.done ())
 	{

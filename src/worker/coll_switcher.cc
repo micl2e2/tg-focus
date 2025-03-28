@@ -24,32 +24,37 @@ tgf::CollSwitcher::operator() ()
       this_thread::sleep_for (chrono::seconds (5));
 
       {
-	tgf::logfi_cg (1, "switcher summary ",
+	tgf::logfi_cg (1, "switcher summary",
 		       "P:", gstat::it_cnt_producer.load (mo::relaxed),
-		       " C:", gstat::it_cnt_consumer.load (mo::relaxed),
-		       " S:", gstat::it_cnt_switcher.load (mo::relaxed),
-		       " mqsize:", gstat::mq.size (),
-		       " nhandle:", gstat::collector.n_handlers (),
-		       " nuser:", gstat::collector.n_users (),
-		       " nchattitle:", gstat::collector.n_chat_titles ());
+		       "C:", gstat::it_cnt_consumer.load (mo::relaxed),
+		       "S:", gstat::it_cnt_switcher.load (mo::relaxed),
+		       "mqsize:", gstat::mq.size (),
+		       "nhandle:", gstat::collector.n_handlers (),
+		       "nuser:", gstat::collector.n_users (),
+		       "nchattitle:", gstat::collector.n_chat_titles (),
+		       "pause_do_csm_mq:",
+		       gstat::pause_do_csm_mq.load (mo::relaxed),
+		       "do_csm_mq:", gstat::do_csm_mq.load (mo::relaxed));
       }
-
-      if (gstat::do_csm_mq.load (mo::acquire))
-	{
-	  tgf::logfi_cg (1, "switcher cnt:",
-			 gstat::it_cnt_switcher.load (mo::relaxed),
-			 " has msg, consumer maybe handling...");
-	  continue;
-	}
 
       if (!gstat::pause_do_csm_mq.load (mo::relaxed))
 	{
-	  lock_guard<mutex> mq_guard (gstat::mq_lock);
-	  if (gstat::mq.size () > 0)
+	  if (gstat::do_csm_mq.load (mo::acquire))
 	    {
-	      gstat::do_csm_mq.store (true, mo::release); // unlock
-	      gstat::do_csm_mq.notify_all ();
+	      tgf::logfi_cg (1, "switcher cnt:",
+			     gstat::it_cnt_switcher.load (mo::relaxed),
+			     " has msg, consumer maybe handling...");
+	      continue;
 	    }
+
+	  {
+	    lock_guard<mutex> mq_guard (gstat::mq_lock);
+	    if (gstat::mq.size () > 0)
+	      {
+		gstat::do_csm_mq.store (true, mo::release); // unlock
+		gstat::do_csm_mq.notify_all ();
+	      }
+	  }
 	}
 
       gstat::it_cnt_switcher.fetch_add (1, mo::relaxed);
