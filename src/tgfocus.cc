@@ -448,7 +448,7 @@ handle_rstatus ()
       assert (msg->extargs ());
       char *bdata = rcast<char *> (msg->extargs ()->data ());
       string s (bdata, msg->extargs ()->size ());
-      cout << s << endl;
+      cout << s;
       // cout << pubname << "done" << endl;
     }
   else

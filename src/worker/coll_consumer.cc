@@ -68,6 +68,7 @@ tgf::CollConsumer::operator() ()
 		    // FIXME: too many disk io incurred by need_collect
 		    if (need_collect (curr_msg))
 		      {
+			this_thread::sleep_for (chro::seconds (2));
 			curr_msg.set_id (consume_cnt + 1);
 			gstat::collector.collect_msg (move (curr_msg));
 			consume_cnt++;

@@ -549,19 +549,19 @@ no-keywords = ["zzz","asda ..."]
 
 🞋 🞋 🞋 🞋 🞋 FILTER 1 🞋 🞋 🞋 🞋 🞋
 
-🞄 Titles <titles> 🞄
+🞋 Titles <titles>
 (.*)
 
-🞄 Senders <senders> 🞄
+🞋 Senders <senders>
 
-🞄 Keywords <keywords> 🞄
+🞋 Keywords <keywords>
 (xxx)  (yyy)
 
-🞄 NO Titles <no-titles> 🞄
+🞋 NO Titles <no-titles>
 
-🞄 NO Senders <no-senders> 🞄
+🞋 NO Senders <no-senders>
 
-🞄 NO Keywords <no-keywords> 🞄
+🞋 NO Keywords <no-keywords>
 (zzz)  (asda ...)
 
 )");
@@ -595,34 +595,34 @@ titles = []
 
 🞋 🞋 🞋 🞋 🞋 FILTER 1 🞋 🞋 🞋 🞋 🞋
 
-🞄 Titles <titles> 🞄
+🞋 Titles <titles>
 (.*)
 
-🞄 Senders <senders> 🞄
+🞋 Senders <senders>
 
-🞄 Keywords <keywords> 🞄
+🞋 Keywords <keywords>
 (xxx)  (yyy)
 
-🞄 NO Titles <no-titles> 🞄
+🞋 NO Titles <no-titles>
 
-🞄 NO Senders <no-senders> 🞄
+🞋 NO Senders <no-senders>
 
-🞄 NO Keywords <no-keywords> 🞄
+🞋 NO Keywords <no-keywords>
 (zzz)  (asda ...)
 
 🞋 🞋 🞋 🞋 🞋 FILTER 2 🞋 🞋 🞋 🞋 🞋
 
-🞄 Titles <titles> 🞄
+🞋 Titles <titles>
 
-🞄 Senders <senders> 🞄
+🞋 Senders <senders>
 
-🞄 Keywords <keywords> 🞄
+🞋 Keywords <keywords>
 
-🞄 NO Titles <no-titles> 🞄
+🞋 NO Titles <no-titles>
 
-🞄 NO Senders <no-senders> 🞄
+🞋 NO Senders <no-senders>
 
-🞄 NO Keywords <no-keywords> 🞄
+🞋 NO Keywords <no-keywords>
 
 )");
   tgfass (res.did_what ().has_value ());
