@@ -29,7 +29,7 @@ if(ON)
 endif()
 
 if(IS_DEB11)
-  set(ZLIB_LIBRARY "/usr/lib/x86_64-linux-gnu/libz.a")
+  set(ZLIB_LIBRARY "/usr/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}-linux-gnu/libz.a")
 else()
   set(ZLIB_USE_STATIC_LIBS ON)
 endif()
