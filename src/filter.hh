@@ -388,7 +388,7 @@ FilterGroup<V, F>::as_readable () const
     {
       const F &el = filters[i];
       oss << "🞋 🞋 🞋 "
-	  << "FILTER " << (i + 1) << " 🞋 🞋 🞋" << endl
+	  << "FILTER " << filters.size () - i << " 🞋 🞋 🞋" << endl
 	  << endl;
       oss << el.as_readable () << endl;
     }

@@ -502,6 +502,32 @@ keywords = ["xxx"]
 }
 
 void
+tst_rawfilters2 ()
+{
+  string curr_filters = R"(
+[[focus-filter]]
+titles = [".*"]
+keywords = ["xxx"]
+[[focus-filter]]
+titles = [".*"]
+keywords = ["yyy"]
+)";
+  string curr_filters_cp = curr_filters;
+  tfdata.set_filters (move (curr_filters));
+
+  string usript = "   rawfilters";
+  tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdRawFilters, usript, tfdata);
+  // cerr << res.succ_data ();
+  // cerr << res.did_what ().value ();
+  // cerr << res.aux_msg ();
+  tgfass (res.done ());
+  tgfass (res.aux_msg () == string (CHATCMD_RPLY_PREFIX) + curr_filters_cp);
+  tgfass (res.did_what ().has_value ());
+  tgfass (res.did_what ().value () == "rawfilters"); // will trim spc
+  tgfass (res.succ_data ().has_value ());
+}
+
+void
 tst_readblefilters ()
 {
   string curr_filters = R"(
@@ -536,6 +562,65 @@ no-keywords = ["zzz","asda ..."]
 
 🞄 No Keywords (no-keywords) 🞄
 (zzz)  (asda ...)
+
+)");
+  tgfass (res.did_what ().has_value ());
+  tgfass (res.did_what ().value () == "filters"); // will trim spc
+  tgfass (res.succ_data ().has_value ());
+}
+
+void
+tst_readblefilters_reverse_order ()
+{
+  string curr_filters = R"(
+[[focus-filter]]
+titles = [".*"]
+keywords = ["xxx","yyy"]
+no-keywords = ["zzz","asda ..."]
+
+[[focus-filter]]
+titles = []
+)";
+  string curr_filters_cp = curr_filters;
+  tfdata.set_filters (move (curr_filters));
+
+  string usript = "  filters";
+  tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdFilters, usript, tfdata);
+  // cerr << res.succ_data ();
+  // cerr << res.did_what ().value ();
+  // cerr << res.aux_msg ();
+  tgfass (res.done ());
+  tgfass (res.aux_msg () == string (CHATCMD_RPLY_PREFIX) + R"(
+🞋 🞋 🞋 FILTER 2 🞋 🞋 🞋
+
+🞄 Titles (titles) 🞄
+(.*)
+
+🞄 No Titles (no-titles) 🞄
+
+🞄 Senders (senders) 🞄
+
+🞄 No Senders (no-senders) 🞄
+
+🞄 Keywords (keywords) 🞄
+(xxx)  (yyy)
+
+🞄 No Keywords (no-keywords) 🞄
+(zzz)  (asda ...)
+
+🞋 🞋 🞋 FILTER 1 🞋 🞋 🞋
+
+🞄 Titles (titles) 🞄
+
+🞄 No Titles (no-titles) 🞄
+
+🞄 Senders (senders) 🞄
+
+🞄 No Senders (no-senders) 🞄
+
+🞄 Keywords (keywords) 🞄
+
+🞄 No Keywords (no-keywords) 🞄
 
 )");
   tgfass (res.did_what ().has_value ());
@@ -667,7 +752,9 @@ main ()
   tst_resume ();
 
   tst_rawfilters ();
+  tst_rawfilters2 ();
   tst_readblefilters ();
+  tst_readblefilters_reverse_order ();
 
   tst_rm_filter_succ ();
   tst_rm_filter_fail ();
