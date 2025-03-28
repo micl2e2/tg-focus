@@ -3,6 +3,7 @@
 #include <locale.h>
 
 #include "locale_conf.hh"
+#include "std_comp.hh"
 
 using namespace std;
 
@@ -15,10 +16,10 @@ locales_must_have ()
       || setlocale (LC_ALL, "en_ZW.UTF-8") == nullptr
       || setlocale (LC_ALL, "zh_CN.UTF-8") == nullptr
       || setlocale (LC_ALL, "zh_HK.UTF-8") == nullptr)
-    assert (false);
+    tgfass (false);
 
   if (setlocale (LC_ALL, "C") == nullptr)
-    assert (false);
+    tgfass (false);
 }
 
 void
@@ -28,18 +29,18 @@ init_and_prefer (const char *init_lc_all, tgf::Lang prefer1, tgf::Lang prefer2)
   tgf::PREFER_LANG = prefer1;
   tgf::try_ensure_locale ();
   cout << "prefer:" << tgf::PREFER_LANG << " actual:" << tgf::HOST_LANG << endl;
-  assert (tgf::HOST_LANG == prefer1);
+  tgfass (tgf::HOST_LANG == prefer1);
   tgf::PREFER_LANG = prefer2;
   tgf::try_ensure_locale ();
   cout << "prefer:" << tgf::PREFER_LANG << " actual:" << tgf::HOST_LANG << endl;
-  assert (tgf::HOST_LANG == prefer2);
+  tgfass (tgf::HOST_LANG == prefer2);
 }
 
 int
 main ()
 {
-  assert (tgf::HOST_LANG == tgf::Lang::unknown);
-  assert (tgf::PREFER_LANG == tgf::Lang::unknown);
+  tgfass (tgf::HOST_LANG == tgf::Lang::unknown);
+  tgfass (tgf::PREFER_LANG == tgf::Lang::unknown);
 
   locales_must_have ();
 

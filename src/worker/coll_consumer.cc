@@ -12,15 +12,9 @@
 namespace gstat = /* DoNotDeleteMe */ tgfstat::c::d;
 namespace gstat_c = /* DoNotDeleteMe */ tgfstat::c;
 
-tgf::CollConsumer::CollConsumer ()
-{
-  tulogfi_cg (1, "ctor");
-}
+tgf::CollConsumer::CollConsumer () { tulogfi_cg (1, "ctor"); }
 
-tgf::CollConsumer::~CollConsumer ()
-{
-  tulogfi_cg (1,  "dtor");
-}
+tgf::CollConsumer::~CollConsumer () { tulogfi_cg (1, "dtor"); }
 
 bool
 tgf::need_collect (const tgf::TgMsg &msg)
@@ -30,7 +24,7 @@ tgf::need_collect (const tgf::TgMsg &msg)
 		 " filters reloaded");
 
   auto filterg = tgf::FilterGroupToml (tomlstr);
-  if (filterg.isMatchTgMsg (msg))
+  if (filterg.mtch_tgmsg (msg))
     return true;
 
   return false;
@@ -43,6 +37,7 @@ tgf::CollConsumer::operator() ()
 
   while (!gstat_c::tryshutwk::coll_consumer.load (mo::relaxed))
     {
+      tulogfi_cg (1, 9898);
       // std::this_thread::sleep_for (std::chrono::seconds (1));
       gstat::do_csm_mq.wait (false, mo::acquire);
 
@@ -61,8 +56,8 @@ tgf::CollConsumer::operator() ()
 	if (gstat::mq.size () > 0 && gstat_all::userdata.is_tgfid_valid ())
 	  {
 	    tulogfd_cg (1, "consumer_iter:",
-			   gstat::it_cnt_consumer.load (mo::relaxed),
-			   " mq consumable, mq.size():", gstat::mq.size ());
+			gstat::it_cnt_consumer.load (mo::relaxed),
+			" mq consumable, mq.size():", gstat::mq.size ());
 
 	    for (auto it = gstat::mq.begin (); it != gstat::mq.end (); it += 1)
 	      {
@@ -73,15 +68,16 @@ tgf::CollConsumer::operator() ()
 		    // FIXME: too many disk io incurred by need_collect
 		    if (need_collect (curr_msg))
 		      {
+			this_thread::sleep_for (chro::seconds (2));
 			curr_msg.set_id (consume_cnt + 1);
 			gstat::collector.collect_msg (move (curr_msg));
 			consume_cnt++;
 		      }
 		    else
 		      tulogfd_cg (1, " consume cnt:",
-				     gstat::it_cnt_consumer.load (mo::relaxed),
-				     " message not collected:",
-				     curr_msg.to_string ());
+				  gstat::it_cnt_consumer.load (mo::relaxed),
+				  " message not collected:",
+				  curr_msg.to_string ());
 		  }
 	      }
 
@@ -92,8 +88,8 @@ tgf::CollConsumer::operator() ()
 	else
 	  {
 	    tulogfd_cg (1, "consumer_iter:",
-			   gstat::it_cnt_consumer.load (mo::relaxed),
-			   " mq not consumable,mq.size():", gstat::mq.size ());
+			gstat::it_cnt_consumer.load (mo::relaxed),
+			" mq not consumable,mq.size():", gstat::mq.size ());
 	  }
       }
 

@@ -77,8 +77,8 @@ curr_tstamp ()
 }
 
 template <typename S, class... Args>
-  requires std::derived_from<S, std::ostream>
-void inline stream_log (S &os, LogLv lv, const Args &...args)
+requires std::derived_from<S, std::ostream> void inline stream_log (
+  S &os, LogLv lv, const Args &...args)
 {
   if (g_loglv < lv)
     return;
@@ -96,8 +96,7 @@ void inline stream_log (S &os, LogLv lv, const Args &...args)
 // impl should be identical to the above lvalue ref one
 // TODO: reduce repeatition by ajusting template arg
 template <typename S, class... Args>
-  requires derived_from<S, std::ostream>
-inline void
+requires derived_from<S, std::ostream> inline void
 stream_log (S &&os, LogLv lv, const Args &...args)
 {
   if (g_loglv < lv)
@@ -175,8 +174,8 @@ _get_log_file (u8 ch_grp = 0)
 	  break;
 	}
     }
-
-  ofstream s (p.c_str (), s.app);
+  bool needs_trunc = is_too_large (p);
+  ofstream s (p.c_str (), needs_trunc ? ios::trunc : ios::app);
   return s;
 }
 

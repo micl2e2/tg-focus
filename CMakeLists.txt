@@ -3,11 +3,15 @@ cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 project(tg-focus)
 
 option(IS_ALPINE "")
+option(IS_DEB11 "")
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
   file(READ "/etc/os-release" OS_RELEASE_CONTENT)
   if(OS_RELEASE_CONTENT MATCHES "ID=alpine")
-    set(IS_ALPINE TRUE)
+    set(IS_ALPINE ON)
+  endif()
+  if(OS_RELEASE_CONTENT MATCHES "VERSION_CODENAME=bullseye")
+    set(IS_DEB11 ON)
   endif()
 endif()
 
@@ -19,14 +23,19 @@ endif()
 
 # ----------------------------- tdlib -----------------------------
 
-if(CMAKE_BUILD_TYPE STREQUAL "Release" OR IS_ALPINE)
-  set(ZLIB_USE_STATIC_LIBS ON)
-  # might need to build from source in many distros
+if(ON)
+  # building from source might be needed in many distros
   set(OPENSSL_USE_STATIC_LIBS ON)
 endif()
-  
+
+if(IS_DEB11)
+  set(ZLIB_LIBRARY "/usr/lib/${CMAKE_HOST_SYSTEM_PROCESSOR}-linux-gnu/libz.a")
+else()
+  set(ZLIB_USE_STATIC_LIBS ON)
+endif()
+
 if(NOT (CMAKE_BUILD_TYPE STREQUAL "Release"))
-  option(BUILD_TESTING OFF)
+  # option(BUILD_TESTING OFF)
   option(TD_BUILD_BENCHMARK OFF)
 endif()
 

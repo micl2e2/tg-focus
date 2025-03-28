@@ -10,12 +10,12 @@ cd ci
 
 [[ $? -eq 0 ]] || exit 255
 
-source vars-x64-linux-musl.bash
+source vars-x86_64-linux-gnu.bash
 
 [[ $? -eq 0 ]] || exit 255
 
-source vars-allarch-linux-musl.bash
+source vars-allarch-linux-gnu.bash
 
 [[ $? -eq 0 ]] || exit 255
 
-source prep-libs-alp321-allarch.bash
+source build-tgfocus-deb11-allarch.bash

@@ -1,3 +1,5 @@
+#define __TU__ "chatcmd"
+
 #include "chatcmd.hh"
 #include "stat.hh"
 #include "posix_regex.hh"
@@ -33,7 +35,7 @@ handle_resume (string cmdipt)
   tuple<optional<string>, optional<string>, string> ret{nullopt, nullopt, "-"};
 
   tgfstat::c::d::pause_do_csm_mq.store (false, mo::relaxed);
-
+  
   succdata << "";
   didwhat << cmdipt;
   auxmsg << "success";
@@ -100,7 +102,8 @@ handle_rmfilter (string cmdipt, tgf::UserData &p_userdata)
     endi = cmdipt.find_first_of (" ", begi);
     if (endi == string::npos)
       {
-	auxmsg << "need" << " ";
+	auxmsg << "need"
+	       << " ";
 	auxmsg << CHATCMD_RMF_ARG1;
 	goto bad_rtn;
       }
@@ -108,7 +111,8 @@ handle_rmfilter (string cmdipt, tgf::UserData &p_userdata)
     begi = cmdipt.find_first_not_of (" ", endi);
     if (begi == string::npos)
       {
-	auxmsg << "need" << " ";
+	auxmsg << "need"
+	       << " ";
 	auxmsg << CHATCMD_RMF_ARG1;
 	goto bad_rtn;
       }
@@ -170,7 +174,8 @@ handle_editfilter (string cmdipt, tgf::UserData &p_userdata)
     endi = cmdipt.find_first_of (" ", begi);
     if (endi == string::npos)
       {
-	auxmsg << "need" << " ";
+	auxmsg << "need"
+	       << " ";
 	auxmsg << CHATCMD_EDITF_ARG1;
 	goto bad_rtn;
       }
@@ -178,7 +183,8 @@ handle_editfilter (string cmdipt, tgf::UserData &p_userdata)
     begi = cmdipt.find_first_not_of (" ", endi);
     if (begi == string::npos)
       {
-	auxmsg << "need" << " ";
+	auxmsg << "need"
+	       << " ";
 	auxmsg << CHATCMD_EDITF_ARG1;
 	goto bad_rtn;
       }
@@ -186,7 +192,8 @@ handle_editfilter (string cmdipt, tgf::UserData &p_userdata)
     string chunk1 = cmdipt.substr (begi, endi - begi);
     if (endi == string::npos)
       {
-	auxmsg << "need" << " ";
+	auxmsg << "need"
+	       << " ";
 	auxmsg << CHATCMD_EDITF_ARG2;
 	goto bad_rtn;
       }
@@ -194,7 +201,8 @@ handle_editfilter (string cmdipt, tgf::UserData &p_userdata)
     begi = cmdipt.find_first_not_of (" ", endi);
     if (begi == string::npos)
       {
-	auxmsg << "need" << " ";
+	auxmsg << "need"
+	       << " ";
 	auxmsg << CHATCMD_EDITF_ARG2;
 	goto bad_rtn;
       }
@@ -202,7 +210,8 @@ handle_editfilter (string cmdipt, tgf::UserData &p_userdata)
     string chunk2 = cmdipt.substr (begi, endi - begi);
     if (endi == string::npos)
       {
-	auxmsg << "need" << " ";
+	auxmsg << "need"
+	       << " ";
 	auxmsg << CHATCMD_EDITF_ARG3;
 	goto bad_rtn;
       }
@@ -210,7 +219,8 @@ handle_editfilter (string cmdipt, tgf::UserData &p_userdata)
     begi = cmdipt.find_first_not_of (" ", endi);
     if (begi == string::npos)
       {
-	auxmsg << "need" << " ";
+	auxmsg << "need"
+	       << " ";
 	auxmsg << CHATCMD_EDITF_ARG3;
 	goto bad_rtn;
       }
@@ -218,7 +228,8 @@ handle_editfilter (string cmdipt, tgf::UserData &p_userdata)
     string chunk3 = cmdipt.substr (begi, endi - begi);
     if (endi == string::npos)
       {
-	auxmsg << "need" << " ";
+	auxmsg << "need"
+	       << " ";
 	auxmsg << CHATCMD_EDITF_ARG4;
 	goto bad_rtn;
       }
@@ -226,7 +237,8 @@ handle_editfilter (string cmdipt, tgf::UserData &p_userdata)
     begi = cmdipt.find_first_not_of (" ", endi);
     if (begi == string::npos)
       {
-	auxmsg << "need" << " ";
+	auxmsg << "need"
+	       << " ";
 	auxmsg << CHATCMD_EDITF_ARG4;
 	goto bad_rtn;
       }
@@ -241,10 +253,9 @@ handle_editfilter (string cmdipt, tgf::UserData &p_userdata)
       }
 
     string property = chunk2;
-    if (property != "chat-title" && property != "keywords"
-	&& property != "no-keywords" && property != "rej-keywords"
-	&& property != "senders" && property != "no-senders"
-	&& property != "rej-senders")
+    if (property != "titles" && property != "no-titles"
+	&& property != "keywords" && property != "no-keywords"
+	&& property != "senders" && property != "no-senders")
       {
 	auxmsg << "invalid " << CHATCMD_EDITF_ARG2;
 	goto bad_rtn;
@@ -276,6 +287,14 @@ handle_editfilter (string cmdipt, tgf::UserData &p_userdata)
     bool action_res = false;
     if (false)
       ;
+    else if (property == "titles" && action == "add")
+      action_res = fg.add_titles (filter_id, unquoted_re);
+    else if (property == "titles" && action == "del")
+      action_res = fg.del_titles (filter_id, unquoted_re);
+    else if (property == "no-titles" && action == "add")
+      action_res = fg.add_no_titles (filter_id, unquoted_re);
+    else if (property == "no-titles" && action == "del")
+      action_res = fg.del_no_titles (filter_id, unquoted_re);
     else if (property == "keywords" && action == "add")
       action_res = fg.add_keywords (filter_id, unquoted_re);
     else if (property == "keywords" && action == "del")
@@ -292,10 +311,6 @@ handle_editfilter (string cmdipt, tgf::UserData &p_userdata)
       action_res = fg.add_no_senders (filter_id, unquoted_re);
     else if (property == "no-senders" && action == "del")
       action_res = fg.del_no_senders (filter_id, unquoted_re);
-    else if (property == "rej-senders" && action == "add")
-      action_res = fg.add_rej_senders (filter_id, unquoted_re);
-    else if (property == "rej-senders" && action == "del")
-      action_res = fg.del_rej_senders (filter_id, unquoted_re);
     else
       {
 	auxmsg << "not supported:";
@@ -319,7 +334,8 @@ handle_editfilter (string cmdipt, tgf::UserData &p_userdata)
     didwhat << filter_id << " ";
     didwhat << property << " ";
     didwhat << action << " ";
-    didwhat << "\"" << unquoted_re << "\"" << " ";
+    didwhat << "\"" << unquoted_re << "\""
+	    << " ";
     auxmsg << "success"; // leading spc makes sure wont be
 			 // identical to user's cmd
     // auxmsg << endl;

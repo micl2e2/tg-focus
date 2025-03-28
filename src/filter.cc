@@ -10,8 +10,16 @@ tgf::FilterToml::FilterToml (const toml::value &v)
   using std::string, std::vector;
 
   // title
-  std::string sval = toml::find_or<string> (v, "title", ".*");
-  this->chat_title = PosixExtRegex (sval);
+  vector<string> title_list
+    = toml::find_or<vector<string>> (v, "titles", vector<string> (0));
+  for (string &strval : title_list)
+    this->__titles.emplace_back (PosixExtRegex (strval));
+
+  // no title
+  vector<string> no_title_list
+    = toml::find_or<vector<string>> (v, "no-titles", vector<string> (0));
+  for (string &strval : no_title_list)
+    this->__no_titles.emplace_back (PosixExtRegex (strval));
 
   // sender
   vector<string> sender_list
@@ -24,12 +32,6 @@ tgf::FilterToml::FilterToml (const toml::value &v)
     = toml::find_or<vector<string>> (v, "no-senders", vector<string> (0));
   for (string &strval : no_sender_list)
     this->no_senders.emplace_back (PosixExtRegex (strval));
-
-  // rej sender
-  vector<string> rej_sender_list
-    = toml::find_or<vector<string>> (v, "rej-senders", vector<string> (0));
-  for (string &strval : rej_sender_list)
-    this->rej_senders.emplace_back (PosixExtRegex (strval));
 
   // keyword
   vector<string> keyword_list
@@ -93,24 +95,22 @@ tgf::FilterGroupToml::as_fsdata () noexcept
       const tgf::FilterToml &el = filters[i];
       oss << endl << "[[focus-filter]]" << endl;
 
-      oss << "title = " << "\"" << el.chat_title.ptn () << "\"" << endl;
-
-      oss << "keywords = [";
-      for (int ii = 0; ii < el.keywords.size (); ii++)
+      oss << "titles = [";
+      for (int ii = 0; ii < el.__titles.size (); ii++)
 	{
-	  const PosixExtRegex &elel = el.keywords[ii];
+	  const PosixExtRegex &elel = el.__titles[ii];
 	  oss << "\"" << elel.ptn () << "\"";
-	  if (ii < el.keywords.size () - 1)
+	  if (ii < el.__titles.size () - 1)
 	    oss << ", ";
 	}
       oss << "]" << endl;
 
-      oss << "no-keywords = [";
-      for (int ii = 0; ii < el.no_keywords.size (); ii++)
+      oss << "no-titles = [";
+      for (int ii = 0; ii < el.__no_titles.size (); ii++)
 	{
-	  const PosixExtRegex &elel = el.no_keywords[ii];
+	  const PosixExtRegex &elel = el.__no_titles[ii];
 	  oss << "\"" << elel.ptn () << "\"";
-	  if (ii < el.no_keywords.size () - 1)
+	  if (ii < el.__no_titles.size () - 1)
 	    oss << ", ";
 	}
       oss << "]" << endl;
@@ -135,12 +135,22 @@ tgf::FilterGroupToml::as_fsdata () noexcept
 	}
       oss << "]" << endl;
 
-      oss << "rej-senders = [";
-      for (int ii = 0; ii < el.rej_senders.size (); ii++)
+      oss << "keywords = [";
+      for (int ii = 0; ii < el.keywords.size (); ii++)
 	{
-	  const PosixExtRegex &elel = el.rej_senders[ii];
+	  const PosixExtRegex &elel = el.keywords[ii];
 	  oss << "\"" << elel.ptn () << "\"";
-	  if (ii < el.rej_senders.size () - 1)
+	  if (ii < el.keywords.size () - 1)
+	    oss << ", ";
+	}
+      oss << "]" << endl;
+
+      oss << "no-keywords = [";
+      for (int ii = 0; ii < el.no_keywords.size (); ii++)
+	{
+	  const PosixExtRegex &elel = el.no_keywords[ii];
+	  oss << "\"" << elel.ptn () << "\"";
+	  if (ii < el.no_keywords.size () - 1)
 	    oss << ", ";
 	}
       oss << "]" << endl;

@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "posix_regex.hh"
+#include "std_comp.hh"
 
 using namespace std;
 
@@ -13,19 +14,19 @@ ptn_should_match (string ptn, string str, long lineno)
   if (auto flag = re.is_match (str))
     {
       if (*flag)
-	assert (true);
+	tgfass (true);
       else
 	{
 	  cerr << "L" << lineno << ", "
 	       << "EXPECT match" << endl;
-	  assert (false);
+	  tgfass (false);
 	}
     }
   else
     {
       cerr << "L" << lineno << ", "
 	   << "EXPECT no errors" << endl;
-      assert (false);
+      tgfass (false);
     }
 }
 
@@ -40,16 +41,16 @@ ptn_should_not_match (string ptn, string str, long lineno)
 	{
 	  cerr << "L" << lineno << ", "
 	       << "EXPECT not match" << endl;
-	  assert (false);
+	  tgfass (false);
 	}
       else
-	assert (true);
+	tgfass (true);
     }
   else
     {
       cerr << "L" << lineno << ", "
 	   << "EXPECT no errors" << endl;
-      assert (false);
+      tgfass (false);
     }
 }
 
@@ -62,13 +63,13 @@ ptn_invalid (string &&ptn, long lineno)
     {
       cerr << "L" << lineno << ", "
 	   << "EXPECT invalid pattern" << endl;
-      assert (false);
+      tgfass (false);
     }
   else
-    assert (true);
+    tgfass (true);
 
-  assert (!re.is_pattern_accept ());
-  assert (re.get_err ().length () > 0);
+  tgfass (!re.is_pattern_accept ());
+  tgfass (re.get_err ().length () > 0);
   cerr << "L" << lineno << ", "
        << "posix re error msg: " << re.get_err ();
 }
@@ -82,10 +83,10 @@ ptn_invalid (string &&ptn, long lineno)
 int
 main ()
 {
-  assert (!std::is_copy_constructible_v<PosixExtRegex>);
-  assert (!std::is_copy_assignable_v<PosixExtRegex>);
-  assert (std::is_move_constructible_v<PosixExtRegex>);
-  assert (std::is_move_assignable_v<PosixExtRegex>);
+  tgfass (!std::is_copy_constructible_v<PosixExtRegex>);
+  tgfass (!std::is_copy_assignable_v<PosixExtRegex>);
+  tgfass (std::is_move_constructible_v<PosixExtRegex>);
+  tgfass (std::is_move_assignable_v<PosixExtRegex>);
 
   assert_ptn_invalid (")(");
 

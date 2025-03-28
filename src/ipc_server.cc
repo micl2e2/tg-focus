@@ -154,14 +154,4 @@ tgf::IpcServer::~IpcServer ()
       if (__domain == AF_UNIX)
 	unlink (SOCKET_PATH_IMMD);
     }
-
-  gstat_c::tryshutwk::ipcmsg_dequer.store (true, mo::relaxed);
-  gstat_c::tryshutwk::ipcmsg_dequer.notify_all ();
-  gstat_c::q_ipcmsg_has_upd.store (true, mo::relaxed);
-
-  gstat_c::tryshutwk::ipcconn_handler.store (true, mo::relaxed);
-  gstat_c::tryshutwk::ipcconn_handler.notify_all ();
-
-  gstat_c::tryshutwk::conn_listener.store (true, mo::relaxed);
-  gstat_c::tryshutwk::conn_listener.notify_all ();
 }

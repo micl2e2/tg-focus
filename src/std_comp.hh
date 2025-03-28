@@ -31,6 +31,7 @@ using namespace std;
 
 namespace fs = filesystem;
 namespace chron = chrono;
+namespace chro = chrono;
 
 using path = std::filesystem::path;
 using mo = std::memory_order;
@@ -89,6 +90,17 @@ exitMain (u8 ec)
 {
   exit (1);
 }
+
+#define tgfass(flag)                                                           \
+  do                                                                           \
+    {                                                                          \
+      if (!(flag))                                                             \
+	{                                                                      \
+	  std::cerr << "assert"                                                \
+		    << "(" << __FILE__ << "," << __LINE__ << ")" << std::endl; \
+	  abort ();                                                            \
+	}                                                                      \
+  } while (false)
 
 } // namespace tgf
 
