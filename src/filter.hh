@@ -2,6 +2,7 @@
 #define hh_filter
 
 #include <concepts>
+#include <algorithm>
 #include <string>
 #include <utility>
 #include <vector>
@@ -190,7 +191,7 @@ Filter<V>::mtch_no_titles (const std::string &input)
 {
   // if no candidates, match anything
   // if (this->__no_titles.size () == 0)
-    // return true;
+  // return true;
 
   for (PosixExtRegex &re : this->__no_titles)
     {
@@ -395,16 +396,27 @@ template <typename V, typename F>
 requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::rm_filter (const u32 &which_filter) noexcept
 {
-  u32 idx = which_filter - 1;
-  if (idx < 0 || filters.size () == 1 || idx > filters.size () - 1)
-    {
-      return false;
-    }
-  size_t oldsz = filters.size ();
-  filters.erase (filters.begin () + idx);
-  size_t newsz = filters.size ();
-  if (newsz == oldsz - 1)
-    return true;
+  std::reverse (filters.begin (), filters.end ());
+
+  {
+    u32 idx = which_filter - 1;
+    if (idx < 0 || filters.size () == 1 || idx > filters.size () - 1)
+      {
+	goto bad_ret;
+      }
+    size_t oldsz = filters.size ();
+    filters.erase (filters.begin () + idx);
+    size_t newsz = filters.size ();
+    if (newsz == oldsz - 1)
+      goto good_ret;
+  }
+
+good_ret:
+  std::reverse (filters.begin (), filters.end ());
+  return true;
+
+bad_ret:
+  std::reverse (filters.begin (), filters.end ());
   return false;
 }
 
@@ -413,40 +425,51 @@ requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::add_one (u32 &which_filter, const FilterProperty p,
 			    const string &value)
 {
+  std::reverse (filters.begin (), filters.end ());
+
   if (which_filter < 1)
-    return false;
-  u32 idx = which_filter - 1;
-  if (idx > filters.size () - 1)
-    {
-      F f;
-      filters.emplace_back (move (f)); // exclusively for add_one
-      idx = filters.size () - 1;
-      which_filter = filters.size ();
-    }
-  PosixExtRegex may_re (value);
-  if (!may_re.is_pattern_accept ())
-    return false;
-  switch (p)
-    {
-    case FilterPropertyTitle:
-      filters[idx].__titles.emplace_back (move (may_re));
-      break;
-    case FilterPropertyNoTitle:
-      filters[idx].__no_titles.emplace_back (move (may_re));
-      break;
-    case FilterPropertyKeywords:
-      filters[idx].keywords.emplace_back (move (may_re));
-      break;
-    case FilterPropertyNoKeywords:
-      filters[idx].no_keywords.emplace_back (move (may_re));
-      break;
-    case FilterPropertySenders:
-      filters[idx].senders.emplace_back (move (may_re));
-      break;
-    case FilterPropertyNoSenders:
-      filters[idx].no_senders.emplace_back (move (may_re));
-      break;
-    }
+    goto bad_rtn;
+
+  {
+    u32 idx = which_filter - 1;
+    if (idx > filters.size () - 1)
+      {
+	F f;
+	filters.emplace_back (move (f)); // exclusively for add_one
+	idx = filters.size () - 1;
+	which_filter = filters.size ();
+      }
+    PosixExtRegex may_re (value);
+    if (!may_re.is_pattern_accept ())
+      goto bad_rtn;
+    switch (p)
+      {
+      case FilterPropertyTitle:
+	filters[idx].__titles.emplace_back (move (may_re));
+	break;
+      case FilterPropertyNoTitle:
+	filters[idx].__no_titles.emplace_back (move (may_re));
+	break;
+      case FilterPropertyKeywords:
+	filters[idx].keywords.emplace_back (move (may_re));
+	break;
+      case FilterPropertyNoKeywords:
+	filters[idx].no_keywords.emplace_back (move (may_re));
+	break;
+      case FilterPropertySenders:
+	filters[idx].senders.emplace_back (move (may_re));
+	break;
+      case FilterPropertyNoSenders:
+	filters[idx].no_senders.emplace_back (move (may_re));
+	break;
+      }
+  }
+
+  std::reverse (filters.begin (), filters.end ());
+  return true;
+
+bad_rtn:
+  std::reverse (filters.begin (), filters.end ());
   return true;
 }
 
@@ -455,82 +478,92 @@ requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::del_one (u32 &which_filter, const FilterProperty p,
 			    const string &value)
 {
+  std::reverse (filters.begin (), filters.end ());
+
   if (which_filter < 1)
-    return false;
-  u32 idx = which_filter - 1;
-  if (idx > filters.size () - 1)
-    {
-      idx = filters.size () - 1;
-      which_filter = filters.size ();
-    }
-  PosixExtRegex may_re (value);
-  if (!may_re.is_pattern_accept ())
-    return false;
+    goto bad_rtn;
 
-  vector<PosixExtRegex> &list_titles = filters[idx].__titles;
-  vector<PosixExtRegex> &list_no_titles = filters[idx].__no_titles;
-  vector<PosixExtRegex> &list_keywords = filters[idx].keywords;
-  vector<PosixExtRegex> &list_no_keywords = filters[idx].no_keywords;
-  vector<PosixExtRegex> &list_senders = filters[idx].senders;
-  vector<PosixExtRegex> &list_no_senders = filters[idx].no_senders;
-  using it_type = vector<PosixExtRegex>::iterator;
-  it_type begit = list_keywords.begin ();
-  it_type endit = list_keywords.end ();
-  switch (p)
-    {
-    case FilterPropertyTitle:
-      begit = list_titles.begin ();
-      endit = list_titles.end ();
-      for (it_type it = begit; it != endit; it++)
-	if (it->ptn () == value)
-	  {
-	    it = list_titles.erase (it);
-	    break;
-	  }
-      break;
-    case FilterPropertyKeywords:
-      begit = list_keywords.begin ();
-      endit = list_keywords.end ();
-      for (it_type it = begit; it != endit; it++)
-	if (it->ptn () == value)
-	  {
-	    it = list_keywords.erase (it);
-	    break;
-	  }
-      break;
-    case FilterPropertyNoKeywords:
-      begit = list_no_keywords.begin ();
-      endit = list_no_keywords.end ();
-      for (it_type it = begit; it != endit; it++)
-	if (it->ptn () == value)
-	  {
-	    it = list_no_keywords.erase (it);
-	    break;
-	  }
-      break;
-    case FilterPropertySenders:
-      begit = list_senders.begin ();
-      endit = list_senders.end ();
-      for (it_type it = begit; it != endit; it++)
-	if (it->ptn () == value)
-	  {
-	    it = list_senders.erase (it);
-	    break;
-	  }
-      break;
-    case FilterPropertyNoSenders:
-      begit = list_no_senders.begin ();
-      endit = list_no_senders.end ();
-      for (it_type it = begit; it != endit; it++)
-	if (it->ptn () == value)
-	  {
-	    it = list_no_senders.erase (it);
-	    break;
-	  }
-      break;
-    }
+  {
+    u32 idx = which_filter - 1;
+    if (idx > filters.size () - 1)
+      {
+	idx = filters.size () - 1;
+	which_filter = filters.size ();
+      }
+    PosixExtRegex may_re (value);
+    if (!may_re.is_pattern_accept ())
+      goto bad_rtn;
 
+    vector<PosixExtRegex> &list_titles = filters[idx].__titles;
+    vector<PosixExtRegex> &list_no_titles = filters[idx].__no_titles;
+    vector<PosixExtRegex> &list_keywords = filters[idx].keywords;
+    vector<PosixExtRegex> &list_no_keywords = filters[idx].no_keywords;
+    vector<PosixExtRegex> &list_senders = filters[idx].senders;
+    vector<PosixExtRegex> &list_no_senders = filters[idx].no_senders;
+    using it_type = vector<PosixExtRegex>::iterator;
+    it_type begit = list_keywords.begin ();
+    it_type endit = list_keywords.end ();
+    switch (p)
+      {
+      case FilterPropertyTitle:
+	begit = list_titles.begin ();
+	endit = list_titles.end ();
+	for (it_type it = begit; it != endit; it++)
+	  if (it->ptn () == value)
+	    {
+	      it = list_titles.erase (it);
+	      break;
+	    }
+	break;
+      case FilterPropertyKeywords:
+	begit = list_keywords.begin ();
+	endit = list_keywords.end ();
+	for (it_type it = begit; it != endit; it++)
+	  if (it->ptn () == value)
+	    {
+	      it = list_keywords.erase (it);
+	      break;
+	    }
+	break;
+      case FilterPropertyNoKeywords:
+	begit = list_no_keywords.begin ();
+	endit = list_no_keywords.end ();
+	for (it_type it = begit; it != endit; it++)
+	  if (it->ptn () == value)
+	    {
+	      it = list_no_keywords.erase (it);
+	      break;
+	    }
+	break;
+      case FilterPropertySenders:
+	begit = list_senders.begin ();
+	endit = list_senders.end ();
+	for (it_type it = begit; it != endit; it++)
+	  if (it->ptn () == value)
+	    {
+	      it = list_senders.erase (it);
+	      break;
+	    }
+	break;
+      case FilterPropertyNoSenders:
+	begit = list_no_senders.begin ();
+	endit = list_no_senders.end ();
+	for (it_type it = begit; it != endit; it++)
+	  if (it->ptn () == value)
+	    {
+	      it = list_no_senders.erase (it);
+	      break;
+	    }
+	break;
+      }
+  }
+
+  std::reverse (filters.begin (), filters.end ());
   return true;
+
+bad_rtn:
+  std::reverse (filters.begin (), filters.end ());
+  return false;
 }
 
 template <typename V, typename F>

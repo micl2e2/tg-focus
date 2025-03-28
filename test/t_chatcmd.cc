@@ -299,19 +299,19 @@ keywords = ["xxx"]
   // cerr << tfdata.get_filters ();
   tgfass (tfdata.get_filters () == R"(
 [[focus-filter]]
-titles = [".*"]
-no-titles = []
-senders = []
-no-senders = []
-keywords = ["xxx"]
-no-keywords = []
-
-[[focus-filter]]
 titles = []
 no-titles = []
 senders = []
 no-senders = []
 keywords = ["yyy"]
+no-keywords = []
+
+[[focus-filter]]
+titles = [".*"]
+no-titles = []
+senders = []
+no-senders = []
+keywords = ["xxx"]
 no-keywords = []
 )");
 }
@@ -337,11 +337,52 @@ keywords = ["xxx"]
   tgfass (res.succ_data ().has_value ());
   tgfass (tfdata.get_filters () == R"(
 [[focus-filter]]
+titles = []
+no-titles = []
+senders = []
+no-senders = []
+keywords = ["yyy"]
+no-keywords = []
+
+[[focus-filter]]
 titles = [".*"]
 no-titles = []
 senders = []
 no-senders = []
 keywords = ["xxx"]
+no-keywords = []
+)");
+}
+
+void
+tst_editf_2filter_succ_filters_pos_are_reversed ()
+{
+  string usript = "editf 9 no-senders add \"zzz\"";
+  string curr_filters = R"(
+[[focus-filter]]
+keywords = ["yyy"]
+
+[[focus-filter]]
+keywords = ["xxx"]
+)";
+  tfdata.set_filters (move (curr_filters));
+  tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdEditFilter, usript, tfdata);
+  // cerr << res.succ_data ();
+  // cerr << res.did_what ().value ();
+  // cerr << res.aux_msg ();
+  tgfass (res.done ());
+  tgfass (res.aux_msg () == "〘 TGFCMD 〙success");
+  tgfass (res.did_what ().has_value ());
+  tgfass (res.did_what ().value () == "editf 3 no-senders add \"zzz\" ");
+  tgfass (res.succ_data ().has_value ());
+  cerr << "|" << tfdata.get_filters ()<<"|";
+  tgfass (tfdata.get_filters () == R"(
+[[focus-filter]]
+titles = []
+no-titles = []
+senders = []
+no-senders = ["zzz"]
+keywords = []
 no-keywords = []
 
 [[focus-filter]]
@@ -350,6 +391,14 @@ no-titles = []
 senders = []
 no-senders = []
 keywords = ["yyy"]
+no-keywords = []
+
+[[focus-filter]]
+titles = []
+no-titles = []
+senders = []
+no-senders = []
+keywords = ["xxx"]
 no-keywords = []
 )");
 }
@@ -484,14 +533,14 @@ no-senders = []
   tgfass (res.did_what ().has_value ());
   tgfass (res.did_what ().value () == "rmf 1");
   tgfass (res.succ_data ().has_value ());
-  // cerr << tfdata.get_filters () << endl;
+  cerr << tfdata.get_filters () << endl;
   tgfass (tfdata.get_filters () == R"(
 [[focus-filter]]
 titles = [".*"]
 no-titles = []
 senders = []
 no-senders = []
-keywords = ["222"]
+keywords = ["111"]
 no-keywords = []
 )");
 }
@@ -574,7 +623,8 @@ main ()
   tst_editf_1filter_succmsg3 ();
   tst_editf_2filter_succmsg4 ();
   tst_editf_2filter_succmsg5 ();
-
+  tst_editf_2filter_succ_filters_pos_are_reversed();
+  
   tst_pause ();
   tst_resume ();
 

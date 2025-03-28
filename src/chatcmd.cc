@@ -253,9 +253,9 @@ handle_editfilter (string cmdipt, tgf::UserData &p_userdata)
       }
 
     string property = chunk2;
-    if (property != "chat-title" && property != "keywords"
-	&& property != "no-keywords" && property != "senders"
-	&& property != "no-senders")
+    if (property != "titles" && property != "no-titles"
+	&& property != "keywords" && property != "no-keywords"
+	&& property != "senders" && property != "no-senders")
       {
 	auxmsg << "invalid " << CHATCMD_EDITF_ARG2;
 	goto bad_rtn;
@@ -287,6 +287,14 @@ handle_editfilter (string cmdipt, tgf::UserData &p_userdata)
     bool action_res = false;
     if (false)
       ;
+    // else if (property == "titles" && action == "add")
+    //   action_res = fg.add_titles (filter_id, unquoted_re);
+    // else if (property == "titles" && action == "del")
+    //   action_res = fg.del_titles (filter_id, unquoted_re);
+    // else if (property == "no-titles" && action == "add")
+    //   action_res = fg.add_no_titles (filter_id, unquoted_re);
+    // else if (property == "no-titles" && action == "del")
+    //   action_res = fg.del_no_titles (filter_id, unquoted_re);
     else if (property == "keywords" && action == "add")
       action_res = fg.add_keywords (filter_id, unquoted_re);
     else if (property == "keywords" && action == "del")
