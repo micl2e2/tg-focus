@@ -9,18 +9,19 @@
 
 void
 test_default_filter ()
-{
+{ // match everything
   tgf::FilterToml f;
   tgfass (f.isMatchTitle (""s));
   tgfass (f.isKeywordsMatch (""s));
   tgfass (f.isMatchSender (""s));
+  tgfass (!f.isMatchNoTitle (""s));
   tgfass (!f.isNoSendersMatch (""s));
   tgfass (!f.isNoKeywordsMatch (""s));
 }
 
 void
 test_default_fg ()
-{
+{ // match everthing
   using namespace toml::literals::toml_literals;
   using namespace std;
 
@@ -931,6 +932,207 @@ keywords = ["cheese"]
   }
 }
 
+void
+test_how_to_no_titles ()
+{
+  using namespace toml::literals::toml_literals;
+  using namespace std;
+
+  auto dataxxx = R"(
+
+[[focus-filter]]
+no-titles= ["aaa"]
+
+[[focus-filter]]
+keywords = [".*"]
+
+)"_toml;
+
+  vector<tgf::FilterToml> filters
+    = toml::find<vector<tgf::FilterToml>> (dataxxx, "focus-filter");
+
+  tgfass (filters.size () == 2);
+
+  auto fcf_list = tgf::FilterGroupToml (dataxxx);
+  tgfass (fcf_list.n_filter () == 2);
+
+  {
+    tgf::TgMsg msg ("title_any"s, ""s, ""s);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+  }
+
+  {
+    tgf::TgMsg msg ("title_any"s, ""s, ""s);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+  }
+
+  {
+    tgf::TgMsg msg ("title_aaa"s, ""s, ""s);
+    tgfass (!fcf_list.isMatchTgMsg (msg));
+  }
+}
+
+void
+test_how_to_no_titles_order_is_signif ()
+{
+  using namespace toml::literals::toml_literals;
+  using namespace std;
+
+  auto dataxxx = R"(
+
+[[focus-filter]]
+keywords = [".*"]
+
+[[focus-filter]]
+no-titles= ["aaa"]
+
+)"_toml;
+
+  vector<tgf::FilterToml> filters
+    = toml::find<vector<tgf::FilterToml>> (dataxxx, "focus-filter");
+
+  tgfass (filters.size () == 2);
+
+  auto fcf_list = tgf::FilterGroupToml (dataxxx);
+  tgfass (fcf_list.n_filter () == 2);
+
+  {
+    tgf::TgMsg msg ("title_any"s, ""s, ""s);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+  }
+
+  {
+    tgf::TgMsg msg ("title_any"s, ""s, ""s);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+  }
+
+  {
+    tgf::TgMsg msg ("title_aaa"s, ""s, ""s);
+    tgfass (fcf_list.isMatchTgMsg (msg)); // now match anyway
+  }
+}
+
+void
+test_how_to_no_titles_using_nokeywords ()
+{
+  using namespace toml::literals::toml_literals;
+  using namespace std;
+
+  auto dataxxx = R"(
+
+[[focus-filter]]
+titles= ["aaa"]
+no-keywords = [".*"]
+
+[[focus-filter]]
+titles = []
+
+)"_toml;
+
+  vector<tgf::FilterToml> filters
+    = toml::find<vector<tgf::FilterToml>> (dataxxx, "focus-filter");
+
+  tgfass (filters.size () == 2);
+
+  auto fcf_list = tgf::FilterGroupToml (dataxxx);
+  tgfass (fcf_list.n_filter () == 2);
+
+  {
+    tgf::TgMsg msg (""s, ""s, ""s);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+  }
+
+  {
+    tgf::TgMsg msg (""s, ""s, ""s);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+  }
+
+  {
+    tgf::TgMsg msg ("title_aaa"s, ""s, ""s);
+    tgfass (!fcf_list.isMatchTgMsg (msg)); // now match anyway
+  }
+}
+
+void
+test_how_to_no_titles_using_nokeywords_emptyfilter ()
+{
+  using namespace toml::literals::toml_literals;
+  using namespace std;
+
+  auto dataxxx = R"(
+
+[[focus-filter]]
+titles= ["aaa"]
+no-keywords = [".*"]
+
+[[focus-filter]]
+
+)"_toml;
+
+  vector<tgf::FilterToml> filters
+    = toml::find<vector<tgf::FilterToml>> (dataxxx, "focus-filter");
+
+  tgfass (filters.size () == 2);
+
+  auto fcf_list = tgf::FilterGroupToml (dataxxx);
+  tgfass (fcf_list.n_filter () == 2);
+
+  {
+    tgf::TgMsg msg (""s, ""s, ""s);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+  }
+
+  {
+    tgf::TgMsg msg (""s, ""s, ""s);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+  }
+
+  {
+    tgf::TgMsg msg ("title_aaa"s, ""s, ""s);
+    tgfass (!fcf_list.isMatchTgMsg (msg)); // now match anyway
+  }
+}
+
+void
+test_how_to_no_titles_using_nokeywords_empty_nokw_wont_work ()
+{
+  using namespace toml::literals::toml_literals;
+  using namespace std;
+
+  auto dataxxx = R"(
+
+[[focus-filter]]
+titles= ["aaa"]
+no-keywords = []
+
+[[focus-filter]]
+
+)"_toml;
+
+  vector<tgf::FilterToml> filters
+    = toml::find<vector<tgf::FilterToml>> (dataxxx, "focus-filter");
+
+  tgfass (filters.size () == 2);
+
+  auto fcf_list = tgf::FilterGroupToml (dataxxx);
+  tgfass (fcf_list.n_filter () == 2);
+
+  {
+    tgf::TgMsg msg (""s, ""s, ""s);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+  }
+
+  {
+    tgf::TgMsg msg (""s, ""s, ""s);
+    tgfass (fcf_list.isMatchTgMsg (msg));
+  }
+
+  {
+    tgf::TgMsg msg ("title_aaa"s, ""s, ""s);
+    tgfass (fcf_list.isMatchTgMsg (msg)); // now match anyway
+  }
+}
+
 int
 main ()
 {
@@ -954,4 +1156,10 @@ main ()
   test_nokw_not_much_inituitive2 ();
   test_how_to_no_keywords ();
   test_how_to_no_keywords2 ();
+
+  test_how_to_no_titles ();
+  test_how_to_no_titles_order_is_signif ();
+  test_how_to_no_titles_using_nokeywords ();
+  test_how_to_no_titles_using_nokeywords_emptyfilter ();
+  test_how_to_no_titles_using_nokeywords_empty_nokw_wont_work ();
 }
