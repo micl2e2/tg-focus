@@ -287,14 +287,14 @@ handle_editfilter (string cmdipt, tgf::UserData &p_userdata)
     bool action_res = false;
     if (false)
       ;
-    // else if (property == "titles" && action == "add")
-    //   action_res = fg.add_titles (filter_id, unquoted_re);
-    // else if (property == "titles" && action == "del")
-    //   action_res = fg.del_titles (filter_id, unquoted_re);
-    // else if (property == "no-titles" && action == "add")
-    //   action_res = fg.add_no_titles (filter_id, unquoted_re);
-    // else if (property == "no-titles" && action == "del")
-    //   action_res = fg.del_no_titles (filter_id, unquoted_re);
+    else if (property == "titles" && action == "add")
+      action_res = fg.add_titles (filter_id, unquoted_re);
+    else if (property == "titles" && action == "del")
+      action_res = fg.del_titles (filter_id, unquoted_re);
+    else if (property == "no-titles" && action == "add")
+      action_res = fg.add_no_titles (filter_id, unquoted_re);
+    else if (property == "no-titles" && action == "del")
+      action_res = fg.del_no_titles (filter_id, unquoted_re);
     else if (property == "keywords" && action == "add")
       action_res = fg.add_keywords (filter_id, unquoted_re);
     else if (property == "keywords" && action == "del")

@@ -86,8 +86,8 @@ public:
 
 typedef enum
 {
-  FilterPropertyTitle,
-  FilterPropertyNoTitle,
+  FilterPropertyTitles,
+  FilterPropertyNoTitles,
   FilterPropertyKeywords,
   FilterPropertyNoKeywords,
   FilterPropertySenders,
@@ -107,14 +107,18 @@ public:
   bool rm_filter (const u32 &which_filter) noexcept;
   bool add_one (u32 &which_filter, const FilterProperty p, const string &value);
   bool del_one (u32 &which_filter, const FilterProperty p, const string &value);
-  bool add_keywords (u32 &which_filter, const string &value);
-  bool del_keywords (u32 &which_filter, const string &value);
-  bool add_no_keywords (u32 &which_filter, const string &value);
-  bool del_no_keywords (u32 &which_filter, const string &value);
+  bool add_titles (u32 &which_filter, const string &value);
+  bool del_titles (u32 &which_filter, const string &value);
+  bool add_no_titles (u32 &which_filter, const string &value);
+  bool del_no_titles (u32 &which_filter, const string &value);
   bool add_senders (u32 &which_filter, const string &value);
   bool del_senders (u32 &which_filter, const string &value);
   bool add_no_senders (u32 &which_filter, const string &value);
   bool del_no_senders (u32 &which_filter, const string &value);
+  bool add_keywords (u32 &which_filter, const string &value);
+  bool del_keywords (u32 &which_filter, const string &value);
+  bool add_no_keywords (u32 &which_filter, const string &value);
+  bool del_no_keywords (u32 &which_filter, const string &value);
 
 protected:
   size_t i_prev_visited_;
@@ -444,10 +448,10 @@ FilterGroup<V, F>::add_one (u32 &which_filter, const FilterProperty p,
       goto bad_rtn;
     switch (p)
       {
-      case FilterPropertyTitle:
+      case FilterPropertyTitles:
 	filters[idx].__titles.emplace_back (move (may_re));
 	break;
-      case FilterPropertyNoTitle:
+      case FilterPropertyNoTitles:
 	filters[idx].__no_titles.emplace_back (move (may_re));
 	break;
       case FilterPropertyKeywords:
@@ -505,7 +509,7 @@ FilterGroup<V, F>::del_one (u32 &which_filter, const FilterProperty p,
     it_type endit = list_keywords.end ();
     switch (p)
       {
-      case FilterPropertyTitle:
+      case FilterPropertyTitles:
 	begit = list_titles.begin ();
 	endit = list_titles.end ();
 	for (it_type it = begit; it != endit; it++)
@@ -568,30 +572,30 @@ bad_rtn:
 
 template <typename V, typename F>
 requires CanFilterRecogValue<F, V> bool
-FilterGroup<V, F>::add_keywords (u32 &which_filter, const string &value)
+FilterGroup<V, F>::add_titles (u32 &which_filter, const string &value)
 {
-  return add_one (which_filter, FilterPropertyKeywords, value);
+  return add_one (which_filter, FilterPropertyTitles, value);
 }
 
 template <typename V, typename F>
 requires CanFilterRecogValue<F, V> bool
-FilterGroup<V, F>::del_keywords (u32 &which_filter, const string &value)
+FilterGroup<V, F>::del_titles (u32 &which_filter, const string &value)
 {
-  return del_one (which_filter, FilterPropertyKeywords, value);
+  return del_one (which_filter, FilterPropertyTitles, value);
 }
 
 template <typename V, typename F>
 requires CanFilterRecogValue<F, V> bool
-FilterGroup<V, F>::add_no_keywords (u32 &which_filter, const string &value)
+FilterGroup<V, F>::add_no_titles (u32 &which_filter, const string &value)
 {
-  return add_one (which_filter, FilterPropertyNoKeywords, value);
+  return add_one (which_filter, FilterPropertyNoTitles, value);
 }
 
 template <typename V, typename F>
 requires CanFilterRecogValue<F, V> bool
-FilterGroup<V, F>::del_no_keywords (u32 &which_filter, const string &value)
+FilterGroup<V, F>::del_no_titles (u32 &which_filter, const string &value)
 {
-  return del_one (which_filter, FilterPropertyNoKeywords, value);
+  return del_one (which_filter, FilterPropertyNoTitles, value);
 }
 
 template <typename V, typename F>
@@ -620,6 +624,34 @@ requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::del_no_senders (u32 &which_filter, const string &value)
 {
   return del_one (which_filter, FilterPropertyNoSenders, value);
+}
+
+template <typename V, typename F>
+requires CanFilterRecogValue<F, V> bool
+FilterGroup<V, F>::add_keywords (u32 &which_filter, const string &value)
+{
+  return add_one (which_filter, FilterPropertyKeywords, value);
+}
+
+template <typename V, typename F>
+requires CanFilterRecogValue<F, V> bool
+FilterGroup<V, F>::del_keywords (u32 &which_filter, const string &value)
+{
+  return del_one (which_filter, FilterPropertyKeywords, value);
+}
+
+template <typename V, typename F>
+requires CanFilterRecogValue<F, V> bool
+FilterGroup<V, F>::add_no_keywords (u32 &which_filter, const string &value)
+{
+  return add_one (which_filter, FilterPropertyNoKeywords, value);
+}
+
+template <typename V, typename F>
+requires CanFilterRecogValue<F, V> bool
+FilterGroup<V, F>::del_no_keywords (u32 &which_filter, const string &value)
+{
+  return del_one (which_filter, FilterPropertyNoKeywords, value);
 }
 
 } // namespace tgf

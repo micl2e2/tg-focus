@@ -404,6 +404,43 @@ no-keywords = []
 }
 
 void
+tst_editf_how_to_block_sometitle ()
+{
+  string usript = "editf 2 no-titles add \"aaa\"";
+  string curr_filters = R"(
+[[focus-filter]]
+)";
+  tfdata.set_filters (move (curr_filters));
+  tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdEditFilter, usript, tfdata);
+  // cerr << res.succ_data ();
+  // cerr << res.did_what ().value ();
+  // cerr << res.aux_msg ();
+  tgfass (res.done ());
+  tgfass (res.aux_msg () == "〘 TGFCMD 〙success");
+  tgfass (res.did_what ().has_value ());
+  tgfass (res.did_what ().value () == "editf 2 no-titles add \"aaa\" ");
+  tgfass (res.succ_data ().has_value ());
+  // cerr << "|" << tfdata.get_filters ()<<"|";
+  tgfass (tfdata.get_filters () == R"(
+[[focus-filter]]
+titles = []
+no-titles = ["aaa"]
+senders = []
+no-senders = []
+keywords = []
+no-keywords = []
+
+[[focus-filter]]
+titles = []
+no-titles = []
+senders = []
+no-senders = []
+keywords = []
+no-keywords = []
+)");
+}
+
+void
 tst_pause ()
 {
   tgfstat::c::d::pause_do_csm_mq.store (false, mo::relaxed);
@@ -624,6 +661,7 @@ main ()
   tst_editf_2filter_succmsg4 ();
   tst_editf_2filter_succmsg5 ();
   tst_editf_2filter_succ_filters_pos_are_reversed();
+  tst_editf_how_to_block_sometitle();
   
   tst_pause ();
   tst_resume ();
