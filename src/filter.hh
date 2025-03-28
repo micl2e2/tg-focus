@@ -270,17 +270,17 @@ requires HasFilterFields<V> string
 Filter<V>::as_readable () const
 {
   ostringstream oss;
-  oss << endl << "🞄 Titles (titles) 🞄" << endl
+  oss << endl << "🞄 Titles <titles> 🞄" << endl
       << readable_eles (__titles);
-  oss << endl << "🞄 Senders (senders) 🞄" << endl
+  oss << endl << "🞄 Senders <senders> 🞄" << endl
       << readable_eles (senders);
-  oss << endl << "🞄 Keywords (keywords) 🞄" << endl
+  oss << endl << "🞄 Keywords <keywords> 🞄" << endl
       << readable_eles (keywords);
-  oss << endl << "🞄 No Titles (no-titles) 🞄" << endl
+  oss << endl << "🞄 NO Titles <no-titles> 🞄" << endl
       << readable_eles (__no_titles) ;
-  oss << endl << "🞄 No Senders (no-senders) 🞄" << endl
+  oss << endl << "🞄 NO Senders <no-senders> 🞄" << endl
       << readable_eles (no_senders) ;
-  oss << endl << "🞄 No Keywords (no-keywords) 🞄" << endl
+  oss << endl << "🞄 NO Keywords <no-keywords> 🞄" << endl
       << readable_eles (no_keywords);
   // if no candidates, not match anything
 
