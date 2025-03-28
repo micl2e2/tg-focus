@@ -184,7 +184,10 @@ tgf::IpcConnHandler::operator() ()
 		  gstat_c::tryshutwk::coll_initer_succ.notify_all ();
 		}
 
+	      tulogfd (77883);
+	      // !!!BLOCKING
 	      gstat_c::tryshutwk::coll_initer_succ.wait (false, mo::relaxed);
+	      tulogfd (77884);
 
 	      IpcMsg m = new_ipcmsg_success ();
 	      tulogfd (6661, m.data ().size (), as_hex_list (m.data ()));

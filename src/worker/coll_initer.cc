@@ -17,15 +17,9 @@ namespace gstat = /* DoNotDeleteMe */ tgfstat::c::d;
 namespace gstat_c = /* DoNotDeleteMe */ tgfstat::c;
 namespace gstat_all = /* DoNotDeleteMe */ tgfstat;
 
-tgf::CollIniter::CollIniter ()
-{
-  tulogfi_cg (1,  "ctor");
-}
+tgf::CollIniter::CollIniter () { tulogfi_cg (1, "ctor"); }
 
-tgf::CollIniter::~CollIniter ()
-{
-  tulogfi_cg (1,  "dtor");
-}
+tgf::CollIniter::~CollIniter () { tulogfi_cg (1, "dtor"); }
 
 void
 tgf::CollIniter::operator() ()
@@ -41,36 +35,40 @@ tgf::CollIniter::operator() ()
   else
     tgf::logfi_cg (1, tgf::HOST_LANG);
 
+  // !!!BLOCKING
   while (!gstat_all::userdata.get_auth_hint ())
     {
-      tgf::logfi_cg (1, "Waiting for authorization");
-      this_thread::sleep_for (chrono::seconds (3));
+      if (gstat_c::tryshutwk::coll_initer.load (mo::relaxed))
+	break;
+      tgf::logfi_cg (1, "wait for auth");
+      this_thread::sleep_for (chrono::seconds (5));
     }
 
   if (!gstat_all::userdata.get_auth_hint ())
     {
-      tgf::logfi_cg (1, "Not authorized");
-      return;
+      tgf::logfi_cg (1, "not authorized");
     }
+  else
+    {
+      gstat::collector.init ();
 
-  gstat::collector.init ();
+      CollProducer p = CollProducer ();
+      CollConsumer c = CollConsumer ();
+      CollSwitcher s = CollSwitcher ();
+      jthread producer (p);
+      jthread switcher (c);
+      jthread consumer (s);
 
-  CollProducer p = CollProducer ();
-  CollConsumer c = CollConsumer ();
-  CollSwitcher s = CollSwitcher ();
+      // !!!BLOCKING
+      gstat_c::tryshutwk::coll_initer.wait (false, mo::relaxed);
 
-  jthread producer (p);
-  jthread switcher (c);
-  jthread consumer (s);
-
-  gstat_c::tryshutwk::coll_initer.wait (false, mo::relaxed);
-
-  // shall be switcher who handles producer/consumer's closing
-  tulogfd_cg (1, "closing switcher...");
-  gstat_c::tryshutwk::coll_switcher.store (true, mo::relaxed);
-  gstat_c::tryshutwk::coll_switcher.notify_all ();
-  gstat_c::tryshutwk::coll_switcher_succ.wait (false, mo::relaxed);
-  tulogfd_cg (1, "closing switcher...done");
+      // shall be switcher who handles producer/consumer's closing
+      tulogfd_cg (1, "closing switcher...");
+      gstat_c::tryshutwk::coll_switcher.store (true, mo::relaxed);
+      gstat_c::tryshutwk::coll_switcher.notify_all ();
+      gstat_c::tryshutwk::coll_switcher_succ.wait (false, mo::relaxed);
+      tulogfd_cg (1, "closing switcher...done");
+    }
 
   gstat_c::tryshutwk::coll_initer_succ.store (true, mo::relaxed);
   gstat_c::tryshutwk::coll_initer_succ.notify_all ();

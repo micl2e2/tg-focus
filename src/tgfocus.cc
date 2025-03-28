@@ -388,6 +388,20 @@ handle_upcoll ()
 }
 
 int
+handle_quickstart ()
+{
+  int ret = 1;
+
+  ret = handle_startup ();
+  if (ret == 0)
+    {
+      this_thread::sleep_for (chrono::seconds (1));
+      ret = handle_upcoll ();
+    }
+  return ret;
+}
+
+int
 handle_shutcoll ()
 {
   const string pubname = "focus-stop: ";
@@ -488,6 +502,9 @@ main (int argc, char *argv[])
 
   if (strcmp (subcmd, "focus-stop") == 0)
     return handle_shutcoll ();
+
+  if (strcmp (subcmd, "quickstart") == 0)
+    return handle_quickstart ();
 
   if (strcmp (subcmd, "status") == 0)
     return handle_rstatus ();
