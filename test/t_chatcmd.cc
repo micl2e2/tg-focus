@@ -423,7 +423,7 @@ no-keywords = ["zzz","asda ..."]
   tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdFilters, usript, tfdata);
   // cerr << res.succ_data ();
   // cerr << res.did_what ().value ();
-  cerr << res.aux_msg ();
+  // cerr << res.aux_msg ();
   tgfass (res.done ());
   tgfass (res.aux_msg () == string (CHATCMD_RPLY_PREFIX) + R"(
 🞋 🞋 🞋 FILTER 1 🞋 🞋 🞋

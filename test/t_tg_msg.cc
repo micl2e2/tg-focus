@@ -1,5 +1,6 @@
 #include "tg_msg.hh"
 #include "locale_conf.hh"
+#include "std_comp.hh"
 #include <assert.h>
 #include <iostream>
 
@@ -18,19 +19,19 @@ test_not_decorate ()
 	"2024-01-20 08:52:04 +0000 UTC\n\xe2\x99\xbe | 0\n";
     cout << msg_lcstr << endl;
     cout << expected << endl;
-    assert (msg_lcstr == expected);
+    tgfass (msg_lcstr == expected);
 
     vector<tuple<int, int>> pos_info = tgf::get_decor_pos (expected);
 
     cout << pos_info.size () << endl;
-    assert (pos_info.size () == 0);
+    tgfass (pos_info.size () == 0);
   }
 }
 
 void
 test_should_decorate_en_us ()
 {
-  assert (tgf::try_ensure_locale ());
+  tgfass (tgf::try_ensure_locale ());
 
   // ascii + nonascii
   {
@@ -42,12 +43,12 @@ test_should_decorate_en_us ()
 		      "好好好好好好好好好好好好好好好。\n\xf0\x9f\x95\x94 | "
 		      "2024-01-20 08:52:04 +0000 UTC\n\xe2\x99\xbe | 0\n";
     cout << msg_lcstr << endl;
-    assert (msg_lcstr == expected);
+    tgfass (msg_lcstr == expected);
 
     vector<tuple<int, int>> pos_info = tgf::get_decor_pos (msg_lcstr);
 
     cout << pos_info.size () << endl;
-    assert (pos_info.size () == 0);
+    tgfass (pos_info.size () == 0);
   }
 
   // ascii + nonascii
@@ -60,12 +61,12 @@ test_should_decorate_en_us ()
 		      "ののののののののAA...\n\xf0\x9f\x95\x94 | 2024-01-20 "
 		      "08:52:04 +0000 UTC\n\xe2\x99\xbe | 0\n";
     cout << msg_lcstr << endl;
-    assert (msg_lcstr == expected);
+    tgfass (msg_lcstr == expected);
 
     vector<tuple<int, int>> pos_info = tgf::get_decor_pos (msg_lcstr);
 
     cout << pos_info.size () << endl;
-    assert (pos_info.size () == 0);
+    tgfass (pos_info.size () == 0);
   }
 
   // ascii + emoji
@@ -78,12 +79,12 @@ test_should_decorate_en_us ()
 		      "🤣🤣🤣🤣🤣🤣🤣🤣AA...\n\xf0\x9f\x95\x94 "
 		      "| 2024-01-20 08:52:04 +0000 UTC\n\xe2\x99\xbe | 0\n";
     cout << msg_lcstr << endl;
-    assert (msg_lcstr == expected);
+    tgfass (msg_lcstr == expected);
 
     vector<tuple<int, int>> pos_info = tgf::get_decor_pos (msg_lcstr);
 
     cout << pos_info.size () << endl;
-    assert (pos_info.size () == 0);
+    tgfass (pos_info.size () == 0);
   }
 
   // ascii + nonascii + emoji
@@ -112,12 +113,12 @@ test_should_decorate_en_us ()
 	"| "
 	"2024-01-20 08:52:04 +0000 UTC\n\xe2\x99\xbe | 0\n";
     cout << msg_lcstr << endl;
-    assert (msg_lcstr == expected);
+    tgfass (msg_lcstr == expected);
 
     vector<tuple<int, int>> pos_info = tgf::get_decor_pos (msg_lcstr);
 
     cout << pos_info.size () << endl;
-    assert (pos_info.size () == 0);
+    tgfass (pos_info.size () == 0);
   }
 
   // ascii + emoji(sometimes rendered as 1 emoji, sometimes 2)
@@ -132,19 +133,19 @@ test_should_decorate_en_us ()
 	"2024-01-20 "
 	"08:52:04 +0000 UTC\n\xe2\x99\xbe | 0\n";
     cout << msg_lcstr << endl;
-    assert (msg_lcstr == expected);
+    tgfass (msg_lcstr == expected);
 
     vector<tuple<int, int>> pos_info = tgf::get_decor_pos (msg_lcstr);
 
     cout << pos_info.size () << endl;
-    assert (pos_info.size () == 0);
+    tgfass (pos_info.size () == 0);
   }
 }
 
 void
 test_should_decorate_zh_cn ()
 {
-  assert (tgf::try_ensure_locale ());
+  tgfass (tgf::try_ensure_locale ());
 
   // ascii + nonascii
   {
@@ -157,24 +158,24 @@ test_should_decorate_zh_cn ()
 [ 标识 ] 0
 )";
     cout << msg_lcstr << endl;
-    assert (msg_lcstr == expected);
+    tgfass (msg_lcstr == expected);
 
     vector<tuple<int, int>> pos_info = tgf::get_decor_pos (msg_lcstr);
     cout << pos_info.size () << endl;
-    assert (pos_info.size () == 5);
+    tgfass (pos_info.size () == 5);
 
-    assert ((pos_info[0] == make_tuple<int, int> (0, 6)));
-    assert ((pos_info[1] == make_tuple<int, int> (16, 6)));
-    assert ((pos_info[2] == make_tuple<int, int> (32, 6)));
-    assert ((pos_info[3] == make_tuple<int, int> (44, 6)));
-    assert ((pos_info[4] == make_tuple<int, int> (81, 6)));
+    tgfass ((pos_info[0] == make_tuple<int, int> (0, 6)));
+    tgfass ((pos_info[1] == make_tuple<int, int> (16, 6)));
+    tgfass ((pos_info[2] == make_tuple<int, int> (32, 6)));
+    tgfass ((pos_info[3] == make_tuple<int, int> (44, 6)));
+    tgfass ((pos_info[4] == make_tuple<int, int> (81, 6)));
   }
 }
 
 void
 test_should_decorate_zh_hk ()
 {
-  assert (tgf::try_ensure_locale ());
+  tgfass (tgf::try_ensure_locale ());
 
   // ascii + nonascii
   {
@@ -187,17 +188,17 @@ test_should_decorate_zh_hk ()
 [ 標識 ] 0
 )";
     cout << msg_lcstr << endl;
-    assert (msg_lcstr == expected);
+    tgfass (msg_lcstr == expected);
 
     vector<tuple<int, int>> pos_info = tgf::get_decor_pos (msg_lcstr);
     cout << pos_info.size () << endl;
-    assert (pos_info.size () == 5);
+    tgfass (pos_info.size () == 5);
 
-    assert ((pos_info[0] == make_tuple<int, int> (0, 6)));
-    assert ((pos_info[1] == make_tuple<int, int> (16, 6)));
-    assert ((pos_info[2] == make_tuple<int, int> (32, 6)));
-    assert ((pos_info[3] == make_tuple<int, int> (44, 6)));
-    assert ((pos_info[4] == make_tuple<int, int> (81, 6)));
+    tgfass ((pos_info[0] == make_tuple<int, int> (0, 6)));
+    tgfass ((pos_info[1] == make_tuple<int, int> (16, 6)));
+    tgfass ((pos_info[2] == make_tuple<int, int> (32, 6)));
+    tgfass ((pos_info[3] == make_tuple<int, int> (44, 6)));
+    tgfass ((pos_info[4] == make_tuple<int, int> (81, 6)));
   }
 }
 
@@ -217,7 +218,7 @@ main ()
       test_should_decorate_en_us ();
     }
   else
-    assert (false);
+    tgfass (false);
 
   tgf::PREFER_LANG = tgf::Lang::zh_HK;
   if (tgf::try_ensure_locale () && tgf::HOST_LANG == tgf::PREFER_LANG)
@@ -225,7 +226,7 @@ main ()
       test_should_decorate_zh_hk ();
     }
   else
-    assert (false);
+    tgfass (false);
 
   tgf::PREFER_LANG = tgf::Lang::zh_CN;
   if (tgf::try_ensure_locale () && tgf::HOST_LANG == tgf::PREFER_LANG)
@@ -233,7 +234,7 @@ main ()
       test_should_decorate_zh_cn ();
     }
   else
-    assert (false);
+    tgfass (false);
 
   return 0;
 }
