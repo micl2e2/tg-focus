@@ -76,7 +76,7 @@ handle_filters (string cmdipt, tgf::UserData &p_userdata)
 
   succdata << "";
   didwhat << cmdipt;
-  auxmsg << endl << endl << fg.as_readable ();
+  auxmsg << endl << fg.as_readable ();
 
   ret = {succdata.str (), didwhat.str (), auxmsg.str ()};
 

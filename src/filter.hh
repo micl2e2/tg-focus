@@ -259,9 +259,8 @@ readable_eles (const vector<PosixExtRegex> &list)
       oss << "(" << el.ptn () << ")";
       if (i < list.size () - 1)
 	oss << "  "; // double spc
-      else
-	oss << endl;
     }
+  oss << endl;
   return oss.str ();
 }
 
@@ -274,24 +273,19 @@ Filter<V>::as_readable () const
       << "🞋 Titles <titles>" //
       << endl
       << readable_eles (__titles);
-  oss << endl
-      << "🞋 Senders <senders>" //
+  oss << "🞋 Senders <senders>" //
       << endl
       << readable_eles (senders);
-  oss << endl
-      << "🞋 Keywords <keywords>" //
+  oss << "🞋 Keywords <keywords>" //
       << endl
       << readable_eles (keywords);
-  oss << endl
-      << "🞋 NO Titles <no-titles>" //
+  oss << "🞋 NO Titles <no-titles>" //
       << endl
       << readable_eles (__no_titles);
-  oss << endl
-      << "🞋 NO Senders <no-senders>" //
+  oss << "🞋 NO Senders <no-senders>" //
       << endl
       << readable_eles (no_senders);
-  oss << endl
-      << "🞋 NO Keywords <no-keywords>" //
+  oss << "🞋 NO Keywords <no-keywords>" //
       << endl
       << readable_eles (no_keywords);
   // if no candidates, not match anything
@@ -399,9 +393,10 @@ FilterGroup<V, F>::as_readable () const
   for (int i = 0; i < filters.size (); i++)
     {
       const F &el = filters[i];
-      oss << "🞋 🞋 🞋 🞋 🞋 "
+      oss << endl
+	  << "🞋 🞋 🞋 🞋 🞋 "
 	  << "FILTER " << (i + 1) << " 🞋 🞋 🞋 🞋 🞋" << endl;
-      oss << el.as_readable () << endl;
+      oss << el.as_readable ();
     }
 
   return oss.str ();

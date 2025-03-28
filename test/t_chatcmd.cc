@@ -551,19 +551,16 @@ no-keywords = ["zzz","asda ..."]
 
 🞋 Titles <titles>
 (.*)
-
 🞋 Senders <senders>
 
 🞋 Keywords <keywords>
 (xxx)  (yyy)
-
 🞋 NO Titles <no-titles>
 
 🞋 NO Senders <no-senders>
 
 🞋 NO Keywords <no-keywords>
 (zzz)  (asda ...)
-
 )");
   tgfass (res.did_what ().has_value ());
   tgfass (res.did_what ().value () == "filters"); // will trim spc
@@ -597,12 +594,10 @@ titles = []
 
 🞋 Titles <titles>
 (.*)
-
 🞋 Senders <senders>
 
 🞋 Keywords <keywords>
 (xxx)  (yyy)
-
 🞋 NO Titles <no-titles>
 
 🞋 NO Senders <no-senders>
