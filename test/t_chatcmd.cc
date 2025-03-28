@@ -550,17 +550,17 @@ no-keywords = ["zzz","asda ..."]
 🞋 🞋 🞋 🞋 🞋 FILTER 1 🞋 🞋 🞋 🞋 🞋
 
 🞋 Titles <titles>
-(.*)
+⤷ (.*)
 🞋 Senders <senders>
-
+⤷ 
 🞋 Keywords <keywords>
-(xxx)  (yyy)
+⤷ (xxx)  (yyy)
 🞋 NO Titles <no-titles>
-
+⤷ 
 🞋 NO Senders <no-senders>
-
+⤷ 
 🞋 NO Keywords <no-keywords>
-(zzz)  (asda ...)
+⤷ (zzz)  (asda ...)
 )");
   tgfass (res.did_what ().has_value ());
   tgfass (res.did_what ().value () == "filters"); // will trim spc
@@ -593,32 +593,32 @@ titles = []
 🞋 🞋 🞋 🞋 🞋 FILTER 1 🞋 🞋 🞋 🞋 🞋
 
 🞋 Titles <titles>
-(.*)
+⤷ (.*)
 🞋 Senders <senders>
-
+⤷ 
 🞋 Keywords <keywords>
-(xxx)  (yyy)
+⤷ (xxx)  (yyy)
 🞋 NO Titles <no-titles>
-
+⤷ 
 🞋 NO Senders <no-senders>
-
+⤷ 
 🞋 NO Keywords <no-keywords>
-(zzz)  (asda ...)
+⤷ (zzz)  (asda ...)
 
 🞋 🞋 🞋 🞋 🞋 FILTER 2 🞋 🞋 🞋 🞋 🞋
 
 🞋 Titles <titles>
-
+⤷ 
 🞋 Senders <senders>
-
+⤷ 
 🞋 Keywords <keywords>
-
+⤷ 
 🞋 NO Titles <no-titles>
-
+⤷ 
 🞋 NO Senders <no-senders>
-
+⤷ 
 🞋 NO Keywords <no-keywords>
-
+⤷ 
 )");
   tgfass (res.did_what ().has_value ());
   tgfass (res.did_what ().value () == "filters"); // will trim spc

@@ -253,6 +253,7 @@ inline string
 readable_eles (const vector<PosixExtRegex> &list)
 {
   ostringstream oss;
+  oss << "⤷ ";
   for (int i = 0; i < list.size (); i++)
     {
       const PosixExtRegex &el = list[i];
