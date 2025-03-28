@@ -30,7 +30,7 @@ tgf::need_collect (const tgf::TgMsg &msg)
 		 " filters reloaded");
 
   auto filterg = tgf::FilterGroupToml (tomlstr);
-  if (filterg.isMatchTgMsg (msg))
+  if (filterg.mtch_tgmsg (msg))
     return true;
 
   return false;

@@ -11,12 +11,12 @@ void
 test_default_filter ()
 { // match everything
   tgf::FilterToml f;
-  tgfass (f.isMatchTitle (""s));
-  tgfass (f.isKeywordsMatch (""s));
-  tgfass (f.isMatchSender (""s));
-  tgfass (!f.isMatchNoTitle (""s));
-  tgfass (!f.isNoSendersMatch (""s));
-  tgfass (!f.isNoKeywordsMatch (""s));
+  tgfass (f.mtch_titles (""s));
+  tgfass (f.mtch_keywords (""s));
+  tgfass (f.mtch_senders (""s));
+  tgfass (!f.mtch_no_titles (""s));
+  tgfass (!f.mtch_no_senders (""s));
+  tgfass (!f.mtch_no_keywords (""s));
 }
 
 void
@@ -39,12 +39,12 @@ test_default_fg ()
 
   {
     tgf::TgMsg msg (""s, ""s, ""s);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
   }
 
   {
     tgf::TgMsg msg ("title_aaa"s, "sd_bbb"s, "kw_bbb"s);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
   }
 }
 
@@ -88,51 +88,51 @@ no-keywords = ["kw6","kw7"]
   tgfass (filters.size () == 6);
 
   // [0]
-  tgfass (filters[0].isMatchTitle ("abcde"));
-  tgfass (!filters[0].isMatchTitle ("cd"));
+  tgfass (filters[0].mtch_titles ("abcde"));
+  tgfass (!filters[0].mtch_titles ("cd"));
   // if absent, then match anything
-  tgfass (filters[0].isKeywordsMatch (""));
+  tgfass (filters[0].mtch_keywords (""));
   // if absent, then not match anything
-  tgfass (!filters[0].isNoKeywordsMatch (""));
-  tgfass (filters[0].isMatchSender (""));
-  tgfass (!filters[0].isNoSendersMatch (""));
+  tgfass (!filters[0].mtch_no_keywords (""));
+  tgfass (filters[0].mtch_senders (""));
+  tgfass (!filters[0].mtch_no_senders (""));
 
   // [1]
-  tgfass (filters[1].isMatchSender ("usr1"));
-  tgfass (filters[1].isMatchSender ("usr2"));
-  tgfass (!filters[1].isMatchSender ("usr"));
+  tgfass (filters[1].mtch_senders ("usr1"));
+  tgfass (filters[1].mtch_senders ("usr2"));
+  tgfass (!filters[1].mtch_senders ("usr"));
 
   // [2]
-  tgfass (filters[2].isNoSendersMatch ("usr3"));
-  tgfass (filters[2].isNoSendersMatch ("usr4"));
-  tgfass (!filters[2].isNoSendersMatch ("usr"));
+  tgfass (filters[2].mtch_no_senders ("usr3"));
+  tgfass (filters[2].mtch_no_senders ("usr4"));
+  tgfass (!filters[2].mtch_no_senders ("usr"));
 
   // [3]
-  tgfass (filters[3].isMatchTitle ("AABB"));
-  tgfass (filters[3].isMatchTitle ("AAABBB"));
-  tgfass (!filters[3].isMatchTitle ("AB"));
-  tgfass (filters[3].isKeywordsMatch ("kw1"));
-  tgfass (filters[3].isKeywordsMatch ("kw2"));
-  tgfass (!filters[3].isKeywordsMatch ("kw3"));
+  tgfass (filters[3].mtch_titles ("AABB"));
+  tgfass (filters[3].mtch_titles ("AAABBB"));
+  tgfass (!filters[3].mtch_titles ("AB"));
+  tgfass (filters[3].mtch_keywords ("kw1"));
+  tgfass (filters[3].mtch_keywords ("kw2"));
+  tgfass (!filters[3].mtch_keywords ("kw3"));
 
   // [4]
   // if title absent, match anything
-  tgfass (filters[4].isMatchTitle (""));
-  tgfass (filters[4].isMatchTitle (" "));
-  tgfass (filters[4].isMatchTitle ("123abcABC😺"));
-  tgfass (filters[4].isKeywordsMatch ("kw3"));
-  tgfass (filters[4].isKeywordsMatch ("kw4"));
-  tgfass (!filters[4].isKeywordsMatch ("kw1"));
-  tgfass (!filters[4].isKeywordsMatch ("😺"));
-  tgfass (!filters[4].isKeywordsMatch ("😺😺"));
-  tgfass (filters[4].isKeywordsMatch ("😺😺😺"));
-  tgfass (filters[4].isKeywordsMatch ("😺😺😺😺"));
+  tgfass (filters[4].mtch_titles (""));
+  tgfass (filters[4].mtch_titles (" "));
+  tgfass (filters[4].mtch_titles ("123abcABC😺"));
+  tgfass (filters[4].mtch_keywords ("kw3"));
+  tgfass (filters[4].mtch_keywords ("kw4"));
+  tgfass (!filters[4].mtch_keywords ("kw1"));
+  tgfass (!filters[4].mtch_keywords ("😺"));
+  tgfass (!filters[4].mtch_keywords ("😺😺"));
+  tgfass (filters[4].mtch_keywords ("😺😺😺"));
+  tgfass (filters[4].mtch_keywords ("😺😺😺😺"));
 
   // [5]
-  tgfass (filters[5].isKeywordsMatch ("kw5"));
-  tgfass (filters[5].isNoKeywordsMatch ("kw6"));
-  tgfass (filters[5].isNoKeywordsMatch ("kw7"));
-  tgfass (!filters[5].isNoKeywordsMatch ("kw8"));
+  tgfass (filters[5].mtch_keywords ("kw5"));
+  tgfass (filters[5].mtch_no_keywords ("kw6"));
+  tgfass (filters[5].mtch_no_keywords ("kw7"));
+  tgfass (!filters[5].mtch_no_keywords ("kw8"));
 }
 
 //
@@ -181,51 +181,51 @@ no-keywords = ["kw6","kw7"]
   tgfass (filters.size () == 6);
 
   // [0]
-  tgfass (filters[0].isMatchTitle ("abcde"));
-  tgfass (!filters[0].isMatchTitle ("cd"));
+  tgfass (filters[0].mtch_titles ("abcde"));
+  tgfass (!filters[0].mtch_titles ("cd"));
   // if absent, then match anything
-  tgfass (filters[0].isKeywordsMatch (""));
+  tgfass (filters[0].mtch_keywords (""));
   // if absent, then not match anything
-  tgfass (!filters[0].isNoKeywordsMatch (""));
-  tgfass (filters[0].isMatchSender (""));
-  tgfass (!filters[0].isNoSendersMatch (""));
+  tgfass (!filters[0].mtch_no_keywords (""));
+  tgfass (filters[0].mtch_senders (""));
+  tgfass (!filters[0].mtch_no_senders (""));
 
   // [1]
-  tgfass (filters[1].isMatchSender ("usr1"));
-  tgfass (filters[1].isMatchSender ("usr2"));
-  tgfass (!filters[1].isMatchSender ("usr"));
+  tgfass (filters[1].mtch_senders ("usr1"));
+  tgfass (filters[1].mtch_senders ("usr2"));
+  tgfass (!filters[1].mtch_senders ("usr"));
 
   // [2]
-  tgfass (filters[2].isNoSendersMatch ("usr3"));
-  tgfass (filters[2].isNoSendersMatch ("usr4"));
-  tgfass (!filters[2].isNoSendersMatch ("usr"));
+  tgfass (filters[2].mtch_no_senders ("usr3"));
+  tgfass (filters[2].mtch_no_senders ("usr4"));
+  tgfass (!filters[2].mtch_no_senders ("usr"));
 
   // [3]
-  tgfass (filters[3].isMatchTitle ("AABB"));
-  tgfass (filters[3].isMatchTitle ("AAABBB"));
-  tgfass (!filters[3].isMatchTitle ("AB"));
-  tgfass (filters[3].isKeywordsMatch ("kw1"));
-  tgfass (filters[3].isKeywordsMatch ("kw2"));
-  tgfass (!filters[3].isKeywordsMatch ("kw3"));
+  tgfass (filters[3].mtch_titles ("AABB"));
+  tgfass (filters[3].mtch_titles ("AAABBB"));
+  tgfass (!filters[3].mtch_titles ("AB"));
+  tgfass (filters[3].mtch_keywords ("kw1"));
+  tgfass (filters[3].mtch_keywords ("kw2"));
+  tgfass (!filters[3].mtch_keywords ("kw3"));
 
   // [4]
   // if title absent, match anything
-  tgfass (filters[4].isMatchTitle (""));
-  tgfass (filters[4].isMatchTitle (" "));
-  tgfass (filters[4].isMatchTitle ("123abcABC😺"));
-  tgfass (filters[4].isKeywordsMatch ("kw3"));
-  tgfass (filters[4].isKeywordsMatch ("kw4"));
-  tgfass (!filters[4].isKeywordsMatch ("kw1"));
-  tgfass (!filters[4].isKeywordsMatch ("😺"));
-  tgfass (!filters[4].isKeywordsMatch ("😺😺"));
-  tgfass (filters[4].isKeywordsMatch ("😺😺😺"));
-  tgfass (filters[4].isKeywordsMatch ("😺😺😺😺"));
+  tgfass (filters[4].mtch_titles (""));
+  tgfass (filters[4].mtch_titles (" "));
+  tgfass (filters[4].mtch_titles ("123abcABC😺"));
+  tgfass (filters[4].mtch_keywords ("kw3"));
+  tgfass (filters[4].mtch_keywords ("kw4"));
+  tgfass (!filters[4].mtch_keywords ("kw1"));
+  tgfass (!filters[4].mtch_keywords ("😺"));
+  tgfass (!filters[4].mtch_keywords ("😺😺"));
+  tgfass (filters[4].mtch_keywords ("😺😺😺"));
+  tgfass (filters[4].mtch_keywords ("😺😺😺😺"));
 
   // [5]
-  tgfass (filters[5].isKeywordsMatch ("kw5"));
-  tgfass (filters[5].isNoKeywordsMatch ("kw6"));
-  tgfass (filters[5].isNoKeywordsMatch ("kw7"));
-  tgfass (!filters[5].isNoKeywordsMatch ("kw8"));
+  tgfass (filters[5].mtch_keywords ("kw5"));
+  tgfass (filters[5].mtch_no_keywords ("kw6"));
+  tgfass (filters[5].mtch_no_keywords ("kw7"));
+  tgfass (!filters[5].mtch_no_keywords ("kw8"));
 }
 
 void
@@ -242,7 +242,7 @@ test_focus_filter_list1 ()
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 1);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
 
     // note: an implicit title=".*" inserted
   }
@@ -253,7 +253,7 @@ test_focus_filter_list1 ()
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 1);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
   }
 
   { // title matched
@@ -263,7 +263,7 @@ titles = ["xxx"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 1);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
   }
 
   { // senders matched
@@ -273,7 +273,7 @@ senders = ["xxx"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 1);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
   }
 
   { // keywords matched
@@ -283,7 +283,7 @@ keywords = ["xxx"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 1);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
   }
 
   { // no-keywords matched
@@ -293,7 +293,7 @@ no-keywords = ["xxx"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 1);
-    tgfass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.mtch_tgmsg (msg));
   }
 
   { // no-keywords not matched
@@ -303,7 +303,7 @@ no-keywords = ["yyy"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 1);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
   }
 
   { // no-senders not matched
@@ -313,7 +313,7 @@ no-senders = ["yyy"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 1);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
   }
 
   { // senders vs. no-senders
@@ -324,7 +324,7 @@ no-senders = ["xxx"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 1);
-    tgfass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.mtch_tgmsg (msg));
   }
 
   { // senders and keywords matched
@@ -335,7 +335,7 @@ keywords = ["xxx"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 1);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
   }
 
   { // senders matched, keywords not
@@ -346,7 +346,7 @@ keywords = ["yyy"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 1);
-    tgfass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.mtch_tgmsg (msg));
   }
 
   { // senders not, keywords matched
@@ -357,7 +357,7 @@ keywords = ["xxx"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 1);
-    tgfass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.mtch_tgmsg (msg));
   }
 
   { // all last matched
@@ -368,7 +368,7 @@ keywords = ["a","b","c","d","x+"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 1);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
   }
 
   { // 2nd filter matched
@@ -381,7 +381,7 @@ keywords = ["x{3}"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 2);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
     tgfass (fcf_list.i_prev_visited () == 1);
   }
 
@@ -395,7 +395,7 @@ keywords = ["x{3}"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 2);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
     tgfass (fcf_list.i_prev_visited () == 0);
   }
 
@@ -409,7 +409,7 @@ no-senders = ["xxx"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 2);
-    tgfass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.mtch_tgmsg (msg));
     tgfass (fcf_list.i_prev_visited () == 0);
   }
 
@@ -428,7 +428,7 @@ keywords = "[a-z]+"
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 3);
-    tgfass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.mtch_tgmsg (msg));
     tgfass (fcf_list.i_prev_visited () == 0);
   }
 
@@ -448,7 +448,7 @@ keywords = "[:alpha:]{3}"
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 4);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
     tgfass (fcf_list.i_prev_visited () == 1);
   }
 
@@ -468,7 +468,7 @@ keywords = "[:alpha:]{3}"
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 4);
-    tgfass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.mtch_tgmsg (msg));
     tgfass (fcf_list.i_prev_visited () == 1);
   }
 }
@@ -488,7 +488,7 @@ senders = ["😺🐶"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 1);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
     tgfass (fcf_list.i_prev_visited () == 0);
   }
 
@@ -511,7 +511,7 @@ no-keywords = ["(🐶){2}(🐶){2}"]   # <--
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 5);
-    tgfass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.mtch_tgmsg (msg));
     tgfass (fcf_list.i_prev_visited () == 0);
   }
 
@@ -528,7 +528,7 @@ senders = ["🐶"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 3);
-    tgfass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.mtch_tgmsg (msg));
     tgfass (fcf_list.i_prev_visited () == 0);
   }
 
@@ -550,7 +550,7 @@ keywords = ["😺😺😺"]  # <--
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 4);
-    tgfass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.mtch_tgmsg (msg));
     tgfass (fcf_list.i_prev_visited () == 1);
   }
 
@@ -572,7 +572,7 @@ keywords = ["😺😺😺"]  # <--
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 4);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
     tgfass (fcf_list.i_prev_visited () == 0);
     // note: [1] and [2] is skipped bc both filters' <no-keywords> reject the
     //       input, even though both filters's <senders> accept it.
@@ -595,7 +595,7 @@ no-keywords = ["macos"]
 )"_toml;
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 1);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
     tgfass (fcf_list.i_prev_visited () == 0);
   }
 }
@@ -615,7 +615,7 @@ no-keywords = ["macos"]
 )";
     auto fcf_list = tgf::FilterGroupToml (tomldata);
     tgfass (fcf_list.n_filter () == 1);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
     tgfass (fcf_list.i_prev_visited () == 0);
   }
 }
@@ -643,17 +643,17 @@ keywords = ["kw1","kw2"]
   tgfass (filters.size () == 1);
 
   // [0]
-  tgfass (filters[0].isNoSendersMatch ("sd1"));
-  tgfass (filters[0].isNoSendersMatch ("sd2"));
-  tgfass (filters[0].isKeywordsMatch ("kw1"));
-  tgfass (filters[0].isKeywordsMatch ("kw2"));
+  tgfass (filters[0].mtch_no_senders ("sd1"));
+  tgfass (filters[0].mtch_no_senders ("sd2"));
+  tgfass (filters[0].mtch_keywords ("kw1"));
+  tgfass (filters[0].mtch_keywords ("kw2"));
 
   auto fcf_list = tgf::FilterGroupToml (dataxxx);
   tgfass (fcf_list.n_filter () == 1);
 
   {
     tgf::TgMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
-    tgfass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.mtch_tgmsg (msg));
   }
 }
 
@@ -683,17 +683,17 @@ keywords = ["kw1","kw2"]
   tgfass (filters.size () == 2);
 
   // [0]
-  tgfass (filters[0].isNoSendersMatch ("sd1"));
-  tgfass (filters[0].isNoSendersMatch ("sd2"));
-  tgfass (filters[0].isKeywordsMatch ("kw1"));
-  tgfass (filters[0].isKeywordsMatch ("kw2"));
+  tgfass (filters[0].mtch_no_senders ("sd1"));
+  tgfass (filters[0].mtch_no_senders ("sd2"));
+  tgfass (filters[0].mtch_keywords ("kw1"));
+  tgfass (filters[0].mtch_keywords ("kw2"));
 
   auto fcf_list = tgf::FilterGroupToml (dataxxx);
   tgfass (fcf_list.n_filter () == 2);
 
   {
     tgf::TgMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
-    tgfass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.mtch_tgmsg (msg));
   }
 }
 
@@ -720,17 +720,17 @@ keywords = ["kw1","kw2"]
   tgfass (filters.size () == 1);
 
   // [0]
-  tgfass (filters[0].isNoSendersMatch ("sd1"));
-  tgfass (filters[0].isNoSendersMatch ("sd2"));
-  tgfass (filters[0].isKeywordsMatch ("kw1"));
-  tgfass (filters[0].isKeywordsMatch ("kw2"));
+  tgfass (filters[0].mtch_no_senders ("sd1"));
+  tgfass (filters[0].mtch_no_senders ("sd2"));
+  tgfass (filters[0].mtch_keywords ("kw1"));
+  tgfass (filters[0].mtch_keywords ("kw2"));
 
   auto fcf_list = tgf::FilterGroupToml (dataxxx);
   tgfass (fcf_list.n_filter () == 1);
 
   {
     tgf::TgMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
-    tgfass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.mtch_tgmsg (msg));
   }
 }
 
@@ -760,17 +760,17 @@ keywords = ["kw1","kw2"]
   tgfass (filters.size () == 2);
 
   // [0]
-  tgfass (filters[0].isNoSendersMatch ("sd1"));
-  tgfass (filters[0].isNoSendersMatch ("sd2"));
-  tgfass (filters[0].isKeywordsMatch ("kw1"));
-  tgfass (filters[0].isKeywordsMatch ("kw2"));
+  tgfass (filters[0].mtch_no_senders ("sd1"));
+  tgfass (filters[0].mtch_no_senders ("sd2"));
+  tgfass (filters[0].mtch_keywords ("kw1"));
+  tgfass (filters[0].mtch_keywords ("kw2"));
 
   auto fcf_list = tgf::FilterGroupToml (dataxxx);
   tgfass (fcf_list.n_filter () == 2);
 
   {
     tgf::TgMsg msg ("chatxxx"s, "sd1"s, "kw2"s);
-    tgfass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.mtch_tgmsg (msg));
   }
 }
 
@@ -801,13 +801,13 @@ titles = [".*"]
 
   {
     tgf::TgMsg msg ("title_bbb"s, "sd_bbb"s, "kw_bbb"s);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
     tgfass (fcf_list.i_prev_visited () == 1);
   }
 
   {
     tgf::TgMsg msg ("title_aaa"s, "sd_bbb"s, "kw_bbb"s);
-    tgfass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.mtch_tgmsg (msg));
     tgfass (fcf_list.i_prev_visited () == 0);
   }
 }
@@ -839,13 +839,13 @@ no-keywords = [".*"]
 
   {
     tgf::TgMsg msg ("title_bbb"s, "sd_bbb"s, "kw_bbb"s);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
     tgfass (fcf_list.i_prev_visited () == 0);
   }
 
   {
     tgf::TgMsg msg ("title_aaa"s, "sd_bbb"s, "kw_bbb"s);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
     tgfass (fcf_list.i_prev_visited () == 0);
   }
 }
@@ -877,17 +877,17 @@ no-senders = ["micl2e2"]
 
   {
     tgf::TgMsg msg ("anytitle"s, "sd_micl2e2"s, ""s);
-    tgfass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.mtch_tgmsg (msg));
   }
 
   {
     tgf::TgMsg msg ("anytitle"s, "sd_micl2e2"s, "a"s);
-    tgfass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.mtch_tgmsg (msg));
   }
 
   {
     tgf::TgMsg msg ("anytitle"s, "sd_micl2e2"s, "kw_cheese"s);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
   }
 }
 
@@ -918,17 +918,17 @@ keywords = ["cheese"]
 
   {
     tgf::TgMsg msg ("anytitle"s, "sd_micl2e2"s, ""s);
-    tgfass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.mtch_tgmsg (msg));
   }
 
   {
     tgf::TgMsg msg ("anytitle"s, "sd_micl2e2"s, "a"s);
-    tgfass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.mtch_tgmsg (msg));
   }
 
   {
     tgf::TgMsg msg ("anytitle"s, "sd_micl2e2"s, "kw_cheese"s);
-    tgfass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.mtch_tgmsg (msg));
   }
 }
 
@@ -958,17 +958,17 @@ keywords = [".*"]
 
   {
     tgf::TgMsg msg ("title_any"s, ""s, ""s);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
   }
 
   {
     tgf::TgMsg msg ("title_any"s, ""s, ""s);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
   }
 
   {
     tgf::TgMsg msg ("title_aaa"s, ""s, ""s);
-    tgfass (!fcf_list.isMatchTgMsg (msg));
+    tgfass (!fcf_list.mtch_tgmsg (msg));
   }
 }
 
@@ -998,17 +998,17 @@ no-titles= ["aaa"]
 
   {
     tgf::TgMsg msg ("title_any"s, ""s, ""s);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
   }
 
   {
     tgf::TgMsg msg ("title_any"s, ""s, ""s);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
   }
 
   {
     tgf::TgMsg msg ("title_aaa"s, ""s, ""s);
-    tgfass (fcf_list.isMatchTgMsg (msg)); // now match anyway
+    tgfass (fcf_list.mtch_tgmsg (msg)); // now match anyway
   }
 }
 
@@ -1039,17 +1039,17 @@ titles = []
 
   {
     tgf::TgMsg msg (""s, ""s, ""s);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
   }
 
   {
     tgf::TgMsg msg (""s, ""s, ""s);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
   }
 
   {
     tgf::TgMsg msg ("title_aaa"s, ""s, ""s);
-    tgfass (!fcf_list.isMatchTgMsg (msg)); // now match anyway
+    tgfass (!fcf_list.mtch_tgmsg (msg)); // now match anyway
   }
 }
 
@@ -1079,17 +1079,17 @@ no-keywords = [".*"]
 
   {
     tgf::TgMsg msg (""s, ""s, ""s);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
   }
 
   {
     tgf::TgMsg msg (""s, ""s, ""s);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
   }
 
   {
     tgf::TgMsg msg ("title_aaa"s, ""s, ""s);
-    tgfass (!fcf_list.isMatchTgMsg (msg)); // now match anyway
+    tgfass (!fcf_list.mtch_tgmsg (msg)); // now match anyway
   }
 }
 
@@ -1119,17 +1119,17 @@ no-keywords = []
 
   {
     tgf::TgMsg msg (""s, ""s, ""s);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
   }
 
   {
     tgf::TgMsg msg (""s, ""s, ""s);
-    tgfass (fcf_list.isMatchTgMsg (msg));
+    tgfass (fcf_list.mtch_tgmsg (msg));
   }
 
   {
     tgf::TgMsg msg ("title_aaa"s, ""s, ""s);
-    tgfass (fcf_list.isMatchTgMsg (msg)); // now match anyway
+    tgfass (fcf_list.mtch_tgmsg (msg)); // now match anyway
   }
 }
 

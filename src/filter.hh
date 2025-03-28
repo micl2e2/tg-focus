@@ -43,17 +43,17 @@ public:
 
   Filter &operator= (Filter &&other);
 
-  bool isMatchTitle (const std::string &input);
+  bool mtch_titles (const std::string &input);
 
-  bool isMatchNoTitle (const std::string &input);
+  bool mtch_no_titles (const std::string &input);
 
-  bool isMatchSender (const std::string &input);
+  bool mtch_senders (const std::string &input);
 
-  bool isNoSendersMatch (const std::string &input);
+  bool mtch_no_senders (const std::string &input);
 
-  bool isKeywordsMatch (const std::string &input);
+  bool mtch_keywords (const std::string &input);
 
-  bool isNoKeywordsMatch (const std::string &input);
+  bool mtch_no_keywords (const std::string &input);
 
   string as_readable () const;
 
@@ -67,7 +67,7 @@ protected:
   std::vector<PosixExtRegex> keywords;
   std::vector<PosixExtRegex> no_keywords;
 
-  FocusDecision isMatchTgMsg (const TgMsg &input);
+  FocusDecision mtch_tgmsg (const TgMsg &input);
 
   template <typename _V, typename _F>
   requires CanFilterRecogValue<_F, _V> friend class FilterGroup;
@@ -100,7 +100,7 @@ public:
   inline size_t n_filter () { return this->filters.size (); }
   inline size_t i_prev_visited () { return this->i_prev_visited_; }
 
-  bool isMatchTgMsg (const TgMsg &in);
+  bool mtch_tgmsg (const TgMsg &in);
   string as_readable () const;
   string as_fsdata () const noexcept;
   bool rm_filter (const u32 &which_filter) noexcept;
@@ -166,7 +166,7 @@ Filter<V>::operator= (Filter<V> &&move_assign_from)
 
 template <typename V>
 requires HasFilterFields<V> bool
-Filter<V>::isMatchTitle (const std::string &input)
+Filter<V>::mtch_titles (const std::string &input)
 {
   // if no candidates, match anything
   if (this->__titles.size () == 0)
@@ -186,7 +186,7 @@ Filter<V>::isMatchTitle (const std::string &input)
 
 template <typename V>
 requires HasFilterFields<V> bool
-Filter<V>::isMatchNoTitle (const std::string &input)
+Filter<V>::mtch_no_titles (const std::string &input)
 {
   // if no candidates, match anything
   // if (this->__no_titles.size () == 0)
@@ -206,7 +206,7 @@ Filter<V>::isMatchNoTitle (const std::string &input)
 
 template <typename V>
 requires HasFilterFields<V> bool
-Filter<V>::isKeywordsMatch (const std::string &input)
+Filter<V>::mtch_keywords (const std::string &input)
 {
   // if no candidates, match anything
   if (this->keywords.size () == 0)
@@ -226,7 +226,7 @@ Filter<V>::isKeywordsMatch (const std::string &input)
 
 template <typename V>
 requires HasFilterFields<V> bool
-Filter<V>::isNoKeywordsMatch (const std::string &input)
+Filter<V>::mtch_no_keywords (const std::string &input)
 {
   // if no candidates, not match anything
   if (this->no_keywords.size () == 0)
@@ -284,7 +284,7 @@ Filter<V>::as_readable () const
 
 template <typename V>
 requires HasFilterFields<V> bool
-Filter<V>::isMatchSender (const std::string &input)
+Filter<V>::mtch_senders (const std::string &input)
 {
   if (this->senders.size () == 0)
     return true;
@@ -303,7 +303,7 @@ Filter<V>::isMatchSender (const std::string &input)
 
 template <typename V>
 requires HasFilterFields<V> bool
-Filter<V>::isNoSendersMatch (const std::string &input)
+Filter<V>::mtch_no_senders (const std::string &input)
 {
   // if (this->no_senders.size () == 0)
   //   return true;
@@ -322,28 +322,28 @@ Filter<V>::isNoSendersMatch (const std::string &input)
 
 template <typename V>
 requires HasFilterFields<V> FocusDecision
-Filter<V>::isMatchTgMsg (const TgMsg &in)
+Filter<V>::mtch_tgmsg (const TgMsg &in)
 {
   // ACCEPT
 
-  if (!this->isMatchTitle (in.get_chat_title ()))
+  if (!this->mtch_titles (in.get_chat_title ()))
     return FocusDecision::Skip;
 
-  if (!this->isMatchSender (in.get_sender ()))
+  if (!this->mtch_senders (in.get_sender ()))
     return FocusDecision::Skip;
 
-  if (!this->isKeywordsMatch (in.get_text_content ()))
+  if (!this->mtch_keywords (in.get_text_content ()))
     return FocusDecision::Skip;
 
   // REJECT
 
-  if (this->isMatchNoTitle (in.get_chat_title ()))
+  if (this->mtch_no_titles (in.get_chat_title ()))
     return FocusDecision::Reject;
 
-  if (this->isNoSendersMatch (in.get_sender ()))
+  if (this->mtch_no_senders (in.get_sender ()))
     return FocusDecision::Reject;
 
-  if (this->isNoKeywordsMatch (in.get_text_content ()))
+  if (this->mtch_no_keywords (in.get_text_content ()))
     return FocusDecision::Reject;
 
   return FocusDecision::Accept;
@@ -353,17 +353,17 @@ Filter<V>::isMatchTgMsg (const TgMsg &in)
 
 template <typename V, typename F>
 requires CanFilterRecogValue<F, V> bool
-FilterGroup<V, F>::isMatchTgMsg (const TgMsg &in)
+FilterGroup<V, F>::mtch_tgmsg (const TgMsg &in)
 {
   this->i_prev_visited_ = 0;
 
   for (auto &f : this->filters)
     {
-      if (f.isMatchTgMsg (in) == FocusDecision::Accept)
+      if (f.mtch_tgmsg (in) == FocusDecision::Accept)
 	{
 	  return true;
 	}
-      if (f.isMatchTgMsg (in) == FocusDecision::Reject)
+      if (f.mtch_tgmsg (in) == FocusDecision::Reject)
 	{
 	  return false;
 	}
