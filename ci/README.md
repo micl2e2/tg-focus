@@ -127,13 +127,13 @@ target `x64-linux-musl`:
 For example, for target `build-tgfocus-gittag-x64-linux-musl`:
 
 ```
-bash _before-action.bash 'run build-tgfocus-gittag-x64-linux-musl'
+bash .before-action.bash 'run build-tgfocus-gittag-x64-linux-musl'
 ```
 
 ## Step 2
 
 ```
-git add actiontrigger && git commit -m 'run build-tgfocus-gittag-x64-linux-musl'
+git add .actiontrigger && git commit -m 'run build-tgfocus-gittag-x64-linux-musl'
 ```
 
 # OCI Image Uploading
