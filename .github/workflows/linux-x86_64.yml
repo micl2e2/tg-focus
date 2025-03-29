@@ -1,0 +1,38 @@
+name: linux-x86_64
+run-name: linux-x86_64
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  job1:
+    if: contains(github.event.head_commit.message, 'build-linux-x86_64') == true
+    runs-on: ubuntu-24.04
+    steps:
+      - run: nproc
+      - run: free -h
+      - run: df -h
+      - run: lsblk
+      - run: lscpu
+      - run: sudo apt-get install -y buildah podman
+      - run: buildah from docker.io/library/debian:bullseye
+      - run: buildah run debian-working-container -- cat /etc/os-release
+      - run: buildah run debian-working-container -- apt-get update
+      - run: buildah run debian-working-container -- apt-get install -y sudo git bash
+      - run: buildah run debian-working-container -- git clone https://github.com/micl2e2/tg-focus
+      - run: buildah run debian-working-container -- bash -c "cd tg-focus && bash ci/prep-libs-deb11-x86_64.bash"
+      - run: df -h
+      - run: buildah run debian-working-container -- bash -c "cd tg-focus && bash ci/prep-toolc-deb11-x86_64.bash"
+      - run: df -h
+      - run: buildah run debian-working-container -- bash -c "cd tg-focus && bash ci/build-tgfocus-deb11-x86_64.bash"
+      - run: df -h
+      - run: buildah run debian-working-container -- bash -c "cd tg-focus && bash ci/pack-tgfocus-deb11-x86_64.bash"
+      - run: df -h
+      - run: buildah commit debian-working-container tmp 
+      - run: podman run --name=tmp tmp
+      - run: podman cp tmp:/tg-focus/ci/artifacts .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: artifacts
+          path: artifacts
