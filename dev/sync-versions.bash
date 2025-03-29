@@ -21,12 +21,12 @@ TF_VER_CURR=$(cat dev/pick-ver-tgfocus)
 test $? -eq 0 || { echo 'sync failed!'; exit 7; }
 
 # tdlib ver
-grep --quiet "TDLIB_VER = \"${TDLIB_VER_PREV}\";" shared/common.hh
+grep --quiet "TDLIB_VER = \"${TDLIB_VER_PREV}\";" src/common.hh
 if [[ $? -eq 0 ]]
 then
     sed -i -E \
 	"s/TDLIB_VER = \"${TDLIB_VER_PREV}\";/TDLIB_VER = \"${TDLIB_VER_CURR}\";/" \
-	shared/common.hh
+	src/common.hh
     if [[ $? -eq 0 ]]
     then
 	echo 'sync: tdlib version'
@@ -35,12 +35,12 @@ then
 fi
 
 # tdlib src
-grep --quiet "TDLIB_SRC = \"${TDLIB_SRC_PREV}\";" shared/common.hh
+grep --quiet "TDLIB_SRC = \"${TDLIB_SRC_PREV}\";" src/common.hh
 if [[ $? -eq 0 ]]
 then
     sed -i -E \
 	"s/TDLIB_SRC = \"${TDLIB_SRC_PREV}\";/TDLIB_SRC = \"${TDLIB_SRC_CURR}\";/" \
-	shared/common.hh
+	src/common.hh
     if [[ $? -eq 0 ]]
     then
 	echo 'sync: tdlib source'
@@ -59,12 +59,12 @@ then
 fi
 
 # tgf ver
-grep --quiet "TF_VER = \"${TF_VER_PREV}\";" shared/common.hh
+grep --quiet "TF_VER = \"${TF_VER_PREV}\";" src/common.hh
 if [[ $? -eq 0 ]]
 then
     sed -i -E \
 	"s/TF_VER = \"${TF_VER_PREV}\";/TF_VER = \"${TF_VER_CURR}\";/" \
-	shared/common.hh
+	src/common.hh
     if [[ $? -eq 0 ]]
     then
 	echo 'sync: tgf version'
