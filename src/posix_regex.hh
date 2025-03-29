@@ -35,15 +35,15 @@ public:
   // dtor
   ~PosixExtRegex ();
 
-  inline bool is_pattern_accept () noexcept { return this->stat_comp == 0; }
+  inline bool is_pattern_accept () noexcept { return this->__stat_comp == 0; }
 
   std::string get_err () noexcept;
   std::optional<bool> is_match (const std::string &str) noexcept;
   string ptn () const noexcept { return __ptn; }
 
 private:
-  int stat_comp;
-  regex_t *re;
+  int __stat_comp;
+  regex_t *__re;
   string __ptn;
 };
 

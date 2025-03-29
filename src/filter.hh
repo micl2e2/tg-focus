@@ -63,10 +63,10 @@ public:
 protected:
   std::vector<PosixExtRegex> __titles;
   std::vector<PosixExtRegex> __no_titles;
-  std::vector<PosixExtRegex> senders;
-  std::vector<PosixExtRegex> no_senders;
-  std::vector<PosixExtRegex> keywords;
-  std::vector<PosixExtRegex> no_keywords;
+  std::vector<PosixExtRegex> __senders;
+  std::vector<PosixExtRegex> __no_senders;
+  std::vector<PosixExtRegex> __keywords;
+  std::vector<PosixExtRegex> __no_keywords;
 
   FocusDecision mtch_tgmsg (const TgMsg &input);
 
@@ -98,7 +98,7 @@ template <typename V, typename F>
 requires CanFilterRecogValue<F, V> class FilterGroup
 {
 public:
-  inline size_t n_filter () { return this->filters.size (); }
+  inline size_t n_filter () { return this->__filters.size (); }
   inline size_t i_prev_visited () { return this->i_prev_visited_; }
 
   bool mtch_tgmsg (const TgMsg &in);
@@ -122,7 +122,7 @@ public:
 
 protected:
   size_t i_prev_visited_;
-  std::vector<F> filters;
+  std::vector<F> __filters;
 };
 
 class FilterGroupToml : public FilterGroup<toml::value, FilterToml>
@@ -133,7 +133,7 @@ public:
   // no const bc both are basic_value
   explicit FilterGroupToml (std::string &v) noexcept;
   // Has at least one filter
-  bool isEffective () noexcept { return this->filters.size () > 0; }
+  bool isEffective () noexcept { return this->__filters.size () > 0; }
   string as_fsdata () noexcept;
 };
 
@@ -150,10 +150,10 @@ Filter<V>::Filter (Filter<V> &&move_ctor_from)
 {
   this->__titles = std::move (move_ctor_from.__titles);
   this->__no_titles = std::move (move_ctor_from.__no_titles);
-  this->senders = std::move (move_ctor_from.senders);
-  this->no_senders = std::move (move_ctor_from.no_senders);
-  this->keywords = std::move (move_ctor_from.keywords);
-  this->no_keywords = std::move (move_ctor_from.no_keywords);
+  this->__senders = std::move (move_ctor_from.__senders);
+  this->__no_senders = std::move (move_ctor_from.__no_senders);
+  this->__keywords = std::move (move_ctor_from.__keywords);
+  this->__no_keywords = std::move (move_ctor_from.__no_keywords);
 }
 
 template <typename V>
@@ -162,10 +162,10 @@ Filter<V>::operator= (Filter<V> &&move_assign_from)
 {
   this->__titles = std::move (move_assign_from.__titles);
   this->__no_titles = std::move (move_assign_from.__no_titles);
-  this->senders = std::move (move_assign_from.senders);
-  this->no_senders = std::move (move_assign_from.no_senders);
-  this->keywords = std::move (move_assign_from.keywords);
-  this->no_keywords = std::move (move_assign_from.no_keywords);
+  this->__senders = std::move (move_assign_from.__senders);
+  this->__no_senders = std::move (move_assign_from.__no_senders);
+  this->__keywords = std::move (move_assign_from.__keywords);
+  this->__no_keywords = std::move (move_assign_from.__no_keywords);
   return *this;
 }
 
@@ -214,10 +214,10 @@ requires HasFilterFields<V> bool
 Filter<V>::mtch_keywords (const std::string &input)
 {
   // if no candidates, match anything
-  if (this->keywords.size () == 0)
+  if (this->__keywords.size () == 0)
     return true;
 
-  for (PosixExtRegex &re : this->keywords)
+  for (PosixExtRegex &re : this->__keywords)
     {
       if (auto flag = re.is_match (input))
 	{
@@ -234,10 +234,10 @@ requires HasFilterFields<V> bool
 Filter<V>::mtch_no_keywords (const std::string &input)
 {
   // if no candidates, not match anything
-  if (this->no_keywords.size () == 0)
+  if (this->__no_keywords.size () == 0)
     return false;
 
-  for (PosixExtRegex &re : this->no_keywords)
+  for (PosixExtRegex &re : this->__no_keywords)
     {
       if (auto flag = re.is_match (input))
 	{
@@ -276,19 +276,19 @@ Filter<V>::as_readable () const
       << readable_eles (__titles);
   oss << "🞋 Senders <senders>" //
       << endl
-      << readable_eles (senders);
+      << readable_eles (__senders);
   oss << "🞋 Keywords <keywords>" //
       << endl
-      << readable_eles (keywords);
+      << readable_eles (__keywords);
   oss << "🞋 NO Titles <no-titles>" //
       << endl
       << readable_eles (__no_titles);
   oss << "🞋 NO Senders <no-senders>" //
       << endl
-      << readable_eles (no_senders);
+      << readable_eles (__no_senders);
   oss << "🞋 NO Keywords <no-keywords>" //
       << endl
-      << readable_eles (no_keywords);
+      << readable_eles (__no_keywords);
   // if no candidates, not match anything
 
   return oss.str ();
@@ -298,10 +298,10 @@ template <typename V>
 requires HasFilterFields<V> bool
 Filter<V>::mtch_senders (const std::string &input)
 {
-  if (this->senders.size () == 0)
+  if (this->__senders.size () == 0)
     return true;
 
-  for (PosixExtRegex &re : this->senders)
+  for (PosixExtRegex &re : this->__senders)
     {
       if (auto flag = re.is_match (input))
 	{
@@ -317,10 +317,10 @@ template <typename V>
 requires HasFilterFields<V> bool
 Filter<V>::mtch_no_senders (const std::string &input)
 {
-  // if (this->no_senders.size () == 0)
+  // if (this->__no_senders.size () == 0)
   //   return true;
 
-  for (PosixExtRegex &re : this->no_senders)
+  for (PosixExtRegex &re : this->__no_senders)
     {
       if (auto flag = re.is_match (input))
 	{
@@ -369,7 +369,7 @@ FilterGroup<V, F>::mtch_tgmsg (const TgMsg &in)
 {
   this->i_prev_visited_ = 0;
 
-  for (auto &f : this->filters)
+  for (auto &f : this->__filters)
     {
       if (f.mtch_tgmsg (in) == FocusDecision::Accept)
 	{
@@ -391,9 +391,9 @@ requires CanFilterRecogValue<F, V> string
 FilterGroup<V, F>::as_readable () const
 {
   ostringstream oss;
-  for (int i = 0; i < filters.size (); i++)
+  for (int i = 0; i < __filters.size (); i++)
     {
-      const F &el = filters[i];
+      const F &el = __filters[i];
       oss << endl
 	  << "🞋 🞋 🞋 🞋 🞋 "
 	  << "FILTER " << (i + 1) << " 🞋 🞋 🞋 🞋 🞋" << endl;
@@ -407,27 +407,27 @@ template <typename V, typename F>
 requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::rm_filter (const u32 &which_filter) noexcept
 {
-  // std::reverse (filters.begin (), filters.end ());
+  // std::reverse (__filters.begin (), __filters.end ());
 
   {
     u32 idx = which_filter - 1;
-    if (idx < 0 || filters.size () == 1 || idx > filters.size () - 1)
+    if (idx < 0 || __filters.size () == 1 || idx > __filters.size () - 1)
       {
 	goto bad_ret;
       }
-    size_t oldsz = filters.size ();
-    filters.erase (filters.begin () + idx);
-    size_t newsz = filters.size ();
+    size_t oldsz = __filters.size ();
+    __filters.erase (__filters.begin () + idx);
+    size_t newsz = __filters.size ();
     if (newsz == oldsz - 1)
       goto good_ret;
   }
 
 good_ret:
-  // std::reverse (filters.begin (), filters.end ());
+  // std::reverse (__filters.begin (), __filters.end ());
   return true;
 
 bad_ret:
-  // std::reverse (filters.begin (), filters.end ());
+  // std::reverse (__filters.begin (), __filters.end ());
   return false;
 }
 
@@ -436,19 +436,19 @@ requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::add_one (u32 &which_filter, const FilterProperty p,
 			    const string &value)
 {
-  // std::reverse (filters.begin (), filters.end ());
+  // std::reverse (__filters.begin (), __filters.end ());
 
   if (which_filter < 1)
     goto bad_rtn;
 
   {
     u32 idx = which_filter - 1;
-    if (idx > filters.size () - 1)
+    if (idx > __filters.size () - 1)
       {
 	F f;
-	filters.emplace_back (move (f)); // exclusively for add_one
-	idx = filters.size () - 1;
-	which_filter = filters.size ();
+	__filters.emplace_back (move (f)); // exclusively for add_one
+	idx = __filters.size () - 1;
+	which_filter = __filters.size ();
       }
     PosixExtRegex may_re (value);
     if (!may_re.is_pattern_accept ())
@@ -456,31 +456,31 @@ FilterGroup<V, F>::add_one (u32 &which_filter, const FilterProperty p,
     switch (p)
       {
       case FilterPropertyTitles:
-	filters[idx].__titles.emplace_back (move (may_re));
+	__filters[idx].__titles.emplace_back (move (may_re));
 	break;
       case FilterPropertyNoTitles:
-	filters[idx].__no_titles.emplace_back (move (may_re));
+	__filters[idx].__no_titles.emplace_back (move (may_re));
 	break;
       case FilterPropertyKeywords:
-	filters[idx].keywords.emplace_back (move (may_re));
+	__filters[idx].__keywords.emplace_back (move (may_re));
 	break;
       case FilterPropertyNoKeywords:
-	filters[idx].no_keywords.emplace_back (move (may_re));
+	__filters[idx].__no_keywords.emplace_back (move (may_re));
 	break;
       case FilterPropertySenders:
-	filters[idx].senders.emplace_back (move (may_re));
+	__filters[idx].__senders.emplace_back (move (may_re));
 	break;
       case FilterPropertyNoSenders:
-	filters[idx].no_senders.emplace_back (move (may_re));
+	__filters[idx].__no_senders.emplace_back (move (may_re));
 	break;
       }
   }
 
-  // std::reverse (filters.begin (), filters.end ());
+  // std::reverse (__filters.begin (), __filters.end ());
   return true;
 
 bad_rtn:
-  // std::reverse (filters.begin (), filters.end ());
+  // std::reverse (__filters.begin (), __filters.end ());
   return true;
 }
 
@@ -489,28 +489,28 @@ requires CanFilterRecogValue<F, V> bool
 FilterGroup<V, F>::del_one (u32 &which_filter, const FilterProperty p,
 			    const string &value)
 {
-  // std::reverse (filters.begin (), filters.end ());
+  // std::reverse (__filters.begin (), __filters.end ());
 
   if (which_filter < 1)
     goto bad_rtn;
 
   {
     u32 idx = which_filter - 1;
-    if (idx > filters.size () - 1)
+    if (idx > __filters.size () - 1)
       {
-	idx = filters.size () - 1;
-	which_filter = filters.size ();
+	idx = __filters.size () - 1;
+	which_filter = __filters.size ();
       }
     PosixExtRegex may_re (value);
     if (!may_re.is_pattern_accept ())
       goto bad_rtn;
 
-    vector<PosixExtRegex> &list_titles = filters[idx].__titles;
-    vector<PosixExtRegex> &list_no_titles = filters[idx].__no_titles;
-    vector<PosixExtRegex> &list_keywords = filters[idx].keywords;
-    vector<PosixExtRegex> &list_no_keywords = filters[idx].no_keywords;
-    vector<PosixExtRegex> &list_senders = filters[idx].senders;
-    vector<PosixExtRegex> &list_no_senders = filters[idx].no_senders;
+    vector<PosixExtRegex> &list_titles = __filters[idx].__titles;
+    vector<PosixExtRegex> &list_no_titles = __filters[idx].__no_titles;
+    vector<PosixExtRegex> &list_keywords = __filters[idx].__keywords;
+    vector<PosixExtRegex> &list_no_keywords = __filters[idx].__no_keywords;
+    vector<PosixExtRegex> &list_senders = __filters[idx].__senders;
+    vector<PosixExtRegex> &list_no_senders = __filters[idx].__no_senders;
     using it_type = vector<PosixExtRegex>::iterator;
     it_type begit = list_keywords.begin ();
     it_type endit = list_keywords.end ();
@@ -579,11 +579,11 @@ FilterGroup<V, F>::del_one (u32 &which_filter, const FilterProperty p,
       }
   }
 
-  // std::reverse (filters.begin (), filters.end ());
+  // std::reverse (__filters.begin (), __filters.end ());
   return true;
 
 bad_rtn:
-  // std::reverse (filters.begin (), filters.end ());
+  // std::reverse (__filters.begin (), __filters.end ());
   return false;
 }
 

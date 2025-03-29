@@ -27,20 +27,20 @@ public:
   TgMsg (std::string &&chat_title, std::string &&sender,
 	 std::string &&text_content, int32_t tstamp = 0);
 
-  inline const std::string &get_chat_title () const { return this->title_; }
+  inline const std::string &get_chat_title () const { return this->__title; }
 
   inline bool is_from_tgfocus () const
   {
-    return this->title_.find ("TG-FOCUS") != string::npos;
+    return this->__title.find ("TG-FOCUS") != string::npos;
   }
 
-  inline const std::string &get_sender () const { return this->sender_; }
+  inline const std::string &get_sender () const { return this->__sender; }
 
-  inline const std::string &get_text_content () const { return this->txt_; }
+  inline const std::string &get_text_content () const { return this->__txt; }
 
-  inline const std::string &get_timestamp () const { return this->tstamp_; }
+  inline const std::string &get_timestamp () const { return this->__tstamp; }
 
-  inline void set_id (uint32_t n) { this->id_ = n; }
+  inline void set_id (uint32_t n) { this->__id = n; }
 
   std::string to_locale_string () const;
 
@@ -50,16 +50,16 @@ public:
 
     ret += "Telegram Message";
     ret += "-<title,";
-    ret += this->title_;
+    ret += this->__title;
     ret += ">";
     ret += "-<sender,";
-    ret += this->sender_;
+    ret += this->__sender;
     ret += ">";
     ret += "-<txt,";
-    ret += this->txt_;
+    ret += this->__txt;
     ret += ">";
     ret += "-<tstamp,";
-    ret += this->tstamp_;
+    ret += this->__tstamp;
     ret += ">";
 
     return ret;
@@ -68,11 +68,11 @@ public:
   friend std::ostream &operator<< (std::ostream &os, const TgMsg &msg);
 
 private:
-  std::string title_;
-  std::string sender_;
-  std::string txt_;
-  std::string tstamp_;
-  std::uint32_t id_;
+  std::string __title;
+  std::string __sender;
+  std::string __txt;
+  std::string __tstamp;
+  std::uint32_t __id;
 };
 
 // Check host environment supports decoration.

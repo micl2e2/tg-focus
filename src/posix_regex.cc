@@ -9,53 +9,53 @@
 #include "std_comp.hh"
 #include "posix_regex.hh"
 
-PosixExtRegex::PosixExtRegex () : stat_comp (INT_MAX), re (nullptr) {}
+PosixExtRegex::PosixExtRegex () : __stat_comp (INT_MAX), __re (nullptr) {}
 
 PosixExtRegex::PosixExtRegex (PosixExtRegex &&move_ctor_from)
-  : stat_comp (move_ctor_from.stat_comp), re (move_ctor_from.re),
+  : __stat_comp (move_ctor_from.__stat_comp), __re (move_ctor_from.__re),
     __ptn (move (move_ctor_from.__ptn))
 {
-  move_ctor_from.stat_comp = INT_MAX;
-  move_ctor_from.re = nullptr;
+  move_ctor_from.__stat_comp = INT_MAX;
+  move_ctor_from.__re = nullptr;
 }
 
 PosixExtRegex::PosixExtRegex (const std::string &ptn)
 {
   const char *ptn_ = ptn.c_str ();
-  this->re = reinterpret_cast<regex_t *> (malloc (sizeof (regex_t)));
-  this->stat_comp = regcomp (this->re, ptn_, REG_EXTENDED | REG_NOSUB);
+  this->__re = reinterpret_cast<regex_t *> (malloc (sizeof (regex_t)));
+  this->__stat_comp = regcomp (this->__re, ptn_, REG_EXTENDED | REG_NOSUB);
   __ptn = move (ptn);
 }
 
 PosixExtRegex &
 PosixExtRegex::operator= (PosixExtRegex &&move_assign_from)
 {
-  this->stat_comp = move_assign_from.stat_comp;
-  this->re = move_assign_from.re;
+  this->__stat_comp = move_assign_from.__stat_comp;
+  this->__re = move_assign_from.__re;
   __ptn = move (move_assign_from.__ptn);
-  move_assign_from.stat_comp = INT_MAX;
-  move_assign_from.re = nullptr;
+  move_assign_from.__stat_comp = INT_MAX;
+  move_assign_from.__re = nullptr;
   return *this;
 }
 
 PosixExtRegex::~PosixExtRegex ()
 {
-  if (this->re != nullptr)
+  if (this->__re != nullptr)
     {
-      regfree (this->re);
-      free (this->re); // not necessary!
+      regfree (this->__re);
+      free (this->__re); // not necessary!
     }
 }
 
 std::string
 PosixExtRegex::get_err () noexcept
 {
-  if (this->stat_comp != 0)
+  if (this->__stat_comp != 0)
     {
       static constexpr size_t BUF_SIZE = 1024;
       char posix_re_errbuf[BUF_SIZE];
       const size_t nchar
-	= regerror (this->stat_comp, nullptr, posix_re_errbuf, BUF_SIZE);
+	= regerror (this->__stat_comp, nullptr, posix_re_errbuf, BUF_SIZE);
 
       return std::string (posix_re_errbuf, nchar);
     }
@@ -66,12 +66,12 @@ PosixExtRegex::get_err () noexcept
 std::optional<bool>
 PosixExtRegex::is_match (const std::string &str) noexcept
 {
-  if (this->stat_comp != 0)
+  if (this->__stat_comp != 0)
     return std::nullopt;
 
   auto str_ = str.c_str ();
 
-  int stat_exec = regexec (this->re, str_, (size_t) 0, nullptr, 0);
+  int stat_exec = regexec (this->__re, str_, (size_t) 0, nullptr, 0);
 
   if (stat_exec == REG_NOMATCH)
     {

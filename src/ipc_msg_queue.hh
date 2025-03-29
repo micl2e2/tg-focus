@@ -10,11 +10,11 @@ namespace tgf {
 
 class IpcMsgQueue
 {
-  std::vector<IpcMsg> queue_;
-  std::mutex lck_;
+  std::vector<IpcMsg> __queue;
+  std::mutex __lck;
 
 public:
-  IpcMsgQueue () { queue_ = std::vector<IpcMsg>{}; }
+  IpcMsgQueue () { __queue = std::vector<IpcMsg>{}; }
   bool enqueue (IpcMsg &&cmd);
   std::optional<tgf::IpcMsg> deque ();
 };

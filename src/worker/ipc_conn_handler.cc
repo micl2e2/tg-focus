@@ -150,7 +150,7 @@ tgf::IpcConnHandler::operator() ()
     {
       IpcMsg m = new_ipcmsg_error ();
       // const char resp[] = "Good (shutdown)\n";
-      int nwrite = write (connfd_, m.data_, NBYTE_IPCMSG_ALL);
+      int nwrite = write (connfd_, m.__data, NBYTE_IPCMSG_ALL);
       tulogfd (6668, nwrite);
       // const char resp[] = "BAD COMMAND\n";
       // write (connfd_, resp, sizeof (resp));
@@ -167,7 +167,7 @@ tgf::IpcConnHandler::operator() ()
 	  if (msg.typ () == IpcMsgType::Ignore)
 	    {
 	      IpcMsg m = new_ipcmsg_success ();
-	      write (connfd_, m.data_, NBYTE_IPCMSG_ALL);
+	      write (connfd_, m.__data, NBYTE_IPCMSG_ALL);
 	    }
 
 	  if (msg.typ () == IpcMsgType::ShutdownIpcSrv)
@@ -192,7 +192,7 @@ tgf::IpcConnHandler::operator() ()
 	      IpcMsg m = new_ipcmsg_success ();
 	      tulogfd (6661, m.data ().size (), as_hex_list (m.data ()));
 
-	      write (connfd_, m.data_, NBYTE_IPCMSG_ALL);
+	      write (connfd_, m.__data, NBYTE_IPCMSG_ALL);
 	      // IpcSrc is essentially parent of all wk, hence must trigger
 	      // after send
 	      gstat_c::tryshutwk::ipcsrv_initer.store (true, mo::relaxed);
@@ -238,7 +238,7 @@ tgf::IpcConnHandler::operator() ()
 
 	      IpcMsg m = new_ipcmsg_success ();
 	      tulogfd (66678, m.data ().size (), as_hex_list (m.data ()));
-	      send (connfd_, m.data_, NBYTE_IPCMSG_ALL, 0);
+	      send (connfd_, m.__data, NBYTE_IPCMSG_ALL, 0);
 	    }
 
 	  if (msg.typ () == IpcMsgType::ShutdownColl)
@@ -254,7 +254,7 @@ tgf::IpcConnHandler::operator() ()
 		{
 		  IpcMsg m = new_ipcmsg_success ();
 		  tulogfd (66688, m.data ().size (), as_hex_list (m.data ()));
-		  send (connfd_, m.data_, NBYTE_IPCMSG_ALL, 0);
+		  send (connfd_, m.__data, NBYTE_IPCMSG_ALL, 0);
 		}
 	    }
 	}
@@ -262,7 +262,7 @@ tgf::IpcConnHandler::operator() ()
 	{
 	  gstat_c::q_ipcmsg.enqueue (std::move (msg));
 	  IpcMsg m = new_ipcmsg_success ();
-	  write (connfd_, m.data_, NBYTE_IPCMSG_ALL);
+	  write (connfd_, m.__data, NBYTE_IPCMSG_ALL);
 	}
 
       conn_handled = true;

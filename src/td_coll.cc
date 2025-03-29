@@ -1,7 +1,6 @@
 #define __TU__ "td_coll"
 
 #include <algorithm>
-
 #include <cuchar>
 #include <cstddef>
 #include <cstdlib>
@@ -9,16 +8,10 @@
 #include <vector>
 #include <atomic>
 #include <mutex>
-#include <chrono>
 #include <map>
 #include <functional>
-#include <atomic>
 #include <chrono>
 #include <iostream>
-
-#include <td/telegram/Client.h>
-#include <td/telegram/td_api.h>
-#include <td/telegram/td_api.hpp>
 
 #include "std_comp.hh"
 #include "td_comp.hh"
@@ -34,8 +27,8 @@ void
 TdCollector::init ()
 {
   TdClient::execute (td_mkobj<TdSetLogLevel> (1));
-  client_manager_ = make_unique<TdClient> ();
-  client_id_ = client_manager_->create_client_id ();
+  __client = make_unique<TdClient> ();
+  __clientid = __client->create_client_id ();
   send_query (td_mkobj<TdGetOpt> ("version"), {});
   send_query (td_mkobj<TdSetOpt> ("use_storage_optimizer",
 				  td_mkobj<TdOptValBool> (true)),
@@ -99,20 +92,18 @@ TdCollector::try_create_tgfchat () // FIXME: is try
     }
 }
 
-TdArray<TdUniPtr<TdTxtEnt>>
+TdArray<TdPtr<TdTxtEnt>>
 decorate_msg (const string &msg)
 {
-  return TdArray<TdUniPtr<TdTxtEnt>>{};
+  return TdArray<TdPtr<TdTxtEnt>>{};
 
   auto pos_info = tgf::get_decor_pos (msg);
 
-  // FIXME: only when very verbose
-  tgf::logfd_cg (1, "consumer_cnt:",
-		 tgfstat::c::d::it_cnt_consumer.load (memory_order_relaxed),
-		 " decorating u8str:", msg,
-		 " pos_info:", tgf::decor_pos_to_str (pos_info));
+  // only when very verbose
+  tgf::logfd_cg (1, 66987, tgfstat::c::d::it_cnt_consumer.load (mo::relaxed),
+		 msg, tgf::decor_pos_to_str (pos_info));
 
-  TdArray<TdUniPtr<TdTxtEnt>> deco_list;
+  TdArray<TdPtr<TdTxtEnt>> deco_list;
 
   for (auto pos : pos_info)
     {
@@ -128,12 +119,12 @@ TdCollector::collect_msg (const tgf::TgMsg &msg)
 {
   string tfmsg_str = msg.to_locale_string ();
 
-  TdArray<TdUniPtr<TdTxtEnt>> text_deco_list = decorate_msg (tfmsg_str);
+  TdArray<TdPtr<TdTxtEnt>> text_deco_list = decorate_msg (tfmsg_str);
 
-  TdUniPtr<TdFmtTxt> message_text
+  TdPtr<TdFmtTxt> message_text
     = td_mkobj<TdFmtTxt> (tfmsg_str, move (text_deco_list));
 
-  TdUniPtr<TdFunc> send_message_request = td_mkobj<TdSendMsg> (
+  TdPtr<TdFunc> send_message_request = td_mkobj<TdSendMsg> (
     // this->collector_id, //
     tgfstat::userdata.get_tgfid (), //
     0, nullptr, nullptr, nullptr,
@@ -142,11 +133,9 @@ TdCollector::collect_msg (const tgf::TgMsg &msg)
   send_query (move (send_message_request), [this, msg] (TdObjPtr object) {
     if (object->get_id () == TdMsg::ID)
       {
-	// FIXME: do not use operator <<
-	tgf::logfd_cg (1, "consumer_cnt:",
-		       tgfstat::c::d::it_cnt_consumer.load (
-			 memory_order_relaxed),
-		       " msg collected:", msg.to_string ());
+	tgf::logfd_cg (1, 888333,
+		       tgfstat::c::d::it_cnt_consumer.load (mo::relaxed),
+		       msg.to_string ());
 
 	tgfstat::c::d::it_msg_coll.fetch_add (1, mo::relaxed);
       }
@@ -169,11 +158,11 @@ TdCollector::collect_msg (const tgf::TgMsg &msg)
 void
 TdCollector::fetch_updates ()
 {
-  auto response = client_manager_->receive (10);
+  auto response = __client->receive (10);
   if (response.object)
     {
       tgf::logfd_cg (1, "producer_iter:",
-		     tgfstat::c::d::it_cnt_producer.load (memory_order_relaxed),
+		     tgfstat::c::d::it_cnt_producer.load (mo::relaxed),
 		     " td-client, resp recv id:",
 
 		     response.object->get_id ());
@@ -184,48 +173,41 @@ TdCollector::fetch_updates ()
 // private
 
 void
-TdCollector::send_query (TdUniPtr<TdFunc> f, function<void (TdObjPtr)> handler)
+TdCollector::send_query (TdPtr<TdFunc> tdfn, function<void (TdObjPtr)> cbfn)
 {
   auto query_id = next_query_id ();
-  tgf::logfd_cg (1, "TdCollector::send_query !!!");
-  if (handler)
+  if (cbfn)
     {
-      handlers_.emplace (query_id, move (handler));
+      __cb.emplace (query_id, move (cbfn));
     }
-  client_manager_->send (client_id_, query_id, move (f));
+  tulogfd_cg (1, 232323);
+  __client->send (__clientid, query_id, move (tdfn));
 }
 
 void
 TdCollector::process_response (TdClient::Response response)
 {
   if (!response.object)
-    {
-      return;
-    }
-
+    return;
   if (response.request_id == 0)
+    return process_update (move (response.object));
+  auto it = __cb.find (response.request_id);
+  if (it != __cb.end ())
     {
-      return process_update (move (response.object));
-    }
-
-  auto it = handlers_.find (response.request_id);
-  if (it != handlers_.end ())
-    {
-      tgf::logfd_cg (1, "producer_iter:",
-		     tgfstat::c::d::it_cnt_producer.load (memory_order_relaxed),
-		     " handlers_.size():", handlers_.size (),
-		     " it->first:", it->first);
-
+      tgf::logfd_cg (1, 881, tgfstat::c::d::it_cnt_producer.load (mo::relaxed),
+		     __cb.size (), it->first);
       it->second (move (response.object));
-      handlers_.erase (it);
+      tulogfi_cg (1, 65776, __cb.size ());
+      __cb.erase (it);
+      tulogfi_cg (1, 65777, __cb.size ());
     }
 }
 
 string
 TdCollector::get_user_name (int64_t user_id) const
 {
-  auto it = this->users_.find (user_id);
-  if (it == users_.end ())
+  auto it = this->__users.find (user_id);
+  if (it == __users.end ())
     {
       return "unknown user";
     }
@@ -244,8 +226,8 @@ TdCollector::get_user_name (int64_t user_id) const
 string
 TdCollector::get_chat_title (int64_t chat_id) const
 {
-  auto it = chat_title_.find (chat_id);
-  if (it == chat_title_.end ())
+  auto it = __chat_titles.find (chat_id);
+  if (it == __chat_titles.end ())
     {
       return "unknown chat";
     }
@@ -258,8 +240,8 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
   string aux_msg = string (CHATCMD_RPLY_PREFIX) + "not supported";
   string did_what = incom_txt;
   u32 len_did_what = did_what.length ();
-  TdArray<TdUniPtr<TdTxtEnt>> deco_list;
-  TdUniPtr<TdFmtTxt> message_text
+  TdArray<TdPtr<TdTxtEnt>> deco_list;
+  TdPtr<TdFmtTxt> message_text
     = td_mkobj<TdFmtTxt> (did_what + aux_msg, move (deco_list));
 
   if (incom_txt.find (CHATCMD_PAUSE) != string::npos)
@@ -326,9 +308,7 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
 					      td_mkobj<TdTxtEntBold> ()));
   message_text->entities_ = move (deco_list);
 
-sendmsg:;
-
-  TdUniPtr<TdFunc> send_message_request = td_mkobj<TdSendMsg> (
+  TdPtr<TdFunc> send_message_request = td_mkobj<TdSendMsg> (
     // this->collector_id, //
     tgfstat::userdata.get_tgfid (), //
     0, nullptr, nullptr, nullptr,
@@ -356,38 +336,38 @@ TdCollector::process_update (TdObjPtr update)
     {
       case TdUpdAuthStat::ID: {
 	auto casted = static_cast<TdUpdAuthStat *> (update.get ());
-	this->auth_state_ = move (casted->authorization_state_);
+	this->__auth_stat = move (casted->authorization_state_);
 	this->on_authorization_state_update ();
 	break;
       }
 
       case TdUpdNewChat::ID: {
 	auto casted = static_cast<TdUpdNewChat *> (update.get ());
-	this->chat_title_[casted->chat_->id_] = casted->chat_->title_;
+	this->__chat_titles[casted->chat_->id_] = casted->chat_->title_;
 	break;
       }
 
       case TdUpdChatTitle::ID: {
 	auto casted = static_cast<TdUpdChatTitle *> (update.get ());
-	this->chat_title_[casted->chat_id_] = casted->title_;
+	this->__chat_titles[casted->chat_id_] = casted->title_;
 	break;
       }
 
       case TdUpdUser::ID: {
 	auto casted = static_cast<TdUpdUser *> (update.get ());
 	auto user_id = casted->user_->id_;
-	this->users_[user_id] = move (casted->user_);
+	this->__users[user_id] = move (casted->user_);
 	break;
       }
 
       case TdUpdNewMsg::ID: {
 	TdUpdNewMsg *nmsg = static_cast<TdUpdNewMsg *> (update.get ());
 	TdInt chat_id = nmsg->message_->chat_id_;
-	string chat_title = chat_title_[chat_id];
+	string chat_title = __chat_titles[chat_id];
 
 	if (chat_title.find ("TG-FOCUS") != string::npos)
 	  {
-	    TdUniPtr<TdMsgContent> p = move (nmsg->message_->content_);
+	    TdPtr<TdMsgContent> p = move (nmsg->message_->content_);
 	    if (p->get_id () == TdMsgText::ID)
 	      {
 		// NOT WORKED: no copy ctor, will error:
@@ -413,7 +393,7 @@ TdCollector::process_update (TdObjPtr update)
 	  }
 
 	string sender_name;
-	TdUniPtr<TdMsgSender> sender_id = move (nmsg->message_->sender_id_);
+	TdPtr<TdMsgSender> sender_id = move (nmsg->message_->sender_id_);
 	switch (sender_id->get_id ())
 	  {
 	    case TdMsgSenderUser::ID: {
@@ -492,7 +472,7 @@ TdCollector::process_update (TdObjPtr update)
 	// ---
 	lock_guard<mutex> mq_guard (tgfstat::c::d::mq_lock);
 
-	tgf::TgMsg msg (chat_title_[chat_id], sender_name, text, tstamp);
+	tgf::TgMsg msg (__chat_titles[chat_id], sender_name, text, tstamp);
 	tgfstat::c::d::mq.insert (tgfstat::c::d::mq.begin (), move (msg));
 	tgfstat::c::d::it_msg_total.fetch_add (1, mo::relaxed);
 
@@ -501,26 +481,24 @@ TdCollector::process_update (TdObjPtr update)
 
       default: {
 	tgf::logfd_cg (1, "producer_iter:",
-		       tgfstat::c::d::it_cnt_producer.load (
-			 memory_order_relaxed),
+		       tgfstat::c::d::it_cnt_producer.load (mo::relaxed),
 		       " ignored update with id:", update->get_id ());
 	break;
       }
     }
 }
 
-auto
+function<void (TdObjPtr)>
 TdCollector::auth_query_callback ()
 {
-  return [this, id = auth_query_id_] (TdObjPtr object) {
-    if (id == auth_query_id_)
+  return [this, id = __auth_qry_id] (TdObjPtr object) {
+    if (id == __auth_qry_id)
       {
 	// FIXME: logging
-	cerr << "create auth query handle callback1, id:";
 	if (object->get_id () == TdErr::ID)
 	  {
 	    auto error = tl_movas<TdErr> (object);
-	    cerr << "Error: " << to_string (error) << flush;
+	    tgf::logfd_cg (1, 997755, to_string (error));
 	  }
       }
   };
@@ -529,9 +507,9 @@ TdCollector::auth_query_callback ()
 void
 TdCollector::on_authorization_state_update ()
 {
-  this->auth_query_id_++;
+  this->__auth_qry_id++;
 
-  switch (this->auth_state_->get_id ())
+  switch (this->__auth_stat->get_id ())
     {
       case TdAuthStatReady::ID: {
 	this->is_auth = true;
@@ -558,7 +536,7 @@ TdCollector::on_authorization_state_update ()
       }
 
       default: {
-	int32_t authState = this->auth_state_->get_id ();
+	int32_t authState = this->__auth_stat->get_id ();
 	if (authState == TdAuthStatWaitPhone::ID)
 	  {
 	    tulogfe_cg (
@@ -596,5 +574,5 @@ TdCollector::check_authentication_error (TdObjPtr object)
 uint64_t
 TdCollector::next_query_id ()
 {
-  return ++current_query_id_;
+  return ++__curr_qry_id;
 }

@@ -40,26 +40,26 @@ constexpr int NBYTE_IPCMSG_ARGS = NBYTE_IPCMSG_ALL - NBYTE_IPCMSG_MAGIC
 
 class IpcMsg
 {
-  IpcMsgType type_;
-  u8 data_[NBYTE_IPCMSG_ALL];
-  size_t data_len_;
+  IpcMsgType __type;
+  u8 __data[NBYTE_IPCMSG_ALL];
+  size_t __data_len_;
   u32 __extargs_len;		   // implying <= 4gb
   optional<vector<u8> > __extargs; // NOTE: will never be transferred
-  bool is_parsed_;
+  bool __is_parsed;
 
 public:
   IpcMsg (char buffer[NBYTE_IPCMSG_ALL]);
   ~IpcMsg () {}
-  inline bool well_formed () { return is_parsed_; };
-  inline IpcMsgType typ () noexcept { return type_; }
+  inline bool well_formed () { return __is_parsed; };
+  inline IpcMsgType typ () noexcept { return __type; }
   inline vector<u8> args () noexcept
   {
     int blk1len = NBYTE_IPCMSG_MAGIC;
     int blk2len = NBYTE_IPCMSG_TYPE;
     int blk3len = NBYTE_IPCMSG_EXTARGS;
 
-    return vector<u8> (data_ + (blk1len + blk2len + blk3len),
-		       data_ + data_len_);
+    return vector<u8> (__data + (blk1len + blk2len + blk3len),
+		       __data + __data_len_);
   }
   inline size_t extargs_len () noexcept
   {
@@ -68,7 +68,7 @@ public:
   inline optional<vector<u8> > extargs () noexcept { return __extargs; }
   inline std::vector<uint8_t> data () const noexcept
   {
-    return std::vector<uint8_t> (data_, data_ + data_len_);
+    return std::vector<uint8_t> (__data, __data + __data_len_);
   }
   void serialize_into (char buf[NBYTE_IPCMSG_ALL]) noexcept;
   void set_extargs (const u8 *obuf, size_t obuflen) noexcept;

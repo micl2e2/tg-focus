@@ -43,10 +43,11 @@ Usage: %s [command]
 Available Commands:
   auth              Log in Telegram account
   auth-reset        Log out Telegram account
-  startup           Start up the daemon
+  quickstart        Start up everyhing
   shutdown          Shutdown everyhing
-  focus-start       Start up the message collector
-  focus-stop        Stop the message collector
+  startup           Start up the daemon
+  focus-start       Start up the message collector (resume)
+  focus-stop        Stop the message collector (pause)
   auth-cust-api     Log in Telegram (with provided API ID and API HASH)
   filters           Customize focus filter(s)
   use-chat          Initialize TG-FOCUS chat as a basic group (default)

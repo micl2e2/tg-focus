@@ -54,7 +54,7 @@ std::ostream &
 tgf::operator<< (std::ostream &os, const tgf::IpcMsg &self)
 {
   os << "IpcMsg(";
-  os << "type:" << self.type_;
+  os << "type:" << self.__type;
   os << ",";
   os << "extargs_len:" << self.__extargs_len;
   os << ",";
@@ -68,7 +68,7 @@ tgf::operator<< (std::ostream &os, const tgf::IpcMsg &self)
       os << "extargs:" << "-";
       os << ",";
     }
-  os << "data_len:" << self.data_len_;
+  os << "data_len:" << self.__data_len_;
   os << ",";
   os << "data:" << as_hex_list (self.data ());
   os << ",";
@@ -79,10 +79,10 @@ tgf::operator<< (std::ostream &os, const tgf::IpcMsg &self)
 tgf::IpcMsg::IpcMsg (char buffer[NBYTE_IPCMSG_ALL])
 {
   // default ctor
-  type_ = IpcMsgType::Ignore;
-  memset (data_, 0, NBYTE_IPCMSG_ALL);
-  data_len_ = 0;
-  is_parsed_ = false;
+  __type = IpcMsgType::Ignore;
+  memset (__data, 0, NBYTE_IPCMSG_ALL);
+  __data_len_ = 0;
+  __is_parsed = false;
 
   int blk1len = NBYTE_IPCMSG_MAGIC;
   int blk2len = NBYTE_IPCMSG_TYPE;
@@ -101,7 +101,7 @@ tgf::IpcMsg::IpcMsg (char buffer[NBYTE_IPCMSG_ALL])
 	{
 	  if (magic == 0x746766)
 	    {
-	      is_parsed_ = true;
+	      __is_parsed = true;
 	    }
 	  else
 	    {
@@ -120,11 +120,11 @@ tgf::IpcMsg::IpcMsg (char buffer[NBYTE_IPCMSG_ALL])
 	}
     }
 
-  if (is_parsed_)
+  if (__is_parsed)
     {
-      memcpy (data_, buffer, NBYTE_IPCMSG_ALL);
-      type_ = scast<IpcMsgType> (typ);
-      data_len_ = NBYTE_IPCMSG_ALL;
+      memcpy (__data, buffer, NBYTE_IPCMSG_ALL);
+      __type = scast<IpcMsgType> (typ);
+      __data_len_ = NBYTE_IPCMSG_ALL;
       __extargs_len = extlen;
       __extargs = nullopt;
     }
@@ -133,7 +133,7 @@ tgf::IpcMsg::IpcMsg (char buffer[NBYTE_IPCMSG_ALL])
 void
 tgf::IpcMsg::serialize_into (char buf[NBYTE_IPCMSG_ALL]) noexcept
 {
-  memcpy (buf, data_, NBYTE_IPCMSG_ALL);
+  memcpy (buf, __data, NBYTE_IPCMSG_ALL);
 }
 
 void

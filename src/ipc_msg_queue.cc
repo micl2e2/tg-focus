@@ -8,10 +8,10 @@
 bool
 tgf::IpcMsgQueue::enqueue (tgf::IpcMsg &&cmd)
 {
-  std::lock_guard<std::mutex> g (lck_);
-  tulogfd ( "IpcMsgQueue::enqueue", "queue size", queue_.size ());
+  std::lock_guard<std::mutex> g (__lck);
+  tulogfd ( "IpcMsgQueue::enqueue", "queue size", __queue.size ());
 
-  queue_.emplace_back (cmd);
+  __queue.emplace_back (cmd);
   tgfstat::c::q_ipcmsg_has_upd.store (true, std::memory_order_relaxed);
   tgfstat::c::q_ipcmsg_has_upd.notify_all ();
 
@@ -21,13 +21,13 @@ tgf::IpcMsgQueue::enqueue (tgf::IpcMsg &&cmd)
 std::optional<tgf::IpcMsg>
 tgf::IpcMsgQueue::deque ()
 {
-  std::lock_guard<std::mutex> g (lck_);
-  tulogfd ( "IpcMsgQueue::deque", "queue size", queue_.size ());
+  std::lock_guard<std::mutex> g (__lck);
+  tulogfd ( "IpcMsgQueue::deque", "queue size", __queue.size ());
 
-  if (queue_.size () > 0)
+  if (__queue.size () > 0)
     {
-      tgf::IpcMsg cmd = queue_.back ();
-      queue_.pop_back ();
+      tgf::IpcMsg cmd = __queue.back ();
+      __queue.pop_back ();
       return cmd;
     }
   return std::nullopt;

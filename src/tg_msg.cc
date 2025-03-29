@@ -18,21 +18,21 @@ make_timestamp_readable (uint32_t tstamp)
 tgf::TgMsg::TgMsg (std::string &&chat_title, std::string &&sender,
 	      std::string &&text_content, int32_t tstamp)
 {
-  this->title_ = std::move (chat_title);
-  this->sender_ = std::move (sender);
-  this->txt_ = std::move (text_content);
-  this->tstamp_ = make_timestamp_readable (tstamp);
-  this->id_ = 0;
+  this->__title = std::move (chat_title);
+  this->__sender = std::move (sender);
+  this->__txt = std::move (text_content);
+  this->__tstamp = make_timestamp_readable (tstamp);
+  this->__id = 0;
 }
 
 tgf::TgMsg::TgMsg (std::string &chat_title, std::string &sender,
 	      std::string &text_content, int32_t tstamp)
 {
-  this->title_ = (chat_title);
-  this->sender_ = (sender);
-  this->txt_ = (text_content);
-  this->tstamp_ = make_timestamp_readable (tstamp);
-  this->id_ = 0;
+  this->__title = (chat_title);
+  this->__sender = (sender);
+  this->__txt = (text_content);
+  this->__tstamp = make_timestamp_readable (tstamp);
+  this->__id = 0;
 }
 
 std::string
@@ -45,19 +45,19 @@ tgf::TgMsg::to_locale_string () const
       //
       case tgf::Lang::zh_HK: {
 	ret += "[ 群組 ] ";
-	ret += this->title_;
+	ret += this->__title;
 	ret += "\n";
 	ret += "[ 用戶 ] ";
-	ret += this->sender_;
+	ret += this->__sender;
 	ret += "\n";
 	ret += "[ 訊息 ] ";
-	ret += this->txt_;
+	ret += this->__txt;
 	ret += "\n";
 	ret += "[ 時間 ] ";
-	ret += this->tstamp_;
+	ret += this->__tstamp;
 	ret += "\n";
 	ret += "[ 標識 ] ";
-	ret += std::to_string (this->id_);
+	ret += std::to_string (this->__id);
 	ret += "\n";
 
 	// R"([ 群组 ] {}
@@ -71,19 +71,19 @@ tgf::TgMsg::to_locale_string () const
       //
       case tgf::Lang::zh_CN: {
 	ret += "[ 群组 ] ";
-	ret += this->title_;
+	ret += this->__title;
 	ret += "\n";
 	ret += "[ 用户 ] ";
-	ret += this->sender_;
+	ret += this->__sender;
 	ret += "\n";
 	ret += "[ 信息 ] ";
-	ret += this->txt_;
+	ret += this->__txt;
 	ret += "\n";
 	ret += "[ 时间 ] ";
-	ret += this->tstamp_;
+	ret += this->__tstamp;
 	ret += "\n";
 	ret += "[ 标识 ] ";
-	ret += std::to_string (this->id_);
+	ret += std::to_string (this->__id);
 	ret += "\n";
 
 	// R"([ 群组 ] {}
@@ -97,20 +97,20 @@ tgf::TgMsg::to_locale_string () const
 
       default: {
 	ret += "\xf0\x9f\x92\xa1 | ";
-	ret += this->title_;
+	ret += this->__title;
 	ret += "\n";
 	ret += "\xe2\x9c\x89 | ";
-	ret += this->sender_;
+	ret += this->__sender;
 	ret += "\n";
 	ret += "\xf0\x9f\x92\xac | "; // "\u1f4ac" is only for <=FFFF
 				      // \U... is compile-time error
-	ret += this->txt_;
+	ret += this->__txt;
 	ret += "\n";
 	ret += "\xf0\x9f\x95\x94 | ";
-	ret += this->tstamp_;
+	ret += this->__tstamp;
 	ret += "\n";
 	ret += "\xe2\x99\xbe | ";
-	ret += std::to_string (this->id_);
+	ret += std::to_string (this->__id);
 	ret += "\n";
 
 	// R"([ CHAT ] {}
@@ -132,11 +132,11 @@ std::ostream &
 operator<< (std::ostream &os, const tgf::TgMsg &msg)
 {
   os << "Telegram Message-"
-     << "<title," << msg.title_ << ">"
-     << "<sender," << msg.sender_ << ">"
-     << "<txt," << msg.txt_ << ">"
-     << "<tstamp," << msg.tstamp_ << ">"
-     << "<id," << msg.id_ << ">";
+     << "<title," << msg.__title << ">"
+     << "<sender," << msg.__sender << ">"
+     << "<txt," << msg.__txt << ">"
+     << "<tstamp," << msg.__tstamp << ">"
+     << "<id," << msg.__id << ">";
   return os;
 }
 

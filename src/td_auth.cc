@@ -5,35 +5,36 @@
 #include "td_auth.hh"
 #include "std_comp.hh"
 #include "common.hh"
-#include <td/telegram/td_api.h>
 
 tgf::TdAuth::TdAuth (bool useProvidedApiPass)
 {
-  td::ClientManager::execute (
-    td_api::make_object<td_api::setLogVerbosityLevel> (1));
-  client_manager_ = std::make_unique<td::ClientManager> ();
-  client_id_ = client_manager_->create_client_id ();
-  send_query (td_api::make_object<td_api::getOption> ("version"), {});
-  send_query (td_api::make_object<td_api::setOption> (
-		"use_storage_optimizer",
-		td_api::make_object<td_api::optionValueBoolean> (true)),
+  __clientid = 0;
+  __curr_qry_id = 0;
+  __apiid = 0;
+  __apihash = ""s;
+  TdClient::execute (td_mkobj<TdSetLogLevel> (1));
+  __client = make_unique<TdClient> ();
+  __clientid = __client->create_client_id ();
+  send_query (td_mkobj<TdGetOpt> ("version"), {});
+  send_query (td_mkobj<TdSetOpt> ("use_storage_optimizer",
+				  td_mkobj<TdOptValBool> (true)),
 	      {});
-  useProvidedApiPass_ = useProvidedApiPass;
+  __use_our_api = useProvidedApiPass;
 }
 
 tgf::TdAuth::~TdAuth ()
 {
-  send_query (td_api::make_object<td_api::close> (), [] (Object obj) {
-    if (obj->get_id () == td_api::ok::ID)
-      tgf::logd ( "Closing...");
+  send_query (td_mkobj<TdClose> (), [] (TdObjPtr obj) {
+    if (obj->get_id () == TdOk::ID)
+      tgf::logd ("Closing...");
   });
 
-  while (!tgfstat::p::is_tdlib_closed.load (std::memory_order_acquire))
+  while (!tgfstat::p::is_tdlib_closed.load (memory_order_acquire))
     {
-      auto response = client_manager_->receive (60);
+      auto response = __client->receive (60);
       if (response.object)
 	{
-	  process_response (std::move (response));
+	  process_response (move (response));
 	}
     }
 }
@@ -41,140 +42,103 @@ tgf::TdAuth::~TdAuth ()
 void
 tgf::TdAuth::loop ()
 {
-  while (!tgfstat::p::is_login.load (std::memory_order_acquire))
+  while (!tgfstat::p::is_login.load (memory_order_acquire))
     {
-      auto response = client_manager_->receive (60);
+      TdClient::Response response = __client->receive (60);
       if (response.object)
 	{
-	  process_response (std::move (response));
+	  process_response (move (response));
 	}
     }
-  cout << ( "Logged in!") << endl;
+  cout << ("Logged in!") << endl;
 }
 
 void
-tgf::TdAuth::send_query (td_api::object_ptr<td_api::Function> f,
-		    std::function<void (Object)> handler)
+tgf::TdAuth::send_query (TdPtr<TdFunc> tdfn, function<void (TdObjPtr)> cbfn)
 {
   auto query_id = next_query_id ();
-  if (handler)
+  if (cbfn)
     {
-      handlers_.emplace (query_id, std::move (handler));
+      __cb.emplace (query_id, move (cbfn));
     }
-  client_manager_->send (client_id_, query_id, std::move (f));
+  tulogfd_cg (1, 232323);
+  __client->send (__clientid, query_id, move (tdfn));
 }
 
 void
-tgf::TdAuth::process_response (td::ClientManager::Response response)
+tgf::TdAuth::process_response (TdClient::Response response)
 {
   if (!response.object)
-    {
-      return;
-    }
+    return;
   if (response.request_id == 0)
+    return process_update (move (response.object));
+  auto it = __cb.find (response.request_id);
+  if (it != __cb.end ())
     {
-      return process_update (std::move (response.object));
+      it->second (move (response.object));
+      __cb.erase (it);
     }
-  auto it = handlers_.find (response.request_id);
-  if (it != handlers_.end ())
-    {
-      it->second (std::move (response.object));
-      handlers_.erase (it);
-    }
-}
-
-std::string
-tgf::TdAuth::get_user_name (std::int64_t user_id) const
-{
-  auto it = users_.find (user_id);
-  if (it == users_.end ())
-    {
-      return "unknown user";
-    }
-  return it->second->first_name_ + " " + it->second->last_name_;
-}
-
-std::string
-tgf::TdAuth::get_chat_title (std::int64_t chat_id) const
-{
-  auto it = chat_title_.find (chat_id);
-  if (it == chat_title_.end ())
-    {
-      return "unknown chat";
-    }
-  return it->second;
 }
 
 void
-tgf::TdAuth::process_update (td_api::object_ptr<td_api::Object> update)
+tgf::TdAuth::process_update (TdObjPtr update)
 {
-  using td::td_api::updateAuthorizationState;
-  using td::td_api::updateChatTitle;
-  using td::td_api::updateNewChat;
-  using td::td_api::updateNewMessage;
-  using td::td_api::updateUser;
-
   switch (update->get_id ())
     {
-      case updateAuthorizationState::ID: {
-	auto casted = static_cast<updateAuthorizationState *> (update.get ());
-	this->auth_state_ = std::move (casted->authorization_state_);
+      case TdUpdAuthStat::ID: {
+	TdUpdAuthStat *casted = static_cast<TdUpdAuthStat *> (update.get ());
+	this->__auth_stat = move (casted->authorization_state_);
 	this->on_authorization_state_update ();
 	break;
       }
     }
 }
 
-auto
+function<void (TdObjPtr)>
 tgf::TdAuth::auth_query_callback ()
 {
-  return [this] (Object object) {
-    if (object->get_id () == td_api::ok::ID)
+  return [this] (TdObjPtr object) {
+    if (object->get_id () == TdOk::ID)
       {
-	// std::cout << "OK!" << std::endl;
+	// cout << "OK!" << endl;
       }
-    else if (object->get_id () == td_api::error::ID)
+    else if (object->get_id () == TdErr::ID)
       {
-	auto error = td::move_tl_object_as<td_api::error> (object);
+	auto error = tl_movas<TdErr> (object);
 
-	if (error->message_.find ("PHONE_NUMBER_INVALID") != std::string::npos)
-	  tgf::loge ( "The phone number is invalid");
-	else if (error->message_.find ("PHONE_CODE_HASH_EMPTY")
-		 != std::string::npos)
-	  tgf::loge ( "phone_code_hash is missing");
-	else if (error->message_.find ("PHONE_CODE_EMPTY") != std::string::npos)
-	  tgf::loge ( "phone_code is missing");
-	else if (error->message_.find ("PHONE_CODE_EXPIRED")
-		 != std::string::npos)
-	  tgf::loge ( "The confirmation code has expired");
-	else if (error->message_.find ("PHONE_CODE_INVALID")
-		 != std::string::npos)
-	  tgf::loge ( "The login code is invalid");
-	else if (error->message_.find ("API_ID_INVALID") != std::string::npos)
-	  tgf::loge ( "The api_id/api_hash combination is invalid"
-			       "(restart might be needed)");
-	else if (error->message_.find ("PASSWORD_HASH_INVALID")
-		 != std::string::npos)
-	  tgf::loge ( "Incorrect password");
+	if (error->message_.find ("PHONE_NUMBER_INVALID") != string::npos)
+	  tgf::loge ("The phone number is invalid");
+	else if (error->message_.find ("PHONE_CODE_HASH_EMPTY") != string::npos)
+	  tgf::loge ("phone_code_hash is missing");
+	else if (error->message_.find ("PHONE_CODE_EMPTY") != string::npos)
+	  tgf::loge ("phone_code is missing");
+	else if (error->message_.find ("PHONE_CODE_EXPIRED") != string::npos)
+	  tgf::loge ("The confirmation code has expired");
+	else if (error->message_.find ("PHONE_CODE_INVALID") != string::npos)
+	  tgf::loge ("The login code is invalid");
+	else if (error->message_.find ("API_ID_INVALID") != string::npos)
+	  tgf::loge ("The api_id/api_hash combination is invalid"
+		     "(restart might be needed)");
+	else if (error->message_.find ("PASSWORD_HASH_INVALID") != string::npos)
+	  tgf::loge ("Incorrect password");
 	else if (error->message_.find ("PHONE_NUMBER_UNOCCUPIED")
-		 != std::string::npos)
-	  tgf::loge ( "The phone number is not yet being used");
+		 != string::npos)
+	  tgf::loge ("The phone number is not yet being used");
 	else if (error->message_.find (
 		   "Valid api_id must be provided. Can be obtained at")
-		 != std::string::npos)
-	  tgf::loge ( "Invalid API ID");
+		 != string::npos)
+	  tgf::loge ("Invalid API ID");
 	else
 	  {
-	    tgf::loge ( "ERROR: {}", error->message_);
-	    tgf::loge ( "Fatal errors. Please submit a bug report.");
-	    std::exit (11);
+	    tgf::loge ("ERROR: {}", error->message_);
+	    tgf::loge ("Fatal errors. Please submit a bug report.");
+	    exit (11);
 	  }
 	on_authorization_state_update ();
       }
     else
       {
-	tgf::loge ( "ERROR: unexpected auth callback id:{}",
-	       object->get_id ());
+	tgf::loge ("ERROR: unexpected auth callback id:{}", object->get_id ());
       }
   };
 }
@@ -182,85 +146,81 @@ tgf::TdAuth::auth_query_callback ()
 void
 tgf::TdAuth::on_authorization_state_update ()
 {
-  switch (this->auth_state_->get_id ())
+  switch (this->__auth_stat->get_id ())
     {
-      case td_api::authorizationStateReady::ID: {
+      case TdAuthStatReady::ID: {
 	// api id/hash correct, phone and vcode correct
 
-	this->is_authorized = true;
+	this->__is_auth = true;
 
 	// persistent
-	tgfstat::userdata.set_api_id (this->api_id_);
-	tgfstat::userdata.set_api_hash (std::move (this->api_hash_));
+	tgfstat::userdata.set_api_id (this->__apiid);
+	tgfstat::userdata.set_api_hash (move (this->__apihash));
 	tgfstat::userdata.set_auth_hint (true);
 
-	tgfstat::p::is_login.store (true, std::memory_order_release);
+	tgfstat::p::is_login.store (true, memory_order_release);
 
 	break;
       }
 
       // FIXME:  auth-reset should make use of this event
-      // case td_api::authorizationStateLoggingOut::ID: {
-      //   this->is_authorized = false;
-      //   std::cout << "Logging out" << std::endl;
+      // case TdAuthStatLogOut::ID: {
+      //   this->__is_auth = false;
+      //   cout << "Logging out" << endl;
       //   break;
       // }
 
-      case td_api::authorizationStateClosing::ID: {
-	// std::cout << "Closing" << std::endl;
+      case TdAuthStatClosing::ID: {
+	// cout << "Closing" << endl;
 	break;
       }
 
-      case td_api::authorizationStateClosed::ID: {
-	tgf::logd ( "Closed");
-	this->is_authorized = false;
-	tgfstat::p::is_tdlib_closed.store (true, std::memory_order_release);
+      case TdAuthStatClosed::ID: {
+	tgf::logd ("Closed");
+	this->__is_auth = false;
+	tgfstat::p::is_tdlib_closed.store (true, memory_order_release);
 	break;
       }
 
-      case td_api::authorizationStateWaitPhoneNumber::ID: {
-	std::cout << ("Enter phone number: ") << std::flush;
-	std::string phone_number;
-	std::getline (std::cin, phone_number);
-	std::string phone_number_fotmatted = rmspc (std::move (phone_number));
+      case TdAuthStatWaitPhone::ID: {
+	cout << ("Enter phone number: ") << flush;
+	string phone_number;
+	getline (cin, phone_number);
+	string phone_number_fotmatted = rmspc (move (phone_number));
 
-	send_query (td_api::make_object<td_api::setAuthenticationPhoneNumber> (
-		      phone_number_fotmatted, nullptr),
+	send_query (td_mkobj<TdSetAuthPhone> (phone_number_fotmatted, nullptr),
 		    auth_query_callback ());
 	break;
       }
 
-      case td_api::authorizationStateWaitCode::ID: {
-	std::cout << ("Enter authentication code: ") << std::flush;
-	std::string code;
-	std::cin >> code;
-	send_query (td_api::make_object<td_api::checkAuthenticationCode> (code),
-		    auth_query_callback ());
+      case TdAuthStatWaitCode::ID: {
+	cout << ("Enter login code: ") << flush;
+	string code;
+	cin >> code;
+	send_query (td_mkobj<TdChkAuthCode> (code), auth_query_callback ());
 	break;
       }
 
-      case td_api::authorizationStateWaitPassword::ID: {
-	std::cout << ("Enter authentication password: ") << std::flush;
-	std::string code;
-	std::cin >> code;
-	send_query (td_api::make_object<td_api::checkAuthenticationPassword> (
-		      code),
-		    auth_query_callback ());
+      case TdAuthStatWaitPsw::ID: {
+	cout << ("Enter authentication password: ") << flush;
+	string code;
+	cin >> code;
+	send_query (td_mkobj<TdChkAuthPsw> (code), auth_query_callback ());
 	break;
       }
 
       // assuming always the first event
-      case td_api::authorizationStateWaitTdlibParameters::ID: {
-	std::int32_t api_id;
-	std::string may_api_id;
-	std::string api_hash;
+      case TdAuthStatWaitPara::ID: {
+	int32_t api_id;
+	string may_api_id;
+	string api_hash;
 
 	if (tgfstat::userdata.get_auth_hint ())
 	  {
 	    api_id = tgfstat::userdata.get_api_id ();
 	    api_hash = tgfstat::userdata.get_api_hash ();
 	  }
-	else if (this->useProvidedApiPass_)
+	else if (this->__use_our_api)
 	  {
 	    int p1 = 0x01b6;
 	    int p2 = 0x7787;
@@ -271,19 +231,19 @@ tgf::TdAuth::on_authorization_state_update ()
 	  }
 	else
 	  {
-	    std::cout << ("Enter api id: ") << std::flush;
-	    std::cin >> may_api_id;
+	    cout << ("Enter api id: ") << flush;
+	    cin >> may_api_id;
 
 	    if (is_valid_int32 (may_api_id))
 	      api_id = sstr_to_int32 (may_api_id);
 	    else
 	      api_id = 0;
 
-	    std::cout << ("Enter api hash: ") << std::flush;
-	    std::cin >> api_hash;
+	    cout << ("Enter api hash: ") << flush;
+	    cin >> api_hash;
 	  }
 
-	auto request = td_api::make_object<td_api::setTdlibParameters> ();
+	auto request = td_mkobj<TdSetPara> ();
 	request->database_directory_ = tgfstat::userdata.path_tddata ();
 	request->use_message_database_ = true;
 	request->use_secret_chats_ = true;
@@ -293,18 +253,17 @@ tgf::TdAuth::on_authorization_state_update ()
 	request->device_model_ = TF_DEV;
 	request->application_version_ = TF_VER;
 
-	this->api_id_ = api_id;
-	this->api_hash_ = api_hash;
+	this->__apiid = api_id;
+	this->__apihash = api_hash;
 
-	send_query (std::move (request), auth_query_callback ());
+	send_query (move (request), auth_query_callback ());
 	break;
       }
 
       default: {
-	tgf::loge ( "ERROR: unknown event {}",
-	       this->auth_state_->get_id ());
-	tgf::loge ( "Fatal errors. Please submit a bug report.");
-	std::exit (10);
+	tgf::loge ("ERROR: unknown event {}", this->__auth_stat->get_id ());
+	tgf::loge ("Fatal errors. Please submit a bug report.");
+	exit (10);
       }
     }
 }

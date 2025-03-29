@@ -1,100 +1,55 @@
 #ifndef hh_td_coll
 #define hh_td_coll
 
-#include <cstdlib>
-#include <vector>
-#include <atomic>
-#include <mutex>
-#include <chrono>
-#include <map>
-#include <functional>
-#include <atomic>
-#include <chrono>
-#include <iostream>
-
-#include <td/telegram/Client.h>
-#include <td/telegram/td_api.h>
-#include <td/telegram/td_api.hpp>
-
 #include "std_comp.hh"
 #include "td_comp.hh"
 
+#include <unordered_map>
+#include <string>
+#include <functional>
+
 class TdCollector
 {
-public:
-  bool tried_c_tgfchat{false};
-  // bool done_create_collector{false};
-
-  TdCollector () = default;
-
-  //
-  // initialize td client
-  void init ();
-
-  //
-  // create collector chat
-  void try_create_tgfchat ();
-  //
-  // send message to collector chat
-  void collect_msg (const tgf::TgMsg &msg);
-
-  void handle_tgfcmd (string &&incom_txt);
-
-  //
-  // signal td client to fetch updates
-  void fetch_updates ();
-
-  bool is_auth{false};
-
-  size_t n_handlers () { return this->handlers_.size (); }
-
-  size_t n_users () { return this->users_.size (); }
-
-  size_t n_chat_titles () { return this->chat_title_.size (); }
-
-private:
-  unique_ptr<TdClient> client_manager_; // client manager obj
-  int32_t client_id_{0};		// client id
-
-  TdUniPtr<TdAuthStat> auth_state_;
-  // td::tapi::int53 collector_id{0};
-  uint64_t current_query_id_{0}; // increase by each query
-  uint64_t auth_query_id_{0};
-
-  map<uint64_t, function<void (TdObjPtr)>> handlers_;
-
-  map<int64_t, TdUniPtr<TdUser>> users_;
-
-  map<int64_t, string> chat_title_;
-
-  //
+  unique_ptr<TdClient> __client;
+  i32 __clientid;
+  TdPtr<TdAuthStat> __auth_stat;
+  u64 __curr_qry_id;
+  u64 __auth_qry_id;
+  unordered_map<u64, function<void (TdObjPtr)>> __cb;
+  unordered_map<i64, TdPtr<TdUser>> __users;
+  unordered_map<i64, string> __chat_titles;
   // signal td client to send a request
-  void send_query (TdUniPtr<TdFunc> f, function<void (TdObjPtr)> handler);
-
-  //
+  void send_query (TdPtr<TdFunc> tdfn, function<void (TdObjPtr)> cbfn);
   // process response from td client, maybe for an automatic update, maybe for a
   // user's request.
   void process_response (TdClient::Response response);
-
-  //
   // get user name from internal map
-  string get_user_name (int64_t user_id) const;
-
-  //
+  string get_user_name (i64 user_id) const;
   // get chat title from internal map
-  string get_chat_title (int64_t chat_id) const;
-
+  string get_chat_title (i64 chat_id) const;
   void process_update (TdObjPtr update);
-
-  auto auth_query_callback ();
-
+  function<void (TdObjPtr)> auth_query_callback ();
   void on_authorization_state_update ();
-
   void check_authentication_error (TdObjPtr object);
-
-  //
   // td request id
-  uint64_t next_query_id ();
+  u64 next_query_id ();
+
+public:
+  bool tried_c_tgfchat{false};
+  TdCollector () : __clientid (0), __curr_qry_id (0), __auth_qry_id (0) {}
+  // initialize td client
+  void init ();
+  // create collector chat
+  void try_create_tgfchat ();
+  // send message to collector chat
+  void collect_msg (const tgf::TgMsg &msg);
+  void handle_tgfcmd (string &&incom_txt);
+  // signal td client to fetch updates
+  void fetch_updates ();
+  bool is_auth{false};
+  size_t n_handlers () { return this->__cb.size (); }
+  size_t n_users () { return this->__users.size (); }
+  size_t n_chat_titles () { return this->__chat_titles.size (); }
 };
 
 #endif
