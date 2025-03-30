@@ -587,19 +587,19 @@ no-keywords = ["zzz","asda ..."]
   tgfass (res.done ());
   tgfass (res.aux_msg () == string (CHATCMD_RPLY_PREFIX) + R"(
 
-🞋 🞋 🞋 🞋 🞋 FILTER 1 🞋 🞋 🞋 🞋 🞋
-
-🞋 Titles <titles>
+● ● ● ● ● FILTER 1 ● ● ● ● ●
+● ●
+● Titles <titles>
 ⤷ (.*)
-🞋 Senders <senders>
+● Senders <senders>
 ⤷ 
-🞋 Keywords <keywords>
+● Keywords <keywords>
 ⤷ (xxx)  (yyy)
-🞋 NO Titles <no-titles>
+● NO Titles <no-titles>
 ⤷ 
-🞋 NO Senders <no-senders>
+● NO Senders <no-senders>
 ⤷ 
-🞋 NO Keywords <no-keywords>
+● NO Keywords <no-keywords>
 ⤷ (zzz)  (asda ...)
 )");
   tgfass (res.did_what ().has_value ());
@@ -630,34 +630,34 @@ titles = []
   tgfass (res.done ());
   tgfass (res.aux_msg () == string (CHATCMD_RPLY_PREFIX) + R"(
 
-🞋 🞋 🞋 🞋 🞋 FILTER 1 🞋 🞋 🞋 🞋 🞋
-
-🞋 Titles <titles>
+● ● ● ● ● FILTER 1 ● ● ● ● ●
+● ●
+● Titles <titles>
 ⤷ (.*)
-🞋 Senders <senders>
+● Senders <senders>
 ⤷ 
-🞋 Keywords <keywords>
+● Keywords <keywords>
 ⤷ (xxx)  (yyy)
-🞋 NO Titles <no-titles>
+● NO Titles <no-titles>
 ⤷ 
-🞋 NO Senders <no-senders>
+● NO Senders <no-senders>
 ⤷ 
-🞋 NO Keywords <no-keywords>
+● NO Keywords <no-keywords>
 ⤷ (zzz)  (asda ...)
 
-🞋 🞋 🞋 🞋 🞋 FILTER 2 🞋 🞋 🞋 🞋 🞋
-
-🞋 Titles <titles>
+● ● ● ● ● FILTER 2 ● ● ● ● ●
+● ●
+● Titles <titles>
 ⤷ 
-🞋 Senders <senders>
+● Senders <senders>
 ⤷ 
-🞋 Keywords <keywords>
+● Keywords <keywords>
 ⤷ 
-🞋 NO Titles <no-titles>
+● NO Titles <no-titles>
 ⤷ 
-🞋 NO Senders <no-senders>
+● NO Senders <no-senders>
 ⤷ 
-🞋 NO Keywords <no-keywords>
+● NO Keywords <no-keywords>
 ⤷ 
 )");
   tgfass (res.did_what ().has_value ());
