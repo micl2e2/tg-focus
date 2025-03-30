@@ -164,6 +164,82 @@ titles = [".*"]
 }
 
 void
+tst_editf_1filter_badre ()
+{
+  string usript = "editf 1 keywords add \")(\"";
+  string curr_filters = R"(
+[[focus-filter]]
+)";
+  tfdata.set_filters (move (curr_filters));
+  tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdEditFilter, usript, tfdata);
+  tgfass (!res.done ());
+  // cerr << res.aux_msg () << endl;
+  tgfass (res.aux_msg ()
+	  == ("〘 TGFCMD 〙invalid"
+	      " " CHATCMD_EDITF_ARG4 "\n\n" CHATCMD_EDITF_USAGE));
+  tgfass (res.did_what ().has_value ());
+  tgfass (res.did_what ().value () == "editf 1 keywords add \")(\" ");
+  tgfass (!res.succ_data ().has_value ());
+  // cerr << tfdata.get_filters () << endl;
+  tgfass (tfdata.get_filters () == R"(
+[[focus-filter]]
+)");
+}
+
+void
+tst_editf_1filter_succ_re_reserved_symbol_escape ()
+{
+  string usript = "editf 1 titles add \"c\\+\\+\"";
+  string curr_filters = R"(
+[[focus-filter]]
+)";
+  tfdata.set_filters (move (curr_filters));
+  tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdEditFilter, usript, tfdata);
+  tgfass (res.done ());
+  tgfass (res.aux_msg () == "〘 TGFCMD 〙success");
+  tgfass (res.did_what ().has_value ());
+  tgfass (res.did_what ().value () == R"(editf 1 titles add "c\+\+" )");
+  tgfass (res.succ_data ().has_value ());
+  cerr << tfdata.get_filters () << endl;
+  tgfass (tfdata.get_filters () == R"(
+[[focus-filter]]
+titles = ["c\\+\\+"]
+no-titles = []
+senders = []
+no-senders = []
+keywords = []
+no-keywords = []
+)");
+  tgf::FilterGroupToml fg (tfdata.get_filters ());
+  cerr << fg.as_fsdata () << endl;
+  tgfass (fg.as_fsdata () == R"(
+[[focus-filter]]
+titles = ["c\\+\\+"]
+no-titles = []
+senders = []
+no-senders = []
+keywords = []
+no-keywords = []
+)");
+  {
+    tgf::TgMsg msg (""s, ""s, ""s);
+    tgfass (!fg.mtch_tgmsg (msg));
+  }
+  {
+    tgf::TgMsg msg ("c+"s, ""s, ""s);
+    tgfass (!fg.mtch_tgmsg (msg));
+  }
+  {
+    tgf::TgMsg msg ("cc"s, ""s, ""s);
+    tgfass (!fg.mtch_tgmsg (msg));
+  }
+  {
+    tgf::TgMsg msg ("c++"s, ""s, ""s);
+    tgfass (fg.mtch_tgmsg (msg));
+  }
+}
+
+void
 tst_editf_1filter_succmsg ()
 {
   string usript = "editf 1 keywords add \"xxx\"";
@@ -777,6 +853,7 @@ main ()
   tst_editf_failmsg_wrongspell4 ();
   tst_editf_failmsg_wrongspell5 ();
 
+  tst_editf_1filter_badre ();
   tst_editf_1filter_succmsg ();
   tst_editf_1filter_succmsg2 ();
   tst_editf_1filter_succmsg3 ();
@@ -798,6 +875,8 @@ main ()
   tst_rm_filter_fail ();
   tst_rm_filter_fail2 ();
   tst_rm_filter_fail3 ();
+
+  tst_editf_1filter_succ_re_reserved_symbol_escape ();
 
   return 0;
 }

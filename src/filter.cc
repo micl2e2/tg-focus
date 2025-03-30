@@ -66,6 +66,22 @@ tgf::FilterGroupToml::FilterGroupToml (const string &v) noexcept
   this->__filters = std::move (fs);
 }
 
+string
+escape (const string &self)
+{
+  ostringstream news;
+  for (int i = 0; i < self.length (); i++)
+    {
+      if (self[i] == 0x5c)
+	{
+	  news << R"(\\)";
+	}
+      else
+	news << self[i];
+    }
+  return news.str ();
+}
+
 // template <typename V, typename F>
 //   requires CanFilterRecogValue<F, V>
 // string
@@ -83,7 +99,8 @@ tgf::FilterGroupToml::as_fsdata () noexcept
       for (int ii = 0; ii < el.__titles.size (); ii++)
 	{
 	  const PosixExtRegex &elel = el.__titles[ii];
-	  oss << "\"" << elel.ptn () << "\"";
+	  string s = escape (elel.ptn ());
+	  oss << "\"" << s << "\"";
 	  if (ii < el.__titles.size () - 1)
 	    oss << ", ";
 	}
@@ -93,7 +110,8 @@ tgf::FilterGroupToml::as_fsdata () noexcept
       for (int ii = 0; ii < el.__no_titles.size (); ii++)
 	{
 	  const PosixExtRegex &elel = el.__no_titles[ii];
-	  oss << "\"" << elel.ptn () << "\"";
+	  string s = escape (elel.ptn ());
+	  oss << "\"" << s << "\"";
 	  if (ii < el.__no_titles.size () - 1)
 	    oss << ", ";
 	}
@@ -103,7 +121,8 @@ tgf::FilterGroupToml::as_fsdata () noexcept
       for (int ii = 0; ii < el.__senders.size (); ii++)
 	{
 	  const PosixExtRegex &elel = el.__senders[ii];
-	  oss << "\"" << elel.ptn () << "\"";
+	  string s = escape (elel.ptn ());
+	  oss << "\"" << s << "\"";
 	  if (ii < el.__senders.size () - 1)
 	    oss << ", ";
 	}
@@ -113,7 +132,8 @@ tgf::FilterGroupToml::as_fsdata () noexcept
       for (int ii = 0; ii < el.__no_senders.size (); ii++)
 	{
 	  const PosixExtRegex &elel = el.__no_senders[ii];
-	  oss << "\"" << elel.ptn () << "\"";
+	  string s = escape (elel.ptn ());
+	  oss << "\"" << s << "\"";
 	  if (ii < el.__no_senders.size () - 1)
 	    oss << ", ";
 	}
@@ -123,7 +143,8 @@ tgf::FilterGroupToml::as_fsdata () noexcept
       for (int ii = 0; ii < el.__keywords.size (); ii++)
 	{
 	  const PosixExtRegex &elel = el.__keywords[ii];
-	  oss << "\"" << elel.ptn () << "\"";
+	  string s = escape (elel.ptn ());
+	  oss << "\"" << s << "\"";
 	  if (ii < el.__keywords.size () - 1)
 	    oss << ", ";
 	}
@@ -133,7 +154,8 @@ tgf::FilterGroupToml::as_fsdata () noexcept
       for (int ii = 0; ii < el.__no_keywords.size (); ii++)
 	{
 	  const PosixExtRegex &elel = el.__no_keywords[ii];
-	  oss << "\"" << elel.ptn () << "\"";
+	  string s = escape (elel.ptn ());
+	  oss << "\"" << s << "\"";
 	  if (ii < el.__no_keywords.size () - 1)
 	    oss << ", ";
 	}
