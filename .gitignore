@@ -16,3 +16,6 @@ build
 
 tdlib-*.json
 tdlib-*.tar
+
+.idea
+cmake-build-debug
