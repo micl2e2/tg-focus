@@ -1,6 +1,7 @@
 #include <assert.h>
 #include "std_comp.hh"
 #include "chatcmd.hh"
+#include "filter.hh"
 #include "user_data.hh"
 #include "stat.hh"
 
@@ -355,6 +356,45 @@ no-keywords = []
 }
 
 void
+tst_editf_1filter_succmsg6 ()
+{
+  string usript = "editf 1 keywords add \"C++\"";
+  string curr_filters = R"(
+[[focus-filter]]
+)";
+  tfdata.set_filters (move (curr_filters));
+  tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdEditFilter, usript, tfdata);
+  tgfass (res.done ());
+  tgfass (res.aux_msg () == "〘 TGFCMD 〙success");
+  tgfass (res.did_what ().has_value ());
+  tgfass (res.did_what ().value () == "editf 1 keywords add \"C++\" ");
+  tgfass (res.succ_data ().has_value ());
+  string fg_fsdata = tfdata.get_filters ();
+  // cerr << tfdata.get_filters () << endl;
+  tgfass (fg_fsdata == R"(
+[[focus-filter]]
+titles = []
+no-titles = []
+senders = []
+no-senders = []
+keywords = ["C++"]
+no-keywords = []
+)");
+
+  tgf::FilterGroupToml fg = tgf::FilterGroupToml (tfdata.get_filters ());
+  cerr << fg.as_fsdata () << endl;
+  tgfass (fg.as_fsdata () == R"(
+[[focus-filter]]
+titles = []
+no-titles = []
+senders = []
+no-senders = []
+keywords = ["C++"]
+no-keywords = []
+)");
+}
+
+void
 tst_editf_2filter_succ_filters_pos_are_nonreversed ()
 {
   string usript = "editf 9 no-senders add \"zzz\"";
@@ -375,7 +415,7 @@ keywords = ["xxx"]
   tgfass (res.did_what ().has_value ());
   tgfass (res.did_what ().value () == "editf 3 no-senders add \"zzz\" ");
   tgfass (res.succ_data ().has_value ());
-  cerr << "|" << tfdata.get_filters ()<<"|";
+  cerr << "|" << tfdata.get_filters () << "|";
   tgfass (tfdata.get_filters () == R"(
 [[focus-filter]]
 titles = []
@@ -742,9 +782,10 @@ main ()
   tst_editf_1filter_succmsg3 ();
   tst_editf_2filter_succmsg4 ();
   tst_editf_2filter_succmsg5 ();
-  tst_editf_2filter_succ_filters_pos_are_nonreversed();
-  tst_editf_how_to_block_sometitle();
-  
+  tst_editf_1filter_succmsg6 ();
+  tst_editf_2filter_succ_filters_pos_are_nonreversed ();
+  tst_editf_how_to_block_sometitle ();
+
   tst_pause ();
   tst_resume ();
 

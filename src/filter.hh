@@ -44,17 +44,17 @@ public:
 
   Filter &operator= (Filter &&other);
 
-  bool mtch_titles (const std::string &input);
+  bool mtch_titles (const std::string &input) const;
 
-  bool mtch_no_titles (const std::string &input);
+  bool mtch_no_titles (const std::string &input) const;
 
-  bool mtch_senders (const std::string &input);
+  bool mtch_senders (const std::string &input) const;
 
-  bool mtch_no_senders (const std::string &input);
+  bool mtch_no_senders (const std::string &input) const;
 
-  bool mtch_keywords (const std::string &input);
+  bool mtch_keywords (const std::string &input) const;
 
-  bool mtch_no_keywords (const std::string &input);
+  bool mtch_no_keywords (const std::string &input) const;
 
   string as_readable () const;
 
@@ -68,7 +68,7 @@ protected:
   std::vector<PosixExtRegex> __keywords;
   std::vector<PosixExtRegex> __no_keywords;
 
-  FocusDecision mtch_tgmsg (const TgMsg &input);
+  FocusDecision mtch_tgmsg (const TgMsg &input) const;
 
   template <typename _V, typename _F>
   requires CanFilterRecogValue<_F, _V> friend class FilterGroup;
@@ -97,9 +97,14 @@ typedef enum
 template <typename V, typename F>
 requires CanFilterRecogValue<F, V> class FilterGroup
 {
+protected:
+  size_t i_prev_visited_;
+  std::vector<F> __filters;
+
 public:
   inline size_t n_filter () { return this->__filters.size (); }
   inline size_t i_prev_visited () { return this->i_prev_visited_; }
+  inline const std::vector<F> &filters () { return __filters; }
 
   bool mtch_tgmsg (const TgMsg &in);
   string as_readable () const;
@@ -119,19 +124,13 @@ public:
   bool del_keywords (u32 &which_filter, const string &value);
   bool add_no_keywords (u32 &which_filter, const string &value);
   bool del_no_keywords (u32 &which_filter, const string &value);
-
-protected:
-  size_t i_prev_visited_;
-  std::vector<F> __filters;
 };
 
 class FilterGroupToml : public FilterGroup<toml::value, FilterToml>
 {
 public:
   FilterGroupToml () = delete;
-  explicit FilterGroupToml (const toml::value &v) noexcept;
-  // no const bc both are basic_value
-  explicit FilterGroupToml (std::string &v) noexcept;
+  explicit FilterGroupToml (const std::string &v) noexcept;
   // Has at least one filter
   bool isEffective () noexcept { return this->__filters.size () > 0; }
   string as_fsdata () noexcept;
@@ -171,13 +170,13 @@ Filter<V>::operator= (Filter<V> &&move_assign_from)
 
 template <typename V>
 requires HasFilterFields<V> bool
-Filter<V>::mtch_titles (const std::string &input)
+Filter<V>::mtch_titles (const std::string &input) const
 {
   // if no candidates, match anything
   if (this->__titles.size () == 0)
     return true;
 
-  for (PosixExtRegex &re : this->__titles)
+  for (const PosixExtRegex &re : this->__titles)
     {
       if (auto flag = re.is_match (input))
 	{
@@ -191,13 +190,13 @@ Filter<V>::mtch_titles (const std::string &input)
 
 template <typename V>
 requires HasFilterFields<V> bool
-Filter<V>::mtch_no_titles (const std::string &input)
+Filter<V>::mtch_no_titles (const std::string &input) const
 {
   // if no candidates, match anything
   // if (this->__no_titles.size () == 0)
   // return true;
 
-  for (PosixExtRegex &re : this->__no_titles)
+  for (const PosixExtRegex &re : this->__no_titles)
     {
       if (auto flag = re.is_match (input))
 	{
@@ -211,13 +210,13 @@ Filter<V>::mtch_no_titles (const std::string &input)
 
 template <typename V>
 requires HasFilterFields<V> bool
-Filter<V>::mtch_keywords (const std::string &input)
+Filter<V>::mtch_keywords (const std::string &input) const
 {
   // if no candidates, match anything
   if (this->__keywords.size () == 0)
     return true;
 
-  for (PosixExtRegex &re : this->__keywords)
+  for (const PosixExtRegex &re : this->__keywords)
     {
       if (auto flag = re.is_match (input))
 	{
@@ -231,13 +230,13 @@ Filter<V>::mtch_keywords (const std::string &input)
 
 template <typename V>
 requires HasFilterFields<V> bool
-Filter<V>::mtch_no_keywords (const std::string &input)
+Filter<V>::mtch_no_keywords (const std::string &input) const
 {
   // if no candidates, not match anything
   if (this->__no_keywords.size () == 0)
     return false;
 
-  for (PosixExtRegex &re : this->__no_keywords)
+  for (const PosixExtRegex &re : this->__no_keywords)
     {
       if (auto flag = re.is_match (input))
 	{
@@ -296,12 +295,12 @@ Filter<V>::as_readable () const
 
 template <typename V>
 requires HasFilterFields<V> bool
-Filter<V>::mtch_senders (const std::string &input)
+Filter<V>::mtch_senders (const std::string &input) const
 {
   if (this->__senders.size () == 0)
     return true;
 
-  for (PosixExtRegex &re : this->__senders)
+  for (const PosixExtRegex &re : this->__senders)
     {
       if (auto flag = re.is_match (input))
 	{
@@ -315,12 +314,12 @@ Filter<V>::mtch_senders (const std::string &input)
 
 template <typename V>
 requires HasFilterFields<V> bool
-Filter<V>::mtch_no_senders (const std::string &input)
+Filter<V>::mtch_no_senders (const std::string &input) const
 {
   // if (this->__no_senders.size () == 0)
   //   return true;
 
-  for (PosixExtRegex &re : this->__no_senders)
+  for (const PosixExtRegex &re : this->__no_senders)
     {
       if (auto flag = re.is_match (input))
 	{
@@ -334,7 +333,7 @@ Filter<V>::mtch_no_senders (const std::string &input)
 
 template <typename V>
 requires HasFilterFields<V> FocusDecision
-Filter<V>::mtch_tgmsg (const TgMsg &in)
+Filter<V>::mtch_tgmsg (const TgMsg &in) const
 {
   // ACCEPT
 

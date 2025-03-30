@@ -8,10 +8,12 @@ endif()
 
 set(CurrTestName posix_regex)
 add_executable(${CurrTestName} t_${CurrTestName}.cc
-   ${PROJECT_SOURCE_DIR}/src/${CurrTestName}.cc
-)
+   ${PROJECT_SOURCE_DIR}/src/${CurrTestName}.cc)
 target_include_directories(${CurrTestName} PRIVATE
   ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(
+  ${CurrTestName}
+  PRIVATE -static-libgcc -static-libstdc++)
 add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 
 # --------------------------- Add A Test ---------------------------
@@ -21,11 +23,13 @@ add_executable(${CurrTestName} t_${CurrTestName}.cc
    ${PROJECT_SOURCE_DIR}/src/${CurrTestName}.cc
    ${PROJECT_SOURCE_DIR}/src/posix_regex.cc
    ${PROJECT_SOURCE_DIR}/src/tg_msg.cc
-   ${PROJECT_SOURCE_DIR}/src/locale_conf.cc
-)
+   ${PROJECT_SOURCE_DIR}/src/locale_conf.cc)
 target_include_directories(${CurrTestName} PRIVATE
   ${PROJECT_SOURCE_DIR}/src
   ${PROJECT_SOURCE_DIR}/3rd/toml11)
+target_link_libraries(
+  ${CurrTestName}
+  PRIVATE -static-libgcc -static-libstdc++)
 add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 
 # --------------------------- Add A Test ---------------------------
@@ -39,8 +43,7 @@ target_include_directories(${CurrTestName} PRIVATE
   ${PROJECT_SOURCE_DIR}/src)
 target_link_libraries(
   ${CurrTestName}
-  PRIVATE Td::TdStatic
-)
+  PRIVATE -static-libgcc -static-libstdc++ Td::TdStatic)
 add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 
 # --------------------------- Add A Test ---------------------------
@@ -48,20 +51,24 @@ add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 set(CurrTestName tg_msg)
 add_executable(${CurrTestName} t_${CurrTestName}.cc
   ${PROJECT_SOURCE_DIR}/src/${CurrTestName}.cc
-  ${PROJECT_SOURCE_DIR}/src/locale_conf.cc
-)
+  ${PROJECT_SOURCE_DIR}/src/locale_conf.cc)
 target_include_directories(${CurrTestName} PRIVATE
   ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(
+  ${CurrTestName}
+  PRIVATE -static-libgcc -static-libstdc++)
 add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 
 # --------------------------- Add A Test ---------------------------
 
 set(CurrTestName locale_conf)
 add_executable(${CurrTestName} t_${CurrTestName}.cc
-  ${PROJECT_SOURCE_DIR}/src/${CurrTestName}.cc
-)
+  ${PROJECT_SOURCE_DIR}/src/${CurrTestName}.cc)
 target_include_directories(${CurrTestName} PRIVATE
   ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(
+  ${CurrTestName}
+  PRIVATE -static-libgcc -static-libstdc++)
 add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 
 # --------------------------- Add A Test ---------------------------
@@ -77,15 +84,13 @@ add_executable(${CurrTestName} t_${CurrTestName}.cc
   ${PROJECT_SOURCE_DIR}/src/td_coll.cc
   ${PROJECT_SOURCE_DIR}/src/ipc_msg_queue.cc
   ${PROJECT_SOURCE_DIR}/src/locale_conf.cc
-  ${PROJECT_SOURCE_DIR}/src/log.cc
-)
+  ${PROJECT_SOURCE_DIR}/src/log.cc)
 target_include_directories(${CurrTestName} PRIVATE
   ${PROJECT_SOURCE_DIR}/src
   ${PROJECT_SOURCE_DIR}/3rd/toml11)
 target_link_libraries(
   ${CurrTestName}
-  PRIVATE Td::TdStatic
-)
+  PRIVATE -static-libgcc -static-libstdc++ Td::TdStatic)
 add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 
 

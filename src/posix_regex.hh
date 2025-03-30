@@ -38,7 +38,7 @@ public:
   inline bool is_pattern_accept () noexcept { return this->__stat_comp == 0; }
 
   std::string get_err () noexcept;
-  std::optional<bool> is_match (const std::string &str) noexcept;
+  std::optional<bool> is_match (const std::string &str) const noexcept;
   string ptn () const noexcept { return __ptn; }
 
 private:

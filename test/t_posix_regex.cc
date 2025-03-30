@@ -90,6 +90,10 @@ main ()
 
   assert_ptn_invalid (")(");
 
+  assert_match ("C++", "C++");
+  assert_match ("C++", "C+");
+  assert_not_match ("C+{2}", "C+");
+
   assert_match ("x", "xxx");
   assert_match ("x{2}", "xxx");
   assert_match ("x{3}", "xxx");

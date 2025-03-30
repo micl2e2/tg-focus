@@ -47,23 +47,7 @@ tgf::FilterToml::FilterToml (const toml::value &v)
     }
 }
 
-tgf::FilterGroupToml::FilterGroupToml (const toml::value &v) noexcept
-{
-  std::vector<FilterToml> fs;
-  try
-    {
-      fs = toml::find<std::vector<FilterToml>> (v, "focus-filter");
-    }
-  catch (std::exception &ex)
-    {
-      using namespace toml::literals::toml_literals;
-      fs = toml::find<std::vector<FilterToml>> ("[[focus-filter]]"_toml,
-						"focus-filter");
-    }
-  this->__filters = std::move (fs);
-}
-
-tgf::FilterGroupToml::FilterGroupToml (std::string &v) noexcept
+tgf::FilterGroupToml::FilterGroupToml (const string &v) noexcept
 {
   std::vector<FilterToml> fs;
   try

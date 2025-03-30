@@ -64,7 +64,7 @@ PosixExtRegex::get_err () noexcept
 }
 
 std::optional<bool>
-PosixExtRegex::is_match (const std::string &str) noexcept
+PosixExtRegex::is_match (const std::string &str) const noexcept
 {
   if (this->__stat_comp != 0)
     return std::nullopt;
