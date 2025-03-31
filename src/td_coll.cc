@@ -305,7 +305,7 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
   message_text->text_ = did_what + aux_msg;
   deco_list.emplace_back (
     td_mkobj<TdTxtEnt> (0, utf16len_didwhat, td_mkobj<TdTxtEntQuote> ()));
-  deco_list.emplace_back (td_mkobj<TdTxtEnt> (len_did_what,
+  deco_list.emplace_back (td_mkobj<TdTxtEnt> (utf16len_didwhat,
 					      CHATCMD_RPLY_PREFIX_N_CP,
 					      td_mkobj<TdTxtEntBold> ()));
   message_text->entities_ = move (deco_list);
