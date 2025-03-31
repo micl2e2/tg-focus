@@ -664,7 +664,7 @@ no-keywords = ["zzz","asda ..."]
   tgfass (res.aux_msg () == string (CHATCMD_RPLY_PREFIX) + R"(
 
 ● ● ● ● ● FILTER 1 ● ● ● ● ●
-● ●
+●
 ● Titles <titles>
 ⤷ (.*)
 ● Senders <senders>
@@ -707,7 +707,7 @@ titles = []
   tgfass (res.aux_msg () == string (CHATCMD_RPLY_PREFIX) + R"(
 
 ● ● ● ● ● FILTER 1 ● ● ● ● ●
-● ●
+●
 ● Titles <titles>
 ⤷ (.*)
 ● Senders <senders>
@@ -722,7 +722,7 @@ titles = []
 ⤷ (zzz)  (asda ...)
 
 ● ● ● ● ● FILTER 2 ● ● ● ● ●
-● ●
+●
 ● Titles <titles>
 ⤷ 
 ● Senders <senders>

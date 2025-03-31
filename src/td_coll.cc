@@ -236,6 +236,135 @@ TdCollector::get_chat_title (int64_t chat_id) const
 }
 
 void
+extra_decoration_filters (TdArray<TdPtr<TdTxtEnt>> &deco_list,
+			  const string &msgtxt)
+{
+  vector<char16_t> seq = get_c16_seq (msgtxt);
+  size_t i = 0;
+  while (i < seq.size ())
+    {
+      {
+	const size_t last_offset = 14;
+	if (i + last_offset < seq.size () && seq[i] == 0x0054
+	    && seq[i + 1] == 0x0069 && seq[i + 2] == 0x0074
+	    && seq[i + 3] == 0x006c && seq[i + 4] == 0x0065
+	    && seq[i + 5] == 0x0073 && seq[i + 6] == 0x0020
+	    && seq[i + 7] == 0x003c && seq[i + 8] == 0x0074
+	    && seq[i + 9] == 0x0069 && seq[i + 10] == 0x0074
+	    && seq[i + 11] == 0x006c && seq[i + 12] == 0x0065
+	    && seq[i + 13] == 0x0073 && seq[i + 14] == 0x003e)
+	  {
+	    deco_list.emplace_back (
+	      td_mkobj<TdTxtEnt> (i, last_offset + 1,
+				  td_mkobj<TdTxtEntBold> ()));
+	  }
+      }
+
+      {
+	const size_t last_offset = 16;
+	if (i + last_offset < seq.size () && seq[i] == 0x0053
+	    && seq[i + 1] == 0x0065 && seq[i + 2] == 0x006e
+	    && seq[i + 3] == 0x0064 && seq[i + 4] == 0x0065
+	    && seq[i + 5] == 0x0072 && seq[i + 6] == 0x0073
+	    && seq[i + 7] == 0x0020 && seq[i + 8] == 0x003c
+	    && seq[i + 9] == 0x0073 && seq[i + 10] == 0x0065
+	    && seq[i + 11] == 0x006e && seq[i + 12] == 0x0064
+	    && seq[i + 13] == 0x0065 && seq[i + 14] == 0x0072
+	    && seq[i + 15] == 0x0073 && seq[i + 16] == 0x003e)
+	  {
+	    deco_list.emplace_back (
+	      td_mkobj<TdTxtEnt> (i, last_offset + 1,
+				  td_mkobj<TdTxtEntBold> ()));
+	  }
+      }
+
+      {
+	const size_t last_offset = 18;
+	if (i + last_offset < seq.size () && seq[i] == 0x004b
+	    && seq[i + 1] == 0x0065 && seq[i + 2] == 0x0079
+	    && seq[i + 3] == 0x0077 && seq[i + 4] == 0x006f
+	    && seq[i + 5] == 0x0072 && seq[i + 6] == 0x0064
+	    && seq[i + 7] == 0x0073 && seq[i + 8] == 0x0020
+	    && seq[i + 9] == 0x003c && seq[i + 10] == 0x006b
+	    && seq[i + 11] == 0x0065 && seq[i + 12] == 0x0079
+	    && seq[i + 13] == 0x0077 && seq[i + 14] == 0x006f
+	    && seq[i + 15] == 0x0072 && seq[i + 16] == 0x0064
+	    && seq[i + 17] == 0x0073 && seq[i + last_offset] == 0x003e)
+	  {
+	    deco_list.emplace_back (
+	      td_mkobj<TdTxtEnt> (i, last_offset + 1,
+				  td_mkobj<TdTxtEntBold> ()));
+	  }
+      }
+
+      {
+	const size_t last_offset = 20;
+	if (i + last_offset < seq.size () && seq[i] == 0x004e
+	    && seq[i + 1] == 0x004f && seq[i + 2] == 0x0020
+	    && seq[i + 3] == 0x0054 && seq[i + 4] == 0x0069
+	    && seq[i + 5] == 0x0074 && seq[i + 6] == 0x006c
+	    && seq[i + 7] == 0x0065 && seq[i + 8] == 0x0073
+	    && seq[i + 9] == 0x0020 && seq[i + 10] == 0x003c
+	    && seq[i + 11] == 0x006e && seq[i + 12] == 0x006f
+	    && seq[i + 13] == 0x002d && seq[i + 14] == 0x0074
+	    && seq[i + 15] == 0x0069 && seq[i + 16] == 0x0074
+	    && seq[i + 17] == 0x006c && seq[i + 18] == 0x0065
+	    && seq[i + 19] == 0x0073 && seq[i + 20] == 0x003e)
+	  {
+	    deco_list.emplace_back (
+	      td_mkobj<TdTxtEnt> (i, last_offset + 1,
+				  td_mkobj<TdTxtEntBold> ()));
+	  }
+      }
+
+      {
+	const size_t last_offset = 22;
+	if (i + last_offset < seq.size () && seq[i] == 0x004e
+	    && seq[i + 1] == 0x004f && seq[i + 2] == 0x0020
+	    && seq[i + 3] == 0x0053 && seq[i + 4] == 0x0065
+	    && seq[i + 5] == 0x006e && seq[i + 6] == 0x0064
+	    && seq[i + 7] == 0x0065 && seq[i + 8] == 0x0072
+	    && seq[i + 9] == 0x0073 && seq[i + 10] == 0x0020
+	    && seq[i + 11] == 0x003c && seq[i + 12] == 0x006e
+	    && seq[i + 13] == 0x006f && seq[i + 14] == 0x002d
+	    && seq[i + 15] == 0x0073 && seq[i + 16] == 0x0065
+	    && seq[i + 17] == 0x006e && seq[i + 18] == 0x0064
+	    && seq[i + 19] == 0x0065 && seq[i + 20] == 0x0072
+	    && seq[i + 21] == 0x0073 && seq[i + 22] == 0x003e)
+	  {
+	    deco_list.emplace_back (
+	      td_mkobj<TdTxtEnt> (i, last_offset + 1,
+				  td_mkobj<TdTxtEntBold> ()));
+	  }
+      }
+
+      {
+	const size_t last_offset = 24;
+	if (i + last_offset < seq.size () && seq[i] == 0x004e
+	    && seq[i + 1] == 0x004f && seq[i + 2] == 0x0020
+	    && seq[i + 3] == 0x004b && seq[i + 4] == 0x0065
+	    && seq[i + 5] == 0x0079 && seq[i + 6] == 0x0077
+	    && seq[i + 7] == 0x006f && seq[i + 8] == 0x0072
+	    && seq[i + 9] == 0x0064 && seq[i + 10] == 0x0073
+	    && seq[i + 11] == 0x0020 && seq[i + 12] == 0x003c
+	    && seq[i + 13] == 0x006e && seq[i + 14] == 0x006f
+	    && seq[i + 15] == 0x002d && seq[i + 16] == 0x006b
+	    && seq[i + 17] == 0x0065 && seq[i + 18] == 0x0079
+	    && seq[i + 19] == 0x0077 && seq[i + 20] == 0x006f
+	    && seq[i + 21] == 0x0072 && seq[i + 22] == 0x0064
+	    && seq[i + 23] == 0x0073 && seq[i + 24] == 0x003e)
+	  {
+	    deco_list.emplace_back (
+	      td_mkobj<TdTxtEnt> (i, last_offset + 1,
+				  td_mkobj<TdTxtEntBold> ()));
+	  }
+      }
+
+      i++;
+    }
+}
+
+void
 TdCollector::handle_tgfcmd (string &&incom_txt)
 {
   string aux_msg = string (CHATCMD_RPLY_PREFIX) + "not supported";
@@ -303,11 +432,17 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
   // tulogfe_cg (111, len_did_what, (string ("") + did_what + aux_msg));
   size_t utf16len_didwhat = get_c16_len (did_what);
   message_text->text_ = did_what + aux_msg;
+  // quote
   deco_list.emplace_back (
     td_mkobj<TdTxtEnt> (0, utf16len_didwhat, td_mkobj<TdTxtEntQuote> ()));
+  // emphasize
   deco_list.emplace_back (td_mkobj<TdTxtEnt> (utf16len_didwhat,
 					      CHATCMD_RPLY_PREFIX_N_CP,
 					      td_mkobj<TdTxtEntBold> ()));
+
+  if (incom_txt.find (CHATCMD_FILTERS) != string::npos)
+    extra_decoration_filters (deco_list, message_text->text_);
+
   message_text->entities_ = move (deco_list);
 
   TdPtr<TdFunc> send_message_request = td_mkobj<TdSendMsg> (

@@ -396,7 +396,7 @@ FilterGroup<V, F>::as_readable () const
       oss << endl
 	  << "● ● ● ● ● "
 	  << "FILTER " << (i + 1) << " ● ● ● ● ●" << endl;
-      oss << "● ●";
+      oss << "●";
       oss << el.as_readable ();
     }
 

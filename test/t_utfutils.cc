@@ -34,5 +34,32 @@ main ()
     tgfass (len == 5);
   }
 
+  {
+    string s = "TGFCMD"s;
+    vector seq = get_c16_seq (s);
+    cerr << seq.size () << endl;
+    tgfass (seq.size () == 6);
+    cerr << scast<int> (seq[0]) << endl;
+    tgfass (seq[0] == 0x0054);
+    tgfass (seq[1] == 0x0047);
+    tgfass (seq[2] == 0x0046);
+    tgfass (seq[3] == 0x0043);
+    tgfass (seq[4] == 0x004d);
+    tgfass (seq[5] == 0x0044);
+  }
+
+  {
+    string s = "zß水🍌"s;
+    vector seq = get_c16_seq (s);
+    cerr << seq.size () << endl;
+    tgfass (seq.size () == 5);
+    cerr << scast<int> (seq[0]) << endl;
+    tgfass (seq[0] == 0x007a);
+    tgfass (seq[1] == 0x00df);
+    tgfass (seq[2] == 0x6c34);
+    tgfass (seq[3] == 0xd83c);
+    tgfass (seq[4] == 0xdf4c);
+  }
+
   return 0;
 }

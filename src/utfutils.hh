@@ -10,4 +10,7 @@
 size_t
 get_c16_len (const string &utf8s);
 
+vector<char16_t>
+get_c16_seq (const string &utf8s);
+
 #endif
