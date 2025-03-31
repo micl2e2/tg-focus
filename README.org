@@ -1,4 +1,5 @@
 #+title: TG-Focus💡
+#+options: num:nil
 
 * TG-Focus💡
 
@@ -21,6 +22,18 @@ tg-focus is built on top of [[https://core.telegram.org/tdlib/][TDLib]], and spe
 TDLib speaks, in which way tg-focus is just inherently as consistent,
 reliable and stable as TDLib itself for most Telegram-specific
 functionalities.
+
+* Platforms
+
+Supported(✅). Work In Progress(🔨). 
+
+| OS \ ARCH | x86 64 | aarch64 |
+|-----------+--------+---------|
+| Linux     | ✅     | ✅      |
+| Windows   | 🔨     | 🔨      |
+| BSD       | 🔨     | 🔨      |
+| macOS     | 🔨     | 🔨      |
+|           |        |         |
 
 * Quickstart
 
@@ -98,7 +111,6 @@ specific messages.
 7. Then wait patiently at TG-FOCUS, and enjoy your every 
    freedom-related conversion :-)
 
-
 * TGFCMD Examples
 
 /Note that all of command mentioned in this section are to be sent out at
@@ -157,7 +169,6 @@ Resume forwarding:
 #+begin_src
 TGFCMD resume
 #+end_src
-
 
 * Filters Rules
 
@@ -253,3 +264,28 @@ Check if tg-focus is for you or not:
 ** It's NOT for you if
 
  1. You want to scrape/crawl messages from chats/channels. 
+* Development
+
+See =docs/development.org=.
+
+* Contributing
+
+tg-focus is still far from perfect, any form of contribution is
+welcomed! 
+
+- Ask question (open an issue with label "question")
+- Bug Report (open an issue with label "bug")
+- Feature Request (open an issue with label "enhancement")
+- Documentation Improvement
+- Code Contribution (tg-focus follows [GCC](https://gcc.gnu.org/) code style)
+
+This is a list of TODOs that are certainly to be finished in near
+future:
+
+- [ ] Project Logo(will be used as TG-FOCUS chat icon)
+- [ ] TGFCMD Filters Configuration's Look
+- [ ] Configuration in json
+- [ ] Windows Port
+- [ ] macOS Port
+- [ ] BSD Port
+

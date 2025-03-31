@@ -1,19 +1,22 @@
 
 # Table of Contents
 
-1.  [TG-Focus💡](#org1494378)
-2.  [Overview](#orgd450f1c)
-3.  [Quickstart](#org2ffa245)
-4.  [TGFCMD Examples](#orgd0b1a1b)
-5.  [Filters Rules](#org33718b3)
-6.  [Can I trust tg-focus?](#org72a1105)
-7.  [Is tg-focus a crawler?](#org5b6033a)
-    1.  [It's for you if](#orgd5d23dc)
-    2.  [It's NOT for you if](#orgf6a73d3)
+-   [TG-Focus💡](#org969a712)
+-   [Overview](#org7a03d30)
+-   [Platforms](#orgf7f48ae)
+-   [Quickstart](#orgd313123)
+-   [TGFCMD Examples](#org626cf68)
+-   [Filters Rules](#org50cb66e)
+-   [Can I trust tg-focus?](#org26ebb61)
+-   [Is tg-focus a crawler?](#org9e9b19e)
+    -   [It's for you if](#org9f6e700)
+    -   [It's NOT for you if](#org909e944)
+-   [Development](#org490de3f)
+-   [Contributing](#org64d4bea)
 
 
 
-<a id="org1494378"></a>
+<a id="org969a712"></a>
 
 # TG-Focus💡
 
@@ -21,8 +24,7 @@
 <a href="https://core.telegram.org/tdlib">![Static Badge](https://img.shields.io/badge/tdlib-1.8.44-%2332a9de)</a>
 <a href="https://github.com/tdlib/td">![GitHub commits difference between two branches/tags/commits](https://img.shields.io/github/commits-difference/tdlib/td?base=496450066b9e5429db0936cdccbc886c23cb6b37&head=master&logo=gitextensions&label=pending&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd)</a>
 
-
-<a id="orgd450f1c"></a>
+<a id="org7a03d30"></a>
 
 # Overview
 
@@ -41,7 +43,69 @@ reliable and stable as TDLib itself for most Telegram-specific
 functionalities.
 
 
-<a id="org2ffa245"></a>
+<a id="orgf7f48ae"></a>
+
+# Platforms
+
+Supported(✅). Work In Progress(🔨). 
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">OS \ ARCH</th>
+<th scope="col" class="org-left">x86 64</th>
+<th scope="col" class="org-left">aarch64</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="org-left">Linux</td>
+<td class="org-left">✅</td>
+<td class="org-left">✅</td>
+</tr>
+
+
+<tr>
+<td class="org-left">Windows</td>
+<td class="org-left">🔨</td>
+<td class="org-left">🔨</td>
+</tr>
+
+
+<tr>
+<td class="org-left">BSD</td>
+<td class="org-left">🔨</td>
+<td class="org-left">🔨</td>
+</tr>
+
+
+<tr>
+<td class="org-left">macOS</td>
+<td class="org-left">🔨</td>
+<td class="org-left">🔨</td>
+</tr>
+
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+
+<a id="orgd313123"></a>
 
 # Quickstart
 
@@ -104,7 +168,7 @@ specific messages.
     freedom-related conversion :-)
 
 
-<a id="orgd0b1a1b"></a>
+<a id="org626cf68"></a>
 
 # TGFCMD Examples
 
@@ -149,7 +213,7 @@ Resume forwarding:
     TGFCMD resume
 
 
-<a id="org33718b3"></a>
+<a id="org50cb66e"></a>
 
 # Filters Rules
 
@@ -202,7 +266,7 @@ filter will not be tried, and the message will be discarded.
 the last three rules as *blacklist*)
 
 
-<a id="org72a1105"></a>
+<a id="org26ebb61"></a>
 
 # Can I trust tg-focus?
 
@@ -220,7 +284,7 @@ individual, **but** Github-hosted machines. Check [github actions](https://githu
 more details.
 
 
-<a id="org5b6033a"></a>
+<a id="org9e9b19e"></a>
 
 # Is tg-focus a crawler?
 
@@ -240,7 +304,7 @@ conversions on Telegram.
 Check if tg-focus is for you or not:
 
 
-<a id="orgd5d23dc"></a>
+<a id="org9f6e700"></a>
 
 ## It's for you if
 
@@ -252,9 +316,40 @@ Check if tg-focus is for you or not:
     exist.
 
 
-<a id="orgf6a73d3"></a>
+<a id="org909e944"></a>
 
 ## It's NOT for you if
 
 1.  You want to scrape/crawl messages from chats/channels.
+
+
+<a id="org490de3f"></a>
+
+# Development
+
+See `docs/development.org`.
+
+
+<a id="org64d4bea"></a>
+
+# Contributing
+
+tg-focus is still far from perfect, any form of contribution is
+welcomed! 
+
+-   Ask question (open an issue with label "question")
+-   Bug Report (open an issue with label "bug")
+-   Feature Request (open an issue with label "enhancement")
+-   Documentation Improvement
+-   Code Contribution (tg-focus follows [GCC](<https://gcc.gnu.org/>) code style)
+
+This is a list of TODOs that are certainly to be finished in near
+future:
+
+-   [ ] Project Logo(will be used as TG-FOCUS chat icon)
+-   [ ] TGFCMD Filters Configuration's Look
+-   [ ] Configuration in json
+-   [ ] Windows Port
+-   [ ] macOS Port
+-   [ ] BSD Port
 
