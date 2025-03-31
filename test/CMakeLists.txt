@@ -16,6 +16,19 @@ target_link_libraries(
   PRIVATE -static-libgcc -static-libstdc++)
 add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
 
+
+# --------------------------- Add A Test ---------------------------
+
+set(CurrTestName utfutils)
+add_executable(${CurrTestName} t_${CurrTestName}.cc
+   ${PROJECT_SOURCE_DIR}/src/${CurrTestName}.cc)
+target_include_directories(${CurrTestName} PRIVATE
+  ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(
+  ${CurrTestName}
+  PRIVATE -static-libgcc -static-libstdc++)
+add_test(NAME ${CurrTestName} COMMAND ${CurrTestName})
+
 # --------------------------- Add A Test ---------------------------
 
 set(CurrTestName filter)
@@ -84,7 +97,8 @@ add_executable(${CurrTestName} t_${CurrTestName}.cc
   ${PROJECT_SOURCE_DIR}/src/td_coll.cc
   ${PROJECT_SOURCE_DIR}/src/ipc_msg_queue.cc
   ${PROJECT_SOURCE_DIR}/src/locale_conf.cc
-  ${PROJECT_SOURCE_DIR}/src/log.cc)
+  ${PROJECT_SOURCE_DIR}/src/log.cc
+  ${PROJECT_SOURCE_DIR}/src/utfutils.cc)
 target_include_directories(${CurrTestName} PRIVATE
   ${PROJECT_SOURCE_DIR}/src
   ${PROJECT_SOURCE_DIR}/3rd/toml11)

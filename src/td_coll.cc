@@ -22,6 +22,7 @@
 #include "tg_msg.hh"
 #include "filter.hh"
 #include "chatcmd.hh"
+#include "utfutils.hh"
 
 void
 TdCollector::init ()
@@ -300,9 +301,10 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
     }
 
   // tulogfe_cg (111, len_did_what, (string ("") + did_what + aux_msg));
+  size_t utf16len_didwhat = get_c16_len (did_what);
   message_text->text_ = did_what + aux_msg;
   deco_list.emplace_back (
-    td_mkobj<TdTxtEnt> (0, len_did_what, td_mkobj<TdTxtEntQuote> ()));
+    td_mkobj<TdTxtEnt> (0, utf16len_didwhat, td_mkobj<TdTxtEntQuote> ()));
   deco_list.emplace_back (td_mkobj<TdTxtEnt> (len_did_what,
 					      CHATCMD_RPLY_PREFIX_N_CP,
 					      td_mkobj<TdTxtEntBold> ()));

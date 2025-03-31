@@ -82,7 +82,8 @@ add_executable(tgfocus
   ${PROJECT_SOURCE_DIR}/src/posix_regex.cc
   ${PROJECT_SOURCE_DIR}/src/locale_conf.cc
   ${PROJECT_SOURCE_DIR}/src/filter.cc
-  ${PROJECT_SOURCE_DIR}/src/chatcmd.cc)
+  ${PROJECT_SOURCE_DIR}/src/chatcmd.cc
+  ${PROJECT_SOURCE_DIR}/src/utfutils.cc)
 
 target_include_directories(tgfocus
   PRIVATE ${PROJECT_SOURCE_DIR}/src
