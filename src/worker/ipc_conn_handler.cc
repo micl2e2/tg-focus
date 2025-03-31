@@ -59,7 +59,7 @@ rhandle_rstatus (int connfd_)
   oss << "   Focus Paused : " << (is_pause ? "YES" : "NO") << endl;
   oss << "      Fwd/Total : " << (n_msg_coll) << "/" << (n_msg_total) << endl;
   oss << "        MQ Size : " << (mqsz) << endl;
-  oss << "         Locale : " << (lang) << endl;
+  oss << "         Locale : " << tgf::lang_to_cstr (tgf::HOST_LANG) << endl;
 
   string rpl = oss.str ();
 
