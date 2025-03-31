@@ -1,5 +1,6 @@
 #include "utfutils.hh"
 #include <uchar.h>
+#include <stdlib.h>
 
 size_t
 get_c16_len (const string &utf8s)
@@ -26,17 +27,11 @@ get_c16_len (const string &utf8s)
       n_by_converted
 	= mbrtoc16 (bufp_utf16, bufp_utf8, bufendp_utf8 - bufp_utf8, &state);
       if (n_by_converted == -1)
-	{
-	  break;
-	}
+	break;
       else if (n_by_converted == -2)
-	{
-	  break;
-	}
+	break;
       else if (n_by_converted == -3)
-	{
-	  bufp_utf16 += 1;
-	}
+	bufp_utf16 += 1;
       else
 	{
 	  bufp_utf8 += n_by_converted;
@@ -59,31 +54,22 @@ get_c16_seq (const string &utf8s)
   size_t n_cu_utf8 = utf8s.length (); // excluding NUL
   const char *bufp_utf8 = buf_utf8;
   const char *bufendp_utf8 = buf_utf8 + n_cu_utf8;
-  if (n_cu_utf8 > 1024)
-    {
-      // support lands in the future
-      return {};
-    }
-  char16_t buf_utf16[n_cu_utf8];
+  char16_t *const buf_utf16
+    = reinterpret_cast<char16_t *> (malloc (n_cu_utf8 * sizeof (char16_t)));
   char16_t *bufp_utf16 = buf_utf16;
   size_t n_by_converted = -1;
   mbstate_t state = {0};
+
   while (n_by_converted != 0)
     {
       n_by_converted
 	= mbrtoc16 (bufp_utf16, bufp_utf8, bufendp_utf8 - bufp_utf8, &state);
       if (n_by_converted == -1)
-	{
-	  break;
-	}
+	break;
       else if (n_by_converted == -2)
-	{
-	  break;
-	}
+	break;
       else if (n_by_converted == -3)
-	{
-	  bufp_utf16 += 1;
-	}
+	bufp_utf16 += 1;
       else
 	{
 	  bufp_utf8 += n_by_converted;
@@ -92,6 +78,9 @@ get_c16_seq (const string &utf8s)
     }
 
   size_t n_cu_utf16 = bufp_utf16 - buf_utf16;
-
-  return vector (buf_utf16, buf_utf16 + n_cu_utf16);
+  vector<char16_t> rtn = vector (buf_utf16, buf_utf16 + n_cu_utf16);
+  free (buf_utf16);
+  return rtn;
+  // if backing data are stack-only:
+  // return vector (buf_utf16, buf_utf16 + n_cu_utf16);
 }

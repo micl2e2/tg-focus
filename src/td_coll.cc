@@ -502,7 +502,9 @@ TdCollector::process_update (TdObjPtr update)
 	TdInt chat_id = nmsg->message_->chat_id_;
 	string chat_title = __chat_titles[chat_id];
 
-	if (chat_title.find ("TG-FOCUS") != string::npos)
+	if (chat_title.find (TF_COLL_CHAT_TITLE) != string::npos
+	    && chat_title.find_first_not_of (TF_COLL_CHAT_TITLE)
+		 == string::npos)
 	  {
 	    TdPtr<TdMsgContent> p = move (nmsg->message_->content_);
 	    if (p->get_id () == TdMsgText::ID)
