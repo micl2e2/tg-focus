@@ -59,8 +59,12 @@ tgf::CollConsumer::operator() ()
 			gstat::it_cnt_consumer.load (mo::relaxed),
 			" mq consumable, mq.size():", gstat::mq.size ());
 
+	    // !!!BLOCKING
 	    for (auto it = gstat::mq.begin (); it != gstat::mq.end (); it += 1)
 	      {
+		// if so, give up consuming
+		if (gstat_c::tryshutwk::coll_consumer.load (mo::relaxed))
+		  break;
 		auto curr_msg = *it;
 		// break; // stop collect
 		if (!curr_msg.is_from_tgfocus ())
