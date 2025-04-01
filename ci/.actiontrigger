@@ -58,3 +58,4 @@ run build-toolc-gcc12-deb11-x64,build-toolc-gcc12-deb11-arm64 Monday, February 2
 run build-linux-x86_64,build-linux-aarch64 Saturday, March 29, 2025 AM10:01:39 UTC
 run build-linux-x86_64,build-linux-aarch64 Sunday, March 30, 2025 PM01:40:07 UTC
 run build-linux-x86_64,build-linux-aarch64 Monday, March 31, 2025 PM02:04:22 UTC
+run build-linux-x86_64,build-linux-aarch64 Tuesday, April 01, 2025 AM10:12:43 UTC
