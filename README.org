@@ -1,5 +1,5 @@
-#+title: TG-Focus💡
-#+options: num:nil
+#+title: TG-Focus
+#+options: toc:1 num:nil
 
 * TG-Focus💡
 
@@ -18,14 +18,12 @@ By customizing /focus filters/, tg-focus can forward any specific
 message from any chat to a dedicated chat, *TG-FOCUS*, that way
 you have full control of the messages you see.
 
-tg-focus is built on top of [[https://core.telegram.org/tdlib/][TDLib]], and speaks the same language that
+tg-focus is built on top of [[https://core.telegram.org/tdlib/][TDLib]], and speaks the same language as
 TDLib speaks, in which way tg-focus is just inherently as consistent,
 reliable and stable as TDLib itself for most Telegram-specific
 functionalities.
 
-* Platforms
-
-Supported(✅). Work In Progress(🔨). 
+The supported platforms are:
 
 | OS \ ARCH | x86 64 | aarch64 |
 |-----------+--------+---------|
@@ -34,6 +32,8 @@ Supported(✅). Work In Progress(🔨).
 | BSD       | 🔨     | 🔨      |
 | macOS     | 🔨     | 🔨      |
 |           |        |         |
+
+Supported(✅). Work In Progress(🔨). 
 
 * Quickstart
 
@@ -46,8 +46,8 @@ specific messages.
 
    #+begin_src bash
      # linux 
-     tar xf tg-focus-XXX-linux-gnu-x86_64.tgz
-     cd tg-focus-XXX-linux-gnu-x86_64
+     tar xf tg-focus-3.0-linux-x86_64.tar.gz
+     cd tg-focus-3.0-linux-x86_64
    #+end_src
    
 3. Log in your Telegram account firstly, it needs your phone number
@@ -220,6 +220,52 @@ filter will not be tried, and the message will be discarded.
 (You can think of the first three rules as /whitelist/,
 the last three rules as /blacklist/)
 
+* Development
+
+** Linux
+
+Distribution:
+- Debian 11 (Bullseye)
+  - /note: bullseye-like distros might work, but it won't be
+    considered an issue if not working there./
+Software:
+- bash, git, sudo, apt, etc.
+  - run =bash ci/prep-libs-deb11-x86_64.bash= to automatically
+    prepare them.
+- custom built GCC
+  - run =bash ci/prep-toolc-deb11-x86_64.bash= to automatically
+    prepare them.
+Building:
+  - run =bash ci/build-tgfocus-deb11-x86_64.bash= to get a Release
+    build.
+  - run =DDD=1 bash ci/build-tgfocus-deb11-x86_64.bash= to get a Debug
+    build.
+* Contributing
+
+tg-focus is still far from perfect, any form of contribution is
+welcomed! 
+
+- Ask question (open an issue with label "question")
+- Bug Report (open an issue with label "bug")
+- Feature Request (open an issue with label "enhancement")
+- Documentation Improvement
+- Code Contribution (tg-focus follows [GCC](https://gcc.gnu.org/) code
+  style)
+
+
+** ToDo list
+
+This is a list of TODOs that are certainly to be finished in the near
+future:
+
+- [ ] Project Logo (will be used as TG-FOCUS chat icon)
+- [ ] TGFCMD Filters Configuration's Look
+- [ ] Forwarded message's Look
+- [ ] Configuration in JSON Format
+- [ ] Windows Port
+- [ ] macOS Port
+- [ ] BSD Port
+
 * Can I trust tg-focus?
 
 Yes.
@@ -239,12 +285,12 @@ more details.
 
 Despite tg-focus is essentially collecting messsages, tg-focus is not,
 and will never be a crawler: forwarded messages is designed to be
-difficult to parse, and the forwarding is far away from real-time. If
+difficult to parse, and the forwarding is hardly real-time. If
 you use it as a crawler, you will realize this is a wrong tool over
 the course of time.
 
 I am here to help telegram users see or omit the messages according to
-their own perferences. Using tg-focus to crawl messages would be
+their own preferences. Using tg-focus to crawl messages would be
 absolutely a misuse. And also we will ensure such usages
 to become more and more challenging in future releases, because my
 *primary goal* is to help catalyze more constructive and meaningful
@@ -255,37 +301,19 @@ Check if tg-focus is for you or not:
 ** It's for you if
 
  1. You think messages are overwhelming, and still don't want to miss
-    out any messages/updates that match your personal perference.
+    out any messages/updates that match your personal preference.
 
  2. Your think some kinds of messages do not match your personal
-    perference and want to ignore them, yet they have reason to
+    preference and want to ignore them, yet they have reason to
     exist.
 
 ** It's NOT for you if
 
  1. You want to scrape/crawl messages from chats/channels. 
-* Development
 
-See =docs/development.org=.
 
-* Contributing
+* License
 
-tg-focus is still far from perfect, any form of contribution is
-welcomed! 
-
-- Ask question (open an issue with label "question")
-- Bug Report (open an issue with label "bug")
-- Feature Request (open an issue with label "enhancement")
-- Documentation Improvement
-- Code Contribution (tg-focus follows [GCC](https://gcc.gnu.org/) code style)
-
-This is a list of TODOs that are certainly to be finished in near
-future:
-
-- [ ] Project Logo(will be used as TG-FOCUS chat icon)
-- [ ] TGFCMD Filters Configuration's Look
-- [ ] Configuration in json
-- [ ] Windows Port
-- [ ] macOS Port
-- [ ] BSD Port
+tg-focus is licensed under /GNU General Public License Version
+3.0/. There is NO WARRANTY, to the extent permitted by law.
 
