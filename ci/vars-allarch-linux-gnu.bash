@@ -3,7 +3,7 @@
 [[ -n $PICK_ARCH ]] || exit 201
 
 PICK_TGF_VER=$(cat ../dev/pick-ver-tgfocus)
-PICK_PLATFORM="linux-gnu-$PICK_ARCH"
+PICK_PLATFORM="linux-$PICK_ARCH" # accurate one is "linux-gnu-$PICK_ARCH"
 PACK_DIRNAME="tg-focus-${PICK_TGF_VER}-${PICK_PLATFORM}"
 CURR_DATE=$(date +'%Y%m%d')
 
