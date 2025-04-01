@@ -54,12 +54,12 @@ rhandle_rstatus (int connfd_)
     mqsz = tgfstat::c::d::mq.size ();
   }
   tgf::Lang lang = tgfstat::userdata.get_pref_lang ();
-  oss << "     Authorized : " << (is_auth ? "YES" : "NO") << endl;
-  oss << "      Collector : " << (is_coll_up ? "UP" : "DOWN") << endl;
-  oss << "   Focus Paused : " << (is_pause ? "YES" : "NO") << endl;
-  oss << "      Fwd/Total : " << (n_msg_coll) << "/" << (n_msg_total) << endl;
-  oss << "        MQ Size : " << (mqsz) << endl;
-  oss << "         Locale : " << tgf::lang_to_cstr (tgf::HOST_LANG) << endl;
+  oss << "       Logged in : " << (is_auth ? "YES" : "NO") << endl;
+  oss << "       Collector : " << (is_coll_up ? "UP" : "DOWN") << endl;
+  oss << "    Focus Paused : " << (is_pause ? "YES" : "NO") << endl;
+  oss << " Forwarded/Total : " << (n_msg_coll) << "/" << (n_msg_total) << endl;
+  oss << "         Pending : " << (mqsz) << endl;
+  oss << "     Host Locale : " << tgf::lang_to_cstr (tgf::HOST_LANG) << endl;
 
   string rpl = oss.str ();
 
