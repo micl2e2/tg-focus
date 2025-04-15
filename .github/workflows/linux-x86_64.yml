@@ -1,9 +1,7 @@
 name: linux-x86_64
 run-name: linux-x86_64
 on:
-  push:
-    branches:
-      - master
+  push
 
 jobs:
   job1:

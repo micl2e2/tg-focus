@@ -1,9 +1,7 @@
 name: linux-aarch64
 run-name: linux-aarch64
 on:
-  push:
-    branches:
-      - master
+  push
 
 jobs:
   job1:

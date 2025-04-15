@@ -38,8 +38,8 @@ constexpr auto TF_SETT_CHAT_TITLE =
 #else
   "TG-FOCUS-SETT_DEV";
 #endif
-constexpr auto TDLIB_VER = "1.8.44";
-constexpr auto TDLIB_SRC = "496450066b9e5429db0936cdccbc886c23cb6b37";
+constexpr auto TDLIB_VER = "1.8.46";
+constexpr auto TDLIB_SRC = "347bd31a30dd479fc4c5fa966316fb2834802bf8";
 
 namespace tgf {
 
