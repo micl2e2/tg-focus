@@ -1,6 +1,6 @@
 #ifndef hh_chatcmd
 #define hh_chatcmd
-#include <string_view>
+
 #include "std_comp.hh"
 #include "user_data.hh"
 
@@ -20,7 +20,7 @@ namespace tgf {
 
 #define CHATCMD_RAWFILTERS "rawfilters"
 
-#define CHATCMD_EDITF "editf"
+#define CHATCMD_EDITF "filter.edit"
 #define CHATCMD_EDITF_ARG1 "<filter-id>"
 #define CHATCMD_EDITF_ARG2 "<property>"
 #define CHATCMD_EDITF_ARG3 "<action>"
@@ -29,7 +29,11 @@ namespace tgf {
   concat6 ("Usage:\n", CHATCMD_EDITF, CHATCMD_EDITF_ARG1, CHATCMD_EDITF_ARG2,  \
 	   CHATCMD_EDITF_ARG3, CHATCMD_EDITF_ARG4)
 
-#define CHATCMD_RMF "rmf"
+#define CHATCMD_INSF "filter.insert"
+#define CHATCMD_INSF_ARG1 "<filter-id>"
+#define CHATCMD_INSF_USAGE concat3 ("Usage:\n", CHATCMD_INSF, CHATCMD_INSF_ARG1)
+
+#define CHATCMD_RMF "filter.remove"
 #define CHATCMD_RMF_ARG1 "<filter-id>"
 #define CHATCMD_RMF_USAGE concat3 ("Usage:\n", CHATCMD_RMF, CHATCMD_RMF_ARG1)
 
@@ -43,7 +47,8 @@ typedef enum
   ChatCmdFilters,
   ChatCmdRawFilters,
   ChatCmdEditFilter,
-  ChatCmdRemoveFilter
+  ChatCmdInsertFilter,
+  ChatCmdRemoveFilter,
 } ChatCmdType;
 
 class ChatCmdHandler

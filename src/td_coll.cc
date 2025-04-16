@@ -419,6 +419,15 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
       did_what = move (res.did_what ().value ());
       len_did_what = did_what.length ();
     }
+  else if (incom_txt.find (CHATCMD_INSF) != string::npos)
+    {
+      string curr_filters = tgfstat::userdata.get_filters ();
+      tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdInsertFilter, incom_txt,
+			       tgfstat::userdata);
+      aux_msg = move (res.aux_msg ());
+      did_what = move (res.did_what ().value ());
+      len_did_what = did_what.length ();
+    }
   else if (incom_txt.find (CHATCMD_RMF) != string::npos)
     {
       string curr_filters = tgfstat::userdata.get_filters ();
@@ -702,7 +711,6 @@ TdCollector::check_authentication_error (TdObjPtr object)
     {
       auto error = tl_movas<TdErr> (object);
       tulogfe_cg (1, to_string (error));
-      // cout << "Error: " << to_string (error) << flush;
     }
   else
     {

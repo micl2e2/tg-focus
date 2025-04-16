@@ -35,7 +35,7 @@ handle_resume (string cmdipt)
   tuple<optional<string>, optional<string>, string> ret{nullopt, nullopt, "-"};
 
   tgfstat::c::d::pause_do_csm_mq.store (false, mo::relaxed);
-  
+
   succdata << "";
   didwhat << cmdipt;
   auxmsg << "success";
@@ -80,6 +80,72 @@ handle_filters (string cmdipt, tgf::UserData &p_userdata)
 
   ret = {succdata.str (), didwhat.str (), auxmsg.str ()};
 
+  return ret;
+}
+
+tuple<optional<string>, optional<string>, string>
+handle_insfilter (string cmdipt, tgf::UserData &p_userdata)
+{
+  ostringstream succdata;
+  ostringstream didwhat;
+  ostringstream auxmsg;
+  tuple<optional<string>, optional<string>, string> ret{nullopt, nullopt,
+							"failed"};
+  if (cmdipt.find (CHATCMD_INSF) != 0)
+    goto bad_rtn;
+
+  { // extra block to workaround cross-init
+    string::size_type begi = 0;
+    string::size_type endi = 0;
+
+    optional<u32> filter_id{nullopt};
+
+    begi = cmdipt.find (CHATCMD_INSF);
+    endi = cmdipt.find_first_of (" ", begi);
+    if (endi != string::npos)
+      {
+	begi = cmdipt.find_first_not_of (" ", endi);
+	if (begi != string::npos)
+	  {
+	    endi = cmdipt.find_first_of (" ", begi);
+	    string chunk1 = cmdipt.substr (begi, endi - begi);
+
+	    i32 may_filter_id = atoi (chunk1.c_str ());
+	    if (filter_id <= 0)
+	      {
+		auxmsg << "invalid " << CHATCMD_INSF_ARG1;
+		goto bad_rtn;
+	      }
+	    filter_id = static_cast<u32> (may_filter_id);
+	  }
+      }
+
+    string s = p_userdata.get_filters ();
+    // TODO: dont use move ctor unless it has been implemented
+    tgf::FilterGroupToml fg = tgf::FilterGroupToml (s);
+    if (fg.ins_filter (filter_id, nullopt))
+      {
+	p_userdata.set_filters (fg.as_fsdata ());
+	succdata << "";
+	didwhat << cmdipt;
+	auxmsg << "success";
+
+	ret = {succdata.str (), didwhat.str (), auxmsg.str ()};
+	return ret;
+      }
+    else
+      {
+	auxmsg << "failed";
+	goto bad_rtn;
+      }
+  }
+
+bad_rtn:
+  // succ should be nullopt, aux and didwhat should not
+  didwhat << cmdipt << " ";
+  auxmsg << endl << endl;
+  auxmsg << CHATCMD_INSF_USAGE;
+  ret = {nullopt, didwhat.str (), auxmsg.str ()};
   return ret;
 }
 
@@ -399,6 +465,14 @@ tgf::ChatCmdHandler::ChatCmdHandler (tgf::ChatCmdType typ, string ipt,
     {
       tuple<optional<string>, optional<string>, string> res
 	= impl::handle_editfilter (ipt, p_userdata);
+      __succ_data = move (get<0> (res));
+      __did_what = move (get<1> (res));
+      __aux_msg += move (get<2> (res));
+    }
+  else if (typ == tgf::ChatCmdType::ChatCmdInsertFilter)
+    {
+      tuple<optional<string>, optional<string>, string> res
+	= impl::handle_insfilter (ipt, p_userdata);
       __succ_data = move (get<0> (res));
       __did_what = move (get<1> (res));
       __aux_msg += move (get<2> (res));

@@ -12,7 +12,7 @@ tgf::UserData tfdata{make_optional (PRED_HOME), true};
 void
 tst_editf_failmsg_missingarg1 ()
 {
-  string usript = "editf";
+  string usript = "filter.edit";
   string curr_filters = R"(
 [[focus-filter]]
 titles = [".*"]
@@ -29,7 +29,7 @@ titles = [".*"]
 void
 tst_editf_failmsg_missingarg2 ()
 {
-  string usript = "editf 1";
+  string usript = "filter.edit 1";
   string curr_filters = R"(
 [[focus-filter]]
 titles = [".*"]
@@ -47,7 +47,7 @@ titles = [".*"]
 void
 tst_editf_failmsg_missingarg3 ()
 {
-  string usript = "editf 1 keywords";
+  string usript = "filter.edit 1 keywords";
   string curr_filters = R"(
 [[focus-filter]]
 titles = [".*"]
@@ -64,7 +64,7 @@ titles = [".*"]
 void
 tst_editf_failmsg_missingarg4 ()
 {
-  string usript = "editf 1 keywords add";
+  string usript = "filter.edit 1 keywords add";
   string curr_filters = R"(
 [[focus-filter]]
 titles = [".*"]
@@ -81,7 +81,7 @@ titles = [".*"]
 void
 tst_editf_failmsg_wrongspell ()
 { // actually bc of wrong spell but wont report it, instead, missing arg error
-  string usript = "editf 1 keywordx";
+  string usript = "filter.edit 1 keywordx";
   string curr_filters = R"(
 [[focus-filter]]
 titles = [".*"]
@@ -98,7 +98,7 @@ titles = [".*"]
 void
 tst_editf_failmsg_wrongspell2 ()
 {
-  string usript = "editf 1 keywordx add xxx";
+  string usript = "filter.edit 1 keywordx add xxx";
   string curr_filters = R"(
 [[focus-filter]]
 titles = [".*"]
@@ -115,7 +115,7 @@ titles = [".*"]
 void
 tst_editf_failmsg_wrongspell3 ()
 {
-  string usript = "editf 1 keywords addx xxx";
+  string usript = "filter.edit 1 keywords addx xxx";
   string curr_filters = R"(
 [[focus-filter]]
 titles = [".*"]
@@ -132,7 +132,7 @@ titles = [".*"]
 void
 tst_editf_failmsg_wrongspell4 ()
 {
-  string usript = "editf 1 keywords add xxx";
+  string usript = "filter.edit 1 keywords add xxx";
   string curr_filters = R"(
 [[focus-filter]]
 titles = [".*"]
@@ -149,7 +149,7 @@ titles = [".*"]
 void
 tst_editf_failmsg_wrongspell5 ()
 {
-  string usript = "editf 1 keywords add \"xxx";
+  string usript = "filter.edit 1 keywords add \"xxx";
   string curr_filters = R"(
 [[focus-filter]]
 titles = [".*"]
@@ -166,7 +166,7 @@ titles = [".*"]
 void
 tst_editf_1filter_badre ()
 {
-  string usript = "editf 1 keywords add \")(\"";
+  string usript = "filter.edit 1 keywords add \")(\"";
   string curr_filters = R"(
 [[focus-filter]]
 )";
@@ -178,7 +178,7 @@ tst_editf_1filter_badre ()
 	  == ("〘 TGFCMD 〙invalid"
 	      " " CHATCMD_EDITF_ARG4 "\n\n" CHATCMD_EDITF_USAGE));
   tgfass (res.did_what ().has_value ());
-  tgfass (res.did_what ().value () == "editf 1 keywords add \")(\" ");
+  tgfass (res.did_what ().value () == "filter.edit 1 keywords add \")(\" ");
   tgfass (!res.succ_data ().has_value ());
   // cerr << tfdata.get_filters () << endl;
   tgfass (tfdata.get_filters () == R"(
@@ -189,7 +189,7 @@ tst_editf_1filter_badre ()
 void
 tst_editf_1filter_succ_re_reserved_symbol_escape ()
 {
-  string usript = "editf 1 titles add \"c\\+\\+\"";
+  string usript = "filter.edit 1 titles add \"c\\+\\+\"";
   string curr_filters = R"(
 [[focus-filter]]
 )";
@@ -198,7 +198,7 @@ tst_editf_1filter_succ_re_reserved_symbol_escape ()
   tgfass (res.done ());
   tgfass (res.aux_msg () == "〘 TGFCMD 〙success");
   tgfass (res.did_what ().has_value ());
-  tgfass (res.did_what ().value () == R"(editf 1 titles add "c\+\+" )");
+  tgfass (res.did_what ().value () == R"(filter.edit 1 titles add "c\+\+" )");
   tgfass (res.succ_data ().has_value ());
   cerr << tfdata.get_filters () << endl;
   tgfass (tfdata.get_filters () == R"(
@@ -242,7 +242,7 @@ no-keywords = []
 void
 tst_editf_1filter_succmsg ()
 {
-  string usript = "editf 1 keywords add \"xxx\"";
+  string usript = "filter.edit 1 keywords add \"xxx\"";
   string curr_filters = R"(
 [[focus-filter]]
 titles = [".*"]
@@ -252,7 +252,7 @@ titles = [".*"]
   tgfass (res.done ());
   tgfass (res.aux_msg () == "〘 TGFCMD 〙success");
   tgfass (res.did_what ().has_value ());
-  tgfass (res.did_what ().value () == "editf 1 keywords add \"xxx\" ");
+  tgfass (res.did_what ().value () == "filter.edit 1 keywords add \"xxx\" ");
   tgfass (res.succ_data ().has_value ());
   // cerr << tfdata.get_filters () << endl;
   tgfass (tfdata.get_filters () == R"(
@@ -269,7 +269,7 @@ no-keywords = []
 void
 tst_editf_1filter_succmsg2 ()
 {
-  string usript = "editf 1 no-senders del \"yyy\"";
+  string usript = "filter.edit 1 no-senders del \"yyy\"";
   string curr_filters = R"(
 [[focus-filter]]
 titles = [".*"]
@@ -282,7 +282,7 @@ no-senders = ["xxx","yyy","zzz"]
   tgfass (res.done ());
   tgfass (res.aux_msg () == "〘 TGFCMD 〙success");
   tgfass (res.did_what ().has_value ());
-  tgfass (res.did_what ().value () == "editf 1 no-senders del \"yyy\" ");
+  tgfass (res.did_what ().value () == "filter.edit 1 no-senders del \"yyy\" ");
   tgfass (res.succ_data ().has_value ());
   tgfass (tfdata.get_filters () == R"(
 [[focus-filter]]
@@ -310,7 +310,7 @@ no-senders = ["xxx","yyy","zzz"]
   string curr_filters_cp = curr_filters;
   {
     tfdata.set_filters (move (curr_filters));
-    string usript = "editf 1 no-senders del \"yyy\"";
+    string usript = "filter.edit 1 no-senders del \"yyy\"";
     tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdEditFilter, usript,
 			     tfdata);
     // cerr << res.aux_msg ();
@@ -318,7 +318,7 @@ no-senders = ["xxx","yyy","zzz"]
     tgfass (res.done ());
     tgfass (res.aux_msg () == "〘 TGFCMD 〙success");
     tgfass (res.did_what ().has_value ());
-    tgfass (res.did_what ().value () == "editf 1 no-senders del \"yyy\" ");
+    tgfass (res.did_what ().value () == "filter.edit 1 no-senders del \"yyy\" ");
     tgfass (res.succ_data ().has_value ());
     tgfass (tfdata.get_filters () == R"(
 [[focus-filter]]
@@ -332,7 +332,7 @@ no-keywords = []
   }
   {
     tfdata.set_filters (move (curr_filters_cp));
-    string usript = "editf 1 no-senders add \"ppp\"";
+    string usript = "filter.edit 1 no-senders add \"ppp\"";
     tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdEditFilter, usript,
 			     tfdata);
     // cerr << res.aux_msg ();
@@ -340,7 +340,7 @@ no-keywords = []
     tgfass (res.done ());
     tgfass (res.aux_msg () == "〘 TGFCMD 〙success");
     tgfass (res.did_what ().has_value ());
-    tgfass (res.did_what ().value () == "editf 1 no-senders add \"ppp\" ");
+    tgfass (res.did_what ().value () == "filter.edit 1 no-senders add \"ppp\" ");
     tgfass (res.succ_data ().has_value ());
     tgfass (tfdata.get_filters () == R"(
 [[focus-filter]]
@@ -357,7 +357,7 @@ no-keywords = []
 void
 tst_editf_2filter_succmsg4 ()
 {
-  string usript = "editf 2 keywords add \"yyy\"";
+  string usript = "filter.edit 2 keywords add \"yyy\"";
   string curr_filters = R"(
 [[focus-filter]]
 titles = [".*"]
@@ -371,7 +371,7 @@ keywords = ["xxx"]
   tgfass (res.done ());
   tgfass (res.aux_msg () == "〘 TGFCMD 〙success");
   tgfass (res.did_what ().has_value ());
-  tgfass (res.did_what ().value () == "editf 2 keywords add \"yyy\" ");
+  tgfass (res.did_what ().value () == "filter.edit 2 keywords add \"yyy\" ");
   tgfass (res.succ_data ().has_value ());
   // cerr << tfdata.get_filters ();
   tgfass (tfdata.get_filters () == R"(
@@ -396,7 +396,7 @@ no-keywords = []
 void
 tst_editf_2filter_succmsg5 ()
 {
-  string usript = "editf 9 keywords add \"yyy\"";
+  string usript = "filter.edit 9 keywords add \"yyy\"";
   string curr_filters = R"(
 [[focus-filter]]
 titles = [".*"]
@@ -410,7 +410,7 @@ keywords = ["xxx"]
   tgfass (res.done ());
   tgfass (res.aux_msg () == "〘 TGFCMD 〙success");
   tgfass (res.did_what ().has_value ());
-  tgfass (res.did_what ().value () == "editf 2 keywords add \"yyy\" ");
+  tgfass (res.did_what ().value () == "filter.edit 2 keywords add \"yyy\" ");
   tgfass (res.succ_data ().has_value ());
   tgfass (tfdata.get_filters () == R"(
 [[focus-filter]]
@@ -434,7 +434,7 @@ no-keywords = []
 void
 tst_editf_1filter_succmsg6 ()
 {
-  string usript = "editf 1 keywords add \"C++\"";
+  string usript = "filter.edit 1 keywords add \"C++\"";
   string curr_filters = R"(
 [[focus-filter]]
 )";
@@ -443,7 +443,7 @@ tst_editf_1filter_succmsg6 ()
   tgfass (res.done ());
   tgfass (res.aux_msg () == "〘 TGFCMD 〙success");
   tgfass (res.did_what ().has_value ());
-  tgfass (res.did_what ().value () == "editf 1 keywords add \"C++\" ");
+  tgfass (res.did_what ().value () == "filter.edit 1 keywords add \"C++\" ");
   tgfass (res.succ_data ().has_value ());
   string fg_fsdata = tfdata.get_filters ();
   // cerr << tfdata.get_filters () << endl;
@@ -473,7 +473,7 @@ no-keywords = []
 void
 tst_editf_2filter_succ_filters_pos_are_nonreversed ()
 {
-  string usript = "editf 9 no-senders add \"zzz\"";
+  string usript = "filter.edit 9 no-senders add \"zzz\"";
   string curr_filters = R"(
 [[focus-filter]]
 keywords = ["yyy"]
@@ -489,7 +489,7 @@ keywords = ["xxx"]
   tgfass (res.done ());
   tgfass (res.aux_msg () == "〘 TGFCMD 〙success");
   tgfass (res.did_what ().has_value ());
-  tgfass (res.did_what ().value () == "editf 3 no-senders add \"zzz\" ");
+  tgfass (res.did_what ().value () == "filter.edit 3 no-senders add \"zzz\" ");
   tgfass (res.succ_data ().has_value ());
   cerr << "|" << tfdata.get_filters () << "|";
   tgfass (tfdata.get_filters () == R"(
@@ -522,7 +522,7 @@ no-keywords = []
 void
 tst_editf_how_to_block_sometitle ()
 {
-  string usript = "editf 2 no-titles add \"aaa\"";
+  string usript = "filter.edit 2 no-titles add \"aaa\"";
   string curr_filters = R"(
 [[focus-filter]]
 )";
@@ -534,7 +534,7 @@ tst_editf_how_to_block_sometitle ()
   tgfass (res.done ());
   tgfass (res.aux_msg () == "〘 TGFCMD 〙success");
   tgfass (res.did_what ().has_value ());
-  tgfass (res.did_what ().value () == "editf 2 no-titles add \"aaa\" ");
+  tgfass (res.did_what ().value () == "filter.edit 2 no-titles add \"aaa\" ");
   tgfass (res.succ_data ().has_value ());
   // cerr << "|" << tfdata.get_filters ()<<"|";
   tgfass (tfdata.get_filters () == R"(
@@ -744,7 +744,7 @@ titles = []
 void
 tst_rm_filter_succ ()
 {
-  string usript = " rmf 1";
+  string usript = " filter.remove 1";
   string curr_filters = R"(
 [[focus-filter]]
 titles = [".*"]
@@ -766,7 +766,7 @@ no-senders = []
   tgfass (res.done ());
   tgfass (res.aux_msg () == "〘 TGFCMD 〙success");
   tgfass (res.did_what ().has_value ());
-  tgfass (res.did_what ().value () == "rmf 1");
+  tgfass (res.did_what ().value () == "filter.remove 1");
   tgfass (res.succ_data ().has_value ());
   cerr << tfdata.get_filters () << endl;
   tgfass (tfdata.get_filters () == R"(
@@ -783,7 +783,7 @@ no-keywords = []
 void
 tst_rm_filter_fail ()
 { // cannot remove if theres only one
-  string usript = " rmf 1";
+  string usript = " filter.remove 1";
   string curr_filters = R"(
 [[focus-filter]]
 titles = [".*"]
@@ -797,7 +797,7 @@ no-senders = []
 			   tfdata);
   tgfass (!res.done ());
   tgfass (res.did_what ().has_value ());
-  tgfass (res.did_what ().value () == "rmf 1 ");
+  tgfass (res.did_what ().value () == "filter.remove 1 ");
   tgfass (res.aux_msg ()
 	  == ("〘 TGFCMD 〙failed"
 	      "\n\n" CHATCMD_RMF_USAGE));
@@ -816,7 +816,7 @@ no-senders = []
 void
 tst_rm_filter_fail2 ()
 {
-  string usript = "rmf";
+  string usript = "filter.remove";
   tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdRemoveFilter, usript,
 			   tfdata);
   tgfass (!res.done ());
@@ -829,7 +829,7 @@ tst_rm_filter_fail2 ()
 void
 tst_rm_filter_fail3 ()
 {
-  string usript = "rmf 0";
+  string usript = "filter.remove 0";
   tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdRemoveFilter, usript,
 			   tfdata);
   tgfass (!res.done ());

@@ -25,17 +25,22 @@ enum FocusDecision
 template <typename T>
 concept HasFilterFields = std::same_as<T, toml::value> || false;
 
-template <typename V> requires HasFilterFields<V> class Filter;
+template <typename V>
+  requires HasFilterFields<V>
+class Filter;
 
 template <typename F, typename V>
 concept CanFilterRecogValue = std::derived_from<F, Filter<V>>;
 
 template <typename V, typename F>
-requires CanFilterRecogValue<F, V> class FilterGroup;
+  requires CanFilterRecogValue<F, V>
+class FilterGroup;
 
 // --------------------------- Filter ---------------------------
 
-template <typename V> requires HasFilterFields<V> class Filter
+template <typename V>
+  requires HasFilterFields<V>
+class Filter
 {
 public:
   Filter ();
@@ -71,7 +76,8 @@ protected:
   FocusDecision mtch_tgmsg (const TgMsg &input) const;
 
   template <typename _V, typename _F>
-  requires CanFilterRecogValue<_F, _V> friend class FilterGroup;
+    requires CanFilterRecogValue<_F, _V>
+  friend class FilterGroup;
   friend class FilterGroupToml;
 };
 
@@ -95,7 +101,8 @@ typedef enum
 } FilterProperty;
 
 template <typename V, typename F>
-requires CanFilterRecogValue<F, V> class FilterGroup
+  requires CanFilterRecogValue<F, V>
+class FilterGroup
 {
 protected:
   size_t i_prev_visited_;
@@ -109,6 +116,7 @@ public:
   bool mtch_tgmsg (const TgMsg &in);
   string as_readable () const;
   string as_fsdata () const noexcept;
+  bool ins_filter (const optional<u32> which_filter, optional<F> f) noexcept;
   bool rm_filter (const u32 &which_filter) noexcept;
   bool add_one (u32 &which_filter, const FilterProperty p, const string &value);
   bool del_one (u32 &which_filter, const FilterProperty p, const string &value);
@@ -139,12 +147,12 @@ public:
 // ---------------------- Filter<> Impl ----------------------
 
 template <typename V>
-requires HasFilterFields<V>
+  requires HasFilterFields<V>
 Filter<V>::Filter ()
 {}
 
 template <typename V>
-requires HasFilterFields<V>
+  requires HasFilterFields<V>
 Filter<V>::Filter (Filter<V> &&move_ctor_from)
 {
   this->__titles = std::move (move_ctor_from.__titles);
@@ -156,7 +164,8 @@ Filter<V>::Filter (Filter<V> &&move_ctor_from)
 }
 
 template <typename V>
-requires HasFilterFields<V> Filter<V> &
+  requires HasFilterFields<V>
+Filter<V> &
 Filter<V>::operator= (Filter<V> &&move_assign_from)
 {
   this->__titles = std::move (move_assign_from.__titles);
@@ -169,7 +178,8 @@ Filter<V>::operator= (Filter<V> &&move_assign_from)
 }
 
 template <typename V>
-requires HasFilterFields<V> bool
+  requires HasFilterFields<V>
+bool
 Filter<V>::mtch_titles (const std::string &input) const
 {
   // if no candidates, match anything
@@ -189,7 +199,8 @@ Filter<V>::mtch_titles (const std::string &input) const
 }
 
 template <typename V>
-requires HasFilterFields<V> bool
+  requires HasFilterFields<V>
+bool
 Filter<V>::mtch_no_titles (const std::string &input) const
 {
   // if no candidates, match anything
@@ -209,7 +220,8 @@ Filter<V>::mtch_no_titles (const std::string &input) const
 }
 
 template <typename V>
-requires HasFilterFields<V> bool
+  requires HasFilterFields<V>
+bool
 Filter<V>::mtch_keywords (const std::string &input) const
 {
   // if no candidates, match anything
@@ -229,7 +241,8 @@ Filter<V>::mtch_keywords (const std::string &input) const
 }
 
 template <typename V>
-requires HasFilterFields<V> bool
+  requires HasFilterFields<V>
+bool
 Filter<V>::mtch_no_keywords (const std::string &input) const
 {
   // if no candidates, not match anything
@@ -265,7 +278,8 @@ readable_eles (const vector<PosixExtRegex> &list)
 }
 
 template <typename V>
-requires HasFilterFields<V> string
+  requires HasFilterFields<V>
+string
 Filter<V>::as_readable () const
 {
   ostringstream oss;
@@ -294,7 +308,8 @@ Filter<V>::as_readable () const
 }
 
 template <typename V>
-requires HasFilterFields<V> bool
+  requires HasFilterFields<V>
+bool
 Filter<V>::mtch_senders (const std::string &input) const
 {
   if (this->__senders.size () == 0)
@@ -313,7 +328,8 @@ Filter<V>::mtch_senders (const std::string &input) const
 }
 
 template <typename V>
-requires HasFilterFields<V> bool
+  requires HasFilterFields<V>
+bool
 Filter<V>::mtch_no_senders (const std::string &input) const
 {
   // if (this->__no_senders.size () == 0)
@@ -332,7 +348,8 @@ Filter<V>::mtch_no_senders (const std::string &input) const
 }
 
 template <typename V>
-requires HasFilterFields<V> FocusDecision
+  requires HasFilterFields<V>
+FocusDecision
 Filter<V>::mtch_tgmsg (const TgMsg &in) const
 {
   // ACCEPT
@@ -363,7 +380,8 @@ Filter<V>::mtch_tgmsg (const TgMsg &in) const
 // --------------------- FilterGroup<> Impl ---------------------
 
 template <typename V, typename F>
-requires CanFilterRecogValue<F, V> bool
+  requires CanFilterRecogValue<F, V>
+bool
 FilterGroup<V, F>::mtch_tgmsg (const TgMsg &in)
 {
   this->i_prev_visited_ = 0;
@@ -386,7 +404,8 @@ FilterGroup<V, F>::mtch_tgmsg (const TgMsg &in)
 }
 
 template <typename V, typename F>
-requires CanFilterRecogValue<F, V> string
+  requires CanFilterRecogValue<F, V>
+string
 FilterGroup<V, F>::as_readable () const
 {
   ostringstream oss;
@@ -404,7 +423,45 @@ FilterGroup<V, F>::as_readable () const
 }
 
 template <typename V, typename F>
-requires CanFilterRecogValue<F, V> bool
+  requires CanFilterRecogValue<F, V>
+bool
+FilterGroup<V, F>::ins_filter (const optional<u32> which_filter,
+			       optional<F> f) noexcept
+{
+  F default_f{};
+  // std::reverse (__filters.begin (), __filters.end ());
+  i32 idx = __filters.size ();
+  if (which_filter)
+    idx = *which_filter;
+  if (idx < 0)
+    {
+      goto bad_ret;
+    }
+  if (idx > __filters.size ())
+    {
+      idx = __filters.size ();
+    }
+
+  if (f)
+    {
+      __filters.insert (__filters.begin () + idx, move (f.value ()));
+    }
+  else
+    {
+      __filters.insert (__filters.begin () + idx, move (default_f));
+    }
+good_ret:
+  // std::reverse (__filters.begin (), __filters.end ());
+  return true;
+
+bad_ret:
+  // std::reverse (__filters.begin (), __filters.end ());
+  return false;
+}
+
+template <typename V, typename F>
+  requires CanFilterRecogValue<F, V>
+bool
 FilterGroup<V, F>::rm_filter (const u32 &which_filter) noexcept
 {
   // std::reverse (__filters.begin (), __filters.end ());
@@ -432,7 +489,8 @@ bad_ret:
 }
 
 template <typename V, typename F>
-requires CanFilterRecogValue<F, V> bool
+  requires CanFilterRecogValue<F, V>
+bool
 FilterGroup<V, F>::add_one (u32 &which_filter, const FilterProperty p,
 			    const string &value)
 {
@@ -485,7 +543,8 @@ bad_rtn:
 }
 
 template <typename V, typename F>
-requires CanFilterRecogValue<F, V> bool
+  requires CanFilterRecogValue<F, V>
+bool
 FilterGroup<V, F>::del_one (u32 &which_filter, const FilterProperty p,
 			    const string &value)
 {
@@ -588,84 +647,96 @@ bad_rtn:
 }
 
 template <typename V, typename F>
-requires CanFilterRecogValue<F, V> bool
+  requires CanFilterRecogValue<F, V>
+bool
 FilterGroup<V, F>::add_titles (u32 &which_filter, const string &value)
 {
   return add_one (which_filter, FilterPropertyTitles, value);
 }
 
 template <typename V, typename F>
-requires CanFilterRecogValue<F, V> bool
+  requires CanFilterRecogValue<F, V>
+bool
 FilterGroup<V, F>::del_titles (u32 &which_filter, const string &value)
 {
   return del_one (which_filter, FilterPropertyTitles, value);
 }
 
 template <typename V, typename F>
-requires CanFilterRecogValue<F, V> bool
+  requires CanFilterRecogValue<F, V>
+bool
 FilterGroup<V, F>::add_no_titles (u32 &which_filter, const string &value)
 {
   return add_one (which_filter, FilterPropertyNoTitles, value);
 }
 
 template <typename V, typename F>
-requires CanFilterRecogValue<F, V> bool
+  requires CanFilterRecogValue<F, V>
+bool
 FilterGroup<V, F>::del_no_titles (u32 &which_filter, const string &value)
 {
   return del_one (which_filter, FilterPropertyNoTitles, value);
 }
 
 template <typename V, typename F>
-requires CanFilterRecogValue<F, V> bool
+  requires CanFilterRecogValue<F, V>
+bool
 FilterGroup<V, F>::add_senders (u32 &which_filter, const string &value)
 {
   return add_one (which_filter, FilterPropertySenders, value);
 }
 
 template <typename V, typename F>
-requires CanFilterRecogValue<F, V> bool
+  requires CanFilterRecogValue<F, V>
+bool
 FilterGroup<V, F>::del_senders (u32 &which_filter, const string &value)
 {
   return del_one (which_filter, FilterPropertySenders, value);
 }
 
 template <typename V, typename F>
-requires CanFilterRecogValue<F, V> bool
+  requires CanFilterRecogValue<F, V>
+bool
 FilterGroup<V, F>::add_no_senders (u32 &which_filter, const string &value)
 {
   return add_one (which_filter, FilterPropertyNoSenders, value);
 }
 
 template <typename V, typename F>
-requires CanFilterRecogValue<F, V> bool
+  requires CanFilterRecogValue<F, V>
+bool
 FilterGroup<V, F>::del_no_senders (u32 &which_filter, const string &value)
 {
   return del_one (which_filter, FilterPropertyNoSenders, value);
 }
 
 template <typename V, typename F>
-requires CanFilterRecogValue<F, V> bool
+  requires CanFilterRecogValue<F, V>
+bool
 FilterGroup<V, F>::add_keywords (u32 &which_filter, const string &value)
 {
   return add_one (which_filter, FilterPropertyKeywords, value);
 }
 
 template <typename V, typename F>
-requires CanFilterRecogValue<F, V> bool
+  requires CanFilterRecogValue<F, V>
+bool
 FilterGroup<V, F>::del_keywords (u32 &which_filter, const string &value)
 {
   return del_one (which_filter, FilterPropertyKeywords, value);
 }
 
 template <typename V, typename F>
-requires CanFilterRecogValue<F, V> bool
+  requires CanFilterRecogValue<F, V>
+bool
 FilterGroup<V, F>::add_no_keywords (u32 &which_filter, const string &value)
 {
   return add_one (which_filter, FilterPropertyNoKeywords, value);
 }
 
 template <typename V, typename F>
-requires CanFilterRecogValue<F, V> bool
+  requires CanFilterRecogValue<F, V>
+bool
 FilterGroup<V, F>::del_no_keywords (u32 &which_filter, const string &value)
 {
   return del_one (which_filter, FilterPropertyNoKeywords, value);
