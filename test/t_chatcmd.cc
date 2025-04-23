@@ -318,7 +318,8 @@ no-senders = ["xxx","yyy","zzz"]
     tgfass (res.done ());
     tgfass (res.aux_msg () == "〘 TGFCMD 〙success");
     tgfass (res.did_what ().has_value ());
-    tgfass (res.did_what ().value () == "filter.edit 1 no-senders del \"yyy\" ");
+    tgfass (res.did_what ().value ()
+	    == "filter.edit 1 no-senders del \"yyy\" ");
     tgfass (res.succ_data ().has_value ());
     tgfass (tfdata.get_filters () == R"(
 [[focus-filter]]
@@ -340,7 +341,8 @@ no-keywords = []
     tgfass (res.done ());
     tgfass (res.aux_msg () == "〘 TGFCMD 〙success");
     tgfass (res.did_what ().has_value ());
-    tgfass (res.did_what ().value () == "filter.edit 1 no-senders add \"ppp\" ");
+    tgfass (res.did_what ().value ()
+	    == "filter.edit 1 no-senders add \"ppp\" ");
     tgfass (res.succ_data ().has_value ());
     tgfass (tfdata.get_filters () == R"(
 [[focus-filter]]
@@ -742,6 +744,226 @@ titles = []
 }
 
 void
+tst_filter_insert_succ ()
+{
+  string usript = " filter.insert 1";
+  string curr_filters = R"(
+[[focus-filter]]
+titles = [".*"]
+keywords = ["111"]
+no-keywords = []
+senders = []
+no-senders = []
+)";
+  tfdata.set_filters (move (curr_filters));
+  tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdInsertFilter, usript,
+			   tfdata);
+  // cerr << res.aux_msg () << endl;
+  tgfass (res.done ());
+  tgfass (res.aux_msg () == "〘 TGFCMD 〙success");
+  tgfass (res.did_what ().has_value ());
+  tgfass (res.did_what ().value () == "filter.insert 1");
+  tgfass (res.succ_data ().has_value ());
+  cerr << tfdata.get_filters () << endl;
+  tgfass (tfdata.get_filters () == R"(
+[[focus-filter]]
+titles = []
+no-titles = []
+senders = []
+no-senders = []
+keywords = []
+no-keywords = []
+
+[[focus-filter]]
+titles = [".*"]
+no-titles = []
+senders = []
+no-senders = []
+keywords = ["111"]
+no-keywords = []
+)");
+}
+
+void
+tst_filter_insert_succ2 ()
+{
+  string usript = " filter.insert 2";
+  string curr_filters = R"(
+[[focus-filter]]
+titles = [".*"]
+keywords = ["111"]
+no-keywords = []
+senders = []
+no-senders = []
+)";
+  tfdata.set_filters (move (curr_filters));
+  tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdInsertFilter, usript,
+			   tfdata);
+  // cerr << res.aux_msg () << endl;
+  tgfass (res.done ());
+  tgfass (res.aux_msg () == "〘 TGFCMD 〙success");
+  tgfass (res.did_what ().has_value ());
+  tgfass (res.did_what ().value () == "filter.insert 2");
+  tgfass (res.succ_data ().has_value ());
+  cerr << tfdata.get_filters () << endl;
+  tgfass (tfdata.get_filters () == R"(
+[[focus-filter]]
+titles = [".*"]
+no-titles = []
+senders = []
+no-senders = []
+keywords = ["111"]
+no-keywords = []
+
+[[focus-filter]]
+titles = []
+no-titles = []
+senders = []
+no-senders = []
+keywords = []
+no-keywords = []
+)");
+}
+
+void
+tst_filter_insert_succ3 ()
+{
+  string usript = " filter.insert 5";
+  string curr_filters = R"(
+[[focus-filter]]
+titles = [".*"]
+keywords = ["111"]
+no-keywords = []
+senders = []
+no-senders = []
+)";
+  tfdata.set_filters (move (curr_filters));
+  tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdInsertFilter, usript,
+			   tfdata);
+  // cerr << res.aux_msg () << endl;
+  tgfass (res.done ());
+  tgfass (res.aux_msg () == "〘 TGFCMD 〙success");
+  tgfass (res.did_what ().has_value ());
+  tgfass (res.did_what ().value () == "filter.insert 5");
+  tgfass (res.succ_data ().has_value ());
+  cerr << tfdata.get_filters () << endl;
+  tgfass (tfdata.get_filters () == R"(
+[[focus-filter]]
+titles = [".*"]
+no-titles = []
+senders = []
+no-senders = []
+keywords = ["111"]
+no-keywords = []
+
+[[focus-filter]]
+titles = []
+no-titles = []
+senders = []
+no-senders = []
+keywords = []
+no-keywords = []
+)");
+}
+
+void
+tst_filter_insert_succ4 ()
+{
+  string usript = " filter.insert 2";
+  string curr_filters = R"(
+[[focus-filter]]
+titles = ["111"]
+keywords = ["111"]
+no-keywords = []
+senders = []
+no-senders = []
+
+[[focus-filter]]
+titles = ["222"]
+keywords = ["222"]
+no-keywords = []
+senders = []
+no-senders = []
+
+[[focus-filter]]
+titles = ["333"]
+keywords = ["333"]
+no-keywords = []
+senders = []
+no-senders = []
+)";
+  tfdata.set_filters (move (curr_filters));
+  tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdInsertFilter, usript,
+			   tfdata);
+  // cerr << res.aux_msg () << endl;
+  tgfass (res.done ());
+  tgfass (res.aux_msg () == "〘 TGFCMD 〙success");
+  tgfass (res.did_what ().has_value ());
+  tgfass (res.did_what ().value () == "filter.insert 2");
+  tgfass (res.succ_data ().has_value ());
+  cerr << tfdata.get_filters () << endl;
+  tgfass (tfdata.get_filters () == R"(
+[[focus-filter]]
+titles = ["111"]
+no-titles = []
+senders = []
+no-senders = []
+keywords = ["111"]
+no-keywords = []
+
+[[focus-filter]]
+titles = []
+no-titles = []
+senders = []
+no-senders = []
+keywords = []
+no-keywords = []
+
+[[focus-filter]]
+titles = ["222"]
+no-titles = []
+senders = []
+no-senders = []
+keywords = ["222"]
+no-keywords = []
+
+[[focus-filter]]
+titles = ["333"]
+no-titles = []
+senders = []
+no-senders = []
+keywords = ["333"]
+no-keywords = []
+)");
+}
+
+void
+tst_filter_insert_fail ()
+{
+  string usript = "filter.insert 0";
+  tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdInsertFilter, usript,
+			   tfdata);
+  tgfass (!res.done ());
+  tgfass (res.succ_data () == nullopt);
+  tgfass (res.aux_msg ()
+	  == ("〘 TGFCMD 〙invalid"
+	      " " CHATCMD_INSF_ARG1 "\n\n" CHATCMD_INSF_USAGE));
+}
+
+void
+tst_filter_insert_fail2 ()
+{
+  string usript = "filter.insert -1";
+  tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdInsertFilter, usript,
+			   tfdata);
+  tgfass (!res.done ());
+  tgfass (res.succ_data () == nullopt);
+  tgfass (res.aux_msg ()
+	  == ("〘 TGFCMD 〙invalid"
+	      " " CHATCMD_INSF_ARG1 "\n\n" CHATCMD_INSF_USAGE));
+}
+
+void
 tst_rm_filter_succ ()
 {
   string usript = " filter.remove 1";
@@ -870,6 +1092,14 @@ main ()
   tst_rawfilters2 ();
   tst_readblefilters ();
   tst_readblefilters_nonreverse_order ();
+
+  tst_filter_insert_succ ();
+  tst_filter_insert_succ2 ();
+  tst_filter_insert_succ3 ();
+  tst_filter_insert_succ4 ();
+
+  tst_filter_insert_fail ();
+  tst_filter_insert_fail2 ();
 
   tst_rm_filter_succ ();
   tst_rm_filter_fail ();

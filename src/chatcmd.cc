@@ -98,7 +98,7 @@ handle_insfilter (string cmdipt, tgf::UserData &p_userdata)
     string::size_type begi = 0;
     string::size_type endi = 0;
 
-    optional<u32> filter_id{nullopt};
+    u32 filter_id = UINT32_MAX;
 
     begi = cmdipt.find (CHATCMD_INSF);
     endi = cmdipt.find_first_of (" ", begi);
@@ -111,7 +111,7 @@ handle_insfilter (string cmdipt, tgf::UserData &p_userdata)
 	    string chunk1 = cmdipt.substr (begi, endi - begi);
 
 	    i32 may_filter_id = atoi (chunk1.c_str ());
-	    if (filter_id <= 0)
+	    if (may_filter_id <= 0)
 	      {
 		auxmsg << "invalid " << CHATCMD_INSF_ARG1;
 		goto bad_rtn;

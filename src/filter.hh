@@ -116,7 +116,7 @@ public:
   bool mtch_tgmsg (const TgMsg &in);
   string as_readable () const;
   string as_fsdata () const noexcept;
-  bool ins_filter (const optional<u32> which_filter, optional<F> f) noexcept;
+  bool ins_filter (u32 &which_filter, optional<F> f) noexcept;
   bool rm_filter (const u32 &which_filter) noexcept;
   bool add_one (u32 &which_filter, const FilterProperty p, const string &value);
   bool del_one (u32 &which_filter, const FilterProperty p, const string &value);
@@ -425,14 +425,12 @@ FilterGroup<V, F>::as_readable () const
 template <typename V, typename F>
   requires CanFilterRecogValue<F, V>
 bool
-FilterGroup<V, F>::ins_filter (const optional<u32> which_filter,
-			       optional<F> f) noexcept
+FilterGroup<V, F>::ins_filter (u32 &which_filter, optional<F> f) noexcept
 {
   F default_f{};
   // std::reverse (__filters.begin (), __filters.end ());
-  i32 idx = __filters.size ();
-  if (which_filter)
-    idx = *which_filter;
+  i32 idx = which_filter - 1;
+
   if (idx < 0)
     {
       goto bad_ret;
@@ -450,6 +448,8 @@ FilterGroup<V, F>::ins_filter (const optional<u32> which_filter,
     {
       __filters.insert (__filters.begin () + idx, move (default_f));
     }
+  which_filter = idx + 1;
+
 good_ret:
   // std::reverse (__filters.begin (), __filters.end ());
   return true;
