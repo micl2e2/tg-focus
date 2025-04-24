@@ -224,7 +224,7 @@ TdCollector::get_user_name (int64_t user_id) const
 
   if (it->second->usernames_)
     {
-      readable_usrname += "@" + it->second->usernames_->editable_username_;
+      readable_usrname += " @" + it->second->usernames_->editable_username_;
     }
 
   return readable_usrname;
