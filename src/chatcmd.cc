@@ -419,6 +419,76 @@ bad_rtn:
   return ret;
 }
 
+tuple<optional<string>, optional<string>, string>
+handle_help (string cmdipt, tgf::UserData &p_userdata)
+{
+  ostringstream succdata;
+  ostringstream didwhat;
+  ostringstream auxmsg;
+  tuple<optional<string>, optional<string>, string> ret{nullopt, nullopt, "-"};
+
+  string s = R"(
+TGFCMD(s) are a group of commands used to control the behavior of TG-FOCUS. To run a TGFCMD command, you MUST send a TGFCMD command message in the TG-FOCUS chat.
+
+Available commands are:
+
+Pause Forwarding: TGFCMD pause 
+
+Resume Forwarding: TGFCMD resume 
+
+Show Configuration: TGFCMD filters 
+
+Create A Filter: TGFCMD filter.insert <ID> 
+
+Remove A Filter: TGFCMD filter.remove <ID> 
+
+Edit A Filter: TGFCMD filter.edit <ID> <PROPERTY> <add/del> <DOUBLE-QUOTED-VALUE> 
+
+EXAMPLES :
+
+Forward the messages that come from chat "Freedom User Group" :
+
+ TGFCMD filter.edit 1 titles add "Freedom User Group" 
+
+Forward the messages that are sent by the user "Some One" :
+
+ TGFCMD filter.edit 1 senders add "Some One" 
+
+Forward the messages that contain a word "freedom" :
+
+ TGFCMD filter.edit 1 keywords add "freedom" 
+
+Not forward the messages that sent by the user "Nonfree Lover" :
+
+ TGFCMD filter.edit 1 no-senders add "Nonfree Lover" 
+
+<CLICK-TO-HIDE>
+
+MORE EXAMPLES :
+
+(note: multiples messages should be sent one by one)
+
+Forward two types of messages, the first contains a word "free things" and belongs to the chat "Nonfree Lovers", the second contains a word "nonfree things" and belongs to "Free Lovers":
+
+ TGFCMD filter.edit 1 titles add "Nonfree Lovers" 
+ TGFCMD filter.edit 1 keywords add "free things" 
+ TGFCMD filter.edit 2 titles add "Free Lovers" 
+ TGFCMD filter.edit 2 keywords add "nonfree things" 
+
+<CLICK-TO-HIDE>
+
+Please check the project page for more details.
+)";
+
+  succdata << "";
+  didwhat << cmdipt;
+  auxmsg << endl << s;
+
+  ret = {succdata.str (), didwhat.str (), auxmsg.str ()};
+
+  return ret;
+}
+
 } // namespace impl
 
 tgf::ChatCmdHandler::ChatCmdHandler (tgf::ChatCmdType typ, string ipt,
@@ -481,6 +551,14 @@ tgf::ChatCmdHandler::ChatCmdHandler (tgf::ChatCmdType typ, string ipt,
     {
       tuple<optional<string>, optional<string>, string> res
 	= impl::handle_rmfilter (ipt, p_userdata);
+      __succ_data = move (get<0> (res));
+      __did_what = move (get<1> (res));
+      __aux_msg += move (get<2> (res));
+    }
+  else if (typ == tgf::ChatCmdType::ChatCmdHelp)
+    {
+      tuple<optional<string>, optional<string>, string> res
+	= impl::handle_help (ipt, p_userdata);
       __succ_data = move (get<0> (res));
       __did_what = move (get<1> (res));
       __aux_msg += move (get<2> (res));

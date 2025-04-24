@@ -226,7 +226,12 @@ Filter<V>::mtch_keywords (const std::string &input) const
 {
   // if no candidates, match anything
   if (this->__keywords.size () == 0)
-    return true;
+    {
+      return true;
+      // PosixExtRegex re ("tgfocus");
+      // if (auto flag = re.is_match (input))
+      // 	return *flag;
+    }
 
   for (const PosixExtRegex &re : this->__keywords)
     {

@@ -93,6 +93,12 @@ TdCollector::try_create_tgfchat () // FIXME: is try
     }
 }
 
+TdPtr<TdLinkPrevOpt>
+no_link_preview ()
+{
+  return td_mkobj<TdLinkPrevOpt> (true, ""s, false, false, false);
+}
+
 TdArray<TdPtr<TdTxtEnt>>
 decorate_msg (const string &msg)
 {
@@ -129,7 +135,7 @@ TdCollector::collect_msg (const tgf::TgMsg &msg)
     // this->collector_id, //
     tgfstat::userdata.get_tgfid (), //
     0, nullptr, nullptr, nullptr,
-    td_mkobj<TdInMsgTxt> (move (message_text), nullptr, true));
+    td_mkobj<TdInMsgTxt> (move (message_text), no_link_preview (), true));
 
   send_query (move (send_message_request), [this, msg] (TdObjPtr object) {
     if (object->get_id () == TdMsg::ID)
@@ -233,6 +239,117 @@ TdCollector::get_chat_title (int64_t chat_id) const
       return "unknown chat";
     }
   return it->second;
+}
+
+void
+extra_decoration_help (TdArray<TdPtr<TdTxtEnt>> &deco_list, string &msgtxt)
+{
+  vector<char16_t> seq = get_c16_seq (msgtxt);
+  size_t msglen = seq.size ();
+  size_t i = 0;
+  bool ent_foldblk = false;
+  bool ent_codeblk = false;
+  bool ent_urlblk = false;
+  size_t lasti_foldblk = -1;
+  size_t lasti_codeblk = -1;
+  size_t lasti_urlblk = -1;
+
+  while (i < seq.size ())
+    {
+      {
+	// more examples
+	const size_t last_offset1 = 9;
+	if (!ent_foldblk && i + last_offset1 < seq.size ()
+	    && seq[i + 0] == 0x0045 && seq[i + 1] == 0x0058
+	    && seq[i + 2] == 0x0041 && seq[i + 3] == 0x004d
+	    && seq[i + 4] == 0x0050 && seq[i + 5] == 0x004c
+	    && seq[i + 6] == 0x0045 && seq[i + 7] == 0x0053
+	    && seq[i + 8] == 0x0020 && seq[i + last_offset1] == 0x003a)
+	  {
+	    ent_foldblk = true;
+	    lasti_foldblk = i;
+	    deco_list.emplace_back (
+	      td_mkobj<TdTxtEnt> (i, last_offset1 + 1,
+				  td_mkobj<TdTxtEntBold> ()));
+	  }
+
+	// more examples
+	const size_t last_offset2 = 14;
+	if (!ent_foldblk && i + last_offset2 < seq.size () && seq[i] == 0x004d
+	    && seq[i + 1] == 0x004f && seq[i + 2] == 0x0052
+	    && seq[i + 3] == 0x0045 && seq[i + 4] == 0x0020
+	    && seq[i + 5] == 0x0045 && seq[i + 6] == 0x0058
+	    && seq[i + 7] == 0x0041 && seq[i + 8] == 0x004d
+	    && seq[i + 9] == 0x0050 && seq[i + 10] == 0x004c
+	    && seq[i + 11] == 0x0045 && seq[i + 12] == 0x0053
+	    && seq[i + 13] == 0x0020 && seq[i + last_offset2] == 0x003a)
+	  {
+	    ent_foldblk = true;
+	    lasti_foldblk = i;
+	    deco_list.emplace_back (
+	      td_mkobj<TdTxtEnt> (i, last_offset2 + 1,
+				  td_mkobj<TdTxtEntBold> ()));
+	  }
+
+	// click to hide
+	const size_t last_offset3 = 14;
+	if (ent_foldblk && i + last_offset3 < seq.size () && seq[i] == 0x003c
+	    && seq[i + 1] == 0x0043 && seq[i + 2] == 0x004c
+	    && seq[i + 3] == 0x0049 && seq[i + 4] == 0x0043
+	    && seq[i + 5] == 0x004b && seq[i + 6] == 0x002d
+	    && seq[i + 7] == 0x0054 && seq[i + 8] == 0x004f
+	    && seq[i + 9] == 0x002d && seq[i + 10] == 0x0048
+	    && seq[i + 11] == 0x0049 && seq[i + 12] == 0x0044
+	    && seq[i + 13] == 0x0045 && seq[i + last_offset3] == 0x003e)
+	  {
+	    deco_list.emplace_back (
+	      td_mkobj<TdTxtEnt> (lasti_foldblk,
+				  (i + last_offset3) - lasti_foldblk + 1,
+				  td_mkobj<TdTxtEntExpQuote> ()));
+	    ent_foldblk = false;
+	    lasti_foldblk = -1;
+	  }
+
+	if (seq[i] == 0x2002)
+	  {
+	    if (ent_codeblk && lasti_codeblk > 0)
+	      {
+		deco_list.emplace_back (
+		  td_mkobj<TdTxtEnt> (lasti_codeblk, i - lasti_codeblk + 1,
+				      td_mkobj<TdTxtEntCode> ()));
+		lasti_codeblk = -1;
+	      }
+	    else
+	      {
+		lasti_codeblk = i;
+	      }
+	    ent_codeblk = !ent_codeblk;
+	  }
+
+	if (seq[i] == 0x2003)
+	  {
+	    if (ent_urlblk && lasti_urlblk > 0)
+	      {
+		deco_list.emplace_back (td_mkobj<TdTxtEnt> (
+		  lasti_urlblk, i - lasti_urlblk + 1,
+		  td_mkobj<TdTxtEntTxtUrl> (
+		    "https://github.com/micl2e2/tg-focus"s)));
+		lasti_urlblk = -1;
+	      }
+	    else
+	      {
+		lasti_urlblk = i;
+	      }
+	    ent_urlblk = !ent_urlblk;
+	  }
+      }
+
+      i++;
+    }
+
+  // for (size_t j = 0; j < msgtxt.size (); j++)
+  //   if (msgtxt[j] == 0x2002)
+  // 	  msgtxt[j - 1] = 0x20;
 }
 
 void
@@ -412,7 +529,6 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
     }
   else if (incom_txt.find (CHATCMD_EDITF) != string::npos)
     {
-      string curr_filters = tgfstat::userdata.get_filters ();
       tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdEditFilter, incom_txt,
 			       tgfstat::userdata);
       aux_msg = move (res.aux_msg ());
@@ -421,7 +537,6 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
     }
   else if (incom_txt.find (CHATCMD_INSF) != string::npos)
     {
-      string curr_filters = tgfstat::userdata.get_filters ();
       tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdInsertFilter, incom_txt,
 			       tgfstat::userdata);
       aux_msg = move (res.aux_msg ());
@@ -430,8 +545,15 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
     }
   else if (incom_txt.find (CHATCMD_RMF) != string::npos)
     {
-      string curr_filters = tgfstat::userdata.get_filters ();
       tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdRemoveFilter, incom_txt,
+			       tgfstat::userdata);
+      aux_msg = move (res.aux_msg ());
+      did_what = move (res.did_what ().value ());
+      len_did_what = did_what.length ();
+    }
+  else if (incom_txt.find (CHATCMD_HELP) != string::npos)
+    {
+      tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdHelp, incom_txt,
 			       tgfstat::userdata);
       aux_msg = move (res.aux_msg ());
       did_what = move (res.did_what ().value ());
@@ -451,6 +573,8 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
 
   if (incom_txt.find (CHATCMD_FILTERS) != string::npos)
     extra_decoration_filters (deco_list, message_text->text_);
+  if (incom_txt.find (CHATCMD_HELP) != string::npos)
+    extra_decoration_help (deco_list, message_text->text_);
 
   message_text->entities_ = move (deco_list);
 
@@ -458,7 +582,7 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
     // this->collector_id, //
     tgfstat::userdata.get_tgfid (), //
     0, nullptr, nullptr, nullptr,
-    td_mkobj<TdInMsgTxt> (move (message_text), nullptr, true));
+    td_mkobj<TdInMsgTxt> (move (message_text), no_link_preview (), true));
 
   send_query (move (send_message_request), [this] (TdObjPtr object) {
     if (object->get_id () == TdMsg::ID)
@@ -510,22 +634,14 @@ TdCollector::process_update (TdObjPtr update)
 	TdUpdNewMsg *nmsg = static_cast<TdUpdNewMsg *> (update.get ());
 	TdInt chat_id = nmsg->message_->chat_id_;
 	string chat_title = __chat_titles[chat_id];
-
-	if (chat_title.find (TF_COLL_CHAT_TITLE) != string::npos
-	    && chat_title.find_first_not_of (TF_COLL_CHAT_TITLE)
-		 == string::npos)
+	int64_t latest_tgfid = tgfstat::userdata.get_tgfid ();
+	bool is_our_tgfchat = chat_id == latest_tgfid;
+	// maybe are TGFCMDs
+	if (is_our_tgfchat)
 	  {
 	    TdPtr<TdMsgContent> p = move (nmsg->message_->content_);
 	    if (p->get_id () == TdMsgText::ID)
 	      {
-		// NOT WORKED: no copy ctor, will error:
-		//    TdMsgText r = static_cast<TdMsgText> (*p);
-		// TODO: why, when using static cast,
-		//       use aliased func not allowed?:
-		//    TdMsgText &r = scast<TdMsgText &> (*p);
-		//       meanwhile the original one worked:
-		//    TdMsgText &r = static_cast<TdMsgText &> (*p);
-		// TODO: why, dynamic_cast reports undefine ref for typeinfo
 		TdMsgText &r = static_cast<TdMsgText &> (*p);
 		string txt = move (r.text_->text_);
 		txt.erase (0, txt.find_first_not_of (" ", 0));

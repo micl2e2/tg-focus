@@ -37,6 +37,8 @@ namespace tgf {
 #define CHATCMD_RMF_ARG1 "<filter-id>"
 #define CHATCMD_RMF_USAGE concat3 ("Usage:\n", CHATCMD_RMF, CHATCMD_RMF_ARG1)
 
+#define CHATCMD_HELP "help"
+
 #define CHATCMD_RPLY_PREFIX "〘 TGFCMD 〙"
 #define CHATCMD_RPLY_PREFIX_N_CP 10
 
@@ -49,6 +51,7 @@ typedef enum
   ChatCmdEditFilter,
   ChatCmdInsertFilter,
   ChatCmdRemoveFilter,
+  ChatCmdHelp,
 } ChatCmdType;
 
 class ChatCmdHandler
