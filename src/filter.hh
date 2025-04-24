@@ -149,7 +149,10 @@ public:
 template <typename V>
   requires HasFilterFields<V>
 Filter<V>::Filter ()
-{}
+{
+  // PosixExtRegex re ("tg-focus");
+  // __keywords.emplace_back (move (re));
+}
 
 template <typename V>
   requires HasFilterFields<V>
@@ -432,7 +435,6 @@ template <typename V, typename F>
 bool
 FilterGroup<V, F>::ins_filter (u32 &which_filter, optional<F> f) noexcept
 {
-  F default_f{};
   // std::reverse (__filters.begin (), __filters.end ());
   i32 idx = which_filter - 1;
 
@@ -451,7 +453,10 @@ FilterGroup<V, F>::ins_filter (u32 &which_filter, optional<F> f) noexcept
     }
   else
     {
-      __filters.insert (__filters.begin () + idx, move (default_f));
+      F f{};
+      PosixExtRegex re ("tg-focus");
+      f.__keywords.emplace_back (move (re));
+      __filters.insert (__filters.begin () + idx, move (f));
     }
   which_filter = idx + 1;
 

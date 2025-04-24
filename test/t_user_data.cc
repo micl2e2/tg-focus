@@ -137,6 +137,12 @@ tst_files_content ()
   {
     auto strdata = tfdata.get_filters ();
     tgfass (strdata == R"([[focus-filter]]
+titles = []
+no-titles = []
+senders = []
+no-senders = []
+keywords = ["tg-focus"]
+no-keywords = []
 )");
   }
 

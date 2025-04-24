@@ -181,6 +181,12 @@ tgf::UserData::UserData (std::optional<path> &&may_pred_home, bool reset)
       {
 	FILE *fstrm = fopen (filters_file.c_str (), "a");
 	const std::string default_ctn = R"([[focus-filter]]
+titles = []
+no-titles = []
+senders = []
+no-senders = []
+keywords = ["tg-focus"]
+no-keywords = []
 )";
 	std::fwrite (default_ctn.c_str (), 1, default_ctn.length (), fstrm);
 	if (fstrm)
