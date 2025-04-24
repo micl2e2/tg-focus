@@ -1,29 +1,29 @@
 
 # Table of Contents
 
--   [TG-Focus💡](#org98e12d6)
--   [Overview](#org3177229)
--   [Quickstart](#org834c19d)
--   [TGFCMD Examples](#org0717c81)
--   [Filters Rules](#org5f57d7e)
--   [Development](#orgc9ea239)
--   [Contributing](#org522bd8c)
--   [Can I trust tg-focus?](#orgee7f9e6)
--   [Is tg-focus a crawler?](#org6c1e42e)
--   [License](#orgedb0e28)
+-   [TG-Focus💡](#org5e16194)
+-   [Overview](#orgebcd213)
+-   [Quickstart](#org8a5c92c)
+-   [TGFCMD Examples](#org39e88c5)
+-   [Filters Rules](#org04cb13c)
+-   [Development](#org1a197f7)
+-   [Contributing](#org75e2711)
+-   [Can I trust tg-focus?](#org893795d)
+-   [Is tg-focus a crawler?](#org82e0c25)
+-   [License](#org8609000)
 
 
 
-<a id="org98e12d6"></a>
+<a id="org5e16194"></a>
 
 # TG-Focus💡
 
-<a href="https://github.com/micl2e2/tg-focus/blob/master/LICENSE-GPL">![GitHub License](https://img.shields.io/github/license/micl2e2/tg-focus?logo=gnu&color=blue&link=https%3A%2F%2Fgithub.com%2Fmicl2e2%2Ftg-focus%2Fblob%2Fmaster%2FLICENSE-GPL)</a>
-<a href="https://core.telegram.org/tdlib">![Static Badge](https://img.shields.io/badge/tdlib-1.8.46-%2332a9de)</a>
-<a href="https://github.com/tdlib/td">![GitHub commits difference between two branches/tags/commits](https://img.shields.io/github/commits-difference/tdlib/td?base=347bd31a30dd479fc4c5fa966316fb2834802bf8&head=master&logo=gitextensions&label=pending&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd)</a>
+<a href="<https://github.com/micl2e2/tg-focus/blob/master/LICENSE-GPL>">![GitHub License](<https://img.shields.io/github/license/micl2e2/tg-focus?logo=gnu&color=blue&link=https%3A%2F%2Fgithub.com%2Fmicl2e2%2Ftg-focus%2Fblob%2Fmaster%2FLICENSE-GPL>)</a>
+<a href="<https://core.telegram.org/tdlib>">![Static Badge](<https://img.shields.io/badge/tdlib-1.8.46-%2332a9de>)</a>
+<a href="<https://github.com/tdlib/td>">![GitHub commits difference between two branches/tags/commits](<https://img.shields.io/github/commits-difference/tdlib/td?base=347bd31a30dd479fc4c5fa966316fb2834802bf8&head=master&logo=gitextensions&label=pending&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd>)</a>
 
 
-<a id="org3177229"></a>
+<a id="orgebcd213"></a>
 
 # Overview
 
@@ -55,7 +55,7 @@ The supported platforms are:
 </colgroup>
 <thead>
 <tr>
-<th scope="col" class="org-left">OS \ ARCH</th>
+<th scope="col" class="org-left">OS \\ ARCH</th>
 <th scope="col" class="org-left">x86 64</th>
 <th scope="col" class="org-left">aarch64</th>
 </tr>
@@ -101,7 +101,7 @@ The supported platforms are:
 Supported(✅). Work In Progress(🔨). 
 
 
-<a id="org834c19d"></a>
+<a id="org8a5c92c"></a>
 
 # Quickstart
 
@@ -164,7 +164,7 @@ specific messages.
     freedom-related conversion :-)
 
 
-<a id="org0717c81"></a>
+<a id="org39e88c5"></a>
 
 # TGFCMD Examples
 
@@ -209,7 +209,7 @@ Resume forwarding:
     TGFCMD resume
 
 
-<a id="org5f57d7e"></a>
+<a id="org04cb13c"></a>
 
 # Filters Rules
 
@@ -262,7 +262,7 @@ filter will not be tried, and the message will be discarded.
 the last three rules as *blacklist*)
 
 
-<a id="orgc9ea239"></a>
+<a id="org1a197f7"></a>
 
 # Development
 
@@ -292,7 +292,7 @@ Building:
     build.
 
 
-<a id="org522bd8c"></a>
+<a id="org75e2711"></a>
 
 # Contributing
 
@@ -321,7 +321,7 @@ future:
 -   [ ] BSD Port
 
 
-<a id="orgee7f9e6"></a>
+<a id="org893795d"></a>
 
 # Can I trust tg-focus?
 
@@ -339,7 +339,7 @@ individual, **but** Github-hosted machines. Check [github actions](https://githu
 more details.
 
 
-<a id="org6c1e42e"></a>
+<a id="org82e0c25"></a>
 
 # Is tg-focus a crawler?
 
@@ -374,7 +374,7 @@ Check if tg-focus is for you or not:
 1.  You want to scrape/crawl messages from chats/channels.
 
 
-<a id="orgedb0e28"></a>
+<a id="org8609000"></a>
 
 # License
 
