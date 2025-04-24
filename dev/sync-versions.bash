@@ -51,6 +51,12 @@ then
     sed -i -E \
 	"s/tdlib-${TDLIB_VER_PREV}-%2332a9de/tdlib-${TDLIB_VER_CURR}-%2332a9de/" \
 	README.md
+    sed -i -E \
+	"s/base=${TDLIB_SRC_PREV}/base=${TDLIB_SRC_CURR}/" \
+	README.org
+    sed -i -E \
+	"s/tdlib-${TDLIB_VER_PREV}-%2332a9de/tdlib-${TDLIB_VER_CURR}-%2332a9de/" \
+	README.org
     if [[ $? -eq 0 ]]
     then
 	echo 'sync: tdlib readme source'

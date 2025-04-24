@@ -24,7 +24,7 @@ constexpr auto TF_DEV =
 #else
   "TG-FOCUS_DEV";
 #endif
-constexpr auto TF_VER = "3.0rc3";
+constexpr auto TF_VER = "3.0rc4";
 constexpr auto TF_VER_MAJOR = "3"; // FIXME: sync vers
 constexpr auto TF_COLL_CHAT_TITLE =
 #ifdef NDEBUG
