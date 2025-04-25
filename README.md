@@ -1,20 +1,19 @@
 
 # Table of Contents
 
--   [TG-Focus💡](#org5e16194)
--   [Overview](#orgebcd213)
--   [Quickstart](#org8a5c92c)
--   [TGFCMD Examples](#org39e88c5)
--   [Filters Rules](#org04cb13c)
--   [Development](#org1a197f7)
--   [Contributing](#org75e2711)
--   [Can I trust tg-focus?](#org893795d)
--   [Is tg-focus a crawler?](#org82e0c25)
--   [License](#org8609000)
+-   [TG-Focus💡](#orgabce91c)
+-   [Overview](#org13fc92f)
+-   [Quickstart](#org813a465)
+-   [TGFCMD Examples](#org72877ff)
+-   [Filters Rules](#orgd1fbd8a)
+-   [Development](#org95c10cd)
+-   [Contributing](#org0ba9f0a)
+-   [FAQ](#org1056921)
+-   [License](#orgd198bb1)
 
 
 
-<a id="org5e16194"></a>
+<a id="orgabce91c"></a>
 
 # TG-Focus💡
 
@@ -23,7 +22,7 @@
 <a href="<https://github.com/tdlib/td>">![GitHub commits difference between two branches/tags/commits](<https://img.shields.io/github/commits-difference/tdlib/td?base=347bd31a30dd479fc4c5fa966316fb2834802bf8&head=master&logo=gitextensions&label=pending&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd>)</a>
 
 
-<a id="orgebcd213"></a>
+<a id="org13fc92f"></a>
 
 # Overview
 
@@ -101,7 +100,7 @@ The supported platforms are:
 Supported(✅). Work In Progress(🔨). 
 
 
-<a id="org8a5c92c"></a>
+<a id="org813a465"></a>
 
 # Quickstart
 
@@ -138,33 +137,19 @@ specific messages.
         startup: done
         focus-start: done
 
-5.  Go back to your Telgram application, open the TG-FOCUS
-    chat.
+5.  Go back to your Telgram application, wait for the TG-FOCUS
+    group showing up. 
     
-    *(NOTE) since the default filter does not filter any messages, you
-    might see many continuously incoming messages.*
+    If TG-FOCUS chat does not appear, you can send a message
+    "tg-focus" in a random group(e.g. Saved Messages) to get it shown
+    up. This is because by default, only messages contain "tg-focus"
+    will be filtered and forwarded.
 
-6.  Configure the focus filters. Suppose you only want to see the
-    messages where the word "freedom" is mentioned, you add it to the
-    keyword list by sending this message to the TG-FOCUS chat:
-    
-        TGFCMD editf 1 keywords add "freedom"
-    
-    *(NOTE) don't forget two double quotes.*
-    
-    If everthing works fine, you should see:
-    
-        [ TGFCMD ] success
-    
-    You can also check your focus filters by sending this message:
-    
-        TGFCMD filters
-
-7.  Then wait patiently at TG-FOCUS, and enjoy your every 
-    freedom-related conversion :-)
+6.  Once the chat shown up, you send a message `TGFCMD help` to get
+    started. The following image tutorials will show you how to use it.
 
 
-<a id="org39e88c5"></a>
+<a id="org72877ff"></a>
 
 # TGFCMD Examples
 
@@ -209,7 +194,7 @@ Resume forwarding:
     TGFCMD resume
 
 
-<a id="org04cb13c"></a>
+<a id="orgd1fbd8a"></a>
 
 # Filters Rules
 
@@ -262,7 +247,7 @@ filter will not be tried, and the message will be discarded.
 the last three rules as *blacklist*)
 
 
-<a id="org1a197f7"></a>
+<a id="org95c10cd"></a>
 
 # Development
 
@@ -292,7 +277,7 @@ Building:
     build.
 
 
-<a id="org75e2711"></a>
+<a id="org0ba9f0a"></a>
 
 # Contributing
 
@@ -321,9 +306,12 @@ future:
 -   [ ] BSD Port
 
 
-<a id="org893795d"></a>
+<a id="org1056921"></a>
 
-# Can I trust tg-focus?
+# FAQ
+
+
+## Can I trust tg-focus?
 
 Yes.
 
@@ -339,42 +327,7 @@ individual, **but** Github-hosted machines. Check [github actions](https://githu
 more details.
 
 
-<a id="org82e0c25"></a>
-
-# Is tg-focus a crawler?
-
-Despite tg-focus is essentially collecting messsages, tg-focus is not,
-and will never be a crawler: forwarded messages is designed to be
-difficult to parse, and the forwarding is hardly real-time. If
-you use it as a crawler, you will realize this is a wrong tool over
-the course of time.
-
-I am here to help telegram users see or omit the messages according to
-their own preferences. Using tg-focus to crawl messages would be
-absolutely a misuse. And also we will ensure such usages
-to become more and more challenging in future releases, because my
-**primary goal** is to help catalyze more constructive and meaningful
-conversions on Telegram.
-
-Check if tg-focus is for you or not:
-
-
-## It's for you if
-
-1.  You think messages are overwhelming, and still don't want to miss
-    out any messages/updates that match your personal preference.
-
-2.  Your think some kinds of messages do not match your personal
-    preference and want to ignore them, yet they have reason to
-    exist.
-
-
-## It's NOT for you if
-
-1.  You want to scrape/crawl messages from chats/channels.
-
-
-<a id="org8609000"></a>
+<a id="orgd198bb1"></a>
 
 # License
 
