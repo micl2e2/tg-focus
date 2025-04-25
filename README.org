@@ -227,15 +227,18 @@ welcomed!
 ** ToDo list
 
 This is a list of TODOs that are certainly to be finished in the near
-future:
+future, you can pick one then get started if you are interested in:
 
-- [ ] Project Logo (will be used as TG-FOCUS chat icon)
-- [ ] Docker/Podman Images
+- [ ] More TGFCMD examples in README
+- [ ] Project Logo (also used as TG-FOCUS group avatar)
+- [ ] Docker/Podman OCI Images
 - [ ] Forwarded message's Look
 - [ ] Configuration in JSON Format
 - [ ] Windows Port
 - [ ] BSD Port
 - [ ] macOS Port
+- [ ] More C++20/23/26 features
+- [ ] More different build systems
 
 
 

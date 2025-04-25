@@ -1,17 +1,17 @@
 
 # Table of Contents
 
--   [TG-Focus💡](#org06c5123)
--   [Quickstart](#org2b92ac5)
--   [TGFCMD Examples](#org369696d)
--   [Filters Rules](#orgf20b6bf)
--   [Contributing](#org57b0a2d)
--   [FAQ](#org6897b74)
--   [License](#orgfc91fe7)
+-   [TG-Focus💡](#org1d07cbd)
+-   [Quickstart](#orgd30f327)
+-   [TGFCMD Examples](#orgb7eea28)
+-   [Filters Rules](#orgd60dc68)
+-   [Contributing](#org0038696)
+-   [FAQ](#org748c24f)
+-   [License](#org56c635d)
 
 
 
-<a id="org06c5123"></a>
+<a id="org1d07cbd"></a>
 
 # TG-Focus💡
 
@@ -92,7 +92,7 @@ The supported platforms are:
 Supported(✅). Work In Progress(🔨). 
 
 
-<a id="org2b92ac5"></a>
+<a id="orgd30f327"></a>
 
 # Quickstart
 
@@ -157,7 +157,7 @@ specific messages.
     <img src="docs/imgtuto/tuto7.png" width="550px"/><br/>
 
 
-<a id="org369696d"></a>
+<a id="orgb7eea28"></a>
 
 # TGFCMD Examples
 
@@ -201,7 +201,7 @@ Resume forwarding:
     TGFCMD resume
 
 
-<a id="orgf20b6bf"></a>
+<a id="orgd60dc68"></a>
 
 # Filters Rules
 
@@ -254,7 +254,7 @@ filter will not be tried, and the message will be discarded.
 the last three rules as *blacklist*)
 
 
-<a id="org57b0a2d"></a>
+<a id="org0038696"></a>
 
 # Contributing
 
@@ -272,15 +272,18 @@ welcomed!
 ## ToDo list
 
 This is a list of TODOs that are certainly to be finished in the near
-future:
+future, you can pick one then get started if you are interested in:
 
--   [ ] Project Logo (will be used as TG-FOCUS chat icon)
--   [ ] Docker/Podman Images
+-   [ ] More TGFCMD examples in README
+-   [ ] Project Logo (also used as TG-FOCUS group avatar)
+-   [ ] Docker/Podman OCI Images
 -   [ ] Forwarded message's Look
 -   [ ] Configuration in JSON Format
 -   [ ] Windows Port
 -   [ ] BSD Port
 -   [ ] macOS Port
+-   [ ] More C++20/23/26 features
+-   [ ] More different build systems
 
 
 ## Development
@@ -311,7 +314,7 @@ Building:
     build.
 
 
-<a id="org6897b74"></a>
+<a id="org748c24f"></a>
 
 # FAQ
 
@@ -343,7 +346,7 @@ by **not** any individual, but **Github-hosted** machines.
 Check [github actions](https://github.com/micl2e2/tg-focus/actions) for more details.
 
 
-<a id="orgfc91fe7"></a>
+<a id="org56c635d"></a>
 
 # License
 
