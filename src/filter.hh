@@ -292,22 +292,22 @@ Filter<V>::as_readable () const
 {
   ostringstream oss;
   oss << endl
-      << "● Titles <titles>" //
+      << "🞆 Titles <titles>" //
       << endl
       << readable_eles (__titles);
-  oss << "● Senders <senders>" //
+  oss << "🞆 Senders <senders>" //
       << endl
       << readable_eles (__senders);
-  oss << "● Keywords <keywords>" //
+  oss << "🞆 Keywords <keywords>" //
       << endl
       << readable_eles (__keywords);
-  oss << "● NO Titles <no-titles>" //
+  oss << "🞆 NO Titles <no-titles>" //
       << endl
       << readable_eles (__no_titles);
-  oss << "● NO Senders <no-senders>" //
+  oss << "🞆 NO Senders <no-senders>" //
       << endl
       << readable_eles (__no_senders);
-  oss << "● NO Keywords <no-keywords>" //
+  oss << "🞆 NO Keywords <no-keywords>" //
       << endl
       << readable_eles (__no_keywords);
   // if no candidates, not match anything
@@ -421,9 +421,9 @@ FilterGroup<V, F>::as_readable () const
     {
       const F &el = __filters[i];
       oss << endl
-	  << "● ● ● ● ● "
-	  << "FILTER " << (i + 1) << " ● ● ● ● ●" << endl;
-      oss << "●";
+	  << "🞆 🞆 🞆 🞆 🞆 "
+	  << "FILTER " << (i + 1) << " 🞆 🞆 🞆 🞆 🞆" << endl;
+      oss << "🞆";
       oss << el.as_readable ();
     }
 

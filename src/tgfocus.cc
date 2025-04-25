@@ -74,7 +74,7 @@ good_client_or_report (const tgf::IpcClient &client)
 	  cout << "error: "
 	       << "initialization failed" << endl;
 	  cout << "(HINT: "
-	       << "run `tgfocus startup` to initialize)" << endl;
+	       << "try `tgfocus quickstart` to get started)" << endl;
 	  break;
 	default:
 	  cout << "error: "
