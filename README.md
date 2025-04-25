@@ -1,17 +1,17 @@
 
 # Table of Contents
 
--   [TG-Focus💡](#orgec35aec)
--   [Quickstart](#orge53991b)
--   [TGFCMD Examples](#org5616a57)
--   [Filters Rules](#org81aae66)
--   [Contributing](#org64b2170)
--   [FAQ](#orgd516ace)
--   [License](#org28c30fe)
+-   [TG-Focus💡](#org06c5123)
+-   [Quickstart](#org2b92ac5)
+-   [TGFCMD Examples](#org369696d)
+-   [Filters Rules](#orgf20b6bf)
+-   [Contributing](#org57b0a2d)
+-   [FAQ](#org6897b74)
+-   [License](#orgfc91fe7)
 
 
 
-<a id="orgec35aec"></a>
+<a id="org06c5123"></a>
 
 # TG-Focus💡
 
@@ -92,7 +92,7 @@ The supported platforms are:
 Supported(✅). Work In Progress(🔨). 
 
 
-<a id="orge53991b"></a>
+<a id="org2b92ac5"></a>
 
 # Quickstart
 
@@ -157,7 +157,7 @@ specific messages.
     <img src="docs/imgtuto/tuto7.png" width="550px"/><br/>
 
 
-<a id="org5616a57"></a>
+<a id="org369696d"></a>
 
 # TGFCMD Examples
 
@@ -201,7 +201,7 @@ Resume forwarding:
     TGFCMD resume
 
 
-<a id="org81aae66"></a>
+<a id="orgf20b6bf"></a>
 
 # Filters Rules
 
@@ -254,7 +254,7 @@ filter will not be tried, and the message will be discarded.
 the last three rules as *blacklist*)
 
 
-<a id="org64b2170"></a>
+<a id="org57b0a2d"></a>
 
 # Contributing
 
@@ -275,12 +275,12 @@ This is a list of TODOs that are certainly to be finished in the near
 future:
 
 -   [ ] Project Logo (will be used as TG-FOCUS chat icon)
--   [ ] TGFCMD Filters Configuration's Look
+-   [ ] Docker/Podman Images
 -   [ ] Forwarded message's Look
 -   [ ] Configuration in JSON Format
 -   [ ] Windows Port
--   [ ] macOS Port
 -   [ ] BSD Port
+-   [ ] macOS Port
 
 
 ## Development
@@ -311,7 +311,7 @@ Building:
     build.
 
 
-<a id="orgd516ace"></a>
+<a id="org6897b74"></a>
 
 # FAQ
 
@@ -319,11 +319,12 @@ Building:
 ## Why yet another Telegram message forwarder?
 
 There are already many TG message forwarders over there, and some of
-them have been continously developed for a long time. I do think most
-of them are doing a great job. But however what I was looking for is a
-message forwarder with the combination of stability, reliability and
-transparency, none of them could completely meet my personal
-preference, at least in the days before this project started.
+them have been continuously developed for a long time. I do think most
+of them are doing a great job. However what I was looking for was a
+message forwarder with a combination of stability, reliability,
+transparency, and flexibility, none of them could completely meet my
+personal preference, at least in the days before this project
+started.
 
 
 ## Can I trust tg-focus?
@@ -342,7 +343,7 @@ by **not** any individual, but **Github-hosted** machines.
 Check [github actions](https://github.com/micl2e2/tg-focus/actions) for more details.
 
 
-<a id="org28c30fe"></a>
+<a id="orgfc91fe7"></a>
 
 # License
 

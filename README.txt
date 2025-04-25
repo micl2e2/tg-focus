@@ -270,12 +270,12 @@ ToDo list
   future:
 
   • ☐ Project Logo (will be used as TG-FOCUS chat icon)
-  • ☐ TGFCMD Filters Configuration's Look
+  • ☐ Docker/Podman Images
   • ☐ Forwarded message's Look
   • ☐ Configuration in JSON Format
   • ☐ Windows Port
-  • ☐ macOS Port
   • ☐ BSD Port
+  • ☐ macOS Port
 
 
 Development
@@ -309,11 +309,11 @@ Why yet another Telegram message forwarder?
 ───────────────────────────────────────────
 
   There are already many TG message forwarders over there, and some of
-  them have been continously developed for a long time. I do think most
-  of them are doing a great job. But however what I was looking for is a
-  message forwarder with the combination of stability, reliability and
-  transparency, none of them could completely meet my personal
-  preference, at least in the days before this project started.
+  them have been continuously developed for a long time. I do think most
+  of them are doing a great job. However what I was looking for was a
+  message forwarder with a combination of stability, reliability,
+  transparency, and flexibility, none of them could completely meet my
+  personal preference, at least in the days before this project started.
 
 
 Can I trust tg-focus?
