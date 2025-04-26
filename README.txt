@@ -78,22 +78,21 @@ Quickstart
      │ cd tg-focus-3.0-linux-x86_64
      └────
 
-  3. Log in your Telegram account firstly, it needs your phone number
-     and a login code. Phone number should be typed in international
-     format, e.g., `+1 23 4567' if your phone number is `23 4567' with
-     region code `+1' (spaces are allowed).
+  3. Log in your Telegram account:
 
      ┌────
      │ ./tgfocus auth
      │ 
-     │ # enter your phone and login code...
+     │ # Enter phone number: +1 23 4567
+     │ # Enter login code: xxxxxx
      └────
+
+     /note: phone number in international format `+1 23 4567' if your
+     number is `23 4567' with region code `+1' (spaces are allowed)./
 
      If everthing works fine, you should see:
 
-     ┌────
-     │ Logged in successfullly! 
-     └────
+           Logged in!
 
   4. Start up tg-focus daemon:
 
@@ -101,41 +100,51 @@ Quickstart
      │ ./tgfocus quickstart
      └────
 
+     /note: conversely, use `./tgfocus shutdown' to shutdown tg-focus/
+
      If everthing works fine, you should see:
 
-     ┌────
-     │ startup: done
-     │ focus-start: done
-     └────
+           startup: done
+
+           focus-start: done
 
   5. Go back to your Telgram application, wait for the TG-FOCUS group
-     showing up.
+     showing up. /(usually takes up 1~2 mins, depends on your network
+     connection)/
 
-     *If* TG-FOCUS chat does not appear, you can send a message
-     "tg-focus" in a random group(e.g. Saved Messages) to get it shown
-     up. This is because by default, only messages contain "tg-focus"
-     will be filtered and forwarded.
+           If TG-FOCUS group doesn't appear, send a message
+           "tg-focus" in a random group(e.g. Saved
+           Messages). /This is because by default, only messages
+           contain "tg-focus" will be filtered and forwarded./
 
-  6. Once the chat shown up, you send a message `TGFCMD help' to get
-     started. The following image tutorials will show you how to use it.
+           If TG-FOCUS group doesn't appear after a long
+           wait(e.g. 10 mins), run a command `./tgfocus status',
+           report and open a GitHub issue with the command output
+           attached.
 
-  7. Image Tutorials: Say there is a Telegram user, called Bob. He owns
-     a group. Every day, plenty of messages are sending out in that
-     group, it is too overwhelming, Bob wants to focus on the messages
-     that strongly interest him, he decides to use tg-focus. After the
-     previous 6-step setup, he now is going to use TGFCMD to configure
-     his tg-focus to forward the messages he is strongly interested in:
-
-     <img src="docs/imgtuto/tuto1.png" width="500px"/><br/> <img
-     src="docs/imgtuto/tuto2.png" width="800px"/><br/> <img
-     src="docs/imgtuto/tuto3.png" width="500px"/><br/> <img
-     src="docs/imgtuto/tuto4.png" width="550px"/><br/> <img
-     src="docs/imgtuto/tuto5.png" width="700px"/><br/> <img
-     src="docs/imgtuto/tuto6.png" width="600px"/><br/> <img
-     src="docs/imgtuto/tuto7.png" width="550px"/><br/>
+  6. Once the group shown up, you send a message `TGFCMD help' to get
+     started. The following image tutorials will show you more details.
 
 
 [page] <https://github.com/micl2e2/tg-focus/releases>
+
+Using TGFCMD
+────────────
+
+  Say there is a Telegram user, called Bob. He owns a group. Every day,
+  plenty of messages are sending out in that group, it is too
+  overwhelming, Bob wants to focus on the messages that strongly
+  interest him, he decides to use tg-focus. After the previous 6-step
+  setup, he now is going to use TGFCMD to configure his tg-focus to
+  forward the messages he is strongly interested in:
+
+  <img src="docs/imgtuto/tuto1.png" width="500px"/><br/> <img
+  src="docs/imgtuto/tuto2.png" width="800px"/><br/> <img
+  src="docs/imgtuto/tuto3.png" width="500px"/><br/> <img
+  src="docs/imgtuto/tuto4.png" width="550px"/><br/> <img
+  src="docs/imgtuto/tuto5.png" width="700px"/><br/> <img
+  src="docs/imgtuto/tuto6.png" width="600px"/><br/> <img
+  src="docs/imgtuto/tuto7.png" width="550px"/><br/>
 
 
 TGFCMD Examples
