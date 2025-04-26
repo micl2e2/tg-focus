@@ -1,3 +1,15 @@
+2025-04-26  Michael Lee  <micl2e2@proton.me>
+
+	* RELEASE: 3.0
+
+	What's New:
+
+	- Latest TDLib 1.8.46
+	- New CLI interfaces (quickstart, startup, shutdown, focus-start/stop)
+	- Introduce TGFCMD (user-friendly chat commands, similar to bot commands)
+	- Add aarch64/arm64 support for Linux
+	- Bug fixes and minor improvements
+
 2024-10-19  Michael Lee  <micl2e2@proton.me>
 
 	* RELEASE: 2.0
