@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
 project(tg-focus)
 
+option(IS_SKIP_TDBENCHTEST "")
 option(IS_ALPINE "")
 option(IS_DEB11 "")
 
@@ -40,6 +41,10 @@ if(NOT (CMAKE_BUILD_TYPE STREQUAL "Release"))
 endif()
 
 add_subdirectory(3rd/tdlib)
+if (IS_SKIP_TDBENCHTEST)
+  set_property(DIRECTORY 3rd/tdlib/test PROPERTY EXCLUDE_FROM_ALL ON)
+  set_property(DIRECTORY 3rd/tdlib/benchmark PROPERTY EXCLUDE_FROM_ALL ON)
+endif()
 
 # ------------------------------ OURS ------------------------------
 
