@@ -360,17 +360,6 @@ template <typename V>
 FocusDecision
 Filter<V>::mtch_tgmsg (const TgMsg &in) const
 {
-  // ACCEPT
-
-  if (!this->mtch_titles (in.get_chat_title ()))
-    return FocusDecision::Skip;
-
-  if (!this->mtch_senders (in.get_sender ()))
-    return FocusDecision::Skip;
-
-  if (!this->mtch_keywords (in.get_text_content ()))
-    return FocusDecision::Skip;
-
   // REJECT
 
   if (this->mtch_no_titles (in.get_chat_title ()))
@@ -381,6 +370,17 @@ Filter<V>::mtch_tgmsg (const TgMsg &in) const
 
   if (this->mtch_no_keywords (in.get_text_content ()))
     return FocusDecision::Reject;
+
+  // ACCEPT
+
+  if (!this->mtch_titles (in.get_chat_title ()))
+    return FocusDecision::Skip;
+
+  if (!this->mtch_senders (in.get_sender ()))
+    return FocusDecision::Skip;
+
+  if (!this->mtch_keywords (in.get_text_content ()))
+    return FocusDecision::Skip;
 
   return FocusDecision::Accept;
 }

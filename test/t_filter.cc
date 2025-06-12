@@ -755,14 +755,12 @@ titles = [".*"]
 
   {
     tgf::TgMsg msg ("title_bbb"s, "sd_bbb"s, "kw_bbb"s);
-    tgfass (fcf_list.mtch_tgmsg (msg));
-    tgfass (fcf_list.i_prev_visited () == 1);
+    tgfass (!fcf_list.mtch_tgmsg (msg));
   }
 
   {
     tgf::TgMsg msg ("title_aaa"s, "sd_bbb"s, "kw_bbb"s);
     tgfass (!fcf_list.mtch_tgmsg (msg));
-    tgfass (fcf_list.i_prev_visited () == 0);
   }
 }
 
@@ -875,6 +873,126 @@ keywords = ["cheese"]
 }
 
 void
+test_how_to_no_keywords3 ()
+{
+  auto dataxxx = R"(
+
+[[focus-filter]]
+titles = ["XXX"]
+no-keywords = ["YYY","你已成功参加抽奖"]
+
+)"s;
+
+  tgf::FilterGroupToml fg (dataxxx);
+
+  tgfass (fg.filters ().size () == 1);
+
+  auto fcf_list = tgf::FilterGroupToml (dataxxx);
+  tgfass (fcf_list.n_filter () == 1);
+
+  {
+    tgf::TgMsg msg ("anytitle"s, "sd_micl2e2"s, ""s);
+    tgfass (!fcf_list.mtch_tgmsg (msg));
+  }
+
+  {
+    tgf::TgMsg msg ("anytitle"s, "sd_micl2e2"s, "a"s);
+    tgfass (!fcf_list.mtch_tgmsg (msg));
+  }
+
+  {
+    tgf::TgMsg msg ("XXX"s, "sd_micl2e2"s, "a"s);
+    tgfass (fcf_list.mtch_tgmsg (msg));
+  }
+
+  {
+    tgf::TgMsg msg ("XXX"s, "sd_micl2e2"s, "YYY"s);
+    tgfass (!fcf_list.mtch_tgmsg (msg));
+  }
+
+  {
+    tgf::TgMsg msg ("XXX"s, "sd_micl2e2"s, "你已成功参加抽奖"s);
+    tgfass (!fcf_list.mtch_tgmsg (msg));
+  }
+}
+
+void
+test_how_to_no_keywords4 ()
+{
+  auto dataxxx = R"(
+
+[[focus-filter]]
+no-senders = ["MissRose"]
+
+[[focus-filter]]
+keywords = ["[Rr]ose"]
+
+)"s;
+
+  tgf::FilterGroupToml fg (dataxxx);
+  auto fcf_list = tgf::FilterGroupToml (dataxxx);
+
+  {
+    tgf::TgMsg msg ("anytitle"s, "sd_MissRose"s, "x"s);
+    tgfass (!fcf_list.mtch_tgmsg (msg));
+  }
+
+  {
+    tgf::TgMsg msg ("anytitle"s, "anysender"s, "rose"s);
+    tgfass (fcf_list.mtch_tgmsg (msg));
+  }
+
+  {
+    tgf::TgMsg msg ("anytitle"s, "anysender"s, "randommsg"s);
+    tgfass (fcf_list.mtch_tgmsg (msg));
+  }
+
+  {
+    tgf::TgMsg msg ("anytitle"s, "sd_MissRose"s, "rose"s);
+    tgfass (!fcf_list.mtch_tgmsg (msg));
+  }
+}
+
+void
+test_how_to_no_keywords5 ()
+{
+  auto dataxxx = R"(
+
+[[focus-filter]]
+titles = []
+no-titles = []
+senders = []
+no-senders = ["MissRose"]
+keywords = ["tg-focus"]
+no-keywords = []
+
+[[focus-filter]]
+titles = []
+no-titles = []
+senders = []
+no-senders = []
+keywords = ["Contact me in PM"]
+no-keywords = []
+ 
+)"s;
+
+  tgf::FilterGroupToml fg (dataxxx);
+  auto fcf_list = tgf::FilterGroupToml (dataxxx);
+
+  {
+    tgf::TgMsg msg ("anytitle"s, "sd_MissRose"s, "Contact me in PM"s);
+    bool actual = fcf_list.mtch_tgmsg (msg);
+    tgfass (!actual);
+  }
+
+  {
+    tgf::TgMsg msg ("anytitle"s, "sd_MissRick"s, "Contact me in PM"s);
+    bool actual = fcf_list.mtch_tgmsg (msg);
+    tgfass (actual);
+  }
+}
+
+void
 test_how_to_no_titles ()
 {
   string dataxxx = R"(
@@ -969,48 +1087,7 @@ titles = []
 
   {
     tgf::TgMsg msg (""s, ""s, ""s);
-    tgfass (fcf_list.mtch_tgmsg (msg));
-  }
-
-  {
-    tgf::TgMsg msg (""s, ""s, ""s);
-    tgfass (fcf_list.mtch_tgmsg (msg));
-  }
-
-  {
-    tgf::TgMsg msg ("title_aaa"s, ""s, ""s);
-    tgfass (!fcf_list.mtch_tgmsg (msg)); // now match anyway
-  }
-}
-
-void
-test_how_to_no_titles_using_nokeywords_emptyfilter ()
-{
-  string dataxxx = R"(
-
-[[focus-filter]]
-titles= ["aaa"]
-no-keywords = [".*"]
-
-[[focus-filter]]
-
-)";
-
-  tgf::FilterGroupToml fg (dataxxx);
-
-  tgfass (fg.filters ().size () == 2);
-
-  auto fcf_list = tgf::FilterGroupToml (dataxxx);
-  tgfass (fcf_list.n_filter () == 2);
-
-  {
-    tgf::TgMsg msg (""s, ""s, ""s);
-    tgfass (fcf_list.mtch_tgmsg (msg));
-  }
-
-  {
-    tgf::TgMsg msg (""s, ""s, ""s);
-    tgfass (fcf_list.mtch_tgmsg (msg));
+    tgfass (!fcf_list.mtch_tgmsg (msg));
   }
 
   {
@@ -1149,11 +1226,13 @@ main ()
   test_nokw_not_much_inituitive2 ();
   test_how_to_no_keywords ();
   test_how_to_no_keywords2 ();
+  test_how_to_no_keywords3 ();
+  test_how_to_no_keywords4 ();
+  test_how_to_no_keywords5 ();
 
   test_how_to_no_titles ();
   test_how_to_no_titles_order_is_signif ();
   test_how_to_no_titles_using_nokeywords ();
-  test_how_to_no_titles_using_nokeywords_emptyfilter ();
   test_how_to_no_titles_using_nokeywords_empty_nokw_wont_work ();
 
   tst_spec_case ();
