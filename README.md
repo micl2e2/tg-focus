@@ -1,17 +1,17 @@
 
 # Table of Contents
 
--   [TG-Focus💡](#org422de22)
--   [Quickstart](#orgcb67baf)
--   [TGFCMD Examples](#org9f496bb)
--   [Filters Rules](#orgc9b8d56)
--   [Contributing](#org442c108)
--   [FAQ](#org33093f5)
--   [License](#orge065a99)
+-   [TG-Focus💡](#org04d2279)
+-   [Quickstart](#org9dc7b56)
+-   [TGFCMD Examples](#org4eaa8ff)
+-   [Filters Rules](#orgf583ed9)
+-   [Contributing](#org2b149e6)
+-   [FAQ](#org4be0ed5)
+-   [License](#org0a2fbe5)
 
 
 
-<a id="org422de22"></a>
+<a id="org04d2279"></a>
 
 # TG-Focus💡
 
@@ -19,7 +19,7 @@
 <a href="<https://core.telegram.org/tdlib>">![Static Badge](<https://img.shields.io/badge/tdlib-1.8.46-%2332a9de>)</a>
 <a href="<https://github.com/tdlib/td>">![GitHub commits difference between two branches/tags/commits](<https://img.shields.io/github/commits-difference/tdlib/td?base=347bd31a30dd479fc4c5fa966316fb2834802bf8&head=master&logo=gitextensions&label=pending&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd>)</a>
 
-tg-focus is a comprehensive Telegram message filter that helps
+tg-focus is a reliable Telegram message filter/forwarder that helps
 you **focus**. A gentle user bot for message forwarding. Most of
 message types are supported: public/private chats, channel updates,
 and more.
@@ -46,7 +46,7 @@ The supported platforms are:
 </colgroup>
 <thead>
 <tr>
-<th scope="col" class="org-left">OS \ ARCH</th>
+<th scope="col" class="org-left">OS \\ ARCH</th>
 <th scope="col" class="org-left">x86 64</th>
 <th scope="col" class="org-left">aarch64</th>
 </tr>
@@ -92,7 +92,34 @@ The supported platforms are:
 Supported(✅). Work In Progress(🔨). 
 
 
-<a id="orgcb67baf"></a>
+## Performance Overview
+
+The rigirous benchmark might be landed in the future. Currently for
+the reference, the performance details randomly captured is shown
+below. 
+
+It turns out that on a typical 1C 1G machine, tg-focus will occupy
+~300MB of memory and ~0.3% of CPU, after it filtered ~440k messages
+and forwarded ~3k messages. 
+
+    
+    USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND                                                                             
+    micdeb    20   0  928112 326676  14540 S   0.3  32.5 102:02.38 tgfocus
+    
+    $ ps -C tgfocus -o etime
+        ELAPSED
+    56-04:16:24
+    
+    $ ./tgfocus status
+           Logged in : YES
+           Collector : UP
+        Focus Paused : NO
+     Forwarded/Total : 3289/441330
+    	 Pending : 0
+         Host Locale : en-US
+
+
+<a id="org9dc7b56"></a>
 
 # Quickstart
 
@@ -168,7 +195,7 @@ strongly interested in:
 <img src="docs/imgtuto/tuto7.png" width="550px"/><br/>
 
 
-<a id="org9f496bb"></a>
+<a id="org4eaa8ff"></a>
 
 # TGFCMD Examples
 
@@ -212,7 +239,7 @@ Resume forwarding:
     TGFCMD resume
 
 
-<a id="orgc9b8d56"></a>
+<a id="orgf583ed9"></a>
 
 # Filters Rules
 
@@ -265,12 +292,12 @@ filter will not be tried, and the message will be discarded.
 the last three rules as *blacklist*)
 
 
-<a id="org442c108"></a>
+<a id="org2b149e6"></a>
 
 # Contributing
 
 tg-focus is still far from perfect, any form of contribution is
-welcomed! 
+welcomed:
 
 -   Ask question (open an issue with label "question")
 -   Bug Report (open an issue with label "bug")
@@ -325,7 +352,7 @@ Building:
     build.
 
 
-<a id="org33093f5"></a>
+<a id="org4be0ed5"></a>
 
 # FAQ
 
@@ -357,7 +384,7 @@ by **not** any individual, but **Github-hosted** machines.
 Check [github actions](https://github.com/micl2e2/tg-focus/actions) for more details.
 
 
-<a id="orge065a99"></a>
+<a id="org0a2fbe5"></a>
 
 # License
 
