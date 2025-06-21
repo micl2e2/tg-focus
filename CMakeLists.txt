@@ -2,15 +2,10 @@ cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
 project(tg-focus)
 
-option(IS_SKIP_TDBENCHTEST "")
-option(IS_ALPINE "")
 option(IS_DEB11 "")
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
   file(READ "/etc/os-release" OS_RELEASE_CONTENT)
-  if(OS_RELEASE_CONTENT MATCHES "ID=alpine")
-    set(IS_ALPINE ON)
-  endif()
   if(OS_RELEASE_CONTENT MATCHES "VERSION_CODENAME=bullseye")
     set(IS_DEB11 ON)
   endif()
@@ -35,16 +30,7 @@ else()
   set(ZLIB_USE_STATIC_LIBS ON)
 endif()
 
-if(NOT (CMAKE_BUILD_TYPE STREQUAL "Release"))
-  # option(BUILD_TESTING OFF)
-  option(TD_BUILD_BENCHMARK OFF)
-endif()
-
 add_subdirectory(3rd/tdlib)
-if (IS_SKIP_TDBENCHTEST)
-  set_property(DIRECTORY 3rd/tdlib/test PROPERTY EXCLUDE_FROM_ALL ON)
-  set_property(DIRECTORY 3rd/tdlib/benchmark PROPERTY EXCLUDE_FROM_ALL ON)
-endif()
 
 # ------------------------------ OURS ------------------------------
 
@@ -54,9 +40,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
   # add_compile_options(-Wall -Wextra)
-  if(IS_ALPINE)
-    add_compile_options(-flto)
-  endif()
   add_link_options(-Wl,-s) # always strip
 else()
   add_compile_options(-g)
@@ -97,10 +80,7 @@ target_include_directories(tgfocus
 target_link_libraries(tgfocus
   PRIVATE Td::TdStatic)
 
-if(IS_ALPINE)
-  target_link_libraries(tgfocus
-    PRIVATE -static)
-else()
+if(IS_DEB11)
   target_link_libraries(tgfocus
     PRIVATE -static-libgcc -static-libstdc++)
 endif()

@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d6bbc90..123d6de 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -206,16 +206,16 @@ add_subdirectory(sqlite)
+ set(TDDB_ENABLE_INSTALL ${TD_INSTALL_STATIC_LIBRARIES} CACHE BOOL "" FORCE)
+ add_subdirectory(tddb)
+ 
+-if (BUILD_TESTING)
+-  add_subdirectory(test)
+-endif()
++# if (BUILD_TESTING)
++  # add_subdirectory(test)
++# endif()
+ 
+ set(TDE2E_ENABLE_INSTALL ${TD_INSTALL_STATIC_LIBRARIES} CACHE BOOL "" FORCE)
+ add_subdirectory(tde2e)
+ 
+-if (NOT CMAKE_CROSSCOMPILING)
+-  add_subdirectory(benchmark)
+-endif()
++# if (NOT CMAKE_CROSSCOMPILING)
++  # add_subdirectory(benchmark)
++# endif()
+ 
+ 
+ get_directory_property(HAS_PARENT PARENT_DIRECTORY)
