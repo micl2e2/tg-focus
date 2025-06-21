@@ -1,17 +1,17 @@
 
 # Table of Contents
 
--   [TG-Focus💡](#org422de22)
--   [Quickstart](#orgcb67baf)
--   [TGFCMD Examples](#org9f496bb)
--   [Filters Rules](#orgc9b8d56)
--   [Contributing](#org442c108)
--   [FAQ](#org33093f5)
--   [License](#orge065a99)
+-   [TG-Focus💡](#orgb21223d)
+-   [Quickstart](#org42dde2b)
+-   [TGFCMD Examples](#org69ccd95)
+-   [Filters Rules](#org66306d9)
+-   [Contributing](#orgb65e4bf)
+-   [FAQ](#orgaddf34a)
+-   [License](#orgd3c858c)
 
 
 
-<a id="org422de22"></a>
+<a id="orgb21223d"></a>
 
 # TG-Focus💡
 
@@ -19,7 +19,7 @@
 <a href="<https://core.telegram.org/tdlib>">![Static Badge](<https://img.shields.io/badge/tdlib-1.8.46-%2332a9de>)</a>
 <a href="<https://github.com/tdlib/td>">![GitHub commits difference between two branches/tags/commits](<https://img.shields.io/github/commits-difference/tdlib/td?base=347bd31a30dd479fc4c5fa966316fb2834802bf8&head=master&logo=gitextensions&label=pending&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd>)</a>
 
-tg-focus is a comprehensive Telegram message filter that helps
+tg-focus is a reliable Telegram message filter/forwarder that helps
 you **focus**. A gentle user bot for message forwarding. Most of
 message types are supported: public/private chats, channel updates,
 and more.
@@ -46,7 +46,7 @@ The supported platforms are:
 </colgroup>
 <thead>
 <tr>
-<th scope="col" class="org-left">OS \ ARCH</th>
+<th scope="col" class="org-left">OS \\ ARCH</th>
 <th scope="col" class="org-left">x86 64</th>
 <th scope="col" class="org-left">aarch64</th>
 </tr>
@@ -61,14 +61,14 @@ The supported platforms are:
 
 
 <tr>
-<td class="org-left">Windows</td>
-<td class="org-left">🔨</td>
-<td class="org-left">🔨</td>
+<td class="org-left">Windows WSL</td>
+<td class="org-left">✅</td>
+<td class="org-left">✅</td>
 </tr>
 
 
 <tr>
-<td class="org-left">BSD</td>
+<td class="org-left">Windows</td>
 <td class="org-left">🔨</td>
 <td class="org-left">🔨</td>
 </tr>
@@ -92,7 +92,7 @@ The supported platforms are:
 Supported(✅). Work In Progress(🔨). 
 
 
-<a id="orgcb67baf"></a>
+<a id="org42dde2b"></a>
 
 # Quickstart
 
@@ -168,7 +168,7 @@ strongly interested in:
 <img src="docs/imgtuto/tuto7.png" width="550px"/><br/>
 
 
-<a id="org9f496bb"></a>
+<a id="org69ccd95"></a>
 
 # TGFCMD Examples
 
@@ -212,7 +212,7 @@ Resume forwarding:
     TGFCMD resume
 
 
-<a id="orgc9b8d56"></a>
+<a id="org66306d9"></a>
 
 # Filters Rules
 
@@ -265,12 +265,12 @@ filter will not be tried, and the message will be discarded.
 the last three rules as *blacklist*)
 
 
-<a id="org442c108"></a>
+<a id="orgb65e4bf"></a>
 
 # Contributing
 
 tg-focus is still far from perfect, any form of contribution is
-welcomed! 
+welcomed:
 
 -   Ask question (open an issue with label "question")
 -   Bug Report (open an issue with label "bug")
@@ -325,7 +325,7 @@ Building:
     build.
 
 
-<a id="org33093f5"></a>
+<a id="orgaddf34a"></a>
 
 # FAQ
 
@@ -357,7 +357,7 @@ by **not** any individual, but **Github-hosted** machines.
 Check [github actions](https://github.com/micl2e2/tg-focus/actions) for more details.
 
 
-<a id="orge065a99"></a>
+<a id="orgd3c858c"></a>
 
 # License
 

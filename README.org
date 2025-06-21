@@ -7,7 +7,7 @@
 <a href="https://core.telegram.org/tdlib">![Static Badge](https://img.shields.io/badge/tdlib-1.8.46-%2332a9de)</a>
 <a href="https://github.com/tdlib/td">![GitHub commits difference between two branches/tags/commits](https://img.shields.io/github/commits-difference/tdlib/td?base=347bd31a30dd479fc4c5fa966316fb2834802bf8&head=master&logo=gitextensions&label=pending&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd)</a>
 
-tg-focus is a comprehensive Telegram message filter that helps
+tg-focus is a reliable Telegram message filter/forwarder that helps
 you *focus*. A gentle user bot for message forwarding. Most of
 message types are supported: public/private chats, channel updates,
 and more.
@@ -22,13 +22,13 @@ Telegram-specific features.
 
 The supported platforms are:
 
-| OS \ ARCH | x86 64 | aarch64 |
-|-----------+--------+---------|
-| Linux     | ✅     | ✅      |
-| Windows   | 🔨     | 🔨      |
-| BSD       | 🔨     | 🔨      |
-| macOS     | 🔨     | 🔨      |
-|           |        |         |
+| OS \ ARCH   | x86 64 | aarch64 |
+|-------------+--------+---------|
+| Linux       | ✅     | ✅      |
+| Windows WSL | ✅     | ✅      |
+| Windows     | 🔨     | 🔨      |
+| macOS       | 🔨     | 🔨      |
+|             |        |         |
 
 Supported(✅). Work In Progress(🔨). 
 
@@ -228,7 +228,7 @@ the last three rules as /blacklist/)
 * Contributing
 
 tg-focus is still far from perfect, any form of contribution is
-welcomed! 
+welcomed:
 
 - Ask question (open an issue with label "question")
 - Bug Report (open an issue with label "bug")
