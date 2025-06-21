@@ -1,17 +1,17 @@
 
 # Table of Contents
 
--   [TG-Focus💡](#org04d2279)
--   [Quickstart](#org9dc7b56)
--   [TGFCMD Examples](#org4eaa8ff)
--   [Filters Rules](#orgf583ed9)
--   [Contributing](#org2b149e6)
--   [FAQ](#org4be0ed5)
--   [License](#org0a2fbe5)
+-   [TG-Focus💡](#org1e16867)
+-   [Quickstart](#org08c77fe)
+-   [TGFCMD Examples](#orgc7e4d4c)
+-   [Filters Rules](#org8c2c1d5)
+-   [Contributing](#org70f72dc)
+-   [FAQ](#orgfcdcc71)
+-   [License](#org890f8fe)
 
 
 
-<a id="org04d2279"></a>
+<a id="org1e16867"></a>
 
 # TG-Focus💡
 
@@ -61,14 +61,14 @@ The supported platforms are:
 
 
 <tr>
-<td class="org-left">Windows</td>
-<td class="org-left">🔨</td>
-<td class="org-left">🔨</td>
+<td class="org-left">Windows WSL</td>
+<td class="org-left">✅</td>
+<td class="org-left">✅</td>
 </tr>
 
 
 <tr>
-<td class="org-left">BSD</td>
+<td class="org-left">Windows</td>
 <td class="org-left">🔨</td>
 <td class="org-left">🔨</td>
 </tr>
@@ -92,34 +92,7 @@ The supported platforms are:
 Supported(✅). Work In Progress(🔨). 
 
 
-## Performance Overview
-
-The rigirous benchmark might be landed in the future. Currently for
-the reference, the performance details randomly captured is shown
-below. 
-
-It turns out that on a typical 1C 1G machine, tg-focus will occupy
-~300MB of memory and ~0.3% of CPU, after it filtered ~440k messages
-and forwarded ~3k messages. 
-
-    
-    USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND                                                                             
-    micdeb    20   0  928112 326676  14540 S   0.3  32.5 102:02.38 tgfocus
-    
-    $ ps -C tgfocus -o etime
-        ELAPSED
-    56-04:16:24
-    
-    $ ./tgfocus status
-           Logged in : YES
-           Collector : UP
-        Focus Paused : NO
-     Forwarded/Total : 3289/441330
-    	 Pending : 0
-         Host Locale : en-US
-
-
-<a id="org9dc7b56"></a>
+<a id="org08c77fe"></a>
 
 # Quickstart
 
@@ -195,7 +168,7 @@ strongly interested in:
 <img src="docs/imgtuto/tuto7.png" width="550px"/><br/>
 
 
-<a id="org4eaa8ff"></a>
+<a id="orgc7e4d4c"></a>
 
 # TGFCMD Examples
 
@@ -239,7 +212,7 @@ Resume forwarding:
     TGFCMD resume
 
 
-<a id="orgf583ed9"></a>
+<a id="org8c2c1d5"></a>
 
 # Filters Rules
 
@@ -292,7 +265,7 @@ filter will not be tried, and the message will be discarded.
 the last three rules as *blacklist*)
 
 
-<a id="org2b149e6"></a>
+<a id="org70f72dc"></a>
 
 # Contributing
 
@@ -352,7 +325,7 @@ Building:
     build.
 
 
-<a id="org4be0ed5"></a>
+<a id="orgfcdcc71"></a>
 
 # FAQ
 
@@ -384,7 +357,7 @@ by **not** any individual, but **Github-hosted** machines.
 Check [github actions](https://github.com/micl2e2/tg-focus/actions) for more details.
 
 
-<a id="org0a2fbe5"></a>
+<a id="org890f8fe"></a>
 
 # License
 
