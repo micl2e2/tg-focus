@@ -83,6 +83,12 @@ TdCollector::try_create_tgfchat () // FIXME: is try
 			    tgfstat::userdata.set_tgfid (
 			      static_cast<int64_t> (chat->chat_id_));
 			  }
+			else if (object->get_id () == TdErr::ID)
+			  {
+			    auto error = tl_movas<TdErr> (object);
+			    tulogfe_cg (1, "error code:", error->code_,
+					" error message:", error->message_);
+			  }
 			else
 			  {
 			    tulogfe_cg (1,
