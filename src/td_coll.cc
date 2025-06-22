@@ -31,70 +31,57 @@ TdCollector::init ()
   __client = make_unique<TdClient> ();
   __clientid = __client->create_client_id ();
   send_query (td_mkobj<TdGetOpt> ("version"), {});
-  send_query (td_mkobj<TdSetOpt> ("use_storage_optimizer",
-				  td_mkobj<TdOptValBool> (true)),
-	      {});
+  send_query (td_mkobj<TdSetOpt> ("use_storage_optimizer", td_mkobj<TdOptValBool> (true)), {});
 }
 
 void
 TdCollector::try_create_tgfchat () // FIXME: is try
 {
-  if (this->is_auth && !tgfstat::userdata.is_tgfid_valid ()
-      && !this->tried_c_tgfchat)
+  if (this->is_auth && !tgfstat::userdata.is_tgfid_valid () && !this->tried_c_tgfchat)
     {
       this->tried_c_tgfchat = true;
 
       if (tgfstat::userdata.is_super_tgfid ())
 	{
-	  send_query (
-	    td_mkobj<TdCreatSuperChat> (TF_COLL_CHAT_TITLE, false, false,
-					"TG-FOCUS helps you focus!", nullptr, 0,
-					false),
-	    [this] (TdObjPtr object) {
-	      if (object->get_id () == TdChat::ID)
-		{
-		  auto chat = tl_movas<TdChat> (object);
-		  tgf::logfi_cg (1, "group created", " chat id:", chat->id_);
-		  tgfstat::userdata.set_tgfid (
-		    static_cast<int64_t> (chat->id_));
-		}
-	      else if (object->get_id () == TdErr::ID)
-		{
-		  auto error = tl_movas<TdErr> (object);
-		  tulogfe_cg (1, "error code:", error->code_,
-			      " error message:", error->message_);
-		}
-	      else
-		{
-		  tulogfe_cg (1, "unexpected tlobj:", object->get_id ());
-		}
-	    });
-	}
-      else
-	{
-	  send_query (td_mkobj<TdCreatBasicChat> (vector<TdInt> (0),
-						  TF_COLL_CHAT_TITLE, 0),
+	  send_query (td_mkobj<TdCreatSuperChat> (TF_COLL_CHAT_TITLE, false, false, "TG-FOCUS helps you focus!",
+						  nullptr, 0, false),
 		      [this] (TdObjPtr object) {
-			if (object->get_id () == TdBasicChat::ID)
+			if (object->get_id () == TdChat::ID)
 			  {
-			    auto chat = tl_movas<TdBasicChat> (object);
-			    tgf::logfi_cg (1, "coll chat created",
-					   " chat id:", chat->chat_id_);
-			    tgfstat::userdata.set_tgfid (
-			      static_cast<int64_t> (chat->chat_id_));
+			    auto chat = tl_movas<TdChat> (object);
+			    tgf::logfi_cg (1, "group created", " chat id:", chat->id_);
+			    tgfstat::userdata.set_tgfid (static_cast<int64_t> (chat->id_));
 			  }
 			else if (object->get_id () == TdErr::ID)
 			  {
 			    auto error = tl_movas<TdErr> (object);
-			    tulogfe_cg (1, "error code:", error->code_,
-					" error message:", error->message_);
+			    tulogfe_cg (1, "error code:", error->code_, " error message:", error->message_);
 			  }
 			else
 			  {
-			    tulogfe_cg (1,
-					"unexpected tlobj:", object->get_id ());
+			    tulogfe_cg (1, "unexpected tlobj:", object->get_id ());
 			  }
 		      });
+	}
+      else
+	{
+	  send_query (td_mkobj<TdCreatBasicChat> (vector<TdInt> (0), TF_COLL_CHAT_TITLE, 0), [this] (TdObjPtr object) {
+	    if (object->get_id () == TdBasicChat::ID)
+	      {
+		auto chat = tl_movas<TdBasicChat> (object);
+		tgf::logfi_cg (1, "coll chat created", " chat id:", chat->chat_id_);
+		tgfstat::userdata.set_tgfid (static_cast<int64_t> (chat->chat_id_));
+	      }
+	    else if (object->get_id () == TdErr::ID)
+	      {
+		auto error = tl_movas<TdErr> (object);
+		tulogfe_cg (1, "error code:", error->code_, " error message:", error->message_);
+	      }
+	    else
+	      {
+		tulogfe_cg (1, "unexpected tlobj:", object->get_id ());
+	      }
+	  });
 	}
     }
 }
@@ -113,15 +100,13 @@ decorate_msg (const string &msg)
   auto pos_info = tgf::get_decor_pos (msg);
 
   // only when very verbose
-  tgf::logfd_cg (1, 66987, tgfstat::c::d::it_cnt_consumer.load (mo::relaxed),
-		 msg, tgf::decor_pos_to_str (pos_info));
+  tgf::logfd_cg (1, 66987, tgfstat::c::d::it_cnt_consumer.load (mo::relaxed), msg, tgf::decor_pos_to_str (pos_info));
 
   TdArray<TdPtr<TdTxtEnt>> deco_list;
 
   for (auto pos : pos_info)
     {
-      deco_list.emplace_back (td_mkobj<TdTxtEnt> (get<0> (pos), get<1> (pos),
-						  td_mkobj<TdTxtEntBold> ()));
+      deco_list.emplace_back (td_mkobj<TdTxtEnt> (get<0> (pos), get<1> (pos), td_mkobj<TdTxtEntBold> ()));
     }
 
   return deco_list;
@@ -134,31 +119,25 @@ TdCollector::collect_msg (const tgf::TgMsg &msg)
 
   TdArray<TdPtr<TdTxtEnt>> text_deco_list = decorate_msg (tfmsg_str);
 
-  TdPtr<TdFmtTxt> message_text
-    = td_mkobj<TdFmtTxt> (tfmsg_str, move (text_deco_list));
+  TdPtr<TdFmtTxt> message_text = td_mkobj<TdFmtTxt> (tfmsg_str, move (text_deco_list));
 
   TdPtr<TdFunc> send_message_request = td_mkobj<TdSendMsg> (
     // this->collector_id, //
     tgfstat::userdata.get_tgfid (), //
-    0, nullptr, nullptr, nullptr,
-    td_mkobj<TdInMsgTxt> (move (message_text), no_link_preview (), true));
+    0, nullptr, nullptr, nullptr, td_mkobj<TdInMsgTxt> (move (message_text), no_link_preview (), true));
 
   send_query (move (send_message_request), [this, msg] (TdObjPtr object) {
     if (object->get_id () == TdMsg::ID)
       {
-	tgf::logfd_cg (1, 888333,
-		       tgfstat::c::d::it_cnt_consumer.load (mo::relaxed),
-		       msg.to_string ());
+	tgf::logfd_cg (1, 888333, tgfstat::c::d::it_cnt_consumer.load (mo::relaxed), msg.to_string ());
 
 	tgfstat::c::d::it_msg_coll.fetch_add (1, mo::relaxed);
       }
     else if (object->get_id () == TdErr::ID)
       {
 	auto error = tl_movas<TdErr> (object);
-	tulogfe_cg (1, "msg not collected", " error code:", error->code_,
-		    " error message:", error->message_);
-	if (error->message_.find ("Have no write access to the chat")
-	      != string::npos
+	tulogfe_cg (1, "msg not collected", " error code:", error->code_, " error message:", error->message_);
+	if (error->message_.find ("Have no write access to the chat") != string::npos
 	    || error->message_.find ("Chat not found") != string::npos)
 	  {
 	    this->tried_c_tgfchat = false;
@@ -174,8 +153,7 @@ TdCollector::fetch_updates ()
   auto response = __client->receive (10);
   if (response.object)
     {
-      tgf::logfd_cg (1, "producer_iter:",
-		     tgfstat::c::d::it_cnt_producer.load (mo::relaxed),
+      tgf::logfd_cg (1, "producer_iter:", tgfstat::c::d::it_cnt_producer.load (mo::relaxed),
 		     " td-client, resp recv id:",
 
 		     response.object->get_id ());
@@ -207,8 +185,7 @@ TdCollector::process_response (TdClient::Response response)
   auto it = __cb.find (response.request_id);
   if (it != __cb.end ())
     {
-      tgf::logfd_cg (1, 881, tgfstat::c::d::it_cnt_producer.load (mo::relaxed),
-		     __cb.size (), it->first);
+      tgf::logfd_cg (1, 881, tgfstat::c::d::it_cnt_producer.load (mo::relaxed), __cb.size (), it->first);
       it->second (move (response.object));
       tulogfi_cg (1, 65776, __cb.size ());
       __cb.erase (it);
@@ -225,8 +202,7 @@ TdCollector::get_user_name (int64_t user_id) const
       return "unknown user";
     }
 
-  auto readable_usrname
-    = it->second->first_name_ + " " + it->second->last_name_;
+  auto readable_usrname = it->second->first_name_ + " " + it->second->last_name_;
 
   if (it->second->usernames_)
     {
@@ -265,53 +241,38 @@ extra_decoration_help (TdArray<TdPtr<TdTxtEnt>> &deco_list, string &msgtxt)
       {
 	// more examples
 	const size_t last_offset1 = 9;
-	if (!ent_foldblk && i + last_offset1 < seq.size ()
-	    && seq[i + 0] == 0x0045 && seq[i + 1] == 0x0058
-	    && seq[i + 2] == 0x0041 && seq[i + 3] == 0x004d
-	    && seq[i + 4] == 0x0050 && seq[i + 5] == 0x004c
-	    && seq[i + 6] == 0x0045 && seq[i + 7] == 0x0053
-	    && seq[i + 8] == 0x0020 && seq[i + last_offset1] == 0x003a)
+	if (!ent_foldblk && i + last_offset1 < seq.size () && seq[i + 0] == 0x0045 && seq[i + 1] == 0x0058
+	    && seq[i + 2] == 0x0041 && seq[i + 3] == 0x004d && seq[i + 4] == 0x0050 && seq[i + 5] == 0x004c
+	    && seq[i + 6] == 0x0045 && seq[i + 7] == 0x0053 && seq[i + 8] == 0x0020 && seq[i + last_offset1] == 0x003a)
 	  {
 	    ent_foldblk = true;
 	    lasti_foldblk = i;
-	    deco_list.emplace_back (
-	      td_mkobj<TdTxtEnt> (i, last_offset1 + 1,
-				  td_mkobj<TdTxtEntBold> ()));
+	    deco_list.emplace_back (td_mkobj<TdTxtEnt> (i, last_offset1 + 1, td_mkobj<TdTxtEntBold> ()));
 	  }
 
 	// more examples
 	const size_t last_offset2 = 14;
-	if (!ent_foldblk && i + last_offset2 < seq.size () && seq[i] == 0x004d
-	    && seq[i + 1] == 0x004f && seq[i + 2] == 0x0052
-	    && seq[i + 3] == 0x0045 && seq[i + 4] == 0x0020
-	    && seq[i + 5] == 0x0045 && seq[i + 6] == 0x0058
-	    && seq[i + 7] == 0x0041 && seq[i + 8] == 0x004d
-	    && seq[i + 9] == 0x0050 && seq[i + 10] == 0x004c
-	    && seq[i + 11] == 0x0045 && seq[i + 12] == 0x0053
-	    && seq[i + 13] == 0x0020 && seq[i + last_offset2] == 0x003a)
+	if (!ent_foldblk && i + last_offset2 < seq.size () && seq[i] == 0x004d && seq[i + 1] == 0x004f
+	    && seq[i + 2] == 0x0052 && seq[i + 3] == 0x0045 && seq[i + 4] == 0x0020 && seq[i + 5] == 0x0045
+	    && seq[i + 6] == 0x0058 && seq[i + 7] == 0x0041 && seq[i + 8] == 0x004d && seq[i + 9] == 0x0050
+	    && seq[i + 10] == 0x004c && seq[i + 11] == 0x0045 && seq[i + 12] == 0x0053 && seq[i + 13] == 0x0020
+	    && seq[i + last_offset2] == 0x003a)
 	  {
 	    ent_foldblk = true;
 	    lasti_foldblk = i;
-	    deco_list.emplace_back (
-	      td_mkobj<TdTxtEnt> (i, last_offset2 + 1,
-				  td_mkobj<TdTxtEntBold> ()));
+	    deco_list.emplace_back (td_mkobj<TdTxtEnt> (i, last_offset2 + 1, td_mkobj<TdTxtEntBold> ()));
 	  }
 
 	// click to hide
 	const size_t last_offset3 = 14;
-	if (ent_foldblk && i + last_offset3 < seq.size () && seq[i] == 0x003c
-	    && seq[i + 1] == 0x0043 && seq[i + 2] == 0x004c
-	    && seq[i + 3] == 0x0049 && seq[i + 4] == 0x0043
-	    && seq[i + 5] == 0x004b && seq[i + 6] == 0x002d
-	    && seq[i + 7] == 0x0054 && seq[i + 8] == 0x004f
-	    && seq[i + 9] == 0x002d && seq[i + 10] == 0x0048
-	    && seq[i + 11] == 0x0049 && seq[i + 12] == 0x0044
-	    && seq[i + 13] == 0x0045 && seq[i + last_offset3] == 0x003e)
+	if (ent_foldblk && i + last_offset3 < seq.size () && seq[i] == 0x003c && seq[i + 1] == 0x0043
+	    && seq[i + 2] == 0x004c && seq[i + 3] == 0x0049 && seq[i + 4] == 0x0043 && seq[i + 5] == 0x004b
+	    && seq[i + 6] == 0x002d && seq[i + 7] == 0x0054 && seq[i + 8] == 0x004f && seq[i + 9] == 0x002d
+	    && seq[i + 10] == 0x0048 && seq[i + 11] == 0x0049 && seq[i + 12] == 0x0044 && seq[i + 13] == 0x0045
+	    && seq[i + last_offset3] == 0x003e)
 	  {
-	    deco_list.emplace_back (
-	      td_mkobj<TdTxtEnt> (lasti_foldblk,
-				  (i + last_offset3) - lasti_foldblk + 1,
-				  td_mkobj<TdTxtEntExpQuote> ()));
+	    deco_list.emplace_back (td_mkobj<TdTxtEnt> (lasti_foldblk, (i + last_offset3) - lasti_foldblk + 1,
+							td_mkobj<TdTxtEntExpQuote> ()));
 	    ent_foldblk = false;
 	    lasti_foldblk = -1;
 	  }
@@ -321,8 +282,7 @@ extra_decoration_help (TdArray<TdPtr<TdTxtEnt>> &deco_list, string &msgtxt)
 	    if (ent_codeblk && lasti_codeblk > 0)
 	      {
 		deco_list.emplace_back (
-		  td_mkobj<TdTxtEnt> (lasti_codeblk, i - lasti_codeblk + 1,
-				      td_mkobj<TdTxtEntCode> ()));
+		  td_mkobj<TdTxtEnt> (lasti_codeblk, i - lasti_codeblk + 1, td_mkobj<TdTxtEntCode> ()));
 		lasti_codeblk = -1;
 	      }
 	    else
@@ -336,10 +296,9 @@ extra_decoration_help (TdArray<TdPtr<TdTxtEnt>> &deco_list, string &msgtxt)
 	  {
 	    if (ent_urlblk && lasti_urlblk > 0)
 	      {
-		deco_list.emplace_back (td_mkobj<TdTxtEnt> (
-		  lasti_urlblk, i - lasti_urlblk + 1,
-		  td_mkobj<TdTxtEntTxtUrl> (
-		    "https://github.com/micl2e2/tg-focus"s)));
+		deco_list.emplace_back (
+		  td_mkobj<TdTxtEnt> (lasti_urlblk, i - lasti_urlblk + 1,
+				      td_mkobj<TdTxtEntTxtUrl> ("https://github.com/micl2e2/tg-focus"s)));
 		lasti_urlblk = -1;
 	      }
 	    else
@@ -359,8 +318,7 @@ extra_decoration_help (TdArray<TdPtr<TdTxtEnt>> &deco_list, string &msgtxt)
 }
 
 void
-extra_decoration_filters (TdArray<TdPtr<TdTxtEnt>> &deco_list,
-			  const string &msgtxt)
+extra_decoration_filters (TdArray<TdPtr<TdTxtEnt>> &deco_list, const string &msgtxt)
 {
   vector<char16_t> seq = get_c16_seq (msgtxt);
   size_t i = 0;
@@ -368,118 +326,77 @@ extra_decoration_filters (TdArray<TdPtr<TdTxtEnt>> &deco_list,
     {
       {
 	const size_t last_offset = 14;
-	if (i + last_offset < seq.size () && seq[i] == 0x0054
-	    && seq[i + 1] == 0x0069 && seq[i + 2] == 0x0074
-	    && seq[i + 3] == 0x006c && seq[i + 4] == 0x0065
-	    && seq[i + 5] == 0x0073 && seq[i + 6] == 0x0020
-	    && seq[i + 7] == 0x003c && seq[i + 8] == 0x0074
-	    && seq[i + 9] == 0x0069 && seq[i + 10] == 0x0074
-	    && seq[i + 11] == 0x006c && seq[i + 12] == 0x0065
-	    && seq[i + 13] == 0x0073 && seq[i + 14] == 0x003e)
+	if (i + last_offset < seq.size () && seq[i] == 0x0054 && seq[i + 1] == 0x0069 && seq[i + 2] == 0x0074
+	    && seq[i + 3] == 0x006c && seq[i + 4] == 0x0065 && seq[i + 5] == 0x0073 && seq[i + 6] == 0x0020
+	    && seq[i + 7] == 0x003c && seq[i + 8] == 0x0074 && seq[i + 9] == 0x0069 && seq[i + 10] == 0x0074
+	    && seq[i + 11] == 0x006c && seq[i + 12] == 0x0065 && seq[i + 13] == 0x0073 && seq[i + 14] == 0x003e)
 	  {
-	    deco_list.emplace_back (
-	      td_mkobj<TdTxtEnt> (i, last_offset + 1,
-				  td_mkobj<TdTxtEntBold> ()));
+	    deco_list.emplace_back (td_mkobj<TdTxtEnt> (i, last_offset + 1, td_mkobj<TdTxtEntBold> ()));
 	  }
       }
 
       {
 	const size_t last_offset = 16;
-	if (i + last_offset < seq.size () && seq[i] == 0x0053
-	    && seq[i + 1] == 0x0065 && seq[i + 2] == 0x006e
-	    && seq[i + 3] == 0x0064 && seq[i + 4] == 0x0065
-	    && seq[i + 5] == 0x0072 && seq[i + 6] == 0x0073
-	    && seq[i + 7] == 0x0020 && seq[i + 8] == 0x003c
-	    && seq[i + 9] == 0x0073 && seq[i + 10] == 0x0065
-	    && seq[i + 11] == 0x006e && seq[i + 12] == 0x0064
-	    && seq[i + 13] == 0x0065 && seq[i + 14] == 0x0072
+	if (i + last_offset < seq.size () && seq[i] == 0x0053 && seq[i + 1] == 0x0065 && seq[i + 2] == 0x006e
+	    && seq[i + 3] == 0x0064 && seq[i + 4] == 0x0065 && seq[i + 5] == 0x0072 && seq[i + 6] == 0x0073
+	    && seq[i + 7] == 0x0020 && seq[i + 8] == 0x003c && seq[i + 9] == 0x0073 && seq[i + 10] == 0x0065
+	    && seq[i + 11] == 0x006e && seq[i + 12] == 0x0064 && seq[i + 13] == 0x0065 && seq[i + 14] == 0x0072
 	    && seq[i + 15] == 0x0073 && seq[i + 16] == 0x003e)
 	  {
-	    deco_list.emplace_back (
-	      td_mkobj<TdTxtEnt> (i, last_offset + 1,
-				  td_mkobj<TdTxtEntBold> ()));
+	    deco_list.emplace_back (td_mkobj<TdTxtEnt> (i, last_offset + 1, td_mkobj<TdTxtEntBold> ()));
 	  }
       }
 
       {
 	const size_t last_offset = 18;
-	if (i + last_offset < seq.size () && seq[i] == 0x004b
-	    && seq[i + 1] == 0x0065 && seq[i + 2] == 0x0079
-	    && seq[i + 3] == 0x0077 && seq[i + 4] == 0x006f
-	    && seq[i + 5] == 0x0072 && seq[i + 6] == 0x0064
-	    && seq[i + 7] == 0x0073 && seq[i + 8] == 0x0020
-	    && seq[i + 9] == 0x003c && seq[i + 10] == 0x006b
-	    && seq[i + 11] == 0x0065 && seq[i + 12] == 0x0079
-	    && seq[i + 13] == 0x0077 && seq[i + 14] == 0x006f
-	    && seq[i + 15] == 0x0072 && seq[i + 16] == 0x0064
-	    && seq[i + 17] == 0x0073 && seq[i + last_offset] == 0x003e)
+	if (i + last_offset < seq.size () && seq[i] == 0x004b && seq[i + 1] == 0x0065 && seq[i + 2] == 0x0079
+	    && seq[i + 3] == 0x0077 && seq[i + 4] == 0x006f && seq[i + 5] == 0x0072 && seq[i + 6] == 0x0064
+	    && seq[i + 7] == 0x0073 && seq[i + 8] == 0x0020 && seq[i + 9] == 0x003c && seq[i + 10] == 0x006b
+	    && seq[i + 11] == 0x0065 && seq[i + 12] == 0x0079 && seq[i + 13] == 0x0077 && seq[i + 14] == 0x006f
+	    && seq[i + 15] == 0x0072 && seq[i + 16] == 0x0064 && seq[i + 17] == 0x0073
+	    && seq[i + last_offset] == 0x003e)
 	  {
-	    deco_list.emplace_back (
-	      td_mkobj<TdTxtEnt> (i, last_offset + 1,
-				  td_mkobj<TdTxtEntBold> ()));
+	    deco_list.emplace_back (td_mkobj<TdTxtEnt> (i, last_offset + 1, td_mkobj<TdTxtEntBold> ()));
 	  }
       }
 
       {
 	const size_t last_offset = 20;
-	if (i + last_offset < seq.size () && seq[i] == 0x004e
-	    && seq[i + 1] == 0x004f && seq[i + 2] == 0x0020
-	    && seq[i + 3] == 0x0054 && seq[i + 4] == 0x0069
-	    && seq[i + 5] == 0x0074 && seq[i + 6] == 0x006c
-	    && seq[i + 7] == 0x0065 && seq[i + 8] == 0x0073
-	    && seq[i + 9] == 0x0020 && seq[i + 10] == 0x003c
-	    && seq[i + 11] == 0x006e && seq[i + 12] == 0x006f
-	    && seq[i + 13] == 0x002d && seq[i + 14] == 0x0074
-	    && seq[i + 15] == 0x0069 && seq[i + 16] == 0x0074
-	    && seq[i + 17] == 0x006c && seq[i + 18] == 0x0065
+	if (i + last_offset < seq.size () && seq[i] == 0x004e && seq[i + 1] == 0x004f && seq[i + 2] == 0x0020
+	    && seq[i + 3] == 0x0054 && seq[i + 4] == 0x0069 && seq[i + 5] == 0x0074 && seq[i + 6] == 0x006c
+	    && seq[i + 7] == 0x0065 && seq[i + 8] == 0x0073 && seq[i + 9] == 0x0020 && seq[i + 10] == 0x003c
+	    && seq[i + 11] == 0x006e && seq[i + 12] == 0x006f && seq[i + 13] == 0x002d && seq[i + 14] == 0x0074
+	    && seq[i + 15] == 0x0069 && seq[i + 16] == 0x0074 && seq[i + 17] == 0x006c && seq[i + 18] == 0x0065
 	    && seq[i + 19] == 0x0073 && seq[i + 20] == 0x003e)
 	  {
-	    deco_list.emplace_back (
-	      td_mkobj<TdTxtEnt> (i, last_offset + 1,
-				  td_mkobj<TdTxtEntBold> ()));
+	    deco_list.emplace_back (td_mkobj<TdTxtEnt> (i, last_offset + 1, td_mkobj<TdTxtEntBold> ()));
 	  }
       }
 
       {
 	const size_t last_offset = 22;
-	if (i + last_offset < seq.size () && seq[i] == 0x004e
-	    && seq[i + 1] == 0x004f && seq[i + 2] == 0x0020
-	    && seq[i + 3] == 0x0053 && seq[i + 4] == 0x0065
-	    && seq[i + 5] == 0x006e && seq[i + 6] == 0x0064
-	    && seq[i + 7] == 0x0065 && seq[i + 8] == 0x0072
-	    && seq[i + 9] == 0x0073 && seq[i + 10] == 0x0020
-	    && seq[i + 11] == 0x003c && seq[i + 12] == 0x006e
-	    && seq[i + 13] == 0x006f && seq[i + 14] == 0x002d
-	    && seq[i + 15] == 0x0073 && seq[i + 16] == 0x0065
-	    && seq[i + 17] == 0x006e && seq[i + 18] == 0x0064
-	    && seq[i + 19] == 0x0065 && seq[i + 20] == 0x0072
-	    && seq[i + 21] == 0x0073 && seq[i + 22] == 0x003e)
+	if (i + last_offset < seq.size () && seq[i] == 0x004e && seq[i + 1] == 0x004f && seq[i + 2] == 0x0020
+	    && seq[i + 3] == 0x0053 && seq[i + 4] == 0x0065 && seq[i + 5] == 0x006e && seq[i + 6] == 0x0064
+	    && seq[i + 7] == 0x0065 && seq[i + 8] == 0x0072 && seq[i + 9] == 0x0073 && seq[i + 10] == 0x0020
+	    && seq[i + 11] == 0x003c && seq[i + 12] == 0x006e && seq[i + 13] == 0x006f && seq[i + 14] == 0x002d
+	    && seq[i + 15] == 0x0073 && seq[i + 16] == 0x0065 && seq[i + 17] == 0x006e && seq[i + 18] == 0x0064
+	    && seq[i + 19] == 0x0065 && seq[i + 20] == 0x0072 && seq[i + 21] == 0x0073 && seq[i + 22] == 0x003e)
 	  {
-	    deco_list.emplace_back (
-	      td_mkobj<TdTxtEnt> (i, last_offset + 1,
-				  td_mkobj<TdTxtEntBold> ()));
+	    deco_list.emplace_back (td_mkobj<TdTxtEnt> (i, last_offset + 1, td_mkobj<TdTxtEntBold> ()));
 	  }
       }
 
       {
 	const size_t last_offset = 24;
-	if (i + last_offset < seq.size () && seq[i] == 0x004e
-	    && seq[i + 1] == 0x004f && seq[i + 2] == 0x0020
-	    && seq[i + 3] == 0x004b && seq[i + 4] == 0x0065
-	    && seq[i + 5] == 0x0079 && seq[i + 6] == 0x0077
-	    && seq[i + 7] == 0x006f && seq[i + 8] == 0x0072
-	    && seq[i + 9] == 0x0064 && seq[i + 10] == 0x0073
-	    && seq[i + 11] == 0x0020 && seq[i + 12] == 0x003c
-	    && seq[i + 13] == 0x006e && seq[i + 14] == 0x006f
-	    && seq[i + 15] == 0x002d && seq[i + 16] == 0x006b
-	    && seq[i + 17] == 0x0065 && seq[i + 18] == 0x0079
-	    && seq[i + 19] == 0x0077 && seq[i + 20] == 0x006f
-	    && seq[i + 21] == 0x0072 && seq[i + 22] == 0x0064
+	if (i + last_offset < seq.size () && seq[i] == 0x004e && seq[i + 1] == 0x004f && seq[i + 2] == 0x0020
+	    && seq[i + 3] == 0x004b && seq[i + 4] == 0x0065 && seq[i + 5] == 0x0079 && seq[i + 6] == 0x0077
+	    && seq[i + 7] == 0x006f && seq[i + 8] == 0x0072 && seq[i + 9] == 0x0064 && seq[i + 10] == 0x0073
+	    && seq[i + 11] == 0x0020 && seq[i + 12] == 0x003c && seq[i + 13] == 0x006e && seq[i + 14] == 0x006f
+	    && seq[i + 15] == 0x002d && seq[i + 16] == 0x006b && seq[i + 17] == 0x0065 && seq[i + 18] == 0x0079
+	    && seq[i + 19] == 0x0077 && seq[i + 20] == 0x006f && seq[i + 21] == 0x0072 && seq[i + 22] == 0x0064
 	    && seq[i + 23] == 0x0073 && seq[i + 24] == 0x003e)
 	  {
-	    deco_list.emplace_back (
-	      td_mkobj<TdTxtEnt> (i, last_offset + 1,
-				  td_mkobj<TdTxtEntBold> ()));
+	    deco_list.emplace_back (td_mkobj<TdTxtEnt> (i, last_offset + 1, td_mkobj<TdTxtEntBold> ()));
 	  }
       }
 
@@ -494,13 +411,11 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
   string did_what = incom_txt;
   u32 len_did_what = did_what.length ();
   TdArray<TdPtr<TdTxtEnt>> deco_list;
-  TdPtr<TdFmtTxt> message_text
-    = td_mkobj<TdFmtTxt> (did_what + aux_msg, move (deco_list));
+  TdPtr<TdFmtTxt> message_text = td_mkobj<TdFmtTxt> (did_what + aux_msg, move (deco_list));
 
   if (incom_txt.find (CHATCMD_PAUSE) != string::npos)
     {
-      tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdPause, incom_txt,
-			       tgfstat::userdata);
+      tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdPause, incom_txt, tgfstat::userdata);
       // succ_data = move (res.succ_data ())
       aux_msg = move (res.aux_msg ());
       did_what = move (res.did_what ().value ());
@@ -508,8 +423,7 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
     }
   else if (incom_txt.find (CHATCMD_RESUME) != string::npos)
     {
-      tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdResume, incom_txt,
-			       tgfstat::userdata);
+      tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdResume, incom_txt, tgfstat::userdata);
       // succ_data = move (res.succ_data ())
       aux_msg = move (res.aux_msg ());
       did_what = move (res.did_what ().value ());
@@ -517,8 +431,7 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
     }
   else if (incom_txt.find (CHATCMD_FILTERS) != string::npos)
     {
-      tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdFilters, incom_txt,
-			       tgfstat::userdata);
+      tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdFilters, incom_txt, tgfstat::userdata);
       // succ_data = move (res.succ_data ())
       aux_msg = move (res.aux_msg ());
       did_what = move (res.did_what ().value ());
@@ -526,8 +439,7 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
     }
   else if (incom_txt.find (CHATCMD_RAWFILTERS) != string::npos)
     {
-      tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdRawFilters, incom_txt,
-			       tgfstat::userdata);
+      tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdRawFilters, incom_txt, tgfstat::userdata);
       // succ_data = move (res.succ_data ())
       aux_msg = move (res.aux_msg ());
       did_what = move (res.did_what ().value ());
@@ -535,32 +447,28 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
     }
   else if (incom_txt.find (CHATCMD_EDITF) != string::npos)
     {
-      tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdEditFilter, incom_txt,
-			       tgfstat::userdata);
+      tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdEditFilter, incom_txt, tgfstat::userdata);
       aux_msg = move (res.aux_msg ());
       did_what = move (res.did_what ().value ());
       len_did_what = did_what.length ();
     }
   else if (incom_txt.find (CHATCMD_INSF) != string::npos)
     {
-      tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdInsertFilter, incom_txt,
-			       tgfstat::userdata);
+      tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdInsertFilter, incom_txt, tgfstat::userdata);
       aux_msg = move (res.aux_msg ());
       did_what = move (res.did_what ().value ());
       len_did_what = did_what.length ();
     }
   else if (incom_txt.find (CHATCMD_RMF) != string::npos)
     {
-      tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdRemoveFilter, incom_txt,
-			       tgfstat::userdata);
+      tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdRemoveFilter, incom_txt, tgfstat::userdata);
       aux_msg = move (res.aux_msg ());
       did_what = move (res.did_what ().value ());
       len_did_what = did_what.length ();
     }
   else if (incom_txt.find (CHATCMD_HELP) != string::npos)
     {
-      tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdHelp, incom_txt,
-			       tgfstat::userdata);
+      tgf::ChatCmdHandler res (tgf::ChatCmdType::ChatCmdHelp, incom_txt, tgfstat::userdata);
       aux_msg = move (res.aux_msg ());
       did_what = move (res.did_what ().value ());
       len_did_what = did_what.length ();
@@ -570,12 +478,9 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
   size_t utf16len_didwhat = get_c16_len (did_what);
   message_text->text_ = did_what + aux_msg;
   // quote
-  deco_list.emplace_back (
-    td_mkobj<TdTxtEnt> (0, utf16len_didwhat, td_mkobj<TdTxtEntQuote> ()));
+  deco_list.emplace_back (td_mkobj<TdTxtEnt> (0, utf16len_didwhat, td_mkobj<TdTxtEntQuote> ()));
   // emphasize
-  deco_list.emplace_back (td_mkobj<TdTxtEnt> (utf16len_didwhat,
-					      CHATCMD_RPLY_PREFIX_N_CP,
-					      td_mkobj<TdTxtEntBold> ()));
+  deco_list.emplace_back (td_mkobj<TdTxtEnt> (utf16len_didwhat, CHATCMD_RPLY_PREFIX_N_CP, td_mkobj<TdTxtEntBold> ()));
 
   if (incom_txt.find (CHATCMD_FILTERS) != string::npos)
     extra_decoration_filters (deco_list, message_text->text_);
@@ -587,8 +492,7 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
   TdPtr<TdFunc> send_message_request = td_mkobj<TdSendMsg> (
     // this->collector_id, //
     tgfstat::userdata.get_tgfid (), //
-    0, nullptr, nullptr, nullptr,
-    td_mkobj<TdInMsgTxt> (move (message_text), no_link_preview (), true));
+    0, nullptr, nullptr, nullptr, td_mkobj<TdInMsgTxt> (move (message_text), no_link_preview (), true));
 
   send_query (move (send_message_request), [this] (TdObjPtr object) {
     if (object->get_id () == TdMsg::ID)
@@ -599,8 +503,7 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
     else if (object->get_id () == TdErr::ID)
       {
 	auto error = tl_movas<TdErr> (object);
-	tulogfe_cg (1, " error code:", error->code_,
-		    " error message:", error->message_);
+	tulogfe_cg (1, " error code:", error->code_, " error message:", error->message_);
       }
   });
 }
@@ -651,8 +554,7 @@ TdCollector::process_update (TdObjPtr update)
 		TdMsgText &r = static_cast<TdMsgText &> (*p);
 		string txt = move (r.text_->text_);
 		txt.erase (0, txt.find_first_not_of (" ", 0));
-		if (txt.length () > 6 && txt[6] == 0x20
-		    && txt.find ("TGFCMD") == 0)
+		if (txt.length () > 6 && txt[6] == 0x20 && txt.find ("TGFCMD") == 0)
 		  {
 		    txt.replace (0, 6, "");
 		    handle_tgfcmd (move (txt));
@@ -685,17 +587,13 @@ TdCollector::process_update (TdObjPtr update)
 	switch (nmsg->message_->content_->get_id ())
 	  {
 	    case TdMsgText::ID: {
-	      auto orig_txt_ctn
-		= static_cast<TdMsgText &> (*nmsg->message_->content_)
-		    .text_->text_;
+	      auto orig_txt_ctn = static_cast<TdMsgText &> (*nmsg->message_->content_).text_->text_;
 	      text = move (orig_txt_ctn);
 	      break;
 	    }
 
 	    case TdMsgPhoto::ID: {
-	      auto orig_txt_ctn
-		= static_cast<TdMsgPhoto &> (*nmsg->message_->content_)
-		    .caption_->text_;
+	      auto orig_txt_ctn = static_cast<TdMsgPhoto &> (*nmsg->message_->content_).caption_->text_;
 
 	      text += "<photo>";
 	      text += "(";
@@ -706,9 +604,7 @@ TdCollector::process_update (TdObjPtr update)
 	    }
 
 	    case TdMsgAniEmoji::ID: {
-	      auto orig_txt_ctn
-		= static_cast<TdMsgAniEmoji &> (*nmsg->message_->content_)
-		    .emoji_;
+	      auto orig_txt_ctn = static_cast<TdMsgAniEmoji &> (*nmsg->message_->content_).emoji_;
 	      text += "<emoji>";
 	      text += "(";
 	      text += move (orig_txt_ctn);
@@ -718,9 +614,7 @@ TdCollector::process_update (TdObjPtr update)
 	    }
 
 	    case TdMsgSticker::ID: {
-	      auto orig_txt_ctn
-		= static_cast<TdMsgSticker &> (*nmsg->message_->content_)
-		    .sticker_->emoji_;
+	      auto orig_txt_ctn = static_cast<TdMsgSticker &> (*nmsg->message_->content_).sticker_->emoji_;
 	      text += "<sticker>";
 	      text += "(";
 	      text += move (orig_txt_ctn);
@@ -750,8 +644,7 @@ TdCollector::process_update (TdObjPtr update)
       }
 
       default: {
-	tgf::logfd_cg (1, "producer_iter:",
-		       tgfstat::c::d::it_cnt_producer.load (mo::relaxed),
+	tgf::logfd_cg (1, "producer_iter:", tgfstat::c::d::it_cnt_producer.load (mo::relaxed),
 		       " ignored update with id:", update->get_id ());
 	break;
       }
@@ -809,12 +702,10 @@ TdCollector::on_authorization_state_update ()
 	int32_t authState = this->__auth_stat->get_id ();
 	if (authState == TdAuthStatWaitPhone::ID)
 	  {
-	    tulogfe_cg (
-	      1,
-	      "Logged in information is "
-	      "corrupted. Run commands one by one: "
-	      "`auth-reset`, `auth`, to resolve the issue. Please report the "
-	      "issue if this message still exists.");
+	    tulogfe_cg (1, "Logged in information is "
+			   "corrupted. Run commands one by one: "
+			   "`auth-reset`, `auth`, to resolve the issue. Please report the "
+			   "issue if this message still exists.");
 	    exit (2);
 	  }
 	else

@@ -9,15 +9,9 @@
 namespace gstat = /* DoNotDeleteMe */ tgfstat::c::d;
 namespace gstat_c = /* DoNotDeleteMe */ tgfstat::c;
 
-tgf::CollProducer::CollProducer ()
-{
-  tulogfi_cg (1,  "ctor");
-}
+tgf::CollProducer::CollProducer () { tulogfi_cg (1, "ctor"); }
 
-tgf::CollProducer::~CollProducer ()
-{
-  tulogfi_cg (1, "dtor");
-}
+tgf::CollProducer::~CollProducer () { tulogfi_cg (1, "dtor"); }
 
 void
 tgf::CollProducer::operator() ()
@@ -26,9 +20,7 @@ tgf::CollProducer::operator() ()
     {
       gstat::do_csm_mq.wait (true, mo::acquire);
 
-      tulogfd_cg (1, "producer_iter:",
-		     gstat::it_cnt_producer.load (mo::relaxed),
-		     " mq size:", gstat::mq.size ());
+      tulogfd_cg (1, "producer_iter:", gstat::it_cnt_producer.load (mo::relaxed), " mq size:", gstat::mq.size ());
 
       tulogfd_cg (1, "producer", "fetching...");
       gstat::collector.fetch_updates ();

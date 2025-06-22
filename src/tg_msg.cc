@@ -15,8 +15,7 @@ make_timestamp_readable (uint32_t tstamp)
   return std::string ("unknown timestamp");
 }
 
-tgf::TgMsg::TgMsg (std::string &&chat_title, std::string &&sender,
-	      std::string &&text_content, int32_t tstamp)
+tgf::TgMsg::TgMsg (std::string &&chat_title, std::string &&sender, std::string &&text_content, int32_t tstamp)
 {
   this->__title = std::move (chat_title);
   this->__sender = std::move (sender);
@@ -25,8 +24,7 @@ tgf::TgMsg::TgMsg (std::string &&chat_title, std::string &&sender,
   this->__id = 0;
 }
 
-tgf::TgMsg::TgMsg (std::string &chat_title, std::string &sender,
-	      std::string &text_content, int32_t tstamp)
+tgf::TgMsg::TgMsg (std::string &chat_title, std::string &sender, std::string &text_content, int32_t tstamp)
 {
   this->__title = (chat_title);
   this->__sender = (sender);
@@ -126,8 +124,8 @@ tgf::TgMsg::to_locale_string () const
   return (ret);
 }
 
-namespace tgf{
-  
+namespace tgf {
+
 std::ostream &
 operator<< (std::ostream &os, const tgf::TgMsg &msg)
 {
@@ -140,7 +138,7 @@ operator<< (std::ostream &os, const tgf::TgMsg &msg)
   return os;
 }
 
-}
+} // namespace tgf
 
 bool
 tgf::can_decor ()
@@ -172,8 +170,8 @@ get_endi_chat (std::vector<char16_t> &cuseq, size_t begi)
   constexpr int MAX_STEP = 4;
   if (cuseq[begi] == 0xd83d /* little endian */
       && begi + MAX_STEP < cuseq.size ())
-    if (cuseq[begi + 1] == 0xdca1 && cuseq[begi + 2] == 0x20
-	&& cuseq[begi + 3] == 0x5b && cuseq[begi + MAX_STEP] == 0x20)
+    if (cuseq[begi + 1] == 0xdca1 && cuseq[begi + 2] == 0x20 && cuseq[begi + 3] == 0x5b
+	&& cuseq[begi + MAX_STEP] == 0x20)
       return std::make_optional<size_t> (MAX_STEP);
 
   return {};
@@ -184,8 +182,7 @@ get_endi_sender (std::vector<char16_t> &cuseq, size_t begi)
 {
   constexpr int MAX_STEP = 3;
   if (cuseq[begi] == 0x7d44 && begi + MAX_STEP < cuseq.size ())
-    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x5b
-	&& cuseq[begi + MAX_STEP] == 0x20)
+    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x5b && cuseq[begi + MAX_STEP] == 0x20)
       return std::make_optional<size_t> (MAX_STEP);
 
   return {};
@@ -197,8 +194,8 @@ get_endi_content (std::vector<char16_t> &cuseq, size_t begi)
   constexpr int MAX_STEP = 4;
   if (cuseq[begi] == 0xd83d /* little endian */
       && begi + MAX_STEP < cuseq.size ())
-    if (cuseq[begi + 1] == 0xdcac && cuseq[begi + 2] == 0x20
-	&& cuseq[begi + 3] == 0x5b && cuseq[begi + MAX_STEP] == 0x20)
+    if (cuseq[begi + 1] == 0xdcac && cuseq[begi + 2] == 0x20 && cuseq[begi + 3] == 0x5b
+	&& cuseq[begi + MAX_STEP] == 0x20)
       return std::make_optional<size_t> (MAX_STEP);
 
   return {};
@@ -210,8 +207,8 @@ get_endi_date (std::vector<char16_t> &cuseq, size_t begi)
   constexpr int MAX_STEP = 4;
   if (cuseq[begi] == 0xd83d /* little endian */
       && begi + MAX_STEP < cuseq.size ())
-    if (cuseq[begi + 1] == 0xdd54 && cuseq[begi + 2] == 0x20
-	&& cuseq[begi + 3] == 0x5b && cuseq[begi + MAX_STEP] == 0x20)
+    if (cuseq[begi + 1] == 0xdd54 && cuseq[begi + 2] == 0x20 && cuseq[begi + 3] == 0x5b
+	&& cuseq[begi + MAX_STEP] == 0x20)
       return std::make_optional<size_t> (MAX_STEP);
 
   return {};
@@ -222,8 +219,7 @@ get_endi_id (std::vector<char16_t> &cuseq, size_t begi)
 {
   constexpr int MAX_STEP = 3;
   if (cuseq[begi] == 0x267e && begi + MAX_STEP < cuseq.size ())
-    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x5b
-	&& cuseq[begi + MAX_STEP] == 0x20)
+    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x5b && cuseq[begi + MAX_STEP] == 0x20)
       return std::make_optional<size_t> (MAX_STEP);
 
   return {};
@@ -237,8 +233,7 @@ get_endi_chat (std::vector<char16_t> &cuseq, size_t begi)
 {
   constexpr size_t n = 5;
   if (cuseq[begi] == 0x5b && begi + n < cuseq.size ())
-    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x7fa4
-	&& cuseq[begi + 3] == 0x7d44 && cuseq[begi + 4] == 0x20
+    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x7fa4 && cuseq[begi + 3] == 0x7d44 && cuseq[begi + 4] == 0x20
 	&& cuseq[begi + n] == 0x5d)
       return std::make_optional<size_t> (n);
 
@@ -250,8 +245,7 @@ get_endi_sender (std::vector<char16_t> &cuseq, size_t begi)
 {
   constexpr size_t n = 5;
   if (cuseq[begi] == 0x5b && begi + n < cuseq.size ())
-    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x7528
-	&& cuseq[begi + 3] == 0x6236 && cuseq[begi + 4] == 0x20
+    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x7528 && cuseq[begi + 3] == 0x6236 && cuseq[begi + 4] == 0x20
 	&& cuseq[begi + n] == 0x5d)
       return std::make_optional<size_t> (n);
 
@@ -263,8 +257,7 @@ get_endi_content (std::vector<char16_t> &cuseq, size_t begi)
 {
   constexpr size_t n = 5;
   if (cuseq[begi] == 0x5b && begi + n < cuseq.size ())
-    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x8a0a
-	&& cuseq[begi + 3] == 0x606f && cuseq[begi + 4] == 0x20
+    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x8a0a && cuseq[begi + 3] == 0x606f && cuseq[begi + 4] == 0x20
 	&& cuseq[begi + n] == 0x5d)
       return std::make_optional<size_t> (n);
 
@@ -276,8 +269,7 @@ get_endi_date (std::vector<char16_t> &cuseq, size_t begi)
 {
   constexpr size_t n = 5;
   if (cuseq[begi] == 0x5b && begi + n < cuseq.size ())
-    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x6642
-	&& cuseq[begi + 3] == 0x9593 && cuseq[begi + 4] == 0x20
+    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x6642 && cuseq[begi + 3] == 0x9593 && cuseq[begi + 4] == 0x20
 	&& cuseq[begi + n] == 0x5d)
       return std::make_optional<size_t> (n);
 
@@ -289,8 +281,7 @@ get_endi_id (std::vector<char16_t> &cuseq, size_t begi)
 {
   constexpr size_t n = 5;
   if (cuseq[begi] == 0x5b && begi + n < cuseq.size ())
-    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x6a19
-	&& cuseq[begi + 3] == 0x8b58 && cuseq[begi + 4] == 0x20
+    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x6a19 && cuseq[begi + 3] == 0x8b58 && cuseq[begi + 4] == 0x20
 	&& cuseq[begi + n] == 0x5d)
       return std::make_optional<size_t> (n);
 
@@ -305,8 +296,7 @@ get_endi_chat (std::vector<char16_t> &cuseq, size_t begi)
 {
   constexpr size_t n = 5;
   if (cuseq[begi] == 0x5b && begi + n < cuseq.size ())
-    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x7fa4
-	&& cuseq[begi + 3] == 0x7ec4 && cuseq[begi + 4] == 0x20
+    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x7fa4 && cuseq[begi + 3] == 0x7ec4 && cuseq[begi + 4] == 0x20
 	&& cuseq[begi + n] == 0x5d)
       return std::make_optional<size_t> (n);
 
@@ -318,8 +308,7 @@ get_endi_sender (std::vector<char16_t> &cuseq, size_t begi)
 {
   constexpr size_t n = 5;
   if (cuseq[begi] == 0x5b && begi + n < cuseq.size ())
-    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x7528
-	&& cuseq[begi + 3] == 0x6237 && cuseq[begi + 4] == 0x20
+    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x7528 && cuseq[begi + 3] == 0x6237 && cuseq[begi + 4] == 0x20
 	&& cuseq[begi + n] == 0x5d)
       return std::make_optional<size_t> (n);
 
@@ -331,8 +320,7 @@ get_endi_content (std::vector<char16_t> &cuseq, size_t begi)
 {
   constexpr size_t n = 5;
   if (cuseq[begi] == 0x5b && begi + n < cuseq.size ())
-    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x4fe1
-	&& cuseq[begi + 3] == 0x606f && cuseq[begi + 4] == 0x20
+    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x4fe1 && cuseq[begi + 3] == 0x606f && cuseq[begi + 4] == 0x20
 	&& cuseq[begi + n] == 0x5d)
       return std::make_optional<size_t> (n);
 
@@ -344,8 +332,7 @@ get_endi_date (std::vector<char16_t> &cuseq, size_t begi)
 {
   constexpr size_t n = 5;
   if (cuseq[begi] == 0x5b && begi + n < cuseq.size ())
-    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x65f6
-	&& cuseq[begi + 3] == 0x95f4 && cuseq[begi + 4] == 0x20
+    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x65f6 && cuseq[begi + 3] == 0x95f4 && cuseq[begi + 4] == 0x20
 	&& cuseq[begi + n] == 0x5d)
       return std::make_optional<size_t> (n);
 
@@ -357,8 +344,7 @@ get_endi_id (std::vector<char16_t> &cuseq, size_t begi)
 {
   constexpr size_t n = 5;
   if (cuseq[begi] == 0x5b && begi + n < cuseq.size ())
-    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x6807
-	&& cuseq[begi + 3] == 0x8bc6 && cuseq[begi + 4] == 0x20
+    if (cuseq[begi + 1] == 0x20 && cuseq[begi + 2] == 0x6807 && cuseq[begi + 3] == 0x8bc6 && cuseq[begi + 4] == 0x20
 	&& cuseq[begi + n] == 0x5d)
       return std::make_optional<size_t> (n);
 

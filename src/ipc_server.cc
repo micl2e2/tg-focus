@@ -44,7 +44,7 @@ creat_in_server (u16 port)
   InSockAddr saddr;
   InSockAddrPtr saddrp = &saddr;
 
-  init_sockaddr: {
+  init_sockaddr : {
     memset (saddrp, 0, sizeof (InSockAddr));
     saddrp->sin_family = AF_INET;
     saddrp->sin_port = htobe16 (port);
@@ -86,7 +86,7 @@ create_unsock_server (const char *fpath_unsock)
   UniSockAddr saddr;
   UniSockAddrPtr saddrp = &saddr;
 
-  init_sockaddr: {
+  init_sockaddr : {
     memset (saddrp, 0, sizeof (UniSockAddr));
     saddrp->sun_family = AF_UNIX;
     strncpy (saddrp->sun_path, fpath_unsock, sizeof (saddrp->sun_path) - 1);

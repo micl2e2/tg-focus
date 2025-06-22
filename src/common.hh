@@ -91,8 +91,7 @@ public:
 	size_t fsize = ftell (filestream);
 
 	if (fsize > this->MAX_SMALL)
-	  this->large_rbuf
-	    = reinterpret_cast<char *> (malloc (this->MAX_LARGE));
+	  this->large_rbuf = reinterpret_cast<char *> (malloc (this->MAX_LARGE));
 
 	this->fstrm_ = filestream;
       }
@@ -153,18 +152,14 @@ private:
 static inline void
 ltrim (std::string &s)
 {
-  s.erase (s.begin (),
-	   std::find_if (s.begin (), s.end (),
-			 [] (unsigned char ch) { return !std::isspace (ch); }));
+  s.erase (s.begin (), std::find_if (s.begin (), s.end (), [] (unsigned char ch) { return !std::isspace (ch); }));
 }
 
 // trim from end (in place)
 static inline void
 rtrim (std::string &s)
 {
-  s.erase (std::find_if (s.rbegin (), s.rend (),
-			 [] (unsigned char ch) { return !std::isspace (ch); })
-	     .base (),
+  s.erase (std::find_if (s.rbegin (), s.rend (), [] (unsigned char ch) { return !std::isspace (ch); }).base (),
 	   s.end ());
 }
 

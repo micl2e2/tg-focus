@@ -32,7 +32,7 @@ creat_in_client (uint16_t port)
       return -10 - ec;
     }
 
-  init_sockaddr: {
+  init_sockaddr : {
     memset (&saddr, 0, sizeof (InSockAddr));
     saddr.sin_family = AF_INET;
     saddr.sin_port = htobe16 (port);
@@ -184,8 +184,7 @@ tgf::IpcClient::send_ipcmsg_sync (tgf::IpcMsg &&msg) noexcept
 	      ssize_t nread = read (__csock, buf_extargs, nbyte_extargs);
 	      if (nread == -1)
 		{
-		  tulogfe (9997, tgf::EC::IPCCLIENT_SYSCALL_READ,
-			   strerror (errno));
+		  tulogfe (9997, tgf::EC::IPCCLIENT_SYSCALL_READ, strerror (errno));
 		  __ec = tgf::EC::IPCCLIENT_SYSCALL_READ;
 		  return nullopt;
 		}

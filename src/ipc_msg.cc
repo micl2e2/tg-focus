@@ -65,7 +65,8 @@ tgf::operator<< (std::ostream &os, const tgf::IpcMsg &self)
     }
   else
     {
-      os << "extargs:" << "-";
+      os << "extargs:"
+	 << "-";
       os << ",";
     }
   os << "data_len:" << self.__data_len_;
@@ -105,7 +106,7 @@ tgf::IpcMsg::IpcMsg (char buffer[NBYTE_IPCMSG_ALL])
 	    }
 	  else
 	    {
-	      tgf::logfe ( "ctor", "not tgf message", magic);
+	      tgf::logfe ("ctor", "not tgf message", magic);
 	      break;
 	    }
 	  assert (i >= blk1len);
@@ -148,8 +149,7 @@ tgf::IpcMsg::set_extargs (const u8 *obuf, size_t obuflen) noexcept
 // ------------------------------ AUX ------------------------------
 
 tgf::IpcMsg
-tgf::new_ipcmsg (const tgf::IpcMsgType typ, const u32 extlen,
-		 const char args[tgf::NBYTE_IPCMSG_ARGS]) noexcept
+tgf::new_ipcmsg (const tgf::IpcMsgType typ, const u32 extlen, const char args[tgf::NBYTE_IPCMSG_ARGS]) noexcept
 /*
  * ipc message's current initialization impl:
  * magic-dependent, type-independent, block-length-dependent,
@@ -202,8 +202,7 @@ tgf::new_ipcmsg (const tgf::IpcMsgType typ, const u32 extlen,
 }
 
 tgf::IpcMsg
-tgf::new_ipcmsg (const tgf::IpcMsgType typ,
-		 const char args[tgf::NBYTE_IPCMSG_ARGS]) noexcept
+tgf::new_ipcmsg (const tgf::IpcMsgType typ, const char args[tgf::NBYTE_IPCMSG_ARGS]) noexcept
 {
   return tgf::new_ipcmsg (typ, 0, args);
 }
@@ -226,7 +225,6 @@ tgf::new_ipcmsg_rstatus () noexcept
   return tgf::new_ipcmsg (tgf::IpcMsgType::ReportStatus, args);
 }
 
-
 tgf::IpcMsg
 tgf::new_ipcmsg_upcoll () noexcept
 {
@@ -243,14 +241,12 @@ tgf::new_ipcmsg_shutcoll () noexcept
   return tgf::new_ipcmsg (tgf::IpcMsgType::ShutdownColl, args);
 }
 
-
 tgf::IpcMsg
 tgf::new_ipcmsg_successr (const u8 *obuf, const size_t obuflen) noexcept
 {
   char args[tgf::NBYTE_IPCMSG_ARGS];
   memset (args, 0, tgf::NBYTE_IPCMSG_ARGS);
-  tgf::IpcMsg msg
-    = tgf::new_ipcmsg (tgf::IpcMsgType::SuccessReadable, obuflen, args);
+  tgf::IpcMsg msg = tgf::new_ipcmsg (tgf::IpcMsgType::SuccessReadable, obuflen, args);
   // extargs not meant to be set here
   // msg.set_extargs (obuf, obuflen);
   return msg;

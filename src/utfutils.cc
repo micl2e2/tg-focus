@@ -24,8 +24,7 @@ get_c16_len (const string &utf8s)
   mbstate_t state = {0};
   while (n_by_converted != 0)
     {
-      n_by_converted
-	= mbrtoc16 (bufp_utf16, bufp_utf8, bufendp_utf8 - bufp_utf8, &state);
+      n_by_converted = mbrtoc16 (bufp_utf16, bufp_utf8, bufendp_utf8 - bufp_utf8, &state);
       if (n_by_converted == -1)
 	break;
       else if (n_by_converted == -2)
@@ -54,16 +53,14 @@ get_c16_seq (const string &utf8s)
   size_t n_cu_utf8 = utf8s.length (); // excluding NUL
   const char *bufp_utf8 = buf_utf8;
   const char *bufendp_utf8 = buf_utf8 + n_cu_utf8;
-  char16_t *const buf_utf16
-    = reinterpret_cast<char16_t *> (malloc (n_cu_utf8 * sizeof (char16_t)));
+  char16_t *const buf_utf16 = reinterpret_cast<char16_t *> (malloc (n_cu_utf8 * sizeof (char16_t)));
   char16_t *bufp_utf16 = buf_utf16;
   size_t n_by_converted = -1;
   mbstate_t state = {0};
 
   while (n_by_converted != 0)
     {
-      n_by_converted
-	= mbrtoc16 (bufp_utf16, bufp_utf8, bufendp_utf8 - bufp_utf8, &state);
+      n_by_converted = mbrtoc16 (bufp_utf16, bufp_utf8, bufendp_utf8 - bufp_utf8, &state);
       if (n_by_converted == -1)
 	break;
       else if (n_by_converted == -2)

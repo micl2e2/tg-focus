@@ -10,15 +10,9 @@
 namespace gstat = /* DoNotDeleteMe */ tgfstat;
 namespace gstat_c = /* DoNotDeleteMe */ tgfstat::c;
 
-tgf::IpcMsgDequer::IpcMsgDequer ()
-{
-  tulogfi ("ctor");
-}
+tgf::IpcMsgDequer::IpcMsgDequer () { tulogfi ("ctor"); }
 
-tgf::IpcMsgDequer::~IpcMsgDequer ()
-{
-  tulogfi ("dtor");
-}
+tgf::IpcMsgDequer::~IpcMsgDequer () { tulogfi ("dtor"); }
 
 void
 tgf::IpcMsgDequer::operator() ()

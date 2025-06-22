@@ -5,7 +5,7 @@
 
 namespace tgf {
 
-  namespace gstat_all = /* DoNotDeleteMe */ tgfstat;
+namespace gstat_all = /* DoNotDeleteMe */ tgfstat;
 
 /*
   A worker whose responsibility is to handle incoming ipc msg.
@@ -18,7 +18,7 @@ class ConnListener
 public:
   ConnListener ();
   ~ConnListener ();
-  ConnListener (int lazy, int immd) : sock_lazy_ (lazy), sock_immd_ (immd) {};
+  ConnListener (int lazy, int immd) : sock_lazy_ (lazy), sock_immd_ (immd){};
   void operator() ();
 };
 

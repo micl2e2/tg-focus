@@ -9,7 +9,7 @@ bool
 tgf::IpcMsgQueue::enqueue (tgf::IpcMsg &&cmd)
 {
   std::lock_guard<std::mutex> g (__lck);
-  tulogfd ( "IpcMsgQueue::enqueue", "queue size", __queue.size ());
+  tulogfd ("IpcMsgQueue::enqueue", "queue size", __queue.size ());
 
   __queue.emplace_back (cmd);
   tgfstat::c::q_ipcmsg_has_upd.store (true, std::memory_order_relaxed);
@@ -22,7 +22,7 @@ std::optional<tgf::IpcMsg>
 tgf::IpcMsgQueue::deque ()
 {
   std::lock_guard<std::mutex> g (__lck);
-  tulogfd ( "IpcMsgQueue::deque", "queue size", __queue.size ());
+  tulogfd ("IpcMsgQueue::deque", "queue size", __queue.size ());
 
   if (__queue.size () > 0)
     {

@@ -105,8 +105,7 @@ License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
 )",
-	  TF_VER, tgf::lang_to_cstr (tgf::HOST_LANG), TF_COLL_CHAT_TITLE,
-	  TF_DEV, TDLIB_VER, TDLIB_SRC);
+	  TF_VER, tgf::lang_to_cstr (tgf::HOST_LANG), TF_COLL_CHAT_TITLE, TF_DEV, TDLIB_VER, TDLIB_SRC);
 
   return 0;
 }
@@ -128,8 +127,7 @@ handle_auth_reset ()
   tgfstat::userdata.set_auth_hint (false);
 
   // second
-  auto del_res
-    = std::filesystem::remove_all (tgfstat::userdata.path_tddata (), ec);
+  auto del_res = std::filesystem::remove_all (tgfstat::userdata.path_tddata (), ec);
   if (del_res == static_cast<std::uintmax_t> (-1))
     return 1;
 
@@ -522,8 +520,7 @@ main (int argc, char *argv[])
   if (strcmp (subcmd, "filters") == 0)
     return handle_filters ();
 
-  if (strcmp (subcmd, "version") == 0 || strcmp (subcmd, "--version") == 0
-      || strcmp (subcmd, "-v") == 0)
+  if (strcmp (subcmd, "version") == 0 || strcmp (subcmd, "--version") == 0 || strcmp (subcmd, "-v") == 0)
     return handle_version ();
 
   if (strcmp (subcmd, "lang") == 0)

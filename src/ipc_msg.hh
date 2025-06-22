@@ -33,8 +33,7 @@ constexpr int NBYTE_IPCMSG_ALL = 64;
 constexpr int NBYTE_IPCMSG_EXTARGS = 4;
 constexpr int NBYTE_IPCMSG_TYPE = 2;
 constexpr int NBYTE_IPCMSG_MAGIC = 3;
-constexpr int NBYTE_IPCMSG_ARGS = NBYTE_IPCMSG_ALL - NBYTE_IPCMSG_MAGIC
-				  - NBYTE_IPCMSG_TYPE - NBYTE_IPCMSG_EXTARGS;
+constexpr int NBYTE_IPCMSG_ARGS = NBYTE_IPCMSG_ALL - NBYTE_IPCMSG_MAGIC - NBYTE_IPCMSG_TYPE - NBYTE_IPCMSG_EXTARGS;
 
 // ------------------------------- - -------------------------------
 
@@ -58,37 +57,27 @@ public:
     int blk2len = NBYTE_IPCMSG_TYPE;
     int blk3len = NBYTE_IPCMSG_EXTARGS;
 
-    return vector<u8> (__data + (blk1len + blk2len + blk3len),
-		       __data + __data_len_);
+    return vector<u8> (__data + (blk1len + blk2len + blk3len), __data + __data_len_);
   }
-  inline size_t extargs_len () noexcept
-  {
-    return scast<size_t> (__extargs_len);
-  }
+  inline size_t extargs_len () noexcept { return scast<size_t> (__extargs_len); }
   inline optional<vector<u8> > extargs () noexcept { return __extargs; }
-  inline std::vector<uint8_t> data () const noexcept
-  {
-    return std::vector<uint8_t> (__data, __data + __data_len_);
-  }
+  inline std::vector<uint8_t> data () const noexcept { return std::vector<uint8_t> (__data, __data + __data_len_); }
   void serialize_into (char buf[NBYTE_IPCMSG_ALL]) noexcept;
   void set_extargs (const u8 *obuf, size_t obuflen) noexcept;
 
   friend std::ostream &operator<< (std::ostream &os, const tgf::IpcMsg &self);
   friend class IpcConnHandler;
-  friend IpcMsg new_ipcmsg (const IpcMsgType typ, const u32 extlen,
-			    const char args[tgf::NBYTE_IPCMSG_ARGS]) noexcept;
+  friend IpcMsg new_ipcmsg (const IpcMsgType typ, const u32 extlen, const char args[tgf::NBYTE_IPCMSG_ARGS]) noexcept;
 };
 
 std::ostream &
 operator<< (std::ostream &os, const tgf::IpcMsg &self);
 
 IpcMsg
-new_ipcmsg (const IpcMsgType typ, const u32 extlen,
-	    const char args[tgf::NBYTE_IPCMSG_ARGS]) noexcept;
+new_ipcmsg (const IpcMsgType typ, const u32 extlen, const char args[tgf::NBYTE_IPCMSG_ARGS]) noexcept;
 
 IpcMsg
-new_ipcmsg (const IpcMsgType typ,
-	    const char args[tgf::NBYTE_IPCMSG_ARGS]) noexcept;
+new_ipcmsg (const IpcMsgType typ, const char args[tgf::NBYTE_IPCMSG_ARGS]) noexcept;
 
 // shutdown ipc server
 IpcMsg

@@ -63,8 +63,7 @@ rhandle_rstatus (int connfd_)
 
   string rpl = oss.str ();
 
-  tgf::IpcMsg m = tgf::new_ipcmsg_successr (rcast<const u8 *> (rpl.c_str ()),
-					    rpl.length ());
+  tgf::IpcMsg m = tgf::new_ipcmsg_successr (rcast<const u8 *> (rpl.c_str ()), rpl.length ());
   tulogfd (6661, m);
   {
     int nsend = send (connfd_, m.data ().data (), tgf::NBYTE_IPCMSG_ALL, 0);
@@ -127,14 +126,12 @@ tgf::IpcConnHandler::operator() ()
 	  // tulogfd ("epoll_wait timeout");
 	  continue;
 	}
-      else if ((rd_events[0].events & EPOLLIN)
-	       && rd_events[0].data.fd == connfd_)
+      else if ((rd_events[0].events & EPOLLIN) && rd_events[0].data.fd == connfd_)
 	{
 	  ssize_t nread = read (connfd_, buffer, NBYTE_IPCMSG_ALL);
 	  if (nread == -1)
 	    {
-	      tulogfe (9995, tgf::EC::IPCCONNHAND_SYSCALL_READ,
-		       strerror (errno));
+	      tulogfe (9995, tgf::EC::IPCCONNHAND_SYSCALL_READ, strerror (errno));
 	      return;
 	    }
 	  giveup_probe = (nread == 0); // EOF
@@ -143,8 +140,7 @@ tgf::IpcConnHandler::operator() ()
 	}
     }
 
-  tulogfd (6667, as_hex_list (
-		   std::vector<uint8_t> (buffer, buffer + NBYTE_IPCMSG_ALL)));
+  tulogfd (6667, as_hex_list (std::vector<uint8_t> (buffer, buffer + NBYTE_IPCMSG_ALL)));
 
   if (giveup_probe)
     {
@@ -179,8 +175,7 @@ tgf::IpcConnHandler::operator() ()
 		}
 	      else
 		{
-		  gstat_c::tryshutwk::coll_initer_succ.store (true,
-							      mo::relaxed);
+		  gstat_c::tryshutwk::coll_initer_succ.store (true, mo::relaxed);
 		  gstat_c::tryshutwk::coll_initer_succ.notify_all ();
 		}
 
@@ -210,29 +205,24 @@ tgf::IpcConnHandler::operator() ()
 		{
 		  gstat_c::tryshutwk::coll_producer.store (false, mo::relaxed);
 		  gstat_c::tryshutwk::coll_producer.notify_all ();
-		  gstat_c::tryshutwk::coll_producer_succ.store (false,
-								mo::relaxed);
+		  gstat_c::tryshutwk::coll_producer_succ.store (false, mo::relaxed);
 		  gstat_c::tryshutwk::coll_producer_succ.notify_all ();
 		  gstat_c::tryshutwk::coll_consumer.store (false, mo::relaxed);
 		  gstat_c::tryshutwk::coll_consumer.notify_all ();
-		  gstat_c::tryshutwk::coll_consumer_succ.store (false,
-								mo::relaxed);
+		  gstat_c::tryshutwk::coll_consumer_succ.store (false, mo::relaxed);
 		  gstat_c::tryshutwk::coll_consumer_succ.notify_all ();
 		  gstat_c::tryshutwk::coll_switcher.store (false, mo::relaxed);
 		  gstat_c::tryshutwk::coll_switcher.notify_all ();
-		  gstat_c::tryshutwk::coll_switcher_succ.store (false,
-								mo::relaxed);
+		  gstat_c::tryshutwk::coll_switcher_succ.store (false, mo::relaxed);
 		  gstat_c::tryshutwk::coll_switcher_succ.notify_all ();
 		  gstat_c::tryshutwk::coll_initer.store (false, mo::relaxed);
 		  gstat_c::tryshutwk::coll_initer.notify_all ();
-		  gstat_c::tryshutwk::coll_initer_succ.store (false,
-							      mo::relaxed);
+		  gstat_c::tryshutwk::coll_initer_succ.store (false, mo::relaxed);
 		  gstat_c::tryshutwk::coll_initer_succ.notify_all ();
 
 		  tgf::CollIniter worker = tgf::CollIniter ();
 		  jthread t (worker);
-		  tgf::ensure::is_valid_thread (
-		    t, tgf::EC::TGFOCUS_SYSCALL_THREAD3);
+		  tgf::ensure::is_valid_thread (t, tgf::EC::TGFOCUS_SYSCALL_THREAD3);
 		  t.detach ();
 		}
 
@@ -247,8 +237,7 @@ tgf::IpcConnHandler::operator() ()
 		{
 		  gstat_c::tryshutwk::coll_initer.store (true, mo::relaxed);
 		  gstat_c::tryshutwk::coll_initer.notify_all ();
-		  gstat_c::tryshutwk::coll_initer_succ.wait (false,
-							     mo::relaxed);
+		  gstat_c::tryshutwk::coll_initer_succ.wait (false, mo::relaxed);
 		}
 	      if (true)
 		{

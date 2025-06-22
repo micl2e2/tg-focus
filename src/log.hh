@@ -24,14 +24,10 @@
 #define tulogfw(...) tgf::logfw (__TU__, __LINE__ __VA_OPT__ (, ) __VA_ARGS__)
 #define tulogfd(...) tgf::logfd (__TU__, __LINE__ __VA_OPT__ (, ) __VA_ARGS__)
 
-#define tulogfe_cg(cg, ...)                                                    \
-  tgf::logfe_cg (cg, __TU__, __LINE__ __VA_OPT__ (, ) __VA_ARGS__)
-#define tulogfi_cg(cg, ...)                                                    \
-  tgf::logfi_cg (cg, __TU__, __LINE__ __VA_OPT__ (, ) __VA_ARGS__)
-#define tulogfw_cg(cg, ...)                                                    \
-  tgf::logfw_cg (cg, __TU__, __LINE__ __VA_OPT__ (, ) __VA_ARGS__)
-#define tulogfd_cg(cg, ...)                                                    \
-  tgf::logfd_cg (cg, __TU__, __LINE__ __VA_OPT__ (, ) __VA_ARGS__)
+#define tulogfe_cg(cg, ...) tgf::logfe_cg (cg, __TU__, __LINE__ __VA_OPT__ (, ) __VA_ARGS__)
+#define tulogfi_cg(cg, ...) tgf::logfi_cg (cg, __TU__, __LINE__ __VA_OPT__ (, ) __VA_ARGS__)
+#define tulogfw_cg(cg, ...) tgf::logfw_cg (cg, __TU__, __LINE__ __VA_OPT__ (, ) __VA_ARGS__)
+#define tulogfd_cg(cg, ...) tgf::logfd_cg (cg, __TU__, __LINE__ __VA_OPT__ (, ) __VA_ARGS__)
 
 namespace tgf {
 
@@ -71,14 +67,13 @@ curr_tstamp ()
 {
   std::time_t time = std::time ({});
   char time_str[std::size ("2025-03-11-T18:17:32+0000")];
-  std::strftime (std::data (time_str), std::size (time_str), "%FT%TZ%z",
-		 std::localtime (&time));
+  std::strftime (std::data (time_str), std::size (time_str), "%FT%TZ%z", std::localtime (&time));
   return std::string (time_str);
 }
 
 template <typename S, class... Args>
-requires std::derived_from<S, std::ostream> void inline stream_log (
-  S &os, LogLv lv, const Args &...args)
+  requires std::derived_from<S, std::ostream>
+void inline stream_log (S &os, LogLv lv, const Args &...args)
 {
   if (g_loglv < lv)
     return;
@@ -96,7 +91,8 @@ requires std::derived_from<S, std::ostream> void inline stream_log (
 // impl should be identical to the above lvalue ref one
 // TODO: reduce repeatition by ajusting template arg
 template <typename S, class... Args>
-requires derived_from<S, std::ostream> inline void
+  requires derived_from<S, std::ostream>
+inline void
 stream_log (S &&os, LogLv lv, const Args &...args)
 {
   if (g_loglv < lv)
@@ -268,8 +264,7 @@ as_hex_list (const std::vector<uint8_t> &arr)
   oss << "[";
   for (size_t i = 0; i < arr.size (); ++i)
     {
-      oss << "0x" << std::hex << std::setw (2) << std::setfill ('0')
-	  << static_cast<int> (arr[i]);
+      oss << "0x" << std::hex << std::setw (2) << std::setfill ('0') << static_cast<int> (arr[i]);
       oss << ",";
     }
   oss << "]";

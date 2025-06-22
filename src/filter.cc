@@ -10,37 +10,31 @@ tgf::FilterToml::FilterToml (const toml::value &v)
   using std::string, std::vector;
 
   // title
-  vector<string> title_list
-    = toml::find_or<vector<string>> (v, "titles", vector<string> (0));
+  vector<string> title_list = toml::find_or<vector<string>> (v, "titles", vector<string> (0));
   for (string &strval : title_list)
     this->__titles.emplace_back (PosixExtRegex (strval));
 
   // no title
-  vector<string> no_title_list
-    = toml::find_or<vector<string>> (v, "no-titles", vector<string> (0));
+  vector<string> no_title_list = toml::find_or<vector<string>> (v, "no-titles", vector<string> (0));
   for (string &strval : no_title_list)
     this->__no_titles.emplace_back (PosixExtRegex (strval));
 
   // sender
-  vector<string> sender_list
-    = toml::find_or<vector<string>> (v, "senders", vector<string> (0));
+  vector<string> sender_list = toml::find_or<vector<string>> (v, "senders", vector<string> (0));
   for (string &strval : sender_list)
     this->__senders.emplace_back (PosixExtRegex (strval));
 
   // no sender
-  vector<string> no_sender_list
-    = toml::find_or<vector<string>> (v, "no-senders", vector<string> (0));
+  vector<string> no_sender_list = toml::find_or<vector<string>> (v, "no-senders", vector<string> (0));
   for (string &strval : no_sender_list)
     this->__no_senders.emplace_back (PosixExtRegex (strval));
 
   // keyword
-  vector<string> keyword_list
-    = toml::find_or<vector<string>> (v, "keywords", vector<string> (0));
+  vector<string> keyword_list = toml::find_or<vector<string>> (v, "keywords", vector<string> (0));
   for (string &strval : keyword_list)
     this->__keywords.emplace_back (PosixExtRegex (strval));
   // no keyword
-  vector<string> no_keyword_list
-    = toml::find_or<vector<string>> (v, "no-keywords", vector<string> (0));
+  vector<string> no_keyword_list = toml::find_or<vector<string>> (v, "no-keywords", vector<string> (0));
   for (string &strval : no_keyword_list)
     {
       this->__no_keywords.emplace_back (PosixExtRegex (strval));
@@ -60,8 +54,7 @@ tgf::FilterGroupToml::FilterGroupToml (const string &v) noexcept
   catch (std::exception &ex)
     {
       using namespace toml::literals::toml_literals;
-      fs = toml::find<std::vector<FilterToml>> ("[[focus-filter]]"_toml,
-						"focus-filter");
+      fs = toml::find<std::vector<FilterToml>> ("[[focus-filter]]"_toml, "focus-filter");
     }
   this->__filters = std::move (fs);
 }

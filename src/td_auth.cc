@@ -16,9 +16,7 @@ tgf::TdAuth::TdAuth (bool useProvidedApiPass)
   __client = make_unique<TdClient> ();
   __clientid = __client->create_client_id ();
   send_query (td_mkobj<TdGetOpt> ("version"), {});
-  send_query (td_mkobj<TdSetOpt> ("use_storage_optimizer",
-				  td_mkobj<TdOptValBool> (true)),
-	      {});
+  send_query (td_mkobj<TdSetOpt> ("use_storage_optimizer", td_mkobj<TdOptValBool> (true)), {});
   __use_our_api = useProvidedApiPass;
 }
 
@@ -121,12 +119,9 @@ tgf::TdAuth::auth_query_callback ()
 		     "(restart might be needed)");
 	else if (error->message_.find ("PASSWORD_HASH_INVALID") != string::npos)
 	  tgf::loge ("Incorrect password");
-	else if (error->message_.find ("PHONE_NUMBER_UNOCCUPIED")
-		 != string::npos)
+	else if (error->message_.find ("PHONE_NUMBER_UNOCCUPIED") != string::npos)
 	  tgf::loge ("The phone number is not yet being used");
-	else if (error->message_.find (
-		   "Valid api_id must be provided. Can be obtained at")
-		 != string::npos)
+	else if (error->message_.find ("Valid api_id must be provided. Can be obtained at") != string::npos)
 	  tgf::loge ("Invalid API ID");
 	else
 	  {
@@ -188,8 +183,7 @@ tgf::TdAuth::on_authorization_state_update ()
 	getline (cin, phone_number);
 	string phone_number_fotmatted = rmspc (move (phone_number));
 
-	send_query (td_mkobj<TdSetAuthPhone> (phone_number_fotmatted, nullptr),
-		    auth_query_callback ());
+	send_query (td_mkobj<TdSetAuthPhone> (phone_number_fotmatted, nullptr), auth_query_callback ());
 	break;
       }
 

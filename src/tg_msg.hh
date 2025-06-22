@@ -21,18 +21,13 @@ class TgMsg
 public:
   TgMsg () = default;
 
-  TgMsg (std::string &chat_title, std::string &sender,
-	 std::string &text_content, int32_t tstamp = 0);
+  TgMsg (std::string &chat_title, std::string &sender, std::string &text_content, int32_t tstamp = 0);
 
-  TgMsg (std::string &&chat_title, std::string &&sender,
-	 std::string &&text_content, int32_t tstamp = 0);
+  TgMsg (std::string &&chat_title, std::string &&sender, std::string &&text_content, int32_t tstamp = 0);
 
   inline const std::string &get_chat_title () const { return this->__title; }
 
-  inline bool is_from_tgfocus () const
-  {
-    return this->__title.find ("TG-FOCUS") != string::npos;
-  }
+  inline bool is_from_tgfocus () const { return this->__title.find ("TG-FOCUS") != string::npos; }
 
   inline const std::string &get_sender () const { return this->__sender; }
 

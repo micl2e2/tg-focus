@@ -12,8 +12,7 @@
 PosixExtRegex::PosixExtRegex () : __stat_comp (INT_MAX), __re (nullptr) {}
 
 PosixExtRegex::PosixExtRegex (PosixExtRegex &&move_ctor_from)
-  : __stat_comp (move_ctor_from.__stat_comp), __re (move_ctor_from.__re),
-    __ptn (move (move_ctor_from.__ptn))
+  : __stat_comp (move_ctor_from.__stat_comp), __re (move_ctor_from.__re), __ptn (move (move_ctor_from.__ptn))
 {
   move_ctor_from.__stat_comp = INT_MAX;
   move_ctor_from.__re = nullptr;
@@ -54,8 +53,7 @@ PosixExtRegex::get_err () noexcept
     {
       static constexpr size_t BUF_SIZE = 1024;
       char posix_re_errbuf[BUF_SIZE];
-      const size_t nchar
-	= regerror (this->__stat_comp, nullptr, posix_re_errbuf, BUF_SIZE);
+      const size_t nchar = regerror (this->__stat_comp, nullptr, posix_re_errbuf, BUF_SIZE);
 
       return std::string (posix_re_errbuf, nchar);
     }

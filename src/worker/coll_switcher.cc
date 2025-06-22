@@ -24,16 +24,11 @@ tgf::CollSwitcher::operator() ()
       this_thread::sleep_for (chrono::seconds (5));
 
       {
-	tgf::logfi_cg (1, "switcher summary",
-		       "P:", gstat::it_cnt_producer.load (mo::relaxed),
-		       "C:", gstat::it_cnt_consumer.load (mo::relaxed),
-		       "S:", gstat::it_cnt_switcher.load (mo::relaxed),
-		       "mqsize:", gstat::mq.size (),
-		       "nhandle:", gstat::collector.n_handlers (),
-		       "nuser:", gstat::collector.n_users (),
-		       "nchattitle:", gstat::collector.n_chat_titles (),
-		       "pause_do_csm_mq:",
-		       gstat::pause_do_csm_mq.load (mo::relaxed),
+	tgf::logfi_cg (1, "switcher summary", "P:", gstat::it_cnt_producer.load (mo::relaxed),
+		       "C:", gstat::it_cnt_consumer.load (mo::relaxed), "S:", gstat::it_cnt_switcher.load (mo::relaxed),
+		       "mqsize:", gstat::mq.size (), "nhandle:", gstat::collector.n_handlers (),
+		       "nuser:", gstat::collector.n_users (), "nchattitle:", gstat::collector.n_chat_titles (),
+		       "pause_do_csm_mq:", gstat::pause_do_csm_mq.load (mo::relaxed),
 		       "do_csm_mq:", gstat::do_csm_mq.load (mo::relaxed));
       }
 
@@ -41,8 +36,7 @@ tgf::CollSwitcher::operator() ()
 	{
 	  if (gstat::do_csm_mq.load (mo::acquire))
 	    {
-	      tgf::logfi_cg (1, "switcher cnt:",
-			     gstat::it_cnt_switcher.load (mo::relaxed),
+	      tgf::logfi_cg (1, "switcher cnt:", gstat::it_cnt_switcher.load (mo::relaxed),
 			     " has msg, consumer maybe handling...");
 	      continue;
 	    }

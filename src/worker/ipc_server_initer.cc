@@ -27,8 +27,7 @@ tgf::IpcServerInitializer::operator() ()
   std::shared_ptr<tgf::IpcServer> srv = std::make_shared<tgf::IpcServer> ();
   if (srv->ok ())
     {
-      ConnListener worker
-	= ConnListener (srv->ssock_lazy (), srv->ssock_immd ());
+      ConnListener worker = ConnListener (srv->ssock_lazy (), srv->ssock_immd ());
       std::jthread t (worker);
       ensure::is_valid_thread (t, tgf::EC::IPCSRCINITER_SYSCALL_THREAD);
       t.detach ();

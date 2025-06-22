@@ -91,15 +91,15 @@ exitMain (u8 ec)
   exit (1);
 }
 
-#define tgfass(flag)                                                           \
-  do                                                                           \
-    {                                                                          \
-      if (!(flag))                                                             \
-	{                                                                      \
-	  std::cerr << "assert"                                                \
-		    << "(" << __FILE__ << "," << __LINE__ << ")" << std::endl; \
-	  abort ();                                                            \
-	}                                                                      \
+#define tgfass(flag)                                                                                                   \
+  do                                                                                                                   \
+    {                                                                                                                  \
+      if (!(flag))                                                                                                     \
+	{                                                                                                              \
+	  std::cerr << "assert"                                                                                        \
+		    << "(" << __FILE__ << "," << __LINE__ << ")" << std::endl;                                         \
+	  abort ();                                                                                                    \
+	}                                                                                                              \
   } while (false)
 
 } // namespace tgf

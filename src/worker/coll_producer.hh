@@ -5,13 +5,12 @@
 
 namespace tgf {
 
-  namespace gstat_all = /* DoNotDeleteMe */ tgfstat;
+namespace gstat_all = /* DoNotDeleteMe */ tgfstat;
 
 /*
  */
 class CollProducer
 {
-
 public:
   CollProducer ();
   ~CollProducer ();

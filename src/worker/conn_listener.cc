@@ -35,8 +35,7 @@ handle_lazy (int sockFD)
   socklen_t addrLen = sizeof (UniSockAddr);
   // int accFD = accept (sockFD, rcast<SockAddrPtr> (&caddr), &addrLen);
   // Not Necessarily Nonblock For accept Currently:
-  int accFD
-    = accept4 (sockFD, ::rcast<SockAddrPtr> (&caddr), &addrLen, SOCK_NONBLOCK);
+  int accFD = accept4 (sockFD, ::rcast<SockAddrPtr> (&caddr), &addrLen, SOCK_NONBLOCK);
   if (accFD == -1)
     {
       if (errno == EAGAIN || errno == EWOULDBLOCK)
@@ -45,8 +44,7 @@ handle_lazy (int sockFD)
 	}
       else
 	{
-	  tulogfe (9992, tgf::EC::CONNLISTENER_SYSCALL_ACCEPT,
-		   strerror (errno));
+	  tulogfe (9992, tgf::EC::CONNLISTENER_SYSCALL_ACCEPT, strerror (errno));
 	  // tgf::exitMain (tgf::EC::CONNLISTENER_SYSCALL_ACCEPT);
 	}
     }
@@ -76,8 +74,7 @@ handle_immd (int sockFD)
 	}
       else
 	{
-	  tulogfe (9995, tgf::EC::CONNLISTENER_SYSCALL_ACCEPT,
-		   strerror (errno));
+	  tulogfe (9995, tgf::EC::CONNLISTENER_SYSCALL_ACCEPT, strerror (errno));
 	  // tgf::exitMain (tgf::EC::CONNLISTENER_SYSCALL_ACCEPT);
 	}
     }

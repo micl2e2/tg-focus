@@ -25,9 +25,8 @@ namespace tgf {
 #define CHATCMD_EDITF_ARG2 "<property>"
 #define CHATCMD_EDITF_ARG3 "<action>"
 #define CHATCMD_EDITF_ARG4 "<double-quoted-value>"
-#define CHATCMD_EDITF_USAGE                                                    \
-  concat6 ("Usage:\n", CHATCMD_EDITF, CHATCMD_EDITF_ARG1, CHATCMD_EDITF_ARG2,  \
-	   CHATCMD_EDITF_ARG3, CHATCMD_EDITF_ARG4)
+#define CHATCMD_EDITF_USAGE                                                                                            \
+  concat6 ("Usage:\n", CHATCMD_EDITF, CHATCMD_EDITF_ARG1, CHATCMD_EDITF_ARG2, CHATCMD_EDITF_ARG3, CHATCMD_EDITF_ARG4)
 
 #define CHATCMD_INSF "filter.insert"
 #define CHATCMD_INSF_ARG1 "<filter-id>"

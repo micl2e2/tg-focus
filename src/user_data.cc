@@ -230,8 +230,6 @@ no-keywords = []
   // tgfid_type
   impl_fs::init_tgfid_type (droot_dir);
 
-
-  
   // pref_lang
   namespace fs = std::filesystem;
   fs::path p_pref_lang = droot_dir / FILE_PREF_LANG;

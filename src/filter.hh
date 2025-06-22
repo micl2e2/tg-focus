@@ -501,8 +501,7 @@ bad_ret:
 template <typename V, typename F>
   requires CanFilterRecogValue<F, V>
 bool
-FilterGroup<V, F>::add_one (u32 &which_filter, const FilterProperty p,
-			    const string &value)
+FilterGroup<V, F>::add_one (u32 &which_filter, const FilterProperty p, const string &value)
 {
   // std::reverse (__filters.begin (), __filters.end ());
 
@@ -555,8 +554,7 @@ bad_rtn:
 template <typename V, typename F>
   requires CanFilterRecogValue<F, V>
 bool
-FilterGroup<V, F>::del_one (u32 &which_filter, const FilterProperty p,
-			    const string &value)
+FilterGroup<V, F>::del_one (u32 &which_filter, const FilterProperty p, const string &value)
 {
   // std::reverse (__filters.begin (), __filters.end ());
 

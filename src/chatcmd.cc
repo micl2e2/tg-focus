@@ -89,8 +89,7 @@ handle_insfilter (string cmdipt, tgf::UserData &p_userdata)
   ostringstream succdata;
   ostringstream didwhat;
   ostringstream auxmsg;
-  tuple<optional<string>, optional<string>, string> ret{nullopt, nullopt,
-							"failed"};
+  tuple<optional<string>, optional<string>, string> ret{nullopt, nullopt, "failed"};
   if (cmdipt.find (CHATCMD_INSF) != 0)
     goto bad_rtn;
 
@@ -155,8 +154,7 @@ handle_rmfilter (string cmdipt, tgf::UserData &p_userdata)
   ostringstream succdata;
   ostringstream didwhat;
   ostringstream auxmsg;
-  tuple<optional<string>, optional<string>, string> ret{nullopt, nullopt,
-							"failed"};
+  tuple<optional<string>, optional<string>, string> ret{nullopt, nullopt, "failed"};
   if (cmdipt.find (CHATCMD_RMF) != 0)
     goto bad_rtn;
 
@@ -319,8 +317,7 @@ handle_editfilter (string cmdipt, tgf::UserData &p_userdata)
       }
 
     string property = chunk2;
-    if (property != "titles" && property != "no-titles"
-	&& property != "keywords" && property != "no-keywords"
+    if (property != "titles" && property != "no-titles" && property != "keywords" && property != "no-keywords"
 	&& property != "senders" && property != "no-senders")
       {
 	auxmsg << "invalid " << CHATCMD_EDITF_ARG2;
@@ -491,8 +488,7 @@ Please check the project page for more details.
 
 } // namespace impl
 
-tgf::ChatCmdHandler::ChatCmdHandler (tgf::ChatCmdType typ, string ipt,
-				     tgf::UserData &p_userdata)
+tgf::ChatCmdHandler::ChatCmdHandler (tgf::ChatCmdType typ, string ipt, tgf::UserData &p_userdata)
 {
   ipt.erase (0, ipt.find_first_not_of (" "));
   __aux_msg = string (CHATCMD_RPLY_PREFIX);
@@ -501,64 +497,56 @@ tgf::ChatCmdHandler::ChatCmdHandler (tgf::ChatCmdType typ, string ipt,
     ;
   else if (typ == tgf::ChatCmdType::ChatCmdPause)
     {
-      tuple<optional<string>, optional<string>, string> res
-	= impl::handle_pause (ipt);
+      tuple<optional<string>, optional<string>, string> res = impl::handle_pause (ipt);
       __succ_data = move (get<0> (res));
       __did_what = move (get<1> (res));
       __aux_msg += move (get<2> (res));
     }
   else if (typ == tgf::ChatCmdType::ChatCmdResume)
     {
-      tuple<optional<string>, optional<string>, string> res
-	= impl::handle_resume (ipt);
+      tuple<optional<string>, optional<string>, string> res = impl::handle_resume (ipt);
       __succ_data = move (get<0> (res));
       __did_what = move (get<1> (res));
       __aux_msg += move (get<2> (res));
     }
   else if (typ == tgf::ChatCmdType::ChatCmdRawFilters)
     {
-      tuple<optional<string>, optional<string>, string> res
-	= impl::handle_rawfilters (ipt, p_userdata);
+      tuple<optional<string>, optional<string>, string> res = impl::handle_rawfilters (ipt, p_userdata);
       __succ_data = move (get<0> (res));
       __did_what = move (get<1> (res));
       __aux_msg += move (get<2> (res));
     }
   else if (typ == tgf::ChatCmdType::ChatCmdFilters)
     {
-      tuple<optional<string>, optional<string>, string> res
-	= impl::handle_filters (ipt, p_userdata);
+      tuple<optional<string>, optional<string>, string> res = impl::handle_filters (ipt, p_userdata);
       __succ_data = move (get<0> (res));
       __did_what = move (get<1> (res));
       __aux_msg += move (get<2> (res));
     }
   else if (typ == tgf::ChatCmdType::ChatCmdEditFilter)
     {
-      tuple<optional<string>, optional<string>, string> res
-	= impl::handle_editfilter (ipt, p_userdata);
+      tuple<optional<string>, optional<string>, string> res = impl::handle_editfilter (ipt, p_userdata);
       __succ_data = move (get<0> (res));
       __did_what = move (get<1> (res));
       __aux_msg += move (get<2> (res));
     }
   else if (typ == tgf::ChatCmdType::ChatCmdInsertFilter)
     {
-      tuple<optional<string>, optional<string>, string> res
-	= impl::handle_insfilter (ipt, p_userdata);
+      tuple<optional<string>, optional<string>, string> res = impl::handle_insfilter (ipt, p_userdata);
       __succ_data = move (get<0> (res));
       __did_what = move (get<1> (res));
       __aux_msg += move (get<2> (res));
     }
   else if (typ == tgf::ChatCmdType::ChatCmdRemoveFilter)
     {
-      tuple<optional<string>, optional<string>, string> res
-	= impl::handle_rmfilter (ipt, p_userdata);
+      tuple<optional<string>, optional<string>, string> res = impl::handle_rmfilter (ipt, p_userdata);
       __succ_data = move (get<0> (res));
       __did_what = move (get<1> (res));
       __aux_msg += move (get<2> (res));
     }
   else if (typ == tgf::ChatCmdType::ChatCmdHelp)
     {
-      tuple<optional<string>, optional<string>, string> res
-	= impl::handle_help (ipt, p_userdata);
+      tuple<optional<string>, optional<string>, string> res = impl::handle_help (ipt, p_userdata);
       __succ_data = move (get<0> (res));
       __did_what = move (get<1> (res));
       __aux_msg += move (get<2> (res));

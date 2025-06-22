@@ -20,8 +20,7 @@ bool
 tgf::need_collect (const tgf::TgMsg &msg)
 {
   auto tomlstr = gstat_all::userdata.get_filters ();
-  tgf::logfi_cg (1, "consumer_iter:", gstat::it_cnt_consumer.load (mo::relaxed),
-		 " filters reloaded");
+  tgf::logfi_cg (1, "consumer_iter:", gstat::it_cnt_consumer.load (mo::relaxed), " filters reloaded");
 
   auto filterg = tgf::FilterGroupToml (tomlstr);
   if (filterg.mtch_tgmsg (msg))
@@ -55,8 +54,7 @@ tgf::CollConsumer::operator() ()
 
 	if (gstat::mq.size () > 0 && gstat_all::userdata.is_tgfid_valid ())
 	  {
-	    tulogfd_cg (1, "consumer_iter:",
-			gstat::it_cnt_consumer.load (mo::relaxed),
+	    tulogfd_cg (1, "consumer_iter:", gstat::it_cnt_consumer.load (mo::relaxed),
 			" mq consumable, mq.size():", gstat::mq.size ());
 
 	    // !!!BLOCKING
@@ -79,10 +77,8 @@ tgf::CollConsumer::operator() ()
 			consume_cnt++;
 		      }
 		    else
-		      tulogfd_cg (1, " consume cnt:",
-				  gstat::it_cnt_consumer.load (mo::relaxed),
-				  " message not collected:",
-				  curr_msg.to_string ());
+		      tulogfd_cg (1, " consume cnt:", gstat::it_cnt_consumer.load (mo::relaxed),
+				  " message not collected:", curr_msg.to_string ());
 		  }
 	      }
 
@@ -92,8 +88,7 @@ tgf::CollConsumer::operator() ()
 	  }
 	else
 	  {
-	    tulogfd_cg (1, "consumer_iter:",
-			gstat::it_cnt_consumer.load (mo::relaxed),
+	    tulogfd_cg (1, "consumer_iter:", gstat::it_cnt_consumer.load (mo::relaxed),
 			" mq not consumable,mq.size():", gstat::mq.size ());
 	  }
       }
