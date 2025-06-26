@@ -23,7 +23,7 @@ PICK_LIBTOML_SRC="$(cat ../dev/pick-src-toml11)"
 
 PXY_FRONTEND=""
 
-if [[ -v USE_PROXYCHAINS ]]
+if [[ -v USE_PXY ]]
 then
     PXY_FRONTEND="proxychains"
     echo "[INFO] using proxy frontend '$PXY_FRONTEND'"
