@@ -1,3 +1,13 @@
+2025-06-28  Michael Lee  <micl2e2@proton.me>
+
+	* RELEASE: 3.1
+
+	What's New:
+
+	- TDLib 1.8.50
+	- Filtering strategy changed to reject-first (single filter)
+	- Other minor improvements
+
 2025-04-26  Michael Lee  <micl2e2@proton.me>
 
 	* RELEASE: 3.0
