@@ -1,8 +1,8 @@
-                             ━━━━━━━━━━━━━
-                                TG-FOCUS
+			       ━━━━━━━━━━
+				TG-FOCUS
 
-                              Michael Lee
-                             ━━━━━━━━━━━━━
+				  asd
+			       ━━━━━━━━━━
 
 
 Table of Contents
@@ -27,39 +27,69 @@ TG-Focus💡
   href="<https://github.com/micl2e2/tg-focus/blob/master/LICENSE-GPL>">![GitHub
   License](<https://img.shields.io/github/license/micl2e2/tg-focus?logo=gnu&color=blue&link=https%3A%2F%2Fgithub.com%2Fmicl2e2%2Ftg-focus%2Fblob%2Fmaster%2FLICENSE-GPL>)</a>
   <a href="<https://core.telegram.org/tdlib>">![Static
-  Badge](<https://img.shields.io/badge/tdlib-1.8.46-%2332a9de>)</a> <a
+  Badge](<https://img.shields.io/badge/tdlib-1.8.50-%2332a9de>)</a> <a
   href="<https://github.com/tdlib/td>">![GitHub commits difference
   between two
-  branches/tags/commits](<https://img.shields.io/github/commits-difference/tdlib/td?base=347bd31a30dd479fc4c5fa966316fb2834802bf8&head=master&logo=gitextensions&label=pending&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd>)</a>
+  branches/tags/commits](<https://img.shields.io/github/commits-difference/tdlib/td?base=64852808ae50d43c655f3f46734f2f90a670f95f&head=master&logo=gitextensions&label=pending&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd>)</a>
 
-  tg-focus is a comprehensive Telegram message filter that helps you
-  *focus*. A gentle user bot for message forwarding. Most of message
-  types are supported: public/private chats, channel updates, and more.
+  tg-focus is a reliable <b>T</b>ele<b>g</b>ram message filter/forwarder
+  that helps you *focus*. A gentle user bot for message forwarding. Most
+  of message types are supported: public/private chats, channel updates,
+  and more.
 
-  By customizing /filters/ through TGFCMD, tg-focus can forward any
-  specific message from any chat to a dedicated chat, *TG-FOCUS*, that
-  way you have full control of the messages you see.
+  By customizing filters through [TGFCMD], you have full control of the
+  messages you'd see in a dedicated chat *TG-FOCUS*.
 
-  tg-focus is built on top of [TDLib] directly, in which way tg-focus is
-  inherently as consistent, reliable and stable as TDLib itself for most
+  Being built on top of [TDLib] directly, tg-focus is inherently as
+  consistent, reliable and stable as TDLib itself for most
   Telegram-specific features.
 
   The supported platforms are:
 
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   OS \ ARCH  x86 64  aarch64 
-  ────────────────────────────
-   Linux      ✅      ✅      
-   Windows    🔨      🔨      
-   BSD        🔨      🔨      
-   macOS      🔨      🔨      
-                            
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   OS \ ARCH    x86 64  aarch64 
+  ──────────────────────────────
+   Linux        ✅      ✅      
+   Windows WSL  ✅      ✅      
+   Windows      🔨      🔨      
+   BSD          🔨      🔨      
+   macOS        🔨      🔨      
+                              
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Supported(✅). Work In Progress(🔨).
 
 
+[TGFCMD] See section Using TGFCMD
+
 [TDLib] <https://core.telegram.org/tdlib/>
+
+Overhead
+────────
+
+  In case someone cares about the overhead of tg-focus, below is an
+  overview captured after 2 months of running on a 1C 1G machine. After
+  filtering ~500K messages, it occupies less than 1% of CPU and less
+  than 400MB of memory.
+
+  ┌────
+  │ $ top
+  │ %CPU  %MEM     TIME+     COMMAND
+  │  0.3   38.1    45:52.73  tgfocus
+  │ 
+  │ $ ps -C tgfocus -o etime
+  │     ELAPSED
+  │ 67-07:04:41
+  │ 
+  │ $ ./tgfocus status
+  │        Logged in : YES
+  │        Collector : UP
+  │     Focus Paused : NO
+  │  Forwarded/Total : 3892/526705
+  │ 	 Pending : 0
+  │      Host Locale : en-US
+  │ 
+  └────
 
 
 Quickstart
@@ -262,7 +292,7 @@ Contributing
 ════════════
 
   tg-focus is still far from perfect, any form of contribution is
-  welcomed!
+  welcomed:
 
   • Ask question (open an issue with label "question")
   • Bug Report (open an issue with label "bug")

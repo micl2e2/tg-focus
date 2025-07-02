@@ -7,55 +7,51 @@
 <a href="https://core.telegram.org/tdlib">![Static Badge](https://img.shields.io/badge/tdlib-1.8.50-%2332a9de)</a>
 <a href="https://github.com/tdlib/td">![GitHub commits difference between two branches/tags/commits](https://img.shields.io/github/commits-difference/tdlib/td?base=64852808ae50d43c655f3f46734f2f90a670f95f&head=master&logo=gitextensions&label=pending&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd)</a>
 
-tg-focus is a reliable Telegram message filter/forwarder that helps
-you *focus*. A gentle user bot for message forwarding. Most of
-message types are supported: public/private chats, channel updates,
-and more.
+tg-focus is a reliable <b>T</b>ele<b>g</b>ram message filter/forwarder that helps
+you *focus*. A gentle user bot for message forwarding. Most of message
+types are supported: public/private chats, channel updates, and more.
 
-By customizing /filters/ through TGFCMD, tg-focus can forward any specific
-message from any chat to a dedicated chat, *TG-FOCUS*, that way
-you have full control of the messages you see.
+By customizing filters through [[Using TGFCMD][TGFCMD]], you have full control of the
+messages you'd see in a dedicated chat *TG-FOCUS*.
 
-tg-focus is built on top of [[https://core.telegram.org/tdlib/][TDLib]] directly, in which way tg-focus is
-inherently as consistent, reliable and stable as TDLib itself for most
-Telegram-specific features.
+Being built on top of [[https://core.telegram.org/tdlib/][TDLib]] directly, tg-focus is inherently as
+consistent, reliable and stable as TDLib itself for most
+Telegram-specific features. 
 
 The supported platforms are:
 
-| OS \ ARCH | x86 64 | aarch64 |
-|-----------+--------+---------|
-| Linux     | ✅     | ✅      |
-| Windows   | 🔨     | 🔨      |
-| BSD       | 🔨     | 🔨      |
-| macOS     | 🔨     | 🔨      |
-|           |        |         |
+| OS \ ARCH   | x86 64 | aarch64 |
+|-------------+--------+---------|
+| Linux       | ✅     | ✅      |
+| Windows WSL | ✅     | ✅      |
+| Windows     | 🔨     | 🔨      |
+| BSD         | 🔨     | 🔨      |
+| macOS       | 🔨     | 🔨      |
+|             |        |         |
 
 Supported(✅). Work In Progress(🔨). 
 
-** Performance Overview
+** Overhead
 
-The rigirous benchmark might be landed in the future. Currently for
-the reference, the performance details randomly captured is shown
-below. 
+In case someone cares about the overhead of tg-focus, below is an
+overview captured after 2 months of running on a 1C 1G machine. After
+filtering ~500K messages, it occupies less than 1% of CPU and less
+than 400MB of memory.
 
-It turns out that on a typical 1C 1G machine, tg-focus will occupy
-~300MB of memory and ~0.3% of CPU, after it filtered ~440k messages
-and forwarded ~3k messages. 
-
-#+begin_src 
-
-USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND                                                                             
-micdeb    20   0  928112 326676  14540 S   0.3  32.5 102:02.38 tgfocus
+#+begin_src  bash
+$ top
+%CPU  %MEM     TIME+     COMMAND
+ 0.3   38.1    45:52.73  tgfocus
 
 $ ps -C tgfocus -o etime
     ELAPSED
-56-04:16:24
+67-07:04:41
 
 $ ./tgfocus status
        Logged in : YES
        Collector : UP
     Focus Paused : NO
- Forwarded/Total : 3289/441330
+ Forwarded/Total : 3892/526705
          Pending : 0
      Host Locale : en-US
 

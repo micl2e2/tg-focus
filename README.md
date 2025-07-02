@@ -1,17 +1,17 @@
 
 # Table of Contents
 
--   [TG-Focus💡](#org1e16867)
--   [Quickstart](#org08c77fe)
--   [TGFCMD Examples](#orgc7e4d4c)
--   [Filters Rules](#org8c2c1d5)
--   [Contributing](#org70f72dc)
--   [FAQ](#orgfcdcc71)
--   [License](#org890f8fe)
+-   [TG-Focus💡](#org2571103)
+-   [Quickstart](#org97fa65a)
+-   [TGFCMD Examples](#org943ea70)
+-   [Filters Rules](#org58a0de6)
+-   [Contributing](#orgd19e839)
+-   [FAQ](#org989312f)
+-   [License](#orgd20f2d5)
 
 
 
-<a id="org1e16867"></a>
+<a id="org2571103"></a>
 
 # TG-Focus💡
 
@@ -19,12 +19,11 @@
 <a href="<https://core.telegram.org/tdlib>">![Static Badge](<https://img.shields.io/badge/tdlib-1.8.50-%2332a9de>)</a>
 <a href="<https://github.com/tdlib/td>">![GitHub commits difference between two branches/tags/commits](<https://img.shields.io/github/commits-difference/tdlib/td?base=64852808ae50d43c655f3f46734f2f90a670f95f&head=master&logo=gitextensions&label=pending&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd>)</a>
 
-tg-focus is a reliable Telegram message filter/forwarder that helps
-you **focus**. A gentle user bot for message forwarding. Most of
-message types are supported: public/private chats, channel updates,
-and more.
+tg-focus is a reliable <b>T</b>ele<b>g</b>ram message filter/forwarder that helps
+you **focus**. A gentle user bot for message forwarding. Most of message
+types are supported: public/private chats, channel updates, and more.
 
-By customizing *filters* through TGFCMD, tg-focus can forward any specific
+By customizing *filters* through [TGFCMD](#org9e29a65), tg-focus can forward any specific
 message from any chat to a dedicated chat, **TG-FOCUS**, that way
 you have full control of the messages you see.
 
@@ -75,6 +74,13 @@ The supported platforms are:
 
 
 <tr>
+<td class="org-left">BSD</td>
+<td class="org-left">🔨</td>
+<td class="org-left">🔨</td>
+</tr>
+
+
+<tr>
 <td class="org-left">macOS</td>
 <td class="org-left">🔨</td>
 <td class="org-left">🔨</td>
@@ -92,7 +98,31 @@ The supported platforms are:
 Supported(✅). Work In Progress(🔨). 
 
 
-<a id="org08c77fe"></a>
+## Overhead
+
+In case someone cares about the overhead of tg-focus, below is an
+overview captured after 2 months of running on a 1C 1G machine. After
+filtering ~500K messages, it occupies less than 1% of CPU and less
+than 400MB of memory.
+
+    $ top
+    %CPU  %MEM     TIME+     COMMAND
+     0.3   38.1    45:52.73  tgfocus
+    
+    $ ps -C tgfocus -o etime
+        ELAPSED
+    67-07:04:41
+    
+    $ ./tgfocus status
+           Logged in : YES
+           Collector : UP
+        Focus Paused : NO
+     Forwarded/Total : 3892/526705
+    	 Pending : 0
+         Host Locale : en-US
+
+
+<a id="org97fa65a"></a>
 
 # Quickstart
 
@@ -149,6 +179,8 @@ specific messages.
     started. The following image tutorials will show you more details.
 
 
+<a id="org9e29a65"></a>
+
 ## Using TGFCMD
 
 Say there is a Telegram user, called Bob. He owns
@@ -168,7 +200,7 @@ strongly interested in:
 <img src="docs/imgtuto/tuto7.png" width="550px"/><br/>
 
 
-<a id="orgc7e4d4c"></a>
+<a id="org943ea70"></a>
 
 # TGFCMD Examples
 
@@ -212,7 +244,7 @@ Resume forwarding:
     TGFCMD resume
 
 
-<a id="org8c2c1d5"></a>
+<a id="org58a0de6"></a>
 
 # Filters Rules
 
@@ -265,7 +297,7 @@ filter will not be tried, and the message will be discarded.
 the last three rules as *blacklist*)
 
 
-<a id="org70f72dc"></a>
+<a id="orgd19e839"></a>
 
 # Contributing
 
@@ -325,7 +357,7 @@ Building:
     build.
 
 
-<a id="orgfcdcc71"></a>
+<a id="org989312f"></a>
 
 # FAQ
 
@@ -357,7 +389,7 @@ by **not** any individual, but **Github-hosted** machines.
 Check [github actions](https://github.com/micl2e2/tg-focus/actions) for more details.
 
 
-<a id="org890f8fe"></a>
+<a id="orgd20f2d5"></a>
 
 # License
 
