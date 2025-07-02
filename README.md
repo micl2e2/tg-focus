@@ -17,7 +17,7 @@
 
 <a href="<https://github.com/micl2e2/tg-focus/blob/master/LICENSE-GPL>">![GitHub License](<https://img.shields.io/github/license/micl2e2/tg-focus?logo=gnu&color=blue&link=https%3A%2F%2Fgithub.com%2Fmicl2e2%2Ftg-focus%2Fblob%2Fmaster%2FLICENSE-GPL>)</a>
 <a href="<https://core.telegram.org/tdlib>">![Static Badge](<https://img.shields.io/badge/tdlib-1.8.50-%2332a9de>)</a>
-<a href="<https://github.com/tdlib/td>">![GitHub commits difference between two branches/tags/commits](<https://img.shields.io/github/commits-difference/tdlib/td?base=64852808ae50d43c655f3f46734f2f90a670f95f&head=master&logo=gitextensions&label=pending&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd>)</a>
+<a href="<https://github.com/tdlib/td>">![GitHub commits difference between two branches/tags/commits](<https://img.shields.io/github/commits-difference/tdlib/td?base=0857d7e909418c3c3b51a38abe3336b9f32c41fd&head=master&logo=gitextensions&label=pending&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd>)</a>
 
 tg-focus is a reliable <b>T</b>ele<b>g</b>ram message filter/forwarder that helps
 you **focus**. A gentle user bot for message forwarding. Most of message
