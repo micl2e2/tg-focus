@@ -1,0 +1,68 @@
+name: Manual Build
+run-name: Manual Build triggered by ${{ github.actor }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: "Target platform"
+        required: true
+        default: "linux-aarch64"
+        type: choice
+        options:
+          - linux-aarch64
+          - linux-x86_64
+          - all
+      push_to_registry:
+        description: "Push to GitHub Container Registry"
+        required: false
+        default: true
+        type: boolean
+      tag:
+        description: "Custom tag (optional)"
+        required: false
+        default: ""
+        type: string
+
+jobs:
+  build-aarch64:
+    if: ${{ inputs.platform == 'linux-aarch64' || inputs.platform == 'all' }}
+    uses: ./.github/workflows/build-linux-aarch64.yml
+    with:
+      tag: ${{ inputs.tag }}
+      push_to_registry: ${{ inputs.push_to_registry }}
+    secrets: inherit
+
+  build-x86_64:
+    if: ${{ inputs.platform == 'linux-x86_64' || inputs.platform == 'all' }}
+    uses: ./.github/workflows/build-linux-x86_64.yml
+    with:
+      tag: ${{ inputs.tag }}
+      push_to_registry: ${{ inputs.push_to_registry }}
+    secrets: inherit
+
+  summary:
+    if: always()
+    needs: [build-aarch64, build-x86_64]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build Summary
+        run: |
+          echo "## Build Results" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ needs.build-aarch64.result }}" == "success" ]; then
+            echo "✅ ARM64 build completed successfully" >> $GITHUB_STEP_SUMMARY
+            echo "- Image: ${{ needs.build-aarch64.outputs.image_name }}:${{ needs.build-aarch64.outputs.image_tag }}" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ needs.build-aarch64.result }}" == "skipped" ]; then
+            echo "⏭️ ARM64 build skipped" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ ARM64 build failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ needs.build-x86_64.result }}" == "success" ]; then
+            echo "✅ x86_64 build completed successfully" >> $GITHUB_STEP_SUMMARY
+            echo "- Image: ${{ needs.build-x86_64.outputs.image_name }}:${{ needs.build-x86_64.outputs.image_tag }}" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ needs.build-x86_64.result }}" == "skipped" ]; then
+            echo "⏭️ x86_64 build skipped" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ x86_64 build failed" >> $GITHUB_STEP_SUMMARY
+          fi

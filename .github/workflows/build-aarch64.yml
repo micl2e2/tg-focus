@@ -1,0 +1,98 @@
+name: Build Linux ARM64
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        description: "Custom tag for the image"
+        required: false
+        default: ""
+        type: string
+      push_to_registry:
+        description: "Whether to push to registry"
+        required: false
+        default: true
+        type: boolean
+    outputs:
+      image_tag:
+        description: "The tag of the built image"
+        value: ${{ jobs.build.outputs.image_tag }}
+      image_name:
+        description: "The name of the built image"
+        value: ${{ jobs.build.outputs.image_name }}
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image_tag: ${{ steps.build.outputs.image_tag }}
+      image_name: ${{ steps.build.outputs.image_name }}
+    steps:
+      - name: System info
+        run: |
+          nproc
+          free -h
+          df -h
+          lscpu
+
+      - name: Install build tools
+        run: sudo apt-get update && sudo apt-get install -y buildah podman
+
+      - name: Build container
+        id: build
+        run: |
+          builder_ctr=$(buildah from docker.io/library/debian:12)
+          buildah config --label "stage=builder" $builder_ctr
+          buildah run $builder_ctr -- apt-get update
+          buildah run $builder_ctr -- apt-get install -y wget tar git bash
+          buildah run $builder_ctr -- rm -rf /var/lib/apt/lists/*
+
+          buildah run $builder_ctr -- git clone https://github.com/micl2e2/tg-focus
+          buildah run $builder_ctr -- bash -c 'cd tg-focus && bash ci/prep-libs-deb11-aarch64.bash'
+          buildah run $builder_ctr -- bash -c 'cd tg-focus && bash ci/prep-toolc-deb11-aarch64.bash'
+          buildah run $builder_ctr -- bash -c 'cd tg-focus && bash ci/build-tgfocus-deb11-aarch64.bash'
+          buildah run $builder_ctr -- bash -c 'cd tg-focus && bash ci/pack-tgfocus-deb11-aarch64.bash'
+
+          mnt=$(buildah mount $builder_ctr)
+          cp -r $mnt/tg-focus/ci/artifacts .
+          buildah umount $builder_ctr
+
+          final_ctr=$(buildah from debian:12-slim)
+          buildah copy --from $builder_ctr $final_ctr /tg-focus/ci/artifacts /tg-focus
+          buildah config --entrypoint '["/tg-focus/tgfocus"]' $final_ctr
+
+          IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/tg-focus"
+          buildah config --label "org.opencontainers.image.source=https://github.com/${{ github.repository }}" $final_ctr
+          buildah config --label "org.opencontainers.image.description=TG Focus Container" $final_ctr
+          buildah config --label "org.opencontainers.image.licenses=MIT" $final_ctr
+
+
+          if [ -n "${{ inputs.tag }}" ]; then
+            TAG="${{ inputs.tag }}"
+          else
+            TAG="$(date +%Y%m%d-%H%M%S)"
+          fi
+
+          buildah commit $final_ctr $IMAGE_NAME:$TAG-aarch64
+          buildah commit $final_ctr $IMAGE_NAME:latest-aarch64
+
+          echo "image_tag=$TAG-aarch64" >> $GITHUB_OUTPUT
+          echo "image_name=$IMAGE_NAME" >> $GITHUB_OUTPUT
+
+          buildah rm $builder_ctr $final_ctr
+
+      - name: Push to registry
+        if: ${{ inputs.push_to_registry }}
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | buildah login ghcr.io -u ${{ github.actor }} --password-stdin
+          buildah push ${{ steps.build.outputs.image_name }}:${{ steps.build.outputs.image_tag }}
+          buildah push ${{ steps.build.outputs.image_name }}:latest-aarch64
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-aarch64
+          path: artifacts
