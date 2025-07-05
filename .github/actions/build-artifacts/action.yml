@@ -1,0 +1,146 @@
+name: Build Linux Image
+
+inputs:
+  arch:
+    description: "Target architecture (aarch64 or x86_64)"
+    required: true
+    default: "aarch64"
+    type: string
+  tag:
+    description: "Custom tag for the image"
+    required: false
+    default: ""
+    type: string
+  push_to_registry:
+    description: "Whether to push to registry"
+    required: false
+    default: true
+    type: boolean
+  github_token:
+    description: "GitHub token for authentication"
+    required: true
+
+outputs:
+  image_tag:
+    description: "The tag of the built image"
+    value: ${{ steps.push.outputs.image_tag }}
+  image_name:
+    description: "The name of the built image"
+    value: ${{ steps.push.outputs.image_name }}
+
+runs:
+  using: composite
+  steps:
+    - name: System info
+      shell: bash
+      run: |
+        nproc
+        free -h
+        df -h
+        lscpu
+
+    - name: Install build tools
+      shell: bash
+      run: sudo apt-get update && sudo apt-get install -y buildah podman
+
+    - name: Prepare build variables
+      id: prep
+      shell: bash
+      run: |
+        set -euo pipefail
+        if [[ "${{ inputs.arch }}" == "aarch64" ]]; then
+          echo "LIBS_SCRIPT=prep-libs-deb11-aarch64.bash" >> $GITHUB_ENV
+          echo "TOOLC_SCRIPT=prep-toolc-deb11-aarch64.bash" >> $GITHUB_ENV
+          echo "BUILD_SCRIPT=build-tgfocus-deb11-aarch64.bash" >> $GITHUB_ENV
+          echo "PACK_SCRIPT=pack-tgfocus-deb11-aarch64.bash" >> $GITHUB_ENV
+          echo "ARCH_TAG=aarch64" >> $GITHUB_ENV
+        elif [[ "${{ inputs.arch }}" == "x86_64" ]]; then
+          echo "LIBS_SCRIPT=prep-libs-deb11-x86_64.bash" >> $GITHUB_ENV
+          echo "TOOLC_SCRIPT=prep-toolc-deb11-x86_64.bash" >> $GITHUB_ENV
+          echo "BUILD_SCRIPT=build-tgfocus-deb11-x86_64.bash" >> $GITHUB_ENV
+          echo "PACK_SCRIPT=pack-tgfocus-deb11-x86_64.bash" >> $GITHUB_ENV
+          echo "ARCH_TAG=x86_64" >> $GITHUB_ENV
+        else
+          echo "Unsupported arch: ${{ inputs.arch }}"
+          exit 1
+        fi
+        VERSION=$(cat ./dev/pick-ver-tgfocus)
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+    - name: Create builder container
+      id: builder
+      shell: bash
+      run: |
+        builder_ctr=$(buildah from docker.io/library/debian:12)
+        echo "BUILDER_CTR=$builder_ctr" >> $GITHUB_ENV
+        buildah config --label "stage=builder" $builder_ctr
+        buildah run $builder_ctr -- apt-get update
+        buildah run $builder_ctr -- apt-get install -y git bash sudo
+        buildah run $builder_ctr -- rm -rf /var/lib/apt/lists/*
+        buildah copy $builder_ctr . /tg-focus
+        buildah config --workingdir /tg-focus $builder_ctr
+
+    - name: Run build scripts
+      shell: bash
+      run: |
+        buildah run $BUILDER_CTR -- bash -c "bash ci/$LIBS_SCRIPT"
+        buildah run $BUILDER_CTR -- bash -c "bash ci/$TOOLC_SCRIPT"
+        buildah run $BUILDER_CTR -- bash -c "bash ci/$BUILD_SCRIPT"
+        buildah run $BUILDER_CTR -- bash -c "bash ci/$PACK_SCRIPT"
+
+    - name: Extract artifacts from builder
+      shell: bash
+      run: |
+        buildah run $BUILDER_CTR -- bash -c "bash ci/decompress.sh ci/artifacts ci/container-artifacts"
+        buildah unshare -- bash -euo pipefail -c '
+        mnt=$(buildah mount "$1")
+        rm -rf artifacts
+        mkdir -p artifacts
+        cp -r "$mnt/tg-focus/ci/artifacts/" artifacts/
+        buildah umount "$1"
+        ' bash "$BUILDER_CTR"
+
+    - name: Create final container
+      id: final
+      shell: bash
+      run: |
+        final_ctr=$(buildah from debian:12-slim)
+        echo "FINAL_CTR=$final_ctr" >> $GITHUB_ENV
+        buildah copy --from $BUILDER_CTR $final_ctr /tg-focus/ci/container-artifacts /tg-focus
+        buildah config --entrypoint '["/tg-focus/tgfocus"]' $final_ctr
+        IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/tg-focus"
+        echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
+        buildah config --label "org.opencontainers.image.source=https://github.com/${{ github.repository }}" $final_ctr
+        buildah config --label "org.opencontainers.image.description=TG Focus Container" $final_ctr
+        buildah config --label "org.opencontainers.image.licenses=MIT" $final_ctr
+
+    - name: Commit and tag image
+      id: tag
+      shell: bash
+      run: |
+        if [ -n "${{ inputs.tag }}" ]; then
+          TAG="${{ inputs.tag }}"
+        else
+          TAG="$VERSION"
+        fi
+        buildah commit $FINAL_CTR $IMAGE_NAME:$TAG-$ARCH_TAG
+        buildah tag $IMAGE_NAME:$TAG-$ARCH_TAG $IMAGE_NAME:latest-$ARCH_TAG
+        echo "IMAGE_TAG"="$TAG-$ARCH_TAG" >> $GITHUB_ENV
+        buildah rm $BUILDER_CTR $FINAL_CTR
+
+    - name: Push to registry
+      if: ${{ inputs.push_to_registry }}
+      id: push
+      shell: bash
+      run: |
+        echo "image_tag=$TAG-$ARCH_TAG" >> $GITHUB_OUTPUT
+        echo "image_name=$IMAGE_NAME" >> $GITHUB_OUTPUT
+        echo "${{ inputs.github_token }}" | buildah login ghcr.io -u ${{ github.actor }} --password-stdin
+        buildah push $IMAGE_NAME:$IMAGE_TAG
+        buildah push $IMAGE_NAME:latest-$ARCH_TAG
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: artifacts-${{ inputs.arch }}
+        path: artifacts
