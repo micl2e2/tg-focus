@@ -1,0 +1,22 @@
+FROM debian:12 AS builder
+
+ARG ARTIFACTS_URL
+
+RUN mkdir /opt/playground
+RUN mkdir /opt/tg-focus
+WORKDIR /opt/playground
+
+RUN apt-get update && \
+    apt-get install -y wget tar && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN wget "${ARTIFACTS_URL}" -O tg-focus-3.0-linux.tar.gz && \
+        tar xvf tg-focus-3.0-linux.tar.gz --strip-components=1 -C /opt/tg-focus
+
+
+FROM debian:12-slim
+
+RUN mkdir /opt/tg-focus
+COPY --from=builder /opt/tg-focus /opt/tg-focus/
+
+ENTRYPOINT ["/opt/tg-focus/tgfocus"]
