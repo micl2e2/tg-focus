@@ -25,6 +25,11 @@ on:
 jobs:
   build-container:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      attestations: read
+      id-token: read
     steps:
       - name: Workflow info
         run: |
