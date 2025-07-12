@@ -64,6 +64,7 @@ jobs:
           file: ./ci/Containerfile
           platforms: linux/amd64
           push: true
+	  provenance: false
           tags: ghcr.io/${{ github.repository_owner }}/tg-focus:${{ env.tag }}
           build-args: |
             ARTIFACTS_URL=${{ github.event.inputs.url_tgz_amd64 }}
@@ -76,6 +77,7 @@ jobs:
           file: ./ci/Containerfile
           platforms: linux/arm64
           push: true
+	  provenance: false
           tags: ghcr.io/${{ github.repository_owner }}/tg-focus:${{ env.tag }}
           build-args: |
             ARTIFACTS_URL=${{ github.event.inputs.url_tgz_arm64 }}
