@@ -1,21 +1,17 @@
-name: Manual Build
-run-name: Manual Build triggered by ${{ github.actor }}
-
+name: create-github-package
 on:
   workflow_dispatch:
     inputs:
-      artifacts_url:
-        description: "URL to the artifact to build"
+      url_tgz_amd64:
+        description: "Release tarball for amd64"
         required: true
         default: ""
         type: string
-      platform:
-        description: "Target platform for the build"
+      url_tgz_arm64:
+        description: "Release tarball for arm64"
         required: true
-        type: choice
-        options:
-          - linux/amd64
-          - linux/arm64
+        default: ""
+        type: string
       tag:
         description: "Custom tag (optional)"
         required: false
@@ -23,7 +19,7 @@ on:
         type: string
 
 jobs:
-  build-container:
+  job1:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -61,14 +57,26 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: Build and push Docker image (amd64)
         uses: docker/build-push-action@v4
         with:
           context: .
           file: ./ci/Containerfile
-          platforms: ${{ github.event.inputs.platform }}
+          platforms: linux/amd64
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/tg-focus:${{ env.tag }}
           build-args: |
-            ARTIFACTS_URL=${{ github.event.inputs.artifacts_url }}
+            ARTIFACTS_URL=${{ github.event.inputs.url_tgz_amd64 }}
+            TAG=${{ env.tag }}
+
+      - name: Build and push Docker image (arm64)
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./ci/Containerfile
+          platforms: linux/arm64
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/tg-focus:${{ env.tag }}
+          build-args: |
+            ARTIFACTS_URL=${{ github.event.inputs.url_tgz_arm64 }}
             TAG=${{ env.tag }}
