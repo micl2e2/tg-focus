@@ -19,7 +19,7 @@ on:
         type: string
 
 jobs:
-  job1:
+  amd64:
     runs-on: ${{ matrix.runner }}
     permissions:
       contents: read
@@ -30,10 +30,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - platform: linux/amd64
-            runner: ubuntu-24.04
           - platform: linux/arm64
             runner: ubuntu-24.04-arm
+          - platform: linux/amd64
+            runner: ubuntu-24.04
     steps:
       - name: Workflow info
         run: |
