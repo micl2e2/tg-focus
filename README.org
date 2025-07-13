@@ -33,9 +33,10 @@ Supported(✅). Work In Progress(🔨).
 
 ** Overhead
 
-In case someone cares about the overhead, here is a rough overview: After *~2 months* of running
-on a *1C 1G* machine, with *~500K* messages being filtered, it would
-occupy *<1%* of CPU and *<40%* of memory (TDLib included). 
+In case someone cares about the overhead, here is a rough overview,
+randomly captured after *~2 months* of uninterrupted running on a *1C 1G*
+machine: With *~500K* messages being filtered, it occupied *<1%* of
+CPU and *<40%* of memory (TDLib included).  
 
 * Quickstart
 

@@ -1,17 +1,17 @@
 
 # Table of Contents
 
--   [TG-Focus💡](#org9051890)
--   [Quickstart](#org2ec0c7f)
--   [TGFCMD Examples](#orgbececa8)
--   [Filters Rules](#orgd35a85d)
--   [Contributing](#org2485130)
--   [FAQ](#orge741ceb)
--   [License](#orga266580)
+-   [TG-Focus💡](#orgd76ac24)
+-   [Quickstart](#org8ac2d84)
+-   [TGFCMD Examples](#org384ee50)
+-   [Filters Rules](#orga18b21e)
+-   [Contributing](#orgae676da)
+-   [FAQ](#org800a4d5)
+-   [License](#orgc7809de)
 
 
 
-<a id="org9051890"></a>
+<a id="orgd76ac24"></a>
 
 # TG-Focus💡
 
@@ -105,12 +105,13 @@ Supported(✅). Work In Progress(🔨).
 
 ## Overhead
 
-In case someone cares about the overhead, here is a rough overview: After **~2 months** of running
-on a **1C 1G** machine, with **~500K** messages being filtered, it would
-occupy **<1%** of CPU and **<40%** of memory (TDLib included). 
+In case someone cares about the overhead, here is a rough overview,
+randomly captured after **~2 months** of uninterrupted running on a **1C 1G**
+machine: With **~500K** messages being filtered, it occupied **<1%** of
+CPU and **<40%** of memory (TDLib included).  
 
 
-<a id="org2ec0c7f"></a>
+<a id="org8ac2d84"></a>
 
 # Quickstart
 
@@ -252,7 +253,7 @@ strongly interested in:
 <img src="docs/imgtuto/tuto7.png" width="550px"/><br/>
 
 
-<a id="orgbececa8"></a>
+<a id="org384ee50"></a>
 
 # TGFCMD Examples
 
@@ -296,7 +297,7 @@ Resume forwarding:
     TGFCMD resume
 
 
-<a id="orgd35a85d"></a>
+<a id="orga18b21e"></a>
 
 # Filters Rules
 
@@ -349,7 +350,7 @@ filter will not be tried, and the message will be discarded.
 the last three rules as *blacklist*)
 
 
-<a id="org2485130"></a>
+<a id="orgae676da"></a>
 
 # Contributing
 
@@ -407,7 +408,7 @@ Building:
     build.
 
 
-<a id="orge741ceb"></a>
+<a id="org800a4d5"></a>
 
 # FAQ
 
@@ -439,7 +440,7 @@ by **not** any individual, but **Github-hosted** machines.
 Check [github actions](https://github.com/micl2e2/tg-focus/actions) for more details.
 
 
-<a id="orga266580"></a>
+<a id="orgc7809de"></a>
 
 # License
 
