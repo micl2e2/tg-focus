@@ -74,8 +74,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-	    docker.io/${{ github.repository_owner }}/tg-focus:${{ env.tag }}
-	    ghcr.io/${{ github.repository_owner }}/tg-focus:${{ env.tag }}
+            docker.io/${{ github.repository_owner }}/tg-focus:${{ env.tag }}
+            ghcr.io/${{ github.repository_owner }}/tg-focus:${{ env.tag }}
           build-args: |
             URL_RELTGZ_AMD64=${{ github.event.inputs.url_tgz_amd64 }}
             URL_RELTGZ_ARM64=${{ github.event.inputs.url_tgz_arm64 }}
