@@ -1,4 +1,4 @@
-name: create-github-package
+name: build-push-image
 on:
   workflow_dispatch:
     inputs:
