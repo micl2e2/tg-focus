@@ -1,29 +1,29 @@
 
 # Table of Contents
 
--   [TG-Focus💡](#org86536c0)
--   [Quickstart](#org77d1682)
--   [TGFCMD Examples](#org09bc2e7)
--   [Filters Rules](#org0abaa0b)
--   [Contributing](#orgee11054)
--   [FAQ](#org980f4d5)
--   [License](#org1418e83)
+-   [TG-Focus💡](#org68a27ff)
+-   [Quickstart](#orgf04bdef)
+-   [TGFCMD Examples](#org7e40289)
+-   [Filters Rules](#orgf6c7c18)
+-   [Contributing](#orgb0ecaf2)
+-   [FAQ](#orgff0e544)
+-   [License](#orgddc2c54)
 
 
 
-<a id="org86536c0"></a>
+<a id="org68a27ff"></a>
 
 # TG-Focus💡
 
-<a href="<https://github.com/micl2e2/tg-focus/blob/master/LICENSE-GPL>">\![GitHub License](<https://img.shields.io/github/license/micl2e2/tg-focus?logo=gnu&color=blue&link=https%3A%2F%2Fgithub.com%2Fmicl2e2%2Ftg-focus%2Fblob%2Fmaster%2FLICENSE-GPL>)</a>
-<a href="<https://core.telegram.org/tdlib>">\![Static Badge](<https://img.shields.io/badge/tdlib-1.8.50-%2332a9de>)</a>
-<a href="<https://github.com/tdlib/td>">\![GitHub commits difference between two branches/tags/commits](<https://img.shields.io/github/commits-difference/tdlib/td?base=0857d7e909418c3c3b51a38abe3336b9f32c41fd&head=master&logo=gitextensions&label=pending&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd>)</a>
+<a href="<https://github.com/micl2e2/tg-focus/blob/master/LICENSE-GPL>">![GitHub License](<https://img.shields.io/github/license/micl2e2/tg-focus?logo=gnu&color=blue&link=https%3A%2F%2Fgithub.com%2Fmicl2e2%2Ftg-focus%2Fblob%2Fmaster%2FLICENSE-GPL>)</a>
+<a href="<https://core.telegram.org/tdlib>">![Static Badge](<https://img.shields.io/badge/tdlib-1.8.50-%2332a9de>)</a>
+<a href="<https://github.com/tdlib/td>">![GitHub commits difference between two branches/tags/commits](<https://img.shields.io/github/commits-difference/tdlib/td?base=0857d7e909418c3c3b51a38abe3336b9f32c41fd&head=master&logo=gitextensions&label=pending&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd>)</a>
 
 tg-focus is a reliable <b>T</b>ele<b>g</b>ram message filter/forwarder that helps
 you **focus**. A gentle user bot for message forwarding. Most of message
 types are supported: public/private chats, channel updates, and more.
 
-With [TGFCMD](#org9d88183), you have full control of the
+With [TGFCMD](#org6d80e7c), you have full control of the
 messages you'd see in a dedicated chat **TG-FOCUS**.
 
 Being built on top of [TDLib](https://core.telegram.org/tdlib/) directly, tg-focus is inherently as
@@ -111,25 +111,28 @@ on a **1C 1G** machine, with **~500K** messages being filtered, it would
 occupy **<1%** of CPU and **<400MB** of memory (TDLib included). 
 
 
-<a id="org77d1682"></a>
+<a id="orgf04bdef"></a>
 
 # Quickstart
 
-tg-focus can be deployed through [Docker/Podman](#orge88f0d1), or [native binaries](#orga5fe029).
+You can use [Docker/Podman](#org99ecab0), or [native binaries](#org4ba3afc) to setup tg-focus.
 
 
-## Use Docker/Podman
+## Using Docker/Podman
 
-The following 6 steps will help you start up tg-focus and filter some
+The following 5 steps will help you start up tg-focus and filter some
 specific messages.
 
 1.  Download the images:
     
         docker pull micl2e2/tg-focus
-        # or
+    
+    or
+    
+        # if you use Podman rather than Docker
         podman pull docker.io/micl2e2/tg-focus
         
-        # (Optional) If you have trouble reaching Docker Hub, try GitHub Package:
+        # If you have trouble in reaching Docker Hub, try GitHub Package:
         docker pull ghcr.io/micl2e2/tg-focus
         # or
         podman pull ghcr.io/micl2e2/tg-focus
@@ -170,7 +173,7 @@ specific messages.
     started. The following image tutorials will show you more details.
 
 
-## Use Binaries
+## Using Binaries
 
 The following 6 steps will help you start up tg-focus and filter some
 specific messages.
@@ -244,7 +247,7 @@ strongly interested in:
 <img src="docs/imgtuto/tuto7.png" width="550px"/><br/>
 
 
-<a id="org09bc2e7"></a>
+<a id="org7e40289"></a>
 
 # TGFCMD Examples
 
@@ -288,7 +291,7 @@ Resume forwarding:
     TGFCMD resume
 
 
-<a id="org0abaa0b"></a>
+<a id="orgf6c7c18"></a>
 
 # Filters Rules
 
@@ -341,7 +344,7 @@ filter will not be tried, and the message will be discarded.
 the last three rules as *blacklist*)
 
 
-<a id="orgee11054"></a>
+<a id="orgb0ecaf2"></a>
 
 # Contributing
 
@@ -401,7 +404,7 @@ Building:
     build.
 
 
-<a id="org980f4d5"></a>
+<a id="orgff0e544"></a>
 
 # FAQ
 
@@ -433,7 +436,7 @@ by **not** any individual, but **Github-hosted** machines.
 Check [github actions](https://github.com/micl2e2/tg-focus/actions) for more details.
 
 
-<a id="org1418e83"></a>
+<a id="orgddc2c54"></a>
 
 # License
 

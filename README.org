@@ -40,21 +40,24 @@ occupy *<1%* of CPU and *<400MB* of memory (TDLib included).
 
 * Quickstart
 
-tg-focus can be deployed through [[Use Docker/Podman][Docker/Podman]], or [[Use Binaries][native binaries]].
+You can use [[Using Docker/Podman][Docker/Podman]], or [[Using Binaries][native binaries]] to setup tg-focus.
 
-** Use Docker/Podman
+** Using Docker/Podman
 
-The following 6 steps will help you start up tg-focus and filter some
+The following 5 steps will help you start up tg-focus and filter some
 specific messages.
 
 1. Download the images:
 
    #+begin_src bash
      docker pull micl2e2/tg-focus
-     # or
+   #+end_src
+   or
+   #+begin_src
+     # if you use Podman rather than Docker
      podman pull docker.io/micl2e2/tg-focus
 
-     # (Optional) If you have trouble reaching Docker Hub, try GitHub Package:
+     # If you have trouble in reaching Docker Hub, try GitHub Package:
      docker pull ghcr.io/micl2e2/tg-focus
      # or
      podman pull ghcr.io/micl2e2/tg-focus
@@ -106,7 +109,7 @@ specific messages.
    started. The following image tutorials will show you more details.
 
 
-** Use Binaries
+** Using Binaries
 
 The following 6 steps will help you start up tg-focus and filter some
 specific messages.
