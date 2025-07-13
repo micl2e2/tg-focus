@@ -4,6 +4,14 @@ ARG TARGETPLATFORM
 ARG URL_RELTGZ_AMD64
 ARG URL_RELTGZ_ARM64
 
+RUN if [ ${TARGETPLATFORM} = linux/amd64 ]; then \
+        echo "URL_RELTGZ=${URL_RELTGZ_AMD64}" >> /tmp/vars; \
+    elif [ ${TARGETPLATFORM} = linux/arm64 ]; then \
+        echo "URL_RELTGZ=${URL_RELTGZ_ARM64}" >> /tmp/vars; \
+    else \
+        echo "URL_RELTGZ=unsupported" >> /tmp/vars; \
+    fi
+
 RUN mkdir /opt/playground
 RUN mkdir /opt/tg-focus
 WORKDIR /opt/playground
@@ -12,17 +20,10 @@ RUN apt-get update && \
     apt-get install -y wget tar && \
     rm -rf /var/lib/apt/lists/*
 
-RUN case ${TARGETPLATFORM} in \
-    "linux/amd64") URL_RELTGZ=${URL_RELTGZ_AMD64} ;; \
-    "linux/arm64") URL_RELTGZ=${URL_RELTGZ_ARM64} ;; \
-    *) echo "Unsupported platform: ${TARGETPLATFORM}" && exit 1 ;; \
-    esac
-
-RUN wget "${URL_RELTGZ}" -O tg-focus-3.0-linux.tar.gz && \
+RUN source /tmp/vars && wget "${URL_RELTGZ}" -O tg-focus-3.0-linux.tar.gz && \
         tar xvf tg-focus-3.0-linux.tar.gz --strip-components=1 -C /opt/tg-focus
 
 FROM debian:12-slim
-
 
 RUN apt-get update && \
     apt-get install -y locales && \
