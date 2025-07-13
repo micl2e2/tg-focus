@@ -1,4 +1,4 @@
-2025-06-28  Michael Lee  <micl2e2@proton.me>
+2025-00-00  Michael Lee  <mail@micl2e2.com>
 
 	* RELEASE: 3.1
 
@@ -6,6 +6,7 @@
 
 	- Lastest TDLib 1.8.50
 	- Filtering strategy changed to reject-first (single filter)
+	- Add multi-arch OCI images building scripts
 	- Other minor improvements
 
 2025-04-26  Michael Lee  <micl2e2@proton.me>
