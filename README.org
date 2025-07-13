@@ -117,7 +117,7 @@ specific messages.
 :CUSTOM_ID: usingbinaries
 :END:
 
-The following 6 steps will help you start up tg-focus and filter some
+The following 6 steps will help you run tg-focus and filter some
 specific messages.
 
 1. Download the binaries at GitHub releases [[https://github.com/micl2e2/tg-focus/releases][page]].

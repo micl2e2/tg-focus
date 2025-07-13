@@ -160,7 +160,7 @@ Using Docker/Podman
 Using Binaries
 ──────────────
 
-  The following 6 steps will help you start up tg-focus and filter some
+  The following 6 steps will help you run tg-focus and filter some
   specific messages.
 
   1. Download the binaries at GitHub releases [page].

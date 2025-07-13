@@ -1,17 +1,17 @@
 
 # Table of Contents
 
--   [TG-Focus💡](#orgd76ac24)
--   [Quickstart](#org8ac2d84)
--   [TGFCMD Examples](#org384ee50)
--   [Filters Rules](#orga18b21e)
--   [Contributing](#orgae676da)
--   [FAQ](#org800a4d5)
--   [License](#orgc7809de)
+-   [TG-Focus💡](#org1dfb543)
+-   [Quickstart](#orgb72c48b)
+-   [TGFCMD Examples](#orgac31100)
+-   [Filters Rules](#org0a24161)
+-   [Contributing](#org88b1558)
+-   [FAQ](#org633d011)
+-   [License](#org8a57fb7)
 
 
 
-<a id="orgd76ac24"></a>
+<a id="org1dfb543"></a>
 
 # TG-Focus💡
 
@@ -111,7 +111,7 @@ machine: With **~500K** messages being filtered, it occupied **<1%** of
 CPU and **<40%** of memory (TDLib included).  
 
 
-<a id="org8ac2d84"></a>
+<a id="orgb72c48b"></a>
 
 # Quickstart
 
@@ -179,7 +179,7 @@ specific messages.
 
 ## Using Binaries
 
-The following 6 steps will help you start up tg-focus and filter some
+The following 6 steps will help you run tg-focus and filter some
 specific messages.
 
 1.  Download the binaries at GitHub releases [page](https://github.com/micl2e2/tg-focus/releases).
@@ -253,7 +253,7 @@ strongly interested in:
 <img src="docs/imgtuto/tuto7.png" width="550px"/><br/>
 
 
-<a id="org384ee50"></a>
+<a id="orgac31100"></a>
 
 # TGFCMD Examples
 
@@ -297,7 +297,7 @@ Resume forwarding:
     TGFCMD resume
 
 
-<a id="orga18b21e"></a>
+<a id="org0a24161"></a>
 
 # Filters Rules
 
@@ -350,7 +350,7 @@ filter will not be tried, and the message will be discarded.
 the last three rules as *blacklist*)
 
 
-<a id="orgae676da"></a>
+<a id="org88b1558"></a>
 
 # Contributing
 
@@ -408,7 +408,7 @@ Building:
     build.
 
 
-<a id="org800a4d5"></a>
+<a id="org633d011"></a>
 
 # FAQ
 
@@ -440,7 +440,7 @@ by **not** any individual, but **Github-hosted** machines.
 Check [github actions](https://github.com/micl2e2/tg-focus/actions) for more details.
 
 
-<a id="orgc7809de"></a>
+<a id="org8a57fb7"></a>
 
 # License
 
