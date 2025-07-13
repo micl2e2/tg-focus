@@ -1,17 +1,17 @@
 
 # Table of Contents
 
--   [TG-Focus💡](#org68a27ff)
--   [Quickstart](#orgf04bdef)
--   [TGFCMD Examples](#org7e40289)
--   [Filters Rules](#orgf6c7c18)
--   [Contributing](#orgb0ecaf2)
--   [FAQ](#orgff0e544)
--   [License](#orgddc2c54)
+-   [TG-Focus💡](#org9051890)
+-   [Quickstart](#org2ec0c7f)
+-   [TGFCMD Examples](#orgbececa8)
+-   [Filters Rules](#orgd35a85d)
+-   [Contributing](#org2485130)
+-   [FAQ](#orge741ceb)
+-   [License](#orga266580)
 
 
 
-<a id="org68a27ff"></a>
+<a id="org9051890"></a>
 
 # TG-Focus💡
 
@@ -23,8 +23,7 @@ tg-focus is a reliable <b>T</b>ele<b>g</b>ram message filter/forwarder that help
 you **focus**. A gentle user bot for message forwarding. Most of message
 types are supported: public/private chats, channel updates, and more.
 
-With [TGFCMD](#org6d80e7c), you have full control of the
-messages you'd see in a dedicated chat **TG-FOCUS**.
+With [TGFCMD](#usingtgfcmd), you have full control of the messages you'd see in a dedicated chat **TG-FOCUS**.
 
 Being built on top of [TDLib](https://core.telegram.org/tdlib/) directly, tg-focus is inherently as
 consistent, reliable and stable as TDLib itself for most
@@ -59,14 +58,14 @@ The supported platforms are:
 
 
 <tr>
-<td class="org-left">Windows WSL</td>
+<td class="org-left">Windows <a href="https://learn.microsoft.com/en-us/windows/wsl/install">WSL</a></td>
 <td class="org-left">✅</td>
 <td class="org-left">✅</td>
 </tr>
 
 
 <tr>
-<td class="org-left">macOS Containerization</td>
+<td class="org-left">macOS <a href="https://github.com/apple/container?tab=readme-ov-file#get-started">Containerization</a></td>
 <td class="org-left">🔨</td>
 <td class="org-left">🔨</td>
 </tr>
@@ -108,19 +107,21 @@ Supported(✅). Work In Progress(🔨).
 
 In case someone cares about the overhead, here is a rough overview: After **~2 months** of running
 on a **1C 1G** machine, with **~500K** messages being filtered, it would
-occupy **<1%** of CPU and **<400MB** of memory (TDLib included). 
+occupy **<1%** of CPU and **<40%** of memory (TDLib included). 
 
 
-<a id="orgf04bdef"></a>
+<a id="org2ec0c7f"></a>
 
 # Quickstart
 
-You can use [Docker/Podman](#org99ecab0), or [native binaries](#org4ba3afc) to setup tg-focus.
+You can use [Docker](#usingdocker) or [executable binaries](#usingbinaries) to get started.
 
+
+<a id="usingdocker"></a>
 
 ## Using Docker/Podman
 
-The following 5 steps will help you start up tg-focus and filter some
+The following 5 steps will help you run tg-focus and filter some
 specific messages.
 
 1.  Download the images:
@@ -170,8 +171,10 @@ specific messages.
     > with the command output attached.
 
 5.  Once the group shown up, you send a message `TGFCMD help` to get
-    started. The following image tutorials will show you more details.
+    started. Check [TGFCMD](#usingtgfcmd) for more details.
 
+
+<a id="usingbinaries"></a>
 
 ## Using Binaries
 
@@ -225,8 +228,10 @@ specific messages.
     > with the command output attached.
 
 6.  Once the group shown up, you send a message `TGFCMD help` to get
-    started. The following image tutorials will show you more details.
+    started. Check [TGFCMD](#usingtgfcmd) for more details.
 
+
+<a id="usingtgfcmd"></a>
 
 ## Using TGFCMD
 
@@ -247,7 +252,7 @@ strongly interested in:
 <img src="docs/imgtuto/tuto7.png" width="550px"/><br/>
 
 
-<a id="org7e40289"></a>
+<a id="orgbececa8"></a>
 
 # TGFCMD Examples
 
@@ -291,7 +296,7 @@ Resume forwarding:
     TGFCMD resume
 
 
-<a id="orgf6c7c18"></a>
+<a id="orgd35a85d"></a>
 
 # Filters Rules
 
@@ -344,7 +349,7 @@ filter will not be tried, and the message will be discarded.
 the last three rules as *blacklist*)
 
 
-<a id="orgb0ecaf2"></a>
+<a id="org2485130"></a>
 
 # Contributing
 
@@ -364,9 +369,7 @@ welcomed:
 This is a list of TODOs that are certainly to be finished in the near
 future, you can pick one then get started if you are interested in:
 
--   [ ] More TGFCMD examples in README
 -   [ ] Project Logo (also used as TG-FOCUS group avatar)
--   [ ] Docker/Podman OCI Images
 -   [ ] Forwarded message's Look
 -   [ ] Configuration in JSON Format
 -   [ ] Windows Port
@@ -404,7 +407,7 @@ Building:
     build.
 
 
-<a id="orgff0e544"></a>
+<a id="orge741ceb"></a>
 
 # FAQ
 
@@ -436,7 +439,7 @@ by **not** any individual, but **Github-hosted** machines.
 Check [github actions](https://github.com/micl2e2/tg-focus/actions) for more details.
 
 
-<a id="orgddc2c54"></a>
+<a id="orga266580"></a>
 
 # License
 

@@ -11,8 +11,7 @@ tg-focus is a reliable <b>T</b>ele<b>g</b>ram message filter/forwarder that help
 you *focus*. A gentle user bot for message forwarding. Most of message
 types are supported: public/private chats, channel updates, and more.
 
-With [[Using TGFCMD][TGFCMD]], you have full control of the
-messages you'd see in a dedicated chat *TG-FOCUS*.
+With [[#usingtgfcmd][TGFCMD]], you have full control of the messages you'd see in a dedicated chat *TG-FOCUS*.
 
 Being built on top of [[https://core.telegram.org/tdlib/][TDLib]] directly, tg-focus is inherently as
 consistent, reliable and stable as TDLib itself for most
@@ -23,8 +22,8 @@ The supported platforms are:
 | OS \ ARCH              | x86 64 | aarch64 |
 |------------------------+--------+---------|
 | Linux                  | ✅     | ✅      |
-| Windows WSL            | ✅     | ✅      |
-| macOS Containerization | 🔨     | 🔨      |
+| Windows [[https://learn.microsoft.com/en-us/windows/wsl/install][WSL]]            | ✅     | ✅      |
+| macOS [[https://github.com/apple/container?tab=readme-ov-file#get-started][Containerization]] | 🔨     | 🔨      |
 | Windows                | 🔨     | 🔨      |
 | BSD                    | 🔨     | 🔨      |
 | macOS                  | 🔨     | 🔨      |
@@ -36,15 +35,18 @@ Supported(✅). Work In Progress(🔨).
 
 In case someone cares about the overhead, here is a rough overview: After *~2 months* of running
 on a *1C 1G* machine, with *~500K* messages being filtered, it would
-occupy *<1%* of CPU and *<400MB* of memory (TDLib included). 
+occupy *<1%* of CPU and *<40%* of memory (TDLib included). 
 
 * Quickstart
 
-You can use [[Using Docker/Podman][Docker/Podman]], or [[Using Binaries][native binaries]] to setup tg-focus.
+You can use [[#usingdocker][Docker]] or [[#usingbinaries][executable binaries]] to get started.
 
 ** Using Docker/Podman
+:PROPERTIES:
+:CUSTOM_ID: usingdocker
+:END:
 
-The following 5 steps will help you start up tg-focus and filter some
+The following 5 steps will help you run tg-focus and filter some
 specific messages.
 
 1. Download the images:
@@ -106,10 +108,13 @@ specific messages.
    #+end_quote
 
 5. Once the group shown up, you send a message =TGFCMD help= to get
-   started. The following image tutorials will show you more details.
+   started. Check [[#usingtgfcmd][TGFCMD]] for more details.
 
 
 ** Using Binaries
+:PROPERTIES:
+:CUSTOM_ID: usingbinaries
+:END:
 
 The following 6 steps will help you start up tg-focus and filter some
 specific messages.
@@ -175,9 +180,12 @@ specific messages.
    #+end_quote
 
 6. Once the group shown up, you send a message =TGFCMD help= to get
-   started. The following image tutorials will show you more details.
+   started. Check [[#usingtgfcmd][TGFCMD]] for more details.
 
 ** Using TGFCMD
+:PROPERTIES:
+:CUSTOM_ID: usingtgfcmd
+:END:
 
    Say there is a Telegram user, called Bob. He owns
    a group. Every day, plenty of messages are sending out in that
@@ -320,9 +328,7 @@ welcomed:
 This is a list of TODOs that are certainly to be finished in the near
 future, you can pick one then get started if you are interested in:
 
-- [ ] More TGFCMD examples in README
 - [ ] Project Logo (also used as TG-FOCUS group avatar)
-- [ ] Docker/Podman OCI Images
 - [ ] Forwarded message's Look
 - [ ] Configuration in JSON Format
 - [ ] Windows Port
@@ -330,7 +336,6 @@ future, you can pick one then get started if you are interested in:
 - [ ] macOS Port
 - [ ] More C++20/23/26 features
 - [ ] More different build systems
-
 
 
 ** Development

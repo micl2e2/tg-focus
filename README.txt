@@ -46,17 +46,17 @@ TG-Focus💡
 
   The supported platforms are:
 
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   OS \ ARCH               x86 64  aarch64 
-  ─────────────────────────────────────────
-   Linux                   ✅      ✅      
-   Windows WSL             ✅      ✅      
-   macOS Containerization  🔨      🔨      
-   Windows                 🔨      🔨      
-   BSD                     🔨      🔨      
-   macOS                   🔨      🔨      
-                                         
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   OS \ ARCH                 x86 64  aarch64 
+  ───────────────────────────────────────────
+   Linux                     ✅      ✅      
+   Windows [WSL]             ✅      ✅      
+   macOS [Containerization]  🔨      🔨      
+   Windows                   🔨      🔨      
+   BSD                       🔨      🔨      
+   macOS                     🔨      🔨      
+                                           
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Supported(✅). Work In Progress(🔨).
 
@@ -65,40 +65,47 @@ TG-Focus💡
 
 [TDLib] <https://core.telegram.org/tdlib/>
 
+[WSL] <https://learn.microsoft.com/en-us/windows/wsl/install>
+
+[Containerization]
+<https://github.com/apple/container?tab=readme-ov-file#get-started>
+
 Overhead
 ────────
 
   In case someone cares about the overhead, here is a rough overview:
   After *~2 months* of running on a *1C 1G* machine, with *~500K*
-  messages being filtered, it would occupy *<1%* of CPU and *<400MB* of
+  messages being filtered, it would occupy *<1%* of CPU and *<40%* of
   memory (TDLib included).
 
 
 Quickstart
 ══════════
 
-  tg-focus can be deployed through [Docker/Podman], or [native
-  binaries].
+  You can use [Docker] or [executable binaries] to get started.
 
 
-[Docker/Podman] See section Use Docker/Podman
+[Docker] See section Using Docker/Podman
 
-[native binaries] See section Use Binaries
+[executable binaries] See section Using Binaries
 
-Use Docker/Podman
-─────────────────
+Using Docker/Podman
+───────────────────
 
-  The following 6 steps will help you start up tg-focus and filter some
+  The following 5 steps will help you run tg-focus and filter some
   specific messages.
 
   1. Download the images:
 
      ┌────
      │ docker pull micl2e2/tg-focus
-     │ # or
+     └────
+     or
+     ┌────
+     │ # if you use Podman rather than Docker
      │ podman pull docker.io/micl2e2/tg-focus
      │ 
-     │ # (Optional) If you have trouble reaching Docker Hub, try GitHub Package:
+     │ # If you have trouble in reaching Docker Hub, try GitHub Package:
      │ docker pull ghcr.io/micl2e2/tg-focus
      │ # or
      │ podman pull ghcr.io/micl2e2/tg-focus
@@ -144,11 +151,14 @@ Use Docker/Podman
            attached.
 
   5. Once the group shown up, you send a message `TGFCMD help' to get
-     started. The following image tutorials will show you more details.
+     started. Check [TGFCMD] for more details.
 
 
-Use Binaries
-────────────
+[TGFCMD] See section Using TGFCMD
+
+
+Using Binaries
+──────────────
 
   The following 6 steps will help you start up tg-focus and filter some
   specific messages.
@@ -208,10 +218,12 @@ Use Binaries
            attached.
 
   6. Once the group shown up, you send a message `TGFCMD help' to get
-     started. The following image tutorials will show you more details.
+     started. Check [TGFCMD] for more details.
 
 
 [page] <https://github.com/micl2e2/tg-focus/releases>
+
+[TGFCMD] See section Using TGFCMD
 
 
 Using TGFCMD
@@ -364,9 +376,7 @@ ToDo list
   This is a list of TODOs that are certainly to be finished in the near
   future, you can pick one then get started if you are interested in:
 
-  • ☐ More TGFCMD examples in README
   • ☐ Project Logo (also used as TG-FOCUS group avatar)
-  • ☐ Docker/Podman OCI Images
   • ☐ Forwarded message's Look
   • ☐ Configuration in JSON Format
   • ☐ Windows Port
