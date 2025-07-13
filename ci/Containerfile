@@ -11,8 +11,11 @@ RUN apt-get update && \
     apt-get install -y wget tar && \
     rm -rf /var/lib/apt/lists/*
 
-RUN test $TARGETPLATFORM == "linux/amd64" && URL_RELTGZ=$URL_RELTGZ_AMD64
-RUN test $TARGETPLATFORM == "linux/arm64" && URL_RELTGZ=$URL_RELTGZ_ARM64
+RUN case ${TARGETPLATFORM} in \
+    "linux/amd64") URL_RELTGZ=${URL_RELTGZ_AMD64} ;; \
+    "linux/arm64") URL_RELTGZ=${URL_RELTGZ_ARM64} ;; \
+    *) echo "Unsupported platform: ${TARGETPLATFORM}" && exit 1 ;; \
+    esac
 
 RUN wget "${URL_RELTGZ}" -O tg-focus-3.0-linux.tar.gz && \
         tar xvf tg-focus-3.0-linux.tar.gz --strip-components=1 -C /opt/tg-focus
