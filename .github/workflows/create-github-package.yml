@@ -72,12 +72,18 @@ jobs:
             echo "tag=${{ github.event.inputs.tag }}" >> $GITHUB_ENV
           fi
 
-      - name: Login to GitHub Container Registry
+      #- name: Login to GitHub Container Registry
+      #  uses: docker/login-action@v2
+      #  with:
+      #    registry: ghcr.io
+      #    username: ${{ github.repository_owner }}
+      #    password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: login-dockerhub
         uses: docker/login-action@v2
         with:
-          registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.DOCKERHUB_READ_WRITE }}
 
       - name: build-and-push
         uses: docker/build-push-action@v6
@@ -86,7 +92,7 @@ jobs:
           file: ./ci/Containerfile
           platforms: ${{ matrix.platform }}
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/tg-focus:${{ env.tag }}
+          tags: ${{ github.repository_owner }}/tg-focus:${{ env.tag }}
           build-args: |
             ARTIFACTS_URL=${{ env.url_tgz }}
             TAG=${{ env.tag }}
