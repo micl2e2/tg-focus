@@ -1,35 +1,34 @@
 
 # Table of Contents
 
--   [TG-Focus💡](#org2571103)
--   [Quickstart](#org97fa65a)
--   [TGFCMD Examples](#org943ea70)
--   [Filters Rules](#org58a0de6)
--   [Contributing](#orgd19e839)
--   [FAQ](#org989312f)
--   [License](#orgd20f2d5)
+-   [TG-Focus💡](#org86536c0)
+-   [Quickstart](#org77d1682)
+-   [TGFCMD Examples](#org09bc2e7)
+-   [Filters Rules](#org0abaa0b)
+-   [Contributing](#orgee11054)
+-   [FAQ](#org980f4d5)
+-   [License](#org1418e83)
 
 
 
-<a id="org2571103"></a>
+<a id="org86536c0"></a>
 
 # TG-Focus💡
 
-<a href="<https://github.com/micl2e2/tg-focus/blob/master/LICENSE-GPL>">![GitHub License](<https://img.shields.io/github/license/micl2e2/tg-focus?logo=gnu&color=blue&link=https%3A%2F%2Fgithub.com%2Fmicl2e2%2Ftg-focus%2Fblob%2Fmaster%2FLICENSE-GPL>)</a>
-<a href="<https://core.telegram.org/tdlib>">![Static Badge](<https://img.shields.io/badge/tdlib-1.8.50-%2332a9de>)</a>
-<a href="<https://github.com/tdlib/td>">![GitHub commits difference between two branches/tags/commits](<https://img.shields.io/github/commits-difference/tdlib/td?base=0857d7e909418c3c3b51a38abe3336b9f32c41fd&head=master&logo=gitextensions&label=pending&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd>)</a>
+<a href="<https://github.com/micl2e2/tg-focus/blob/master/LICENSE-GPL>">\![GitHub License](<https://img.shields.io/github/license/micl2e2/tg-focus?logo=gnu&color=blue&link=https%3A%2F%2Fgithub.com%2Fmicl2e2%2Ftg-focus%2Fblob%2Fmaster%2FLICENSE-GPL>)</a>
+<a href="<https://core.telegram.org/tdlib>">\![Static Badge](<https://img.shields.io/badge/tdlib-1.8.50-%2332a9de>)</a>
+<a href="<https://github.com/tdlib/td>">\![GitHub commits difference between two branches/tags/commits](<https://img.shields.io/github/commits-difference/tdlib/td?base=0857d7e909418c3c3b51a38abe3336b9f32c41fd&head=master&logo=gitextensions&label=pending&color=lightblue&link=https%3A%2F%2Fgithub.com%2Ftdlib%2Ftd>)</a>
 
 tg-focus is a reliable <b>T</b>ele<b>g</b>ram message filter/forwarder that helps
 you **focus**. A gentle user bot for message forwarding. Most of message
 types are supported: public/private chats, channel updates, and more.
 
-By customizing *filters* through [TGFCMD](#org9e29a65), tg-focus can forward any specific
-message from any chat to a dedicated chat, **TG-FOCUS**, that way
-you have full control of the messages you see.
+With [TGFCMD](#org9d88183), you have full control of the
+messages you'd see in a dedicated chat **TG-FOCUS**.
 
-tg-focus is built on top of [TDLib](https://core.telegram.org/tdlib/) directly, in which way tg-focus is
-inherently as consistent, reliable and stable as TDLib itself for most
-Telegram-specific features.
+Being built on top of [TDLib](https://core.telegram.org/tdlib/) directly, tg-focus is inherently as
+consistent, reliable and stable as TDLib itself for most
+Telegram-specific features. 
 
 The supported platforms are:
 
@@ -45,7 +44,7 @@ The supported platforms are:
 </colgroup>
 <thead>
 <tr>
-<th scope="col" class="org-left">OS \\ ARCH</th>
+<th scope="col" class="org-left">OS \ ARCH</th>
 <th scope="col" class="org-left">x86 64</th>
 <th scope="col" class="org-left">aarch64</th>
 </tr>
@@ -63,6 +62,13 @@ The supported platforms are:
 <td class="org-left">Windows WSL</td>
 <td class="org-left">✅</td>
 <td class="org-left">✅</td>
+</tr>
+
+
+<tr>
+<td class="org-left">macOS Containerization</td>
+<td class="org-left">🔨</td>
+<td class="org-left">🔨</td>
 </tr>
 
 
@@ -100,31 +106,71 @@ Supported(✅). Work In Progress(🔨).
 
 ## Overhead
 
-In case someone cares about the overhead of tg-focus, below is an
-overview captured after 2 months of running on a 1C 1G machine. After
-filtering ~500K messages, it occupies less than 1% of CPU and less
-than 400MB of memory.
-
-    $ top
-    %CPU  %MEM     TIME+     COMMAND
-     0.3   38.1    45:52.73  tgfocus
-    
-    $ ps -C tgfocus -o etime
-        ELAPSED
-    67-07:04:41
-    
-    $ ./tgfocus status
-           Logged in : YES
-           Collector : UP
-        Focus Paused : NO
-     Forwarded/Total : 3892/526705
-    	 Pending : 0
-         Host Locale : en-US
+In case someone cares about the overhead, here is a rough overview: After **~2 months** of running
+on a **1C 1G** machine, with **~500K** messages being filtered, it would
+occupy **<1%** of CPU and **<400MB** of memory (TDLib included). 
 
 
-<a id="org97fa65a"></a>
+<a id="org77d1682"></a>
 
 # Quickstart
+
+tg-focus can be deployed through [Docker/Podman](#orge88f0d1), or [native binaries](#orga5fe029).
+
+
+## Use Docker/Podman
+
+The following 6 steps will help you start up tg-focus and filter some
+specific messages.
+
+1.  Download the images:
+    
+        docker pull micl2e2/tg-focus
+        # or
+        podman pull docker.io/micl2e2/tg-focus
+        
+        # (Optional) If you have trouble reaching Docker Hub, try GitHub Package:
+        docker pull ghcr.io/micl2e2/tg-focus
+        # or
+        podman pull ghcr.io/micl2e2/tg-focus
+
+2.  Run tg-focus:
+    
+        docker run -d --name tgfocus micl2e2/tg-focus
+
+3.  Log in your Telegram account:
+    
+        docker exec -i tgfocus auth
+        
+        # Enter phone number: +1 23 4567
+        # Enter login code: xxxxxx
+    
+    *note: phone number in international format `+1 23 4567` if your
+    number is `23 4567` with region code `+1` (spaces are allowed).*
+    
+    If everthing works fine, you should see:
+    
+    > Logged in!
+    
+    You can check more details about tg-focus by `docker exec -i tgfocus status`.
+
+4.  Go back to your Telgram application, wait for the TG-FOCUS
+    group showing up. *(usually takes up 1~2 mins, depends on your
+    network connection)* 
+    
+    > If TG-FOCUS group doesn't appear, send a message "tg-focus" in a
+    > random group(e.g. Saved Messages). *This is because by default, only
+    > messages contain "tg-focus" will be filtered and forwarded.*
+    
+    > If TG-FOCUS group doesn't appear after a long wait(e.g. 10 mins),
+    > run a command `./tgfocus status`, report and open a GitHub issue
+    > with the command output attached.
+
+5.  Once the group shown up, you send a message `TGFCMD help` to get
+    started. The following image tutorials will show you more details.
+
+
+## Use Binaries
 
 The following 6 steps will help you start up tg-focus and filter some
 specific messages.
@@ -179,8 +225,6 @@ specific messages.
     started. The following image tutorials will show you more details.
 
 
-<a id="org9e29a65"></a>
-
 ## Using TGFCMD
 
 Say there is a Telegram user, called Bob. He owns
@@ -200,7 +244,7 @@ strongly interested in:
 <img src="docs/imgtuto/tuto7.png" width="550px"/><br/>
 
 
-<a id="org943ea70"></a>
+<a id="org09bc2e7"></a>
 
 # TGFCMD Examples
 
@@ -244,7 +288,7 @@ Resume forwarding:
     TGFCMD resume
 
 
-<a id="org58a0de6"></a>
+<a id="org0abaa0b"></a>
 
 # Filters Rules
 
@@ -297,7 +341,7 @@ filter will not be tried, and the message will be discarded.
 the last three rules as *blacklist*)
 
 
-<a id="orgd19e839"></a>
+<a id="orgee11054"></a>
 
 # Contributing
 
@@ -357,7 +401,7 @@ Building:
     build.
 
 
-<a id="org989312f"></a>
+<a id="org980f4d5"></a>
 
 # FAQ
 
@@ -389,7 +433,7 @@ by **not** any individual, but **Github-hosted** machines.
 Check [github actions](https://github.com/micl2e2/tg-focus/actions) for more details.
 
 
-<a id="orgd20f2d5"></a>
+<a id="org1418e83"></a>
 
 # License
 
