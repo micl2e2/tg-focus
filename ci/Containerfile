@@ -20,7 +20,7 @@ RUN apt-get update && \
     apt-get install -y wget tar && \
     rm -rf /var/lib/apt/lists/*
 
-RUN source /tmp/vars && wget "${URL_RELTGZ}" -O tg-focus-3.0-linux.tar.gz && \
+RUN . /tmp/vars && wget "${URL_RELTGZ}" -O tg-focus-3.0-linux.tar.gz && \
         tar xvf tg-focus-3.0-linux.tar.gz --strip-components=1 -C /opt/tg-focus
 
 FROM debian:12-slim
