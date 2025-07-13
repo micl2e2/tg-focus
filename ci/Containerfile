@@ -1,6 +1,7 @@
 FROM debian:12 AS builder
 
-ARG ARTIFACTS_URL
+ARG URL_RELTGZ_AMD64
+ARG URL_RELTGZ_ARM64
 
 RUN mkdir /opt/playground
 RUN mkdir /opt/tg-focus
@@ -10,9 +11,11 @@ RUN apt-get update && \
     apt-get install -y wget tar && \
     rm -rf /var/lib/apt/lists/*
 
-RUN wget "${ARTIFACTS_URL}" -O tg-focus-3.0-linux.tar.gz && \
-        tar xvf tg-focus-3.0-linux.tar.gz --strip-components=1 -C /opt/tg-focus
+RUN [[ $TARGETPLATFORM == "linux/amd64" ]] && URL_RELTGZ=$URL_RELTGZ_AMD64
+RUN [[ $TARGETPLATFORM == "linux/arm64" ]] && URL_RELTGZ=$URL_RELTGZ_ARM64
 
+RUN wget "${URL_RELTGZ}" -O tg-focus-3.0-linux.tar.gz && \
+        tar xvf tg-focus-3.0-linux.tar.gz --strip-components=1 -C /opt/tg-focus
 
 FROM debian:12-slim
 
