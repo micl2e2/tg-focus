@@ -20,20 +20,12 @@ on:
 
 jobs:
   job1:
-    runs-on: ${{ matrix.runner }}
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       packages: write
       attestations: read
       id-token: write
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - platform: linux/amd64
-            runner: ubuntu-24.04
-          - platform: linux/arm64
-            runner: ubuntu-24.04-arm
     steps:
       - name: Workflow info
         run: |
@@ -50,49 +42,42 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: determine tgz url
-        run: |
-          if [[ "${{ matrix.platform }}" == linux/amd64 ]]
-          then
-            echo "url_tgz=${{ github.event.inputs.url_tgz_amd64 }}" >> $GITHUB_ENV
-          fi
-          if [[ "${{ matrix.platform }}" == linux/arm64 ]]
-          then
-            echo "url_tgz=${{ github.event.inputs.url_tgz_arm64 }}" >> $GITHUB_ENV
-          fi
-
       - name: determine-image-tag
         id: tag
         run: |
           if [ -z "${{ github.event.inputs.tag }}" ]; then
             echo "No custom tag provided, using commit SHA."
-            echo "tag=${{ github.sha }}-${{ matrix.platform }}" >> $GITHUB_ENV
+            echo "tag=${{ github.sha }}" >> $GITHUB_ENV
           else
             echo "Using custom tag: ${{ github.event.inputs.tag }}"
             echo "tag=${{ github.event.inputs.tag }}" >> $GITHUB_ENV
           fi
 
-      #- name: Login to GitHub Container Registry
-      #  uses: docker/login-action@v2
-      #  with:
-      #    registry: ghcr.io
-      #    username: ${{ github.repository_owner }}
-      #    password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: login-dockerhub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.DOCKERHUB_READ_WRITE }}
+
+      - name: login-ghcr
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: build-and-push
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./ci/Containerfile
-          platforms: ${{ matrix.platform }}
+          platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ github.repository_owner }}/tg-focus:${{ env.tag }}
+          tags: |
+            docker.io/${{ github.repository_owner }}/tg-focus:${{ env.tag }}
+            ghcr.io/${{ github.repository_owner }}/tg-focus:${{ env.tag }}
           build-args: |
-            ARTIFACTS_URL=${{ env.url_tgz }}
+            URL_RELTGZ_AMD64=${{ github.event.inputs.url_tgz_amd64 }}
+            URL_RELTGZ_ARM64=${{ github.event.inputs.url_tgz_arm64 }}
             TAG=${{ env.tag }}
+
