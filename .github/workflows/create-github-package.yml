@@ -49,14 +49,14 @@ jobs:
 
       - name: determine tgz url
         run: |
-	  if [[ "${{ matrix.platform }}" == linux/amd64 ]]
-	  then
-	    echo "url_tgz=${{ github.event.inputs.url_tgz_amd64 }}" >> $GITHUB_ENV
-	  fi
-	  if [[ "${{ matrix.platform }}" == linux/arm64 ]]
-	  then
-	    echo "url_tgz=${{ github.event.inputs.url_tgz_arm64 }}" >> $GITHUB_ENV
-	  fi
+          if [[ "${{ matrix.platform }}" == linux/amd64 ]]
+          then
+            echo "url_tgz=${{ github.event.inputs.url_tgz_amd64 }}" >> $GITHUB_ENV
+          fi
+          if [[ "${{ matrix.platform }}" == linux/arm64 ]]
+          then
+            echo "url_tgz=${{ github.event.inputs.url_tgz_arm64 }}" >> $GITHUB_ENV
+          fi
 
       - name: determine image tag
         id: tag
