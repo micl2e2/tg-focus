@@ -16,7 +16,7 @@ endif()
 if(IS_LINUX)
   set(ZLIB_USE_STATIC_LIBS ON)
   if(IS_CENT9)
-    set(OPENSSL_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/3rd/openssl/build)
+    set(OPENSSL_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/ci/openssl/build)
     set(OPENSSL_INCLUDE_DIR ${OPENSSL_INSTALL_PREFIX}/include/openssl)
     set(OPENSSL_CRYPTO_LIBRARY ${OPENSSL_INSTALL_PREFIX}/lib64/libcrypto.a)
     set(OPENSSL_SSL_LIBRARY ${OPENSSL_INSTALL_PREFIX}/lib64/libssl.a)
@@ -28,7 +28,7 @@ if (DEFINED ENV{WITH_SANITIZERS})
   link_libraries(asan ubsan)
 endif()
 
-add_subdirectory(3rd/tdlib)
+add_subdirectory(ci/tdlib)
 
 # # # # # # # # # # TGF # # # # # # # # # #
 
@@ -69,7 +69,7 @@ add_executable(tgfocus
 
 target_include_directories(tgfocus
   PRIVATE ${PROJECT_SOURCE_DIR}/src
-  PRIVATE ${PROJECT_SOURCE_DIR}/3rd/toml11)
+  PRIVATE ${PROJECT_SOURCE_DIR}/ci/toml11)
 
 target_link_libraries(tgfocus
   PRIVATE Td::TdStatic)

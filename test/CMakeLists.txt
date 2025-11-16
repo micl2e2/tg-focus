@@ -39,7 +39,7 @@ add_executable(${CurrTestName} t_${CurrTestName}.cc
    ${PROJECT_SOURCE_DIR}/src/locale_conf.cc)
 target_include_directories(${CurrTestName} PRIVATE
   ${PROJECT_SOURCE_DIR}/src
-  ${PROJECT_SOURCE_DIR}/3rd/toml11)
+  ${PROJECT_SOURCE_DIR}/ci/toml11)
 target_link_libraries(
   ${CurrTestName}
   PRIVATE -static-libgcc -static-libstdc++)
@@ -101,7 +101,7 @@ add_executable(${CurrTestName} t_${CurrTestName}.cc
   ${PROJECT_SOURCE_DIR}/src/utfutils.cc)
 target_include_directories(${CurrTestName} PRIVATE
   ${PROJECT_SOURCE_DIR}/src
-  ${PROJECT_SOURCE_DIR}/3rd/toml11)
+  ${PROJECT_SOURCE_DIR}/ci/toml11)
 target_link_libraries(
   ${CurrTestName}
   PRIVATE -static-libgcc -static-libstdc++ Td::TdStatic)
