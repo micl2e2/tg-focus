@@ -1,21 +1,11 @@
 *~
 *#
 *.#
-
-*.session
-
-Cargo.lock
 *target*
 *tmp*
-build
+*build*
+*.tgz
 
-3rd/*
-!3rd/*.bash
-
-.cache
-
-tdlib-*.json
-tdlib-*.tar
-
-.idea
-cmake-build-debug
+ci/openssl
+ci/tdlib
+ci/toml11
