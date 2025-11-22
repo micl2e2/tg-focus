@@ -4,19 +4,25 @@
 
 IS_FEDORA=$(grep 'Fedora Linux' /etc/os-release --quiet && printf true || printf false)
 IS_CENTOS=$(grep 'CentOS Stream' /etc/os-release --quiet && printf true || printf false)
+IS_DEBIAN=$(grep 'Debian GNU/Linux' /etc/os-release --quiet && printf true || printf false)
 
 if [[ $IS_FEDORA = true ]]
 then
-    sudo dnf install -y --quiet gperf zlib-devel g++ libstdc++-static cmake make git
+    sudo dnf install -y --quiet gperf zlib-devel g++ libstdc++-static cmake
 fi
 
 if [[ $IS_CENTOS = true ]]
 then
     sudo dnf config-manager --set-enabled crb && \
 	sudo dnf install -y --quiet epel-release epel-next-release && \
-	sudo dnf install -y --quiet gperf zlib-devel g++ libstdc++-static cmake make git
+	sudo dnf install -y --quiet gperf zlib-devel g++ libstdc++-static cmake
 fi
 
+if [[ $IS_DEBIAN = true ]]
+then
+    sudo apt update && \
+	sudo apt install -y --quiet zlib1g-dev gperf cmake g++
+fi
 
 # GIT TDLIB
 
