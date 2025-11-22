@@ -6,11 +6,6 @@ IS_FEDORA=$(grep 'Fedora Linux' /etc/os-release --quiet && printf true || printf
 IS_CENTOS=$(grep 'CentOS Stream' /etc/os-release --quiet && printf true || printf false)
 IS_DEBIAN=$(grep 'Debian GNU/Linux' /etc/os-release --quiet && printf true || printf false)
 
-if [[ $IS_FEDORA = true ]]
-then
-    sudo dnf install -y --quiet gperf zlib-devel g++ libstdc++-static cmake
-fi
-
 if [[ $IS_CENTOS = true ]]
 then
     sudo dnf config-manager --set-enabled crb && \
@@ -18,10 +13,15 @@ then
 	sudo dnf install -y --quiet gperf zlib-devel g++ libstdc++-static cmake
 fi
 
+if [[ $IS_FEDORA = true ]]
+then
+    sudo dnf install -y --quiet gperf zlib-devel g++ cmake openssl-devel
+fi
+
 if [[ $IS_DEBIAN = true ]]
 then
     sudo apt update && \
-	sudo apt install -y --quiet zlib1g-dev gperf cmake g++
+	sudo apt install -y --quiet zlib1g-dev gperf cmake g++ libssl-dev
 fi
 
 # GIT TDLIB
@@ -42,17 +42,20 @@ fi
 
 # TARBALL OPENSSL
 
-if [[ ! -f openssl/build/lib64/libssl.a || ! -f openssl/build/lib64/libcrypto.a ]]
+if [[ $IS_CENTOS = true ]]
 then
-    OPENSSL_URL_PFIX="https://github.com/openssl/openssl/releases/download"
-    OPENSSL_VER=$(cat ../dev/pick-ver-openssl)
-
-    if [[ ! -d openssl ]]
+    if [[ ! -f openssl/build/lib64/libssl.a || ! -f openssl/build/lib64/libcrypto.a ]]
     then
-	wget ${OPENSSL_URL_PFIX}/openssl-${OPENSSL_VER}/openssl-${OPENSSL_VER}.tar.gz -O openssl.tgz && \
-	    mkdir -p openssl && tar --extract -C openssl --strip-components=1 --file openssl.tgz || \
-		{ rm -f openssl.tgz && exit 1; }
-    fi
+	OPENSSL_URL_PFIX="https://github.com/openssl/openssl/releases/download"
+	OPENSSL_VER=$(cat ../dev/pick-ver-openssl)
 
-    cd openssl && ./Configure --prefix=$(pwd)/build && make install
+	if [[ ! -d openssl ]]
+	then
+	    wget ${OPENSSL_URL_PFIX}/openssl-${OPENSSL_VER}/openssl-${OPENSSL_VER}.tar.gz -O openssl.tgz && \
+		mkdir -p openssl && tar --extract -C openssl --strip-components=1 --file openssl.tgz || \
+		    { rm -f openssl.tgz && exit 1; }
+	fi
+
+	cd openssl && ./Configure --prefix=$(pwd)/build && make install
+    fi    
 fi
