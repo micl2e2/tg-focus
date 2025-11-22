@@ -1,12 +1,22 @@
-set -x
+# set -x
 
 # SYS
 
-sudo dnf config-manager --set-enabled crb
+IS_FEDORA=$(grep 'Fedora Linux' /etc/os-release --quiet && printf true || printf false)
+IS_CENTOS=$(grep 'CentOS Stream' /etc/os-release --quiet && printf true || printf false)
 
-sudo dnf install -y --quiet epel-release epel-next-release
+if [[ $IS_FEDORA = true ]]
+then
+    sudo dnf install -y --quiet gperf zlib-devel g++ libstdc++-static cmake make git
+fi
 
-sudo dnf install -y --quiet gperf zlib-devel g++ libstdc++-static cmake make git
+if [[ $IS_CENTOS = true ]]
+then
+    sudo dnf config-manager --set-enabled crb && \
+	sudo dnf install -y --quiet epel-release epel-next-release && \
+	sudo dnf install -y --quiet gperf zlib-devel g++ libstdc++-static cmake make git
+fi
+
 
 # GIT TDLIB
 
@@ -40,4 +50,3 @@ then
 
     cd openssl && ./Configure --prefix=$(pwd)/build && make install
 fi
-
