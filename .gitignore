@@ -5,6 +5,7 @@
 *tmp*
 *build*
 *.tgz
+.cache
 
 ci/openssl
 ci/tdlib
