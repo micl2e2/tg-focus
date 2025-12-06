@@ -132,8 +132,8 @@ handle_auth_reset ()
     return 1;
 
   // third
-  // FIXME: tgfid cleanup
-
+  tgfstat::userdata.set_tgfid (-1);
+ 
   cout << ("Reset successfully") << endl;
 
   return 0;
