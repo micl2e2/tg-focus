@@ -94,6 +94,7 @@ add_executable(${CurrTestName} t_${CurrTestName}.cc
   ${PROJECT_SOURCE_DIR}/src/stat.cc
   ${PROJECT_SOURCE_DIR}/src/user_data.cc
   ${PROJECT_SOURCE_DIR}/src/tg_msg.cc
+  ${PROJECT_SOURCE_DIR}/src/td_comp.cc
   ${PROJECT_SOURCE_DIR}/src/td_coll.cc
   ${PROJECT_SOURCE_DIR}/src/ipc_msg_queue.cc
   ${PROJECT_SOURCE_DIR}/src/locale_conf.cc

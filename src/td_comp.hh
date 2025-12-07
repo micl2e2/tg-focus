@@ -23,4 +23,8 @@ tapi_movas (td::tl_object_ptr<FromT> &from)
   return td::move_tl_object_as<ToT> (from);
 }
 
+template <class T>
+std::string
+tapi_stringify (T &);
+
 #endif

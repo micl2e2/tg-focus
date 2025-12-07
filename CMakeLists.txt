@@ -58,6 +58,7 @@ add_executable(tgfocus
   ${PROJECT_SOURCE_DIR}/src/ipc_server.cc
   ${PROJECT_SOURCE_DIR}/src/ipc_client.cc
   ${PROJECT_SOURCE_DIR}/src/tg_msg.cc
+  ${PROJECT_SOURCE_DIR}/src/td_comp.cc
   ${PROJECT_SOURCE_DIR}/src/td_auth.cc
   ${PROJECT_SOURCE_DIR}/src/td_coll.cc
   ${PROJECT_SOURCE_DIR}/src/user_data.cc
