@@ -27,11 +27,11 @@
 void
 TdCollector::init ()
 {
-  TdClient::execute (td_mkobj<TdSetLogLevel> (1));
-  __client = make_unique<TdClient> ();
+  td::ClientManager::execute (td_mkobj<tapi::setLogVerbosityLevel> (1));
+  __client = make_unique<td::ClientManager> ();
   __clientid = __client->create_client_id ();
-  send_query (td_mkobj<TdGetOpt> ("version"), {});
-  send_query (td_mkobj<TdSetOpt> ("use_storage_optimizer", td_mkobj<TdOptValBool> (true)), {});
+  send_query (td_mkobj<tapi::getOption> ("version"), {});
+  send_query (td_mkobj<tapi::setOption> ("use_storage_optimizer", td_mkobj<tapi::optionValueBoolean> (true)), {});
 }
 
 void
@@ -43,18 +43,18 @@ TdCollector::try_create_tgfchat () // FIXME: is try
 
       if (tgfstat::userdata.is_super_tgfid ())
 	{
-	  send_query (td_mkobj<TdCreatSuperChat> (TF_COLL_CHAT_TITLE, false, false, "TG-FOCUS helps you focus!",
+	  send_query (td_mkobj<tapi::createNewSupergroupChat> (TF_COLL_CHAT_TITLE, false, false, "TG-FOCUS helps you focus!",
 						  nullptr, 0, false),
-		      [this] (TdObjPtr object) {
-			if (object->get_id () == TdChat::ID)
+		      [this] (tapi::object_ptr<tapi::Object> object) {
+			if (object->get_id () == tapi::chat::ID)
 			  {
-			    auto chat = tl_movas<TdChat> (object);
+			    auto chat = tl_movas<tapi::chat> (object);
 			    tgf::logfi_cg (1, "group created", " chat id:", chat->id_);
 			    tgfstat::userdata.set_tgfid (static_cast<int64_t> (chat->id_));
 			  }
-			else if (object->get_id () == TdErr::ID)
+			else if (object->get_id () == tapi::error::ID)
 			  {
-			    auto error = tl_movas<TdErr> (object);
+			    auto error = tl_movas<tapi::error> (object);
 			    tulogfe_cg (1, "error code:", error->code_, " error message:", error->message_);
 			  }
 			else
@@ -65,16 +65,16 @@ TdCollector::try_create_tgfchat () // FIXME: is try
 	}
       else
 	{
-	  send_query (td_mkobj<TdCreatBasicChat> (vector<TdInt> (0), TF_COLL_CHAT_TITLE, 0), [this] (TdObjPtr object) {
-	    if (object->get_id () == TdBasicChat::ID)
+	  send_query (td_mkobj<tapi::createNewBasicGroupChat> (vector<tapi::int53> (0), TF_COLL_CHAT_TITLE, 0), [this] (tapi::object_ptr<tapi::Object> object) {
+	    if (object->get_id () == tapi::createdBasicGroupChat::ID)
 	      {
-		auto chat = tl_movas<TdBasicChat> (object);
+		auto chat = tl_movas<tapi::createdBasicGroupChat> (object);
 		tgf::logfi_cg (1, "coll chat created", " chat id:", chat->chat_id_);
 		tgfstat::userdata.set_tgfid (static_cast<int64_t> (chat->chat_id_));
 	      }
-	    else if (object->get_id () == TdErr::ID)
+	    else if (object->get_id () == tapi::error::ID)
 	      {
-		auto error = tl_movas<TdErr> (object);
+		auto error = tl_movas<tapi::error> (object);
 		tulogfe_cg (1, "error code:", error->code_, " error message:", error->message_);
 	      }
 	    else
@@ -86,27 +86,27 @@ TdCollector::try_create_tgfchat () // FIXME: is try
     }
 }
 
-TdPtr<TdLinkPrevOpt>
+tapi::object_ptr<tapi::linkPreviewOptions>
 no_link_preview ()
 {
-  return td_mkobj<TdLinkPrevOpt> (true, ""s, false, false, false);
+  return td_mkobj<tapi::linkPreviewOptions> (true, ""s, false, false, false);
 }
 
-TdArray<TdPtr<TdTxtEnt>>
+tapi::array<tapi::object_ptr<tapi::textEntity>>
 decorate_msg (const string &msg)
 {
-  return TdArray<TdPtr<TdTxtEnt>>{};
+  return tapi::array<tapi::object_ptr<tapi::textEntity>>{};
 
   auto pos_info = tgf::get_decor_pos (msg);
 
   // only when very verbose
   tgf::logfd_cg (1, 66987, tgfstat::c::d::it_cnt_consumer.load (mo::relaxed), msg, tgf::decor_pos_to_str (pos_info));
 
-  TdArray<TdPtr<TdTxtEnt>> deco_list;
+  tapi::array<tapi::object_ptr<tapi::textEntity>> deco_list;
 
   for (auto pos : pos_info)
     {
-      deco_list.emplace_back (td_mkobj<TdTxtEnt> (get<0> (pos), get<1> (pos), td_mkobj<TdTxtEntBold> ()));
+      deco_list.emplace_back (td_mkobj<tapi::textEntity> (get<0> (pos), get<1> (pos), td_mkobj<tapi::textEntityTypeBold> ()));
     }
 
   return deco_list;
@@ -117,25 +117,25 @@ TdCollector::collect_msg (const tgf::TgMsg &msg)
 {
   string tfmsg_str = msg.to_locale_string ();
 
-  TdArray<TdPtr<TdTxtEnt>> text_deco_list = decorate_msg (tfmsg_str);
+  tapi::array<tapi::object_ptr<tapi::textEntity>> text_deco_list = decorate_msg (tfmsg_str);
 
-  TdPtr<TdFmtTxt> message_text = td_mkobj<TdFmtTxt> (tfmsg_str, move (text_deco_list));
+  tapi::object_ptr<tapi::formattedText> message_text = td_mkobj<tapi::formattedText> (tfmsg_str, move (text_deco_list));
 
-  TdPtr<TdFunc> send_message_request = td_mkobj<TdSendMsg> (
+  tapi::object_ptr<tapi::Function> send_message_request = td_mkobj<tapi::sendMessage> (
     // this->collector_id, //
     tgfstat::userdata.get_tgfid (), //
-    0, nullptr, nullptr, nullptr, td_mkobj<TdInMsgTxt> (move (message_text), no_link_preview (), true));
+    0, nullptr, nullptr, nullptr, td_mkobj<tapi::inputMessageText> (move (message_text), no_link_preview (), true));
 
-  send_query (move (send_message_request), [this, msg] (TdObjPtr object) {
-    if (object->get_id () == TdMsg::ID)
+  send_query (move (send_message_request), [this, msg] (tapi::object_ptr<tapi::Object> object) {
+    if (object->get_id () == tapi::message::ID)
       {
 	tgf::logfd_cg (1, 888333, tgfstat::c::d::it_cnt_consumer.load (mo::relaxed), msg.to_string ());
 
 	tgfstat::c::d::it_msg_coll.fetch_add (1, mo::relaxed);
       }
-    else if (object->get_id () == TdErr::ID)
+    else if (object->get_id () == tapi::error::ID)
       {
-	auto error = tl_movas<TdErr> (object);
+	auto error = tl_movas<tapi::error> (object);
 	tulogfe_cg (1, "msg not collected", " error code:", error->code_, " error message:", error->message_);
 	if (error->message_.find ("Have no write access to the chat") != string::npos
 	    || error->message_.find ("Chat not found") != string::npos)
@@ -164,7 +164,7 @@ TdCollector::fetch_updates ()
 // private
 
 void
-TdCollector::send_query (TdPtr<TdFunc> tdfn, function<void (TdObjPtr)> cbfn)
+TdCollector::send_query (tapi::object_ptr<tapi::Function> tdfn, function<void (tapi::object_ptr<tapi::Object>)> cbfn)
 {
   auto query_id = next_query_id ();
   if (cbfn)
@@ -176,7 +176,7 @@ TdCollector::send_query (TdPtr<TdFunc> tdfn, function<void (TdObjPtr)> cbfn)
 }
 
 void
-TdCollector::process_response (TdClient::Response response)
+TdCollector::process_response (td::ClientManager::Response response)
 {
   if (!response.object)
     return;
@@ -224,7 +224,7 @@ TdCollector::get_chat_title (int64_t chat_id) const
 }
 
 void
-extra_decoration_help (TdArray<TdPtr<TdTxtEnt>> &deco_list, string &msgtxt)
+extra_decoration_help (tapi::array<tapi::object_ptr<tapi::textEntity>> &deco_list, string &msgtxt)
 {
   vector<char16_t> seq = get_c16_seq (msgtxt);
   size_t msglen = seq.size ();
@@ -247,7 +247,7 @@ extra_decoration_help (TdArray<TdPtr<TdTxtEnt>> &deco_list, string &msgtxt)
 	  {
 	    ent_foldblk = true;
 	    lasti_foldblk = i;
-	    deco_list.emplace_back (td_mkobj<TdTxtEnt> (i, last_offset1 + 1, td_mkobj<TdTxtEntBold> ()));
+	    deco_list.emplace_back (td_mkobj<tapi::textEntity> (i, last_offset1 + 1, td_mkobj<tapi::textEntityTypeBold> ()));
 	  }
 
 	// more examples
@@ -260,7 +260,7 @@ extra_decoration_help (TdArray<TdPtr<TdTxtEnt>> &deco_list, string &msgtxt)
 	  {
 	    ent_foldblk = true;
 	    lasti_foldblk = i;
-	    deco_list.emplace_back (td_mkobj<TdTxtEnt> (i, last_offset2 + 1, td_mkobj<TdTxtEntBold> ()));
+	    deco_list.emplace_back (td_mkobj<tapi::textEntity> (i, last_offset2 + 1, td_mkobj<tapi::textEntityTypeBold> ()));
 	  }
 
 	// click to hide
@@ -271,8 +271,8 @@ extra_decoration_help (TdArray<TdPtr<TdTxtEnt>> &deco_list, string &msgtxt)
 	    && seq[i + 10] == 0x0048 && seq[i + 11] == 0x0049 && seq[i + 12] == 0x0044 && seq[i + 13] == 0x0045
 	    && seq[i + last_offset3] == 0x003e)
 	  {
-	    deco_list.emplace_back (td_mkobj<TdTxtEnt> (lasti_foldblk, (i + last_offset3) - lasti_foldblk + 1,
-							td_mkobj<TdTxtEntExpQuote> ()));
+	    deco_list.emplace_back (td_mkobj<tapi::textEntity> (lasti_foldblk, (i + last_offset3) - lasti_foldblk + 1,
+							td_mkobj<tapi::textEntityTypeExpandableBlockQuote> ()));
 	    ent_foldblk = false;
 	    lasti_foldblk = -1;
 	  }
@@ -282,7 +282,7 @@ extra_decoration_help (TdArray<TdPtr<TdTxtEnt>> &deco_list, string &msgtxt)
 	    if (ent_codeblk && lasti_codeblk > 0)
 	      {
 		deco_list.emplace_back (
-		  td_mkobj<TdTxtEnt> (lasti_codeblk, i - lasti_codeblk + 1, td_mkobj<TdTxtEntCode> ()));
+		  td_mkobj<tapi::textEntity> (lasti_codeblk, i - lasti_codeblk + 1, td_mkobj<tapi::textEntityTypeCode> ()));
 		lasti_codeblk = -1;
 	      }
 	    else
@@ -297,8 +297,8 @@ extra_decoration_help (TdArray<TdPtr<TdTxtEnt>> &deco_list, string &msgtxt)
 	    if (ent_urlblk && lasti_urlblk > 0)
 	      {
 		deco_list.emplace_back (
-		  td_mkobj<TdTxtEnt> (lasti_urlblk, i - lasti_urlblk + 1,
-				      td_mkobj<TdTxtEntTxtUrl> ("https://github.com/micl2e2/tg-focus"s)));
+		  td_mkobj<tapi::textEntity> (lasti_urlblk, i - lasti_urlblk + 1,
+				      td_mkobj<tapi::textEntityTypeTextUrl> ("https://github.com/micl2e2/tg-focus"s)));
 		lasti_urlblk = -1;
 	      }
 	    else
@@ -318,7 +318,7 @@ extra_decoration_help (TdArray<TdPtr<TdTxtEnt>> &deco_list, string &msgtxt)
 }
 
 void
-extra_decoration_filters (TdArray<TdPtr<TdTxtEnt>> &deco_list, const string &msgtxt)
+extra_decoration_filters (tapi::array<tapi::object_ptr<tapi::textEntity>> &deco_list, const string &msgtxt)
 {
   vector<char16_t> seq = get_c16_seq (msgtxt);
   size_t i = 0;
@@ -331,7 +331,7 @@ extra_decoration_filters (TdArray<TdPtr<TdTxtEnt>> &deco_list, const string &msg
 	    && seq[i + 7] == 0x003c && seq[i + 8] == 0x0074 && seq[i + 9] == 0x0069 && seq[i + 10] == 0x0074
 	    && seq[i + 11] == 0x006c && seq[i + 12] == 0x0065 && seq[i + 13] == 0x0073 && seq[i + 14] == 0x003e)
 	  {
-	    deco_list.emplace_back (td_mkobj<TdTxtEnt> (i, last_offset + 1, td_mkobj<TdTxtEntBold> ()));
+	    deco_list.emplace_back (td_mkobj<tapi::textEntity> (i, last_offset + 1, td_mkobj<tapi::textEntityTypeBold> ()));
 	  }
       }
 
@@ -343,7 +343,7 @@ extra_decoration_filters (TdArray<TdPtr<TdTxtEnt>> &deco_list, const string &msg
 	    && seq[i + 11] == 0x006e && seq[i + 12] == 0x0064 && seq[i + 13] == 0x0065 && seq[i + 14] == 0x0072
 	    && seq[i + 15] == 0x0073 && seq[i + 16] == 0x003e)
 	  {
-	    deco_list.emplace_back (td_mkobj<TdTxtEnt> (i, last_offset + 1, td_mkobj<TdTxtEntBold> ()));
+	    deco_list.emplace_back (td_mkobj<tapi::textEntity> (i, last_offset + 1, td_mkobj<tapi::textEntityTypeBold> ()));
 	  }
       }
 
@@ -356,7 +356,7 @@ extra_decoration_filters (TdArray<TdPtr<TdTxtEnt>> &deco_list, const string &msg
 	    && seq[i + 15] == 0x0072 && seq[i + 16] == 0x0064 && seq[i + 17] == 0x0073
 	    && seq[i + last_offset] == 0x003e)
 	  {
-	    deco_list.emplace_back (td_mkobj<TdTxtEnt> (i, last_offset + 1, td_mkobj<TdTxtEntBold> ()));
+	    deco_list.emplace_back (td_mkobj<tapi::textEntity> (i, last_offset + 1, td_mkobj<tapi::textEntityTypeBold> ()));
 	  }
       }
 
@@ -369,7 +369,7 @@ extra_decoration_filters (TdArray<TdPtr<TdTxtEnt>> &deco_list, const string &msg
 	    && seq[i + 15] == 0x0069 && seq[i + 16] == 0x0074 && seq[i + 17] == 0x006c && seq[i + 18] == 0x0065
 	    && seq[i + 19] == 0x0073 && seq[i + 20] == 0x003e)
 	  {
-	    deco_list.emplace_back (td_mkobj<TdTxtEnt> (i, last_offset + 1, td_mkobj<TdTxtEntBold> ()));
+	    deco_list.emplace_back (td_mkobj<tapi::textEntity> (i, last_offset + 1, td_mkobj<tapi::textEntityTypeBold> ()));
 	  }
       }
 
@@ -382,7 +382,7 @@ extra_decoration_filters (TdArray<TdPtr<TdTxtEnt>> &deco_list, const string &msg
 	    && seq[i + 15] == 0x0073 && seq[i + 16] == 0x0065 && seq[i + 17] == 0x006e && seq[i + 18] == 0x0064
 	    && seq[i + 19] == 0x0065 && seq[i + 20] == 0x0072 && seq[i + 21] == 0x0073 && seq[i + 22] == 0x003e)
 	  {
-	    deco_list.emplace_back (td_mkobj<TdTxtEnt> (i, last_offset + 1, td_mkobj<TdTxtEntBold> ()));
+	    deco_list.emplace_back (td_mkobj<tapi::textEntity> (i, last_offset + 1, td_mkobj<tapi::textEntityTypeBold> ()));
 	  }
       }
 
@@ -396,7 +396,7 @@ extra_decoration_filters (TdArray<TdPtr<TdTxtEnt>> &deco_list, const string &msg
 	    && seq[i + 19] == 0x0077 && seq[i + 20] == 0x006f && seq[i + 21] == 0x0072 && seq[i + 22] == 0x0064
 	    && seq[i + 23] == 0x0073 && seq[i + 24] == 0x003e)
 	  {
-	    deco_list.emplace_back (td_mkobj<TdTxtEnt> (i, last_offset + 1, td_mkobj<TdTxtEntBold> ()));
+	    deco_list.emplace_back (td_mkobj<tapi::textEntity> (i, last_offset + 1, td_mkobj<tapi::textEntityTypeBold> ()));
 	  }
       }
 
@@ -410,8 +410,8 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
   string aux_msg = string (CHATCMD_RPLY_PREFIX) + "not supported";
   string did_what = incom_txt;
   u32 len_did_what = did_what.length ();
-  TdArray<TdPtr<TdTxtEnt>> deco_list;
-  TdPtr<TdFmtTxt> message_text = td_mkobj<TdFmtTxt> (did_what + aux_msg, move (deco_list));
+  tapi::array<tapi::object_ptr<tapi::textEntity>> deco_list;
+  tapi::object_ptr<tapi::formattedText> message_text = td_mkobj<tapi::formattedText> (did_what + aux_msg, move (deco_list));
 
   if (incom_txt.find (CHATCMD_PAUSE) != string::npos)
     {
@@ -478,9 +478,9 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
   size_t utf16len_didwhat = get_c16_len (did_what);
   message_text->text_ = did_what + aux_msg;
   // quote
-  deco_list.emplace_back (td_mkobj<TdTxtEnt> (0, utf16len_didwhat, td_mkobj<TdTxtEntQuote> ()));
+  deco_list.emplace_back (td_mkobj<tapi::textEntity> (0, utf16len_didwhat, td_mkobj<tapi::textEntityTypeBlockQuote> ()));
   // emphasize
-  deco_list.emplace_back (td_mkobj<TdTxtEnt> (utf16len_didwhat, CHATCMD_RPLY_PREFIX_N_CP, td_mkobj<TdTxtEntBold> ()));
+  deco_list.emplace_back (td_mkobj<tapi::textEntity> (utf16len_didwhat, CHATCMD_RPLY_PREFIX_N_CP, td_mkobj<tapi::textEntityTypeBold> ()));
 
   if (incom_txt.find (CHATCMD_FILTERS) != string::npos)
     extra_decoration_filters (deco_list, message_text->text_);
@@ -489,69 +489,69 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
 
   message_text->entities_ = move (deco_list);
 
-  TdPtr<TdFunc> send_message_request = td_mkobj<TdSendMsg> (
+  tapi::object_ptr<tapi::Function> send_message_request = td_mkobj<tapi::sendMessage> (
     // this->collector_id, //
     tgfstat::userdata.get_tgfid (), //
-    0, nullptr, nullptr, nullptr, td_mkobj<TdInMsgTxt> (move (message_text), no_link_preview (), true));
+    0, nullptr, nullptr, nullptr, td_mkobj<tapi::inputMessageText> (move (message_text), no_link_preview (), true));
 
-  send_query (move (send_message_request), [this] (TdObjPtr object) {
-    if (object->get_id () == TdMsg::ID)
+  send_query (move (send_message_request), [this] (tapi::object_ptr<tapi::Object> object) {
+    if (object->get_id () == tapi::message::ID)
       {
 	// FIXME: do not use operator <<
 	tulogfi_cg (1, "TGFCMD reply send");
       }
-    else if (object->get_id () == TdErr::ID)
+    else if (object->get_id () == tapi::error::ID)
       {
-	auto error = tl_movas<TdErr> (object);
+	auto error = tl_movas<tapi::error> (object);
 	tulogfe_cg (1, " error code:", error->code_, " error message:", error->message_);
       }
   });
 }
 
 void
-TdCollector::process_update (TdObjPtr update)
+TdCollector::process_update (tapi::object_ptr<tapi::Object> update)
 {
   switch (update->get_id ())
     {
-      case TdUpdAuthStat::ID: {
-	auto casted = static_cast<TdUpdAuthStat *> (update.get ());
+      case tapi::updateAuthorizationState::ID: {
+	auto casted = static_cast<tapi::updateAuthorizationState *> (update.get ());
 	this->__auth_stat = move (casted->authorization_state_);
 	this->on_authorization_state_update ();
 	break;
       }
 
-      case TdUpdNewChat::ID: {
-	auto casted = static_cast<TdUpdNewChat *> (update.get ());
+      case tapi::updateNewChat::ID: {
+	auto casted = static_cast<tapi::updateNewChat *> (update.get ());
 	this->__chat_titles[casted->chat_->id_] = casted->chat_->title_;
 	break;
       }
 
-      case TdUpdChatTitle::ID: {
-	auto casted = static_cast<TdUpdChatTitle *> (update.get ());
+      case tapi::updateChatTitle::ID: {
+	auto casted = static_cast<tapi::updateChatTitle *> (update.get ());
 	this->__chat_titles[casted->chat_id_] = casted->title_;
 	break;
       }
 
-      case TdUpdUser::ID: {
-	auto casted = static_cast<TdUpdUser *> (update.get ());
+      case tapi::updateUser::ID: {
+	auto casted = static_cast<tapi::updateUser *> (update.get ());
 	auto user_id = casted->user_->id_;
 	this->__users[user_id] = move (casted->user_);
 	break;
       }
 
-      case TdUpdNewMsg::ID: {
-	TdUpdNewMsg *nmsg = static_cast<TdUpdNewMsg *> (update.get ());
-	TdInt chat_id = nmsg->message_->chat_id_;
+      case tapi::updateNewMessage::ID: {
+	tapi::updateNewMessage *nmsg = static_cast<tapi::updateNewMessage *> (update.get ());
+	tapi::int53 chat_id = nmsg->message_->chat_id_;
 	string chat_title = __chat_titles[chat_id];
 	int64_t latest_tgfid = tgfstat::userdata.get_tgfid ();
 	bool is_our_tgfchat = chat_id == latest_tgfid;
 	// maybe are TGFCMDs
 	if (is_our_tgfchat)
 	  {
-	    TdPtr<TdMsgContent> p = move (nmsg->message_->content_);
-	    if (p->get_id () == TdMsgText::ID)
+	    tapi::object_ptr<tapi::MessageContent> p = move (nmsg->message_->content_);
+	    if (p->get_id () == tapi::messageText::ID)
 	      {
-		TdMsgText &r = static_cast<TdMsgText &> (*p);
+		tapi::messageText &r = static_cast<tapi::messageText &> (*p);
 		string txt = move (r.text_->text_);
 		txt.erase (0, txt.find_first_not_of (" ", 0));
 		if (txt.length () > 6 && txt[6] == 0x20 && txt.find ("TGFCMD") == 0)
@@ -565,16 +565,16 @@ TdCollector::process_update (TdObjPtr update)
 	  }
 
 	string sender_name;
-	TdPtr<TdMsgSender> sender_id = move (nmsg->message_->sender_id_);
+	tapi::object_ptr<tapi::MessageSender> sender_id = move (nmsg->message_->sender_id_);
 	switch (sender_id->get_id ())
 	  {
-	    case TdMsgSenderUser::ID: {
-	      auto nmsg = static_cast<TdMsgSenderUser *> (sender_id.get ());
+	    case tapi::messageSenderUser::ID: {
+	      auto nmsg = static_cast<tapi::messageSenderUser *> (sender_id.get ());
 	      sender_name = get_user_name (nmsg->user_id_);
 	      break;
 	    }
-	    case TdMsgSenderChat::ID: {
-	      auto nmsg = static_cast<TdMsgSenderChat *> (sender_id.get ());
+	    case tapi::messageSenderChat::ID: {
+	      auto nmsg = static_cast<tapi::messageSenderChat *> (sender_id.get ());
 	      sender_name += get_chat_title (nmsg->chat_id_);
 	      sender_name += "(chat)";
 	      // sender_name
@@ -586,14 +586,14 @@ TdCollector::process_update (TdObjPtr update)
 	string text;
 	switch (nmsg->message_->content_->get_id ())
 	  {
-	    case TdMsgText::ID: {
-	      auto orig_txt_ctn = static_cast<TdMsgText &> (*nmsg->message_->content_).text_->text_;
+	    case tapi::messageText::ID: {
+	      auto orig_txt_ctn = static_cast<tapi::messageText &> (*nmsg->message_->content_).text_->text_;
 	      text = move (orig_txt_ctn);
 	      break;
 	    }
 
-	    case TdMsgPhoto::ID: {
-	      auto orig_txt_ctn = static_cast<TdMsgPhoto &> (*nmsg->message_->content_).caption_->text_;
+	    case tapi::messagePhoto::ID: {
+	      auto orig_txt_ctn = static_cast<tapi::messagePhoto &> (*nmsg->message_->content_).caption_->text_;
 
 	      text += "<photo>";
 	      text += "(";
@@ -603,8 +603,8 @@ TdCollector::process_update (TdObjPtr update)
 	      break;
 	    }
 
-	    case TdMsgAniEmoji::ID: {
-	      auto orig_txt_ctn = static_cast<TdMsgAniEmoji &> (*nmsg->message_->content_).emoji_;
+	    case tapi::messageAnimatedEmoji::ID: {
+	      auto orig_txt_ctn = static_cast<tapi::messageAnimatedEmoji &> (*nmsg->message_->content_).emoji_;
 	      text += "<emoji>";
 	      text += "(";
 	      text += move (orig_txt_ctn);
@@ -613,8 +613,8 @@ TdCollector::process_update (TdObjPtr update)
 	      break;
 	    }
 
-	    case TdMsgSticker::ID: {
-	      auto orig_txt_ctn = static_cast<TdMsgSticker &> (*nmsg->message_->content_).sticker_->emoji_;
+	    case tapi::messageSticker::ID: {
+	      auto orig_txt_ctn = static_cast<tapi::messageSticker &> (*nmsg->message_->content_).sticker_->emoji_;
 	      text += "<sticker>";
 	      text += "(";
 	      text += move (orig_txt_ctn);
@@ -651,16 +651,16 @@ TdCollector::process_update (TdObjPtr update)
     }
 }
 
-function<void (TdObjPtr)>
+function<void (tapi::object_ptr<tapi::Object>)>
 TdCollector::auth_query_callback ()
 {
-  return [this, id = __auth_qry_id] (TdObjPtr object) {
+  return [this, id = __auth_qry_id] (tapi::object_ptr<tapi::Object> object) {
     if (id == __auth_qry_id)
       {
 	// FIXME: logging
-	if (object->get_id () == TdErr::ID)
+	if (object->get_id () == tapi::error::ID)
 	  {
-	    auto error = tl_movas<TdErr> (object);
+	    auto error = tl_movas<tapi::error> (object);
 	    tgf::logfd_cg (1, 997755, to_string (error));
 	  }
       }
@@ -674,18 +674,18 @@ TdCollector::on_authorization_state_update ()
 
   switch (this->__auth_stat->get_id ())
     {
-      case TdAuthStatReady::ID: {
+      case tapi::authorizationStateReady::ID: {
 	this->is_auth = true;
 	tgf::logfd_cg (1, "Authorization is completed");
 	break;
       }
 
-      case TdAuthStatWaitPara::ID: {
+      case tapi::authorizationStateWaitTdlibParameters::ID: {
 	tgf::logfd_cg (1, "wait tdlib para... ");
 
 	string inbuf;
 
-	auto request = td_mkobj<TdSetPara> ();
+	auto request = td_mkobj<tapi::setTdlibParameters> ();
 	request->database_directory_ = tgfstat::userdata.path_tddata ();
 	request->use_message_database_ = true;
 	request->use_secret_chats_ = true;
@@ -700,7 +700,7 @@ TdCollector::on_authorization_state_update ()
 
       default: {
 	int32_t authState = this->__auth_stat->get_id ();
-	if (authState == TdAuthStatWaitPhone::ID)
+	if (authState == tapi::authorizationStateWaitPhoneNumber::ID)
 	  {
 	    tulogfe_cg (1, "Logged in information is "
 			   "corrupted. Run commands one by one: "
@@ -718,11 +718,11 @@ TdCollector::on_authorization_state_update ()
 }
 
 void
-TdCollector::check_authentication_error (TdObjPtr object)
+TdCollector::check_authentication_error (tapi::object_ptr<tapi::Object> object)
 {
-  if (object->get_id () == TdErr::ID)
+  if (object->get_id () == tapi::error::ID)
     {
-      auto error = tl_movas<TdErr> (object);
+      auto error = tl_movas<tapi::error> (object);
       tulogfe_cg (1, to_string (error));
     }
   else

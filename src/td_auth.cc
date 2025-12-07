@@ -12,18 +12,18 @@ tgf::TdAuth::TdAuth (bool useProvidedApiPass)
   __curr_qry_id = 0;
   __apiid = 0;
   __apihash = ""s;
-  TdClient::execute (td_mkobj<TdSetLogLevel> (1));
-  __client = make_unique<TdClient> ();
+  td::ClientManager::execute (td_mkobj<tapi::setLogVerbosityLevel> (1));
+  __client = make_unique<td::ClientManager> ();
   __clientid = __client->create_client_id ();
-  send_query (td_mkobj<TdGetOpt> ("version"), {});
-  send_query (td_mkobj<TdSetOpt> ("use_storage_optimizer", td_mkobj<TdOptValBool> (true)), {});
+  send_query (td_mkobj<tapi::getOption> ("version"), {});
+  send_query (td_mkobj<tapi::setOption> ("use_storage_optimizer", td_mkobj<tapi::optionValueBoolean> (true)), {});
   __use_our_api = useProvidedApiPass;
 }
 
 tgf::TdAuth::~TdAuth ()
 {
-  send_query (td_mkobj<TdClose> (), [] (TdObjPtr obj) {
-    if (obj->get_id () == TdOk::ID)
+  send_query (td_mkobj<tapi::close> (), [] (TdObjPtr obj) {
+    if (obj->get_id () == tapi::ok::ID)
       tgf::logd ("Closing...");
   });
 
@@ -42,7 +42,7 @@ tgf::TdAuth::loop ()
 {
   while (!tgfstat::p::is_login.load (memory_order_acquire))
     {
-      TdClient::Response response = __client->receive (60);
+      td::ClientManager::Response response = __client->receive (60);
       if (response.object)
 	{
 	  process_response (move (response));
@@ -52,7 +52,7 @@ tgf::TdAuth::loop ()
 }
 
 void
-tgf::TdAuth::send_query (TdPtr<TdFunc> tdfn, function<void (TdObjPtr)> cbfn)
+tgf::TdAuth::send_query (tapi::object_ptr<tapi::Function> tdfn, function<void (TdObjPtr)> cbfn)
 {
   auto query_id = next_query_id ();
   if (cbfn)
@@ -64,7 +64,7 @@ tgf::TdAuth::send_query (TdPtr<TdFunc> tdfn, function<void (TdObjPtr)> cbfn)
 }
 
 void
-tgf::TdAuth::process_response (TdClient::Response response)
+tgf::TdAuth::process_response (td::ClientManager::Response response)
 {
   if (!response.object)
     return;
@@ -83,8 +83,8 @@ tgf::TdAuth::process_update (TdObjPtr update)
 {
   switch (update->get_id ())
     {
-      case TdUpdAuthStat::ID: {
-	TdUpdAuthStat *casted = static_cast<TdUpdAuthStat *> (update.get ());
+      case tapi::updateAuthorizationState::ID: {
+	tapi::updateAuthorizationState *casted = static_cast<tapi::updateAuthorizationState *> (update.get ());
 	this->__auth_stat = move (casted->authorization_state_);
 	this->on_authorization_state_update ();
 	break;
@@ -96,13 +96,13 @@ function<void (TdObjPtr)>
 tgf::TdAuth::auth_query_callback ()
 {
   return [this] (TdObjPtr object) {
-    if (object->get_id () == TdOk::ID)
+    if (object->get_id () == tapi::ok::ID)
       {
 	// cout << "OK!" << endl;
       }
-    else if (object->get_id () == TdErr::ID)
+    else if (object->get_id () == tapi::error::ID)
       {
-	auto error = tl_movas<TdErr> (object);
+	auto error = tl_movas<tapi::error> (object);
 
 	if (error->message_.find ("PHONE_NUMBER_INVALID") != string::npos)
 	  tgf::loge ("The phone number is invalid");
@@ -143,7 +143,7 @@ tgf::TdAuth::on_authorization_state_update ()
 {
   switch (this->__auth_stat->get_id ())
     {
-      case TdAuthStatReady::ID: {
+      case tapi::authorizationStateReady::ID: {
 	// api id/hash correct, phone and vcode correct
 
 	this->__is_auth = true;
@@ -159,52 +159,52 @@ tgf::TdAuth::on_authorization_state_update ()
       }
 
       // FIXME:  auth-reset should make use of this event
-      // case TdAuthStatLogOut::ID: {
+      // case tapi::AuthorizationStateLogOut::ID: {
       //   this->__is_auth = false;
       //   cout << "Logging out" << endl;
       //   break;
       // }
 
-      case TdAuthStatClosing::ID: {
+      case tapi::authorizationStateClosing::ID: {
 	// cout << "Closing" << endl;
 	break;
       }
 
-      case TdAuthStatClosed::ID: {
+      case tapi::authorizationStateClosed::ID: {
 	tgf::logd ("Closed");
 	this->__is_auth = false;
 	tgfstat::p::is_tdlib_closed.store (true, memory_order_release);
 	break;
       }
 
-      case TdAuthStatWaitPhone::ID: {
+      case tapi::authorizationStateWaitPhoneNumber::ID: {
 	cout << ("Enter phone number: ") << flush;
 	string phone_number;
 	getline (cin, phone_number);
 	string phone_number_fotmatted = rmspc (move (phone_number));
 
-	send_query (td_mkobj<TdSetAuthPhone> (phone_number_fotmatted, nullptr), auth_query_callback ());
+	send_query (td_mkobj<tapi::setAuthenticationPhoneNumber> (phone_number_fotmatted, nullptr), auth_query_callback ());
 	break;
       }
 
-      case TdAuthStatWaitCode::ID: {
+      case tapi::authorizationStateWaitCode::ID: {
 	cout << ("Enter login code: ") << flush;
 	string code;
 	cin >> code;
-	send_query (td_mkobj<TdChkAuthCode> (code), auth_query_callback ());
+	send_query (td_mkobj<tapi::checkAuthenticationCode> (code), auth_query_callback ());
 	break;
       }
 
-      case TdAuthStatWaitPsw::ID: {
+      case tapi::authorizationStateWaitPassword::ID: {
 	cout << ("Enter authentication password: ") << flush;
 	string code;
 	cin >> code;
-	send_query (td_mkobj<TdChkAuthPsw> (code), auth_query_callback ());
+	send_query (td_mkobj<tapi::checkAuthenticationPassword> (code), auth_query_callback ());
 	break;
       }
 
       // assuming always the first event
-      case TdAuthStatWaitPara::ID: {
+      case tapi::authorizationStateWaitTdlibParameters::ID: {
 	int32_t api_id;
 	string may_api_id;
 	string api_hash;
@@ -237,7 +237,7 @@ tgf::TdAuth::on_authorization_state_update ()
 	    cin >> api_hash;
 	  }
 
-	auto request = td_mkobj<TdSetPara> ();
+	auto request = td_mkobj<tapi::setTdlibParameters> ();
 	request->database_directory_ = tgfstat::userdata.path_tddata ();
 	request->use_message_database_ = true;
 	request->use_secret_chats_ = true;

@@ -10,19 +10,19 @@
 
 class TdCollector
 {
-  unique_ptr<TdClient> __client;
+  unique_ptr<td::ClientManager> __client;
   i32 __clientid;
-  TdPtr<TdAuthStat> __auth_stat;
+  tapi::object_ptr<tapi::AuthorizationState> __auth_stat;
   u64 __curr_qry_id;
   u64 __auth_qry_id;
   unordered_map<u64, function<void (TdObjPtr)>> __cb;
-  unordered_map<i64, TdPtr<TdUser>> __users;
+  unordered_map<i64, tapi::object_ptr<tapi::user>> __users;
   unordered_map<i64, string> __chat_titles;
   // signal td client to send a request
-  void send_query (TdPtr<TdFunc> tdfn, function<void (TdObjPtr)> cbfn);
+  void send_query (tapi::object_ptr<tapi::Function> tdfn, function<void (TdObjPtr)> cbfn);
   // process response from td client, maybe for an automatic update, maybe for a
   // user's request.
-  void process_response (TdClient::Response response);
+  void process_response (td::ClientManager::Response response);
   // get user name from internal map
   string get_user_name (i64 user_id) const;
   // get chat title from internal map
