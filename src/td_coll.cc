@@ -27,11 +27,11 @@
 void
 TdCollector::init ()
 {
-  td::ClientManager::execute (td_mkobj<tapi::setLogVerbosityLevel> (1));
+  td::ClientManager::execute (tapi_mkobj<tapi::setLogVerbosityLevel> (1));
   __client = make_unique<td::ClientManager> ();
   __clientid = __client->create_client_id ();
-  send_query (td_mkobj<tapi::getOption> ("version"), {});
-  send_query (td_mkobj<tapi::setOption> ("use_storage_optimizer", td_mkobj<tapi::optionValueBoolean> (true)), {});
+  send_query (tapi_mkobj<tapi::getOption> ("version"), {});
+  send_query (tapi_mkobj<tapi::setOption> ("use_storage_optimizer", tapi_mkobj<tapi::optionValueBoolean> (true)), {});
 }
 
 void
@@ -43,18 +43,18 @@ TdCollector::try_create_tgfchat () // FIXME: is try
 
       if (tgfstat::userdata.is_super_tgfid ())
 	{
-	  send_query (td_mkobj<tapi::createNewSupergroupChat> (TF_COLL_CHAT_TITLE, false, false, "TG-FOCUS helps you focus!",
+	  send_query (tapi_mkobj<tapi::createNewSupergroupChat> (TF_COLL_CHAT_TITLE, false, false, "TG-FOCUS helps you focus!",
 						  nullptr, 0, false),
 		      [this] (tapi::object_ptr<tapi::Object> object) {
 			if (object->get_id () == tapi::chat::ID)
 			  {
-			    auto chat = tl_movas<tapi::chat> (object);
+			    auto chat = tapi_movas<tapi::chat> (object);
 			    tgf::logfi_cg (1, "group created", " chat id:", chat->id_);
 			    tgfstat::userdata.set_tgfid (static_cast<int64_t> (chat->id_));
 			  }
 			else if (object->get_id () == tapi::error::ID)
 			  {
-			    auto error = tl_movas<tapi::error> (object);
+			    auto error = tapi_movas<tapi::error> (object);
 			    tulogfe_cg (1, "error code:", error->code_, " error message:", error->message_);
 			  }
 			else
@@ -65,16 +65,16 @@ TdCollector::try_create_tgfchat () // FIXME: is try
 	}
       else
 	{
-	  send_query (td_mkobj<tapi::createNewBasicGroupChat> (vector<tapi::int53> (0), TF_COLL_CHAT_TITLE, 0), [this] (tapi::object_ptr<tapi::Object> object) {
+	  send_query (tapi_mkobj<tapi::createNewBasicGroupChat> (vector<tapi::int53> (0), TF_COLL_CHAT_TITLE, 0), [this] (tapi::object_ptr<tapi::Object> object) {
 	    if (object->get_id () == tapi::createdBasicGroupChat::ID)
 	      {
-		auto chat = tl_movas<tapi::createdBasicGroupChat> (object);
+		auto chat = tapi_movas<tapi::createdBasicGroupChat> (object);
 		tgf::logfi_cg (1, "coll chat created", " chat id:", chat->chat_id_);
 		tgfstat::userdata.set_tgfid (static_cast<int64_t> (chat->chat_id_));
 	      }
 	    else if (object->get_id () == tapi::error::ID)
 	      {
-		auto error = tl_movas<tapi::error> (object);
+		auto error = tapi_movas<tapi::error> (object);
 		tulogfe_cg (1, "error code:", error->code_, " error message:", error->message_);
 	      }
 	    else
@@ -89,7 +89,7 @@ TdCollector::try_create_tgfchat () // FIXME: is try
 tapi::object_ptr<tapi::linkPreviewOptions>
 no_link_preview ()
 {
-  return td_mkobj<tapi::linkPreviewOptions> (true, ""s, false, false, false);
+  return tapi_mkobj<tapi::linkPreviewOptions> (true, ""s, false, false, false);
 }
 
 tapi::array<tapi::object_ptr<tapi::textEntity>>
@@ -106,7 +106,7 @@ decorate_msg (const string &msg)
 
   for (auto pos : pos_info)
     {
-      deco_list.emplace_back (td_mkobj<tapi::textEntity> (get<0> (pos), get<1> (pos), td_mkobj<tapi::textEntityTypeBold> ()));
+      deco_list.emplace_back (tapi_mkobj<tapi::textEntity> (get<0> (pos), get<1> (pos), tapi_mkobj<tapi::textEntityTypeBold> ()));
     }
 
   return deco_list;
@@ -119,12 +119,12 @@ TdCollector::collect_msg (const tgf::TgMsg &msg)
 
   tapi::array<tapi::object_ptr<tapi::textEntity>> text_deco_list = decorate_msg (tfmsg_str);
 
-  tapi::object_ptr<tapi::formattedText> message_text = td_mkobj<tapi::formattedText> (tfmsg_str, move (text_deco_list));
+  tapi::object_ptr<tapi::formattedText> message_text = tapi_mkobj<tapi::formattedText> (tfmsg_str, move (text_deco_list));
 
-  tapi::object_ptr<tapi::Function> send_message_request = td_mkobj<tapi::sendMessage> (
+  tapi::object_ptr<tapi::Function> send_message_request = tapi_mkobj<tapi::sendMessage> (
     // this->collector_id, //
     tgfstat::userdata.get_tgfid (), //
-    0, nullptr, nullptr, nullptr, td_mkobj<tapi::inputMessageText> (move (message_text), no_link_preview (), true));
+    0, nullptr, nullptr, nullptr, tapi_mkobj<tapi::inputMessageText> (move (message_text), no_link_preview (), true));
 
   send_query (move (send_message_request), [this, msg] (tapi::object_ptr<tapi::Object> object) {
     if (object->get_id () == tapi::message::ID)
@@ -135,7 +135,7 @@ TdCollector::collect_msg (const tgf::TgMsg &msg)
       }
     else if (object->get_id () == tapi::error::ID)
       {
-	auto error = tl_movas<tapi::error> (object);
+	auto error = tapi_movas<tapi::error> (object);
 	tulogfe_cg (1, "msg not collected", " error code:", error->code_, " error message:", error->message_);
 	if (error->message_.find ("Have no write access to the chat") != string::npos
 	    || error->message_.find ("Chat not found") != string::npos)
@@ -247,7 +247,7 @@ extra_decoration_help (tapi::array<tapi::object_ptr<tapi::textEntity>> &deco_lis
 	  {
 	    ent_foldblk = true;
 	    lasti_foldblk = i;
-	    deco_list.emplace_back (td_mkobj<tapi::textEntity> (i, last_offset1 + 1, td_mkobj<tapi::textEntityTypeBold> ()));
+	    deco_list.emplace_back (tapi_mkobj<tapi::textEntity> (i, last_offset1 + 1, tapi_mkobj<tapi::textEntityTypeBold> ()));
 	  }
 
 	// more examples
@@ -260,7 +260,7 @@ extra_decoration_help (tapi::array<tapi::object_ptr<tapi::textEntity>> &deco_lis
 	  {
 	    ent_foldblk = true;
 	    lasti_foldblk = i;
-	    deco_list.emplace_back (td_mkobj<tapi::textEntity> (i, last_offset2 + 1, td_mkobj<tapi::textEntityTypeBold> ()));
+	    deco_list.emplace_back (tapi_mkobj<tapi::textEntity> (i, last_offset2 + 1, tapi_mkobj<tapi::textEntityTypeBold> ()));
 	  }
 
 	// click to hide
@@ -271,8 +271,8 @@ extra_decoration_help (tapi::array<tapi::object_ptr<tapi::textEntity>> &deco_lis
 	    && seq[i + 10] == 0x0048 && seq[i + 11] == 0x0049 && seq[i + 12] == 0x0044 && seq[i + 13] == 0x0045
 	    && seq[i + last_offset3] == 0x003e)
 	  {
-	    deco_list.emplace_back (td_mkobj<tapi::textEntity> (lasti_foldblk, (i + last_offset3) - lasti_foldblk + 1,
-							td_mkobj<tapi::textEntityTypeExpandableBlockQuote> ()));
+	    deco_list.emplace_back (tapi_mkobj<tapi::textEntity> (lasti_foldblk, (i + last_offset3) - lasti_foldblk + 1,
+							tapi_mkobj<tapi::textEntityTypeExpandableBlockQuote> ()));
 	    ent_foldblk = false;
 	    lasti_foldblk = -1;
 	  }
@@ -282,7 +282,7 @@ extra_decoration_help (tapi::array<tapi::object_ptr<tapi::textEntity>> &deco_lis
 	    if (ent_codeblk && lasti_codeblk > 0)
 	      {
 		deco_list.emplace_back (
-		  td_mkobj<tapi::textEntity> (lasti_codeblk, i - lasti_codeblk + 1, td_mkobj<tapi::textEntityTypeCode> ()));
+		  tapi_mkobj<tapi::textEntity> (lasti_codeblk, i - lasti_codeblk + 1, tapi_mkobj<tapi::textEntityTypeCode> ()));
 		lasti_codeblk = -1;
 	      }
 	    else
@@ -297,8 +297,8 @@ extra_decoration_help (tapi::array<tapi::object_ptr<tapi::textEntity>> &deco_lis
 	    if (ent_urlblk && lasti_urlblk > 0)
 	      {
 		deco_list.emplace_back (
-		  td_mkobj<tapi::textEntity> (lasti_urlblk, i - lasti_urlblk + 1,
-				      td_mkobj<tapi::textEntityTypeTextUrl> ("https://github.com/micl2e2/tg-focus"s)));
+		  tapi_mkobj<tapi::textEntity> (lasti_urlblk, i - lasti_urlblk + 1,
+				      tapi_mkobj<tapi::textEntityTypeTextUrl> ("https://github.com/micl2e2/tg-focus"s)));
 		lasti_urlblk = -1;
 	      }
 	    else
@@ -331,7 +331,7 @@ extra_decoration_filters (tapi::array<tapi::object_ptr<tapi::textEntity>> &deco_
 	    && seq[i + 7] == 0x003c && seq[i + 8] == 0x0074 && seq[i + 9] == 0x0069 && seq[i + 10] == 0x0074
 	    && seq[i + 11] == 0x006c && seq[i + 12] == 0x0065 && seq[i + 13] == 0x0073 && seq[i + 14] == 0x003e)
 	  {
-	    deco_list.emplace_back (td_mkobj<tapi::textEntity> (i, last_offset + 1, td_mkobj<tapi::textEntityTypeBold> ()));
+	    deco_list.emplace_back (tapi_mkobj<tapi::textEntity> (i, last_offset + 1, tapi_mkobj<tapi::textEntityTypeBold> ()));
 	  }
       }
 
@@ -343,7 +343,7 @@ extra_decoration_filters (tapi::array<tapi::object_ptr<tapi::textEntity>> &deco_
 	    && seq[i + 11] == 0x006e && seq[i + 12] == 0x0064 && seq[i + 13] == 0x0065 && seq[i + 14] == 0x0072
 	    && seq[i + 15] == 0x0073 && seq[i + 16] == 0x003e)
 	  {
-	    deco_list.emplace_back (td_mkobj<tapi::textEntity> (i, last_offset + 1, td_mkobj<tapi::textEntityTypeBold> ()));
+	    deco_list.emplace_back (tapi_mkobj<tapi::textEntity> (i, last_offset + 1, tapi_mkobj<tapi::textEntityTypeBold> ()));
 	  }
       }
 
@@ -356,7 +356,7 @@ extra_decoration_filters (tapi::array<tapi::object_ptr<tapi::textEntity>> &deco_
 	    && seq[i + 15] == 0x0072 && seq[i + 16] == 0x0064 && seq[i + 17] == 0x0073
 	    && seq[i + last_offset] == 0x003e)
 	  {
-	    deco_list.emplace_back (td_mkobj<tapi::textEntity> (i, last_offset + 1, td_mkobj<tapi::textEntityTypeBold> ()));
+	    deco_list.emplace_back (tapi_mkobj<tapi::textEntity> (i, last_offset + 1, tapi_mkobj<tapi::textEntityTypeBold> ()));
 	  }
       }
 
@@ -369,7 +369,7 @@ extra_decoration_filters (tapi::array<tapi::object_ptr<tapi::textEntity>> &deco_
 	    && seq[i + 15] == 0x0069 && seq[i + 16] == 0x0074 && seq[i + 17] == 0x006c && seq[i + 18] == 0x0065
 	    && seq[i + 19] == 0x0073 && seq[i + 20] == 0x003e)
 	  {
-	    deco_list.emplace_back (td_mkobj<tapi::textEntity> (i, last_offset + 1, td_mkobj<tapi::textEntityTypeBold> ()));
+	    deco_list.emplace_back (tapi_mkobj<tapi::textEntity> (i, last_offset + 1, tapi_mkobj<tapi::textEntityTypeBold> ()));
 	  }
       }
 
@@ -382,7 +382,7 @@ extra_decoration_filters (tapi::array<tapi::object_ptr<tapi::textEntity>> &deco_
 	    && seq[i + 15] == 0x0073 && seq[i + 16] == 0x0065 && seq[i + 17] == 0x006e && seq[i + 18] == 0x0064
 	    && seq[i + 19] == 0x0065 && seq[i + 20] == 0x0072 && seq[i + 21] == 0x0073 && seq[i + 22] == 0x003e)
 	  {
-	    deco_list.emplace_back (td_mkobj<tapi::textEntity> (i, last_offset + 1, td_mkobj<tapi::textEntityTypeBold> ()));
+	    deco_list.emplace_back (tapi_mkobj<tapi::textEntity> (i, last_offset + 1, tapi_mkobj<tapi::textEntityTypeBold> ()));
 	  }
       }
 
@@ -396,7 +396,7 @@ extra_decoration_filters (tapi::array<tapi::object_ptr<tapi::textEntity>> &deco_
 	    && seq[i + 19] == 0x0077 && seq[i + 20] == 0x006f && seq[i + 21] == 0x0072 && seq[i + 22] == 0x0064
 	    && seq[i + 23] == 0x0073 && seq[i + 24] == 0x003e)
 	  {
-	    deco_list.emplace_back (td_mkobj<tapi::textEntity> (i, last_offset + 1, td_mkobj<tapi::textEntityTypeBold> ()));
+	    deco_list.emplace_back (tapi_mkobj<tapi::textEntity> (i, last_offset + 1, tapi_mkobj<tapi::textEntityTypeBold> ()));
 	  }
       }
 
@@ -411,7 +411,7 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
   string did_what = incom_txt;
   u32 len_did_what = did_what.length ();
   tapi::array<tapi::object_ptr<tapi::textEntity>> deco_list;
-  tapi::object_ptr<tapi::formattedText> message_text = td_mkobj<tapi::formattedText> (did_what + aux_msg, move (deco_list));
+  tapi::object_ptr<tapi::formattedText> message_text = tapi_mkobj<tapi::formattedText> (did_what + aux_msg, move (deco_list));
 
   if (incom_txt.find (CHATCMD_PAUSE) != string::npos)
     {
@@ -478,9 +478,9 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
   size_t utf16len_didwhat = get_c16_len (did_what);
   message_text->text_ = did_what + aux_msg;
   // quote
-  deco_list.emplace_back (td_mkobj<tapi::textEntity> (0, utf16len_didwhat, td_mkobj<tapi::textEntityTypeBlockQuote> ()));
+  deco_list.emplace_back (tapi_mkobj<tapi::textEntity> (0, utf16len_didwhat, tapi_mkobj<tapi::textEntityTypeBlockQuote> ()));
   // emphasize
-  deco_list.emplace_back (td_mkobj<tapi::textEntity> (utf16len_didwhat, CHATCMD_RPLY_PREFIX_N_CP, td_mkobj<tapi::textEntityTypeBold> ()));
+  deco_list.emplace_back (tapi_mkobj<tapi::textEntity> (utf16len_didwhat, CHATCMD_RPLY_PREFIX_N_CP, tapi_mkobj<tapi::textEntityTypeBold> ()));
 
   if (incom_txt.find (CHATCMD_FILTERS) != string::npos)
     extra_decoration_filters (deco_list, message_text->text_);
@@ -489,10 +489,10 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
 
   message_text->entities_ = move (deco_list);
 
-  tapi::object_ptr<tapi::Function> send_message_request = td_mkobj<tapi::sendMessage> (
+  tapi::object_ptr<tapi::Function> send_message_request = tapi_mkobj<tapi::sendMessage> (
     // this->collector_id, //
     tgfstat::userdata.get_tgfid (), //
-    0, nullptr, nullptr, nullptr, td_mkobj<tapi::inputMessageText> (move (message_text), no_link_preview (), true));
+    0, nullptr, nullptr, nullptr, tapi_mkobj<tapi::inputMessageText> (move (message_text), no_link_preview (), true));
 
   send_query (move (send_message_request), [this] (tapi::object_ptr<tapi::Object> object) {
     if (object->get_id () == tapi::message::ID)
@@ -502,7 +502,7 @@ TdCollector::handle_tgfcmd (string &&incom_txt)
       }
     else if (object->get_id () == tapi::error::ID)
       {
-	auto error = tl_movas<tapi::error> (object);
+	auto error = tapi_movas<tapi::error> (object);
 	tulogfe_cg (1, " error code:", error->code_, " error message:", error->message_);
       }
   });
@@ -660,7 +660,7 @@ TdCollector::auth_query_callback ()
 	// FIXME: logging
 	if (object->get_id () == tapi::error::ID)
 	  {
-	    auto error = tl_movas<tapi::error> (object);
+	    auto error = tapi_movas<tapi::error> (object);
 	    tgf::logfd_cg (1, 997755, to_string (error));
 	  }
       }
@@ -685,7 +685,7 @@ TdCollector::on_authorization_state_update ()
 
 	string inbuf;
 
-	auto request = td_mkobj<tapi::setTdlibParameters> ();
+	auto request = tapi_mkobj<tapi::setTdlibParameters> ();
 	request->database_directory_ = tgfstat::userdata.path_tddata ();
 	request->use_message_database_ = true;
 	request->use_secret_chats_ = true;
@@ -722,7 +722,7 @@ TdCollector::check_authentication_error (tapi::object_ptr<tapi::Object> object)
 {
   if (object->get_id () == tapi::error::ID)
     {
-      auto error = tl_movas<tapi::error> (object);
+      auto error = tapi_movas<tapi::error> (object);
       tulogfe_cg (1, to_string (error));
     }
   else

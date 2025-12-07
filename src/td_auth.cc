@@ -12,17 +12,17 @@ tgf::TdAuth::TdAuth (bool useProvidedApiPass)
   __curr_qry_id = 0;
   __apiid = 0;
   __apihash = ""s;
-  td::ClientManager::execute (td_mkobj<tapi::setLogVerbosityLevel> (1));
+  td::ClientManager::execute (tapi_mkobj<tapi::setLogVerbosityLevel> (1));
   __client = make_unique<td::ClientManager> ();
   __clientid = __client->create_client_id ();
-  send_query (td_mkobj<tapi::getOption> ("version"), {});
-  send_query (td_mkobj<tapi::setOption> ("use_storage_optimizer", td_mkobj<tapi::optionValueBoolean> (true)), {});
+  send_query (tapi_mkobj<tapi::getOption> ("version"), {});
+  send_query (tapi_mkobj<tapi::setOption> ("use_storage_optimizer", tapi_mkobj<tapi::optionValueBoolean> (true)), {});
   __use_our_api = useProvidedApiPass;
 }
 
 tgf::TdAuth::~TdAuth ()
 {
-  send_query (td_mkobj<tapi::close> (), [] (TdObjPtr obj) {
+  send_query (tapi_mkobj<tapi::close> (), [] (TdObjPtr obj) {
     if (obj->get_id () == tapi::ok::ID)
       tgf::logd ("Closing...");
   });
@@ -102,7 +102,7 @@ tgf::TdAuth::auth_query_callback ()
       }
     else if (object->get_id () == tapi::error::ID)
       {
-	auto error = tl_movas<tapi::error> (object);
+	auto error = tapi_movas<tapi::error> (object);
 
 	if (error->message_.find ("PHONE_NUMBER_INVALID") != string::npos)
 	  tgf::loge ("The phone number is invalid");
@@ -183,7 +183,7 @@ tgf::TdAuth::on_authorization_state_update ()
 	getline (cin, phone_number);
 	string phone_number_fotmatted = rmspc (move (phone_number));
 
-	send_query (td_mkobj<tapi::setAuthenticationPhoneNumber> (phone_number_fotmatted, nullptr), auth_query_callback ());
+	send_query (tapi_mkobj<tapi::setAuthenticationPhoneNumber> (phone_number_fotmatted, nullptr), auth_query_callback ());
 	break;
       }
 
@@ -191,7 +191,7 @@ tgf::TdAuth::on_authorization_state_update ()
 	cout << ("Enter login code: ") << flush;
 	string code;
 	cin >> code;
-	send_query (td_mkobj<tapi::checkAuthenticationCode> (code), auth_query_callback ());
+	send_query (tapi_mkobj<tapi::checkAuthenticationCode> (code), auth_query_callback ());
 	break;
       }
 
@@ -199,7 +199,7 @@ tgf::TdAuth::on_authorization_state_update ()
 	cout << ("Enter authentication password: ") << flush;
 	string code;
 	cin >> code;
-	send_query (td_mkobj<tapi::checkAuthenticationPassword> (code), auth_query_callback ());
+	send_query (tapi_mkobj<tapi::checkAuthenticationPassword> (code), auth_query_callback ());
 	break;
       }
 
@@ -237,7 +237,7 @@ tgf::TdAuth::on_authorization_state_update ()
 	    cin >> api_hash;
 	  }
 
-	auto request = td_mkobj<tapi::setTdlibParameters> ();
+	auto request = tapi_mkobj<tapi::setTdlibParameters> ();
 	request->database_directory_ = tgfstat::userdata.path_tddata ();
 	request->use_message_database_ = true;
 	request->use_secret_chats_ = true;
