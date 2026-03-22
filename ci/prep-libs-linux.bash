@@ -15,7 +15,7 @@ fi
 
 if [[ $IS_FEDORA = true ]]
 then
-    sudo dnf install -y --quiet gperf zlib-devel g++ cmake openssl-devel
+    sudo dnf install -y --quiet gperf zlib-ng-compat libstdc++-static g++ cmake openssl-devel
 fi
 
 if [[ $IS_DEBIAN = true ]]
@@ -28,7 +28,7 @@ fi
 
 if [[ ! -d tdlib/.git ]]
 then
-    git clone --depth=1000 https://github.com/tdlib/td tdlib || exit 255
+    git clone https://github.com/tdlib/td tdlib || exit 255
     git --git-dir=tdlib/.git --work-tree=tdlib reset --hard $(cat ../dev/pick-src-tdlib) || exit 255
 fi
 
@@ -36,7 +36,7 @@ fi
 
 if [[ ! -d toml11/.git ]]
 then
-    git clone --depth=1000 https://github.com/ToruNiina/toml11 toml11
+    git clone https://github.com/ToruNiina/toml11 toml11
     git --git-dir=toml11/.git --work-tree=toml11 reset --hard $(cat ../dev/pick-src-toml11)
 fi
 
